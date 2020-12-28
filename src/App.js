@@ -1,20 +1,39 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
+import { Route, Switch } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import QuestionListPage from './pages/question/QuestionListPage';
+import QuestionWritePage from './pages/question/QuestionWritePage';
+import QuestionDetailPage from './pages/question/QuestionDetailPage';
+import ProfilePage from './pages/user/ProfilePage';
+import LoginPage from './pages/LoginPage';
+import NotFoundPage from './pages/NotFoundPage';
 import './App.css';
 
-function App() {
+export default function App() {
   return (
     <>
       <head>
         <meta name="description" content="세상 모든 테크트리, tect.dev" />
       </head>
-      <header></header>
-      <Route path="/" exact={true} component={Home} />
-      <Route path="/about" component={About} />
+      {/* 라우트를 Switch 로 감싸면, 매칭되는 첫번째 페이지만 렌더를 해준다. */}
+      <Switch>
+        <Route path="/" exact={true} component={HomePage} />
+        <Route path="/about" component={AboutPage} />
+        <Route path="/user/:userID" component={ProfilePage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/question" exact={true} component={QuestionListPage} />
+        <Route
+          path="/question/wrtie"
+          exact={true}
+          component={QuestionWritePage}
+        />
+        <Route
+          path="/question/detail/:questionID"
+          component={QuestionDetailPage}
+        />
+        <Route component={NotFoundPage} />
+      </Switch>
     </>
   );
 }
-
-export default App;
