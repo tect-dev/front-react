@@ -1,10 +1,10 @@
 import React from 'react';
 import MainLayout from '../components/MainLayout';
 
-export default function About() {
+export default function LoginPage() {
   return (
     <>
-      <MainLayout>about</MainLayout>
+      <MainLayout>Login Page</MainLayout>
     </>
   );
 }

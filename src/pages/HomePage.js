@@ -5,7 +5,7 @@ import MainLayout from '../components/MainLayout';
 import { ForceGraph } from '../components/home/ForceGraph';
 import { dummyTechtree } from '../lib/dummyTechtree';
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
       <MainLayout>
