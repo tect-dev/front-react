@@ -1,7 +1,10 @@
-import React, { useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/auth';
+import '../styles/Navbar.css';
+import { FaTimes, FaBars } from 'react-icons/fa';
+import { Button } from './Button';
 
 export default function Navbar() {
   // useSelector: 리덕스 스토어의 상태를 조회하는 hooks.
@@ -19,24 +22,79 @@ export default function Navbar() {
     dispatch(loginSuccess());
   }, [dispatch]);
 
+  const [menuClick, setMenuClick] = useState(false);
+
+  const handleMenuClick = () => setMenuClick(!menuClick);
+  const closeMobileMenu = () => setMenuClick(false);
+
   return (
     <>
-      <nav>
-        <Link to="/">Tect.dev </Link>
-        <Link to="/question">QnA </Link>
-        <Link to="/about">About </Link>
-        {loginState ? (
-          <Link to={`/user/`}>MyPage </Link>
-        ) : (
-          <Link to="/login">Login </Link>
-        )}
-        <button
-          onClick={() => {
-            onLogin();
-          }}
-        >
-          로그인상태 변경(임시)
-        </button>
+      <nav className="navbar">
+        <div className="nav-container">
+          <Link to="/" className="navbar-logo">
+            Tect.dev
+          </Link>
+          <div className="menu-icon" onClick={handleMenuClick}>
+            {menuClick ? <FaTimes /> : <FaBars />}
+          </div>
+          <ul className={menuClick ? 'nav-menu active' : 'nav-menu'}>
+            <li className="nav-item">
+              <Link to="/about" className="nav-links" onClick={closeMobileMenu}>
+                About
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                to="/question"
+                className="nav-links"
+                onClick={closeMobileMenu}
+              >
+                QnA
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                to="/article"
+                className="nav-links"
+                onClick={closeMobileMenu}
+              >
+                Article
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                to="/freeboard"
+                className="nav-links"
+                onClick={closeMobileMenu}
+              >
+                Freeboard
+              </Link>
+            </li>
+            <li className="nav-item" id="input-container">
+              <div className="input-container">
+                <input />
+              </div>
+            </li>
+            <li className="nav-item">
+              {loginState ? (
+                <Link
+                  to="/mypage"
+                  className="nav-links"
+                  onClick={closeMobileMenu}
+                >
+                  MyPage
+                </Link>
+              ) : (
+                <div className="nav-btns">
+                  <Button buttonStyle="btn--outline">Login</Button>
+                </div>
+              )}
+            </li>
+            <li className="nav-item">
+              <button onClick={onLogin}>임시 로그인 테스트용 버튼</button>
+            </li>
+          </ul>
+        </div>
       </nav>
     </>
   );
