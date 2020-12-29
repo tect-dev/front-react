@@ -24,7 +24,7 @@ export default function App() {
         <Route path="/login" component={LoginPage} />
         <Route path="/question" exact={true} component={QuestionListPage} />
         <Route
-          path="/question/wrtie"
+          path="/question/write"
           exact={true}
           component={QuestionWritePage}
         />
