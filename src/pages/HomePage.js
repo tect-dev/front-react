@@ -22,7 +22,7 @@ export default function HomePage() {
             >
               <img
                 src="/icons/physics.svg"
-                alt="physics"
+                alt="physicsIcon"
                 height="70"
                 width="70"
               />
@@ -31,13 +31,23 @@ export default function HomePage() {
             </div>
 
             <div onClick={() => {}} className="block">
-              <img src="/icons/math.svg" height="70" width="70" />
+              <img
+                src="/icons/math.svg"
+                alt="mathematicsIcon"
+                height="70"
+                width="70"
+              />
               <br />
               Mathematics
             </div>
 
             <div onClick={() => {}} className="block">
-              <img src="/icons/economics.svg" height="70" width="70" />
+              <img
+                src="/icons/economics.svg"
+                alt="economicsIcon"
+                height="70"
+                width="70"
+              />
               <br />
               economics
             </div>

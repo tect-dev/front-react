@@ -6,6 +6,13 @@ export default function QuestionListPage() {
     <>
       <MainLayout>
         <h2>question List</h2>
+        <button
+          onClick={() => {
+            window.location.href = '/question/write';
+          }}
+        >
+          글쓰기
+        </button>
       </MainLayout>
     </>
   );
