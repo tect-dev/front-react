@@ -1,7 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-export function ForceGraph({ techtreeData, category }) {
+export default function ForceGraph({ techtreeData, category }) {
   const containerRef = React.useRef(null);
 
   const nodeHoverTooltip = (node) => {

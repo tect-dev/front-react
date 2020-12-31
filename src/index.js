@@ -4,11 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import rootReducer from './redux/index';
 import { Provider } from 'react-redux';
+import logger from 'redux-logger';
+import ReduxThunk from 'redux-thunk';
 
-const reduxStore = createStore(rootReducer);
+// logger 미들웨어는 마지막 순서에 와야함.
+const reduxStore = createStore(
+  rootReducer,
+  applyMiddleware(ReduxThunk, logger)
+);
 
 ReactDOM.render(
   <Provider store={reduxStore}>
