@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import MainLayout from '../../components/MainLayout';
-import { getPosts } from '../../redux/post';
+import { readQuestionList } from '../../redux/readPost';
 import { Link } from 'react-router-dom';
 import QuestionBlock from '../../components/question/QuestionBlock';
 
@@ -15,12 +15,13 @@ export default function QuestionListPage() {
   // useCallback : 함수의 불필요한 리렌더링을 막기 위한 hooks.
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
   const getPostsAsync = useCallback(() => {
-    dispatch(getPosts());
+    dispatch(readQuestionList());
   }, [dispatch]);
 
   useEffect(() => {
+    //dispatch(readQuestionList());
     getPostsAsync();
-  }, []);
+  }, [dispatch]);
 
   if (loading)
     return (
@@ -28,8 +29,19 @@ export default function QuestionListPage() {
         <div>로딩중...</div>
       </MainLayout>
     );
-  if (error) return <div>에러 발생!</div>;
-  if (!data) return null;
+  if (error)
+    return (
+      <MainLayout>
+        <div>로딩중...</div>
+      </MainLayout>
+    );
+
+  if (!data)
+    return (
+      <MainLayout>
+        <div>no data</div>
+      </MainLayout>
+    );
   return (
     <>
       <MainLayout>
@@ -39,8 +51,8 @@ export default function QuestionListPage() {
           ? data.map((element) => {
               return (
                 <QuestionBlock
-                  key={element.id}
-                  questionID={element.id}
+                  key={element.uid}
+                  questionUID={element.uid}
                   title={element.title}
                 />
               );

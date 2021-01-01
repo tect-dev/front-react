@@ -1,24 +1,23 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPostById } from '../../redux/post';
+import { readQuestionByUID } from '../../redux/readPost';
 import MainLayout from '../../components/MainLayout';
 
 export default function QuestionDetailPage({ match }) {
-  const { questionID } = match.params;
+  const { questionUID } = match.params;
   const { loading, data, error } = useSelector((state) => {
     return state.post.post;
   });
 
   const dispatch = useDispatch();
 
-  const getPostAsync = useCallback(() => {
-    dispatch(getPostById(questionID));
-  }, [dispatch]);
+  //const getPostAsync = useCallback(() => {
+  //  dispatch(readQuestionByUID(questionID));
+  //}, [dispatch]);
 
   useEffect(() => {
-    getPostAsync();
-    console.log('data: ', data);
-  }, []);
+    dispatch(readQuestionByUID(questionUID));
+  }, [dispatch]);
 
   if (loading)
     return (
@@ -34,11 +33,16 @@ export default function QuestionDetailPage({ match }) {
       </>
     );
   }
-  if (!data) return <>no data</>;
+  if (!data)
+    return (
+      <>
+        <MainLayout>no data</MainLayout>
+      </>
+    );
   return (
     <>
       <MainLayout>
-        <h2>params: {questionID}</h2>
+        <h2>params: {questionUID}</h2>
         {data ? <h2>title: {data.title}</h2> : ''}
       </MainLayout>
     </>
