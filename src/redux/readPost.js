@@ -68,7 +68,7 @@ const READ_ARTICLE_FAIL = 'article/READ_ARTICLE_FAIL';
 export const readQuestionList = () => async (dispatch) => {
   dispatch({ type: READ_QUESTION_LIST_TRY });
   try {
-    const res = await axios.get('/question');
+    const res = await axios.get('/question/list');
     // 브라우저 캐싱기능 구현 확인을 위해 의도적으로 setTimeout 을 뒀음.
     setTimeout(() => {
       dispatch({ type: READ_QUESTION_SUCCESS, questionList: res.data });
