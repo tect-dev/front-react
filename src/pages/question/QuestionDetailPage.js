@@ -2,11 +2,12 @@ import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { readQuestionByUID } from '../../redux/readPost';
 import MainLayout from '../../components/MainLayout';
+import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
 
 export default function QuestionDetailPage({ match }) {
   const { questionUID } = match.params;
   const { loading, data, error } = useSelector((state) => {
-    return state.post.post;
+    return state.readPost.question;
   });
 
   const dispatch = useDispatch();
@@ -14,9 +15,12 @@ export default function QuestionDetailPage({ match }) {
   //const getPostAsync = useCallback(() => {
   //  dispatch(readQuestionByUID(questionID));
   //}, [dispatch]);
+  const getQuestionAsync = useCallback(() => {
+    dispatch(readQuestionByUID(questionUID));
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(readQuestionByUID(questionUID));
+    getQuestionAsync();
   }, [dispatch]);
 
   if (loading)
@@ -28,9 +32,9 @@ export default function QuestionDetailPage({ match }) {
 
   if (error) {
     return (
-      <>
-        <h2>error..</h2>
-      </>
+      <MainLayout>
+        <div>error...</div>
+      </MainLayout>
     );
   }
   if (!data)
@@ -44,6 +48,7 @@ export default function QuestionDetailPage({ match }) {
       <MainLayout>
         <h2>params: {questionUID}</h2>
         {data ? <h2>title: {data.title}</h2> : ''}
+        <AnswerWriteBlock questionUID={questionUID} />
       </MainLayout>
     </>
   );
