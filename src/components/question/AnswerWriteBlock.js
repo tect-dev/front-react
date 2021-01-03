@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
+import { uid } from 'uid';
 import unified from 'unified';
 import parse from 'remark-parse';
 import remark2react from 'remark-react';
@@ -20,6 +21,8 @@ export default function AnswerWriteBlock({ questionUID }) {
       return alert('게시글을 작성하세요.');
     }
     const formData = new FormData();
+    const uid24 = uid(24);
+    formData.append('postUID', uid24);
     formData.append('contentType', 'answer');
     formData.append('content', content);
     formData.append('answerOf', questionUID);
