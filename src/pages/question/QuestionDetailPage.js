@@ -5,7 +5,7 @@ import MainLayout from '../../components/MainLayout';
 import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
 
 export default function QuestionDetailPage({ match }) {
-  const { questionUID } = match.params;
+  const questionID = match.params.questionID;
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.question;
   });
@@ -16,10 +16,12 @@ export default function QuestionDetailPage({ match }) {
   //  dispatch(readQuestionByUID(questionID));
   //}, [dispatch]);
   const getQuestionAsync = useCallback(() => {
-    dispatch(readQuestionByUID(questionUID));
+    dispatch(readQuestionByUID(questionID));
   }, [dispatch]);
 
   useEffect(() => {
+    console.log('match.params: ', match.params);
+    console.log('questionID: ', questionID);
     getQuestionAsync();
   }, [dispatch]);
 
@@ -46,9 +48,11 @@ export default function QuestionDetailPage({ match }) {
   return (
     <>
       <MainLayout>
-        <h2>params: {questionUID}</h2>
-        {data ? <h2>title: {data.title}</h2> : ''}
-        <AnswerWriteBlock questionUID={questionUID} />
+        <div>params: {questionID}</div>
+        <h2>title: {data.questionBody.title}</h2>
+        <div>본문: {data.questionBody.content}</div>
+
+        <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>
     </>
   );
