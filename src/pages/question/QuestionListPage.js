@@ -18,8 +18,7 @@ export default function QuestionListPage() {
     dispatch(readQuestionList());
   }, [dispatch]);
 
-  useEffect(() => {
-    //dispatch(readQuestionList());
+  useEffect(async () => {
     getQuestionListAsync();
   }, [dispatch]);
 
@@ -47,14 +46,15 @@ export default function QuestionListPage() {
       <MainLayout>
         <h2>question List</h2>
         <Link to={'/question/write'}>글쓰기</Link>
-        {data && data.length > 0
+        {data
           ? data.map((element) => {
               return (
-                <QuestionBlock
-                  key={element.uid}
-                  questionUID={element.uid}
-                  title={element.title}
-                />
+                <>
+                  <QuestionBlock
+                    questionUID={element._id}
+                    title={element.questionBody.title}
+                  />
+                </>
               );
             })
           : ''}

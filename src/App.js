@@ -28,10 +28,7 @@ export default function App() {
           exact={true}
           component={QuestionWritePage}
         />
-        <Route
-          path="/question/detail/:questionID"
-          component={QuestionDetailPage}
-        />
+        <Route path="/question/:questionID" component={QuestionDetailPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </>

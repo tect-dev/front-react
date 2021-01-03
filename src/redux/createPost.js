@@ -32,12 +32,19 @@ const CREATE_ARTICLE_FAIL = 'article/CREATE_ARTICLE_FAIL';
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
 
 export const createQuestion = (data) => async (dispatch) => {
-  dispatch({ type: CREATE_ANSWER_TRY });
+  dispatch({ type: CREATE_QUESTION_TRY });
   try {
-    await axios.post(`/write`, data);
-    setTimeout(() => {
-      dispatch({ type: CREATE_QUESTION_SUCCESS });
-    }, 500);
+    const obj = JSON.stringify(Object.fromEntries(data));
+    console.log(obj);
+    await axios({
+      method: 'post',
+      url: `/question`,
+      headers: { 'Content-Type': 'application/json' },
+      data: obj,
+    });
+    await dispatch({ type: CREATE_QUESTION_SUCCESS });
+    // 왜 리다이렉션이 안되지??
+    window.location.href = `/question/${obj.postID}`;
   } catch (e) {
     console.log('error: ', e);
     dispatch({ type: CREATE_QUESTION_FAIL, error: e });
@@ -47,7 +54,7 @@ export const createQuestion = (data) => async (dispatch) => {
 export const createAnswer = (data) => async (dispatch) => {
   dispatch({ type: CREATE_ANSWER_TRY });
   try {
-    await axios.post(`/write`, data);
+    await axios.post({ method: 'post', url: `/write`, data: data });
     setTimeout(() => {
       dispatch({ type: CREATE_ANSWER_SUCCESS });
     }, 500);

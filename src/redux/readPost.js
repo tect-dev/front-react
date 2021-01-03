@@ -5,33 +5,12 @@ import axios from 'axios';
 const initialState = {
   questionList: {
     loading: false,
-    data: [
-      {
-        uid: '1',
-        title: '리덕스 미들웨어를 배워봅시다',
-        content: '리덕스 미들웨어를 직접 만들어보면 이해하기 쉽죠.',
-      },
-      {
-        uid: '2',
-        title: 'redux-thunk를 사용해봅시다',
-        content: 'redux-thunk를 사용해서 비동기 작업을 처리해봅시다!',
-      },
-      {
-        uid: '3',
-        title: 'redux-saga도 사용해봅시다',
-        content:
-          '나중엔 redux-saga를 사용해서 비동기 작업을 처리하는 방법도 배워볼 거예요.',
-      },
-    ],
+    data: null,
     error: null,
   },
   question: {
     loading: false,
-    data: {
-      uid: '1',
-      title: '리덕스 미들웨어를 배워봅시다',
-      content: '리덕스 미들웨어를 직접 만들어보면 이해하기 쉽죠.',
-    },
+    data: null,
     error: null,
   },
   articleList: {
@@ -68,10 +47,10 @@ const READ_ARTICLE_FAIL = 'article/READ_ARTICLE_FAIL';
 export const readQuestionList = () => async (dispatch) => {
   dispatch({ type: READ_QUESTION_LIST_TRY });
   try {
-    const res = await axios.get('/question/list');
+    const res = await axios.get('/question');
     // 브라우저 캐싱기능 구현 확인을 위해 의도적으로 setTimeout 을 뒀음.
     setTimeout(() => {
-      dispatch({ type: READ_QUESTION_SUCCESS, questionList: res.data });
+      dispatch({ type: READ_QUESTION_LIST_SUCCESS, questionList: res.data });
     }, 500);
   } catch (e) {
     console.log('error: ', e);
@@ -82,8 +61,8 @@ export const readQuestionList = () => async (dispatch) => {
 export const readArticleList = () => async (dispatch) => {
   dispatch({ type: READ_ARTICLE_LIST_TRY });
   try {
-    const res = await axios.get('/article/list');
-    dispatch({ type: READ_ARTICLE_SUCCESS, articleList: res.data });
+    const res = await axios.get('/article');
+    dispatch({ type: READ_ARTICLE_LIST_SUCCESS, articleList: res.data });
   } catch (e) {
     console.log('error: ', e);
     dispatch({ type: READ_ARTICLE_LIST_FAIL, error: e });
@@ -93,7 +72,7 @@ export const readArticleList = () => async (dispatch) => {
 export const readQuestionByUID = (uid) => async (dispatch) => {
   dispatch({ type: READ_QUESTION_TRY });
   try {
-    const res = await axios.get(`/question/detail/${uid}`);
+    const res = await axios.get(`/question/${uid}`);
     setTimeout(() => {
       dispatch({ type: READ_QUESTION_SUCCESS, question: res.data });
     }, 500);
@@ -106,7 +85,7 @@ export const readQuestionByUID = (uid) => async (dispatch) => {
 export const readArticleByUID = (uid) => async (dispatch) => {
   dispatch({ type: READ_ARTICLE_TRY });
   try {
-    const res = await axios.get(`/article/detail/${uid}`);
+    const res = await axios.get(`/article/${uid}`);
     setTimeout(() => {
       dispatch({ type: READ_ARTICLE_SUCCESS, article: res.data });
     }, 500);
@@ -121,11 +100,11 @@ export default function readPost(state = initialState, action) {
     case READ_QUESTION_LIST_TRY:
       return {
         ...state,
-        //questionList: {
-        //  loading: true,
-        //  data: null,
-        //  error: null,
-        //},
+        questionList: {
+          loading: true,
+          data: null,
+          error: null,
+        },
       };
     case READ_QUESTION_LIST_SUCCESS:
       return {
@@ -149,29 +128,29 @@ export default function readPost(state = initialState, action) {
     case READ_QUESTION_TRY:
       return {
         ...state,
-        //question: {
-        //  loading: true,
-        //  data: null,
-        //  error: null,
-        //},
+        question: {
+          loading: true,
+          data: null,
+          error: null,
+        },
       };
     case READ_QUESTION_SUCCESS:
       return {
         ...state,
-        //question: {
-        //  loading: false,
-        //  data: action.question,
-        //  error: null,
-        //},
+        question: {
+          loading: false,
+          data: action.question,
+          error: null,
+        },
       };
     case READ_QUESTION_FAIL:
       return {
         ...state, // 테스트를 위해 각주처리. 실제 서버가 돌아가면 각주 풀어줘야함.
-        //question: {
-        //  loading: false,
-        //  data: null,
-        //  error: action.error,
-        //},
+        question: {
+          loading: false,
+          data: null,
+          error: action.error,
+        },
       };
 
     case READ_ARTICLE_LIST_TRY:
