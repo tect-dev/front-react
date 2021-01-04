@@ -1,11 +1,11 @@
 .container {
   width: 100%;
   height: 80vh;
-  position: relative;
+  /*position: relative;*/
 }
 
 .container svg {
-  display: block;
+  /*display: block;*/
   width: 100%;
   height: 100%;
 }
