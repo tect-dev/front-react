@@ -2,138 +2,139 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500&display=swap');
 
 .navbar {
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    height: 86px;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  height: 86px;
 }
 
 .nav-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    max-width: 1500px;
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  max-width: 1500px;
 }
 
 .navbar-logo {
-    color: #00bebe;
-    justify-self: start;
-    margin-left: 30px;
-    font-family: 'Heebo';
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 2rem;
-    display: flex;
-    align-items: center;
+  color: #00bebe;
+  justify-self: start;
+  margin-left: 30px;
+  font-family: 'Heebo';
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
 }
 
 .nav-menu {
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    text-align: center;
-    justify-content: start;
-    margin-left: 5vw;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  text-align: center;
+  justify-content: start;
+  margin-left: 5vw;
 }
 
 .nav-item {
-    height: 80px;
+  height: 80px;
 }
 
-.nav-links, .input-container, .nav-btns {  
-    color: #000;  
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    padding: 0 1rem;
-    height: 100%;
+.nav-links,
+.input-container,
+.nav-btns {
+  color: #000;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
 }
 
 .nav-links:hover {
-    color: #00bebe;
-    border-bottom: 3px solid #00bebe;
-    transition: all 0.2s ease-out;
-  }
-
-.input-container > input {
-    width: 25vw;
-    height: 20px;
+  color: #00bebe;
+  border-bottom: 3px solid #00bebe;
+  transition: all 0.2s ease-out;
 }
 
+.input-container > input {
+  width: 25vw;
+  height: 20px;
+}
 
 .menu-icon {
-    display: none;
+  display: none;
 }
 
 @media screen and (max-width: 960px) {
-    .nav-menu {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 90vh;
-        position: absolute;
-        top: 80px;
-        right: -150%;
-        opacity: 1;
-        transition: all 0.5s ease;
-    }
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 80px;
+    right: -150%;
+    opacity: 1;
+    transition: all 0.5s ease;
+  }
 
-    .nav-menu.active {
-        background: #fff;
-        right: 0;
-        opacity: 1;
-        transition: all 0.5s ease;
-        margin: 0;
-        z-index: 1;
-    }
+  .nav-menu.active {
+    background: #fff;
+    right: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    margin: 0;
+    z-index: 8;
+  }
 
-    .nav-links, .nav-btns {
-        text-align: center;
-        padding: 2rem 1rem;
-        width: 100%;
-        display: table;
-    }
+  .nav-links,
+  .nav-btns {
+    text-align: center;
+    padding: 2rem 1rem;
+    width: 100%;
+    display: table;
+  }
 
-    .nav-btns > button {
-        width: 80%;
-        font-size: 100%;
-        height: 150%;
-    }
+  .nav-btns > button {
+    width: 80%;
+    font-size: 100%;
+    height: 150%;
+  }
 
-    .nav-links:hover {
-        border-radius: 0;
-        background: #00bebe;
-        border : none;
-        color: #fff;
-        transition: 250ms;
-      }
-    
-    .navbar-logo {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translate(25%, 50%);
-    }
+  .nav-links:hover {
+    border-radius: 0;
+    background: #00bebe;
+    border: none;
+    color: #fff;
+    transition: 250ms;
+  }
 
-    #input-container {
-        display: none;
-    }
-    
-    .menu-icon {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(-100%, 60%);
-        font-size: 1.8rem;
-        cursor: pointer;
-    }
+  .navbar-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(25%, 50%);
+  }
+
+  #input-container {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 60%);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
 }

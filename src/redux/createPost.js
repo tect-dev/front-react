@@ -29,13 +29,17 @@ const CREATE_ARTICLE_TRY = 'article/CREATE_ARTICLE_TRY';
 const CREATE_ARTICLE_SUCCESS = 'article/CREATE_ARTICLE_SUCCESS';
 const CREATE_ARTICLE_FAIL = 'article/CREATE_ARTICLE_FAIL';
 
+const CREATE_COMMENT_TRY = 'comment/CREATE_COMMENT_TRY';
+const CREATE_COMMENT_SUCCESS = 'comment/CREATE_COMMENT_SUCCESS';
+const CREATE_COMMENT_FAIL = 'comment/CREATE_COMMENT_FAIL';
+
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
 
 export const createQuestion = (data) => async (dispatch) => {
   dispatch({ type: CREATE_QUESTION_TRY });
   try {
     const obj = JSON.stringify(Object.fromEntries(data));
-    console.log(obj);
+    //console.log(obj);
     await axios({
       method: 'post',
       url: `/question`,
@@ -54,10 +58,14 @@ export const createQuestion = (data) => async (dispatch) => {
 export const createAnswer = (data) => async (dispatch) => {
   dispatch({ type: CREATE_ANSWER_TRY });
   try {
-    await axios.post({ method: 'post', url: `/write`, data: data });
-    setTimeout(() => {
-      dispatch({ type: CREATE_ANSWER_SUCCESS });
-    }, 500);
+    const obj = JSON.stringify(Object.fromEntries(data));
+    await axios({
+      method: 'post',
+      url: `/answer`,
+      headers: { 'Content-Type': 'application/json' },
+      data: obj,
+    });
+    dispatch({ type: CREATE_ANSWER_SUCCESS });
   } catch (e) {
     console.log('error: ', e);
     dispatch({ type: CREATE_ANSWER_FAIL, error: e });
@@ -67,7 +75,13 @@ export const createAnswer = (data) => async (dispatch) => {
 export const createArticle = (data) => async (dispatch) => {
   dispatch({ type: CREATE_ARTICLE_TRY });
   try {
-    await axios.post(`/write`, data);
+    const obj = JSON.stringify(Object.fromEntries(data));
+    await axios({
+      method: 'post',
+      url: `/article`,
+      headers: { 'Content-Type': 'application/json' },
+      data: obj,
+    });
     setTimeout(() => {
       dispatch({ type: CREATE_ARTICLE_SUCCESS });
     }, 500);
@@ -76,6 +90,8 @@ export const createArticle = (data) => async (dispatch) => {
     dispatch({ type: CREATE_ARTICLE_FAIL, error: e });
   }
 };
+
+// comment 작성 관련 작성.
 
 export default function createPost(state = initialState, action) {
   switch (action.type) {
