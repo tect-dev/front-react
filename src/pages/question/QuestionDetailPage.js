@@ -1,21 +1,58 @@
-import React from 'react';
+import { useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { readQuestionByUID } from '../../redux/readPost';
 import MainLayout from '../../components/MainLayout';
+import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
 
 export default function QuestionDetailPage({ match }) {
-  const { questionID } = match.params;
+  const questionID = match.params.questionID;
+  const { loading, data, error } = useSelector((state) => {
+    return state.readPost.question;
+  });
 
-  if (!questionID) {
+  const dispatch = useDispatch();
+
+  //const getPostAsync = useCallback(() => {
+  //  dispatch(readQuestionByUID(questionID));
+  //}, [dispatch]);
+  const getQuestionAsync = useCallback(() => {
+    dispatch(readQuestionByUID(questionID));
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log('match.params: ', match.params);
+    console.log('questionID: ', questionID);
+    getQuestionAsync();
+  }, [dispatch]);
+
+  if (loading)
     return (
-      <>
-        <h2>no one..</h2>
-      </>
+      <MainLayout>
+        <div>로딩중...</div>
+      </MainLayout>
+    );
+
+  if (error) {
+    return (
+      <MainLayout>
+        <div>error...</div>
+      </MainLayout>
     );
   }
-
+  if (!data)
+    return (
+      <>
+        <MainLayout>no data</MainLayout>
+      </>
+    );
   return (
     <>
       <MainLayout>
-        <h2>params: {questionID}</h2>
+        <div>params: {questionID}</div>
+        <h2>title: {data.questionBody.title}</h2>
+        <div>본문: {data.questionBody.content}</div>
+
+        <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>
     </>
   );

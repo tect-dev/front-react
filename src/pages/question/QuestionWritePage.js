@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
+import { useSelector } from 'react-redux';
+import QuestionWriteBlock from '../../components/question/QuestionWriteBlock';
 
 export default function QuestionWritePage({ history }) {
   //useEffect(() => {
@@ -7,24 +9,14 @@ export default function QuestionWritePage({ history }) {
   //    history.block('페이지를 떠나시는건가요?');
   //  };
   //}, [history]);
+  const { loginState, userInfo } = useSelector((state) => {
+    return { loginState: state.auth.loginState, userInfo: state.auth.userInfo };
+  });
 
   return (
     <>
       <MainLayout>
-        <form action="/question/write" method="post">
-          <div>
-            <label for="title">title:</label>
-            <input type="text" id="title" />
-          </div>
-
-          <div>
-            <label for="content">content:</label>
-            <textarea id="content"></textarea>
-          </div>
-          <div class="button">
-            <button type="submit">Send your message</button>
-          </div>
-        </form>
+        <QuestionWriteBlock />
       </MainLayout>
     </>
   );

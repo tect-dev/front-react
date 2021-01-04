@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginSuccess } from '../redux/auth';
+import { loginSuccess, loginSuccessDelayed } from '../redux/auth';
 import '../styles/Navbar.css';
 import { FaTimes, FaBars } from 'react-icons/fa';
 import { Button } from './Button';
@@ -19,7 +19,7 @@ export default function Navbar() {
   // useCallback : 함수의 불필요한 리렌더링을 막기 위한 hooks.
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
   const onLogin = useCallback(() => {
-    dispatch(loginSuccess());
+    dispatch(loginSuccessDelayed());
   }, [dispatch]);
 
   const [menuClick, setMenuClick] = useState(false);
@@ -38,11 +38,6 @@ export default function Navbar() {
             {menuClick ? <FaTimes /> : <FaBars />}
           </div>
           <ul className={menuClick ? 'nav-menu active' : 'nav-menu'}>
-            <li className="nav-item">
-              <Link to="/about" className="nav-links" onClick={closeMobileMenu}>
-                About
-              </Link>
-            </li>
             <li className="nav-item">
               <Link
                 to="/question"
@@ -78,7 +73,7 @@ export default function Navbar() {
             <li className="nav-item">
               {loginState ? (
                 <Link
-                  to="/mypage"
+                  to="/user/userID"
                   className="nav-links"
                   onClick={closeMobileMenu}
                 >
