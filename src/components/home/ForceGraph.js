@@ -1,7 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
+import styles from '../../styles/Techtree.module.css';
 
-export function ForceGraph({ techtreeData, category }) {
+export default function ForceGraph({ techtreeData, category }) {
   const containerRef = React.useRef(null);
 
   const nodeHoverTooltip = (node) => {
@@ -27,7 +28,7 @@ export function ForceGraph({ techtreeData, category }) {
     return destroyFn;
   }, []);
 
-  return <div ref={containerRef} />;
+  return <div ref={containerRef} className={styles.container} />;
 }
 
 function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {

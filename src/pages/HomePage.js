@@ -2,7 +2,8 @@ import React from 'react';
 import MainLayout from '../components/MainLayout';
 //import '../styles/Home.module.css';
 
-import { ForceGraph } from '../components/home/ForceGraph';
+import ForceGraph from '../components/home/ForceGraph';
+import SubjectBlock from '../components/home/SubjectBlock';
 import { dummyTechtree } from '../lib/dummyTechtree';
 
 export default function HomePage() {
@@ -20,14 +21,11 @@ export default function HomePage() {
               }}
               className="block"
             >
-              <img
-                src="/icons/physics.svg"
-                alt="physicsIcon"
-                height="70"
-                width="70"
+              <SubjectBlock
+                iconSize="70"
+                url="physics"
+                displayedName="physics"
               />
-              <br />
-              Physics
             </div>
 
             <div onClick={() => {}} className="block">
