@@ -1,68 +1,56 @@
-import React from 'react';
-import MainLayout from '../components/MainLayout';
+import React, { useState } from 'react'
+import MainLayout from '../components/MainLayout'
 //import '../styles/Home.module.css';
 
-import ForceGraph from '../components/home/ForceGraph';
-import OrbitGraph from '../components/home/OrbitGraph';
-import SubjectBlock from '../components/home/SubjectBlock';
-import { dummyTechtree } from '../lib/dummyTechtree';
+import ForceGraph from '../components/home/ForceGraph'
+import OrbitGraph from '../components/home/OrbitGraph'
+import SubjectBlock from '../components/home/SubjectBlock'
+import { dummyTechtree } from '../lib/dummyTechtree'
 
 export default function HomePage() {
+  const [onPhysics, setOnPhysics] = useState(true)
   return (
     <>
       <MainLayout>
         <div className="container">
           <main>
-            <OrbitGraph
-              techtreeData={dummyTechtree.physics}
-              category={'physics'}
-            />
+            {onPhysics ? (
+              <OrbitGraph techtreeData={dummyTechtree.physics} category={'physics'} />
+            ) : (
+              <ForceGraph techtreeData={dummyTechtree.cs} category={'cs'} />
+            )}
           </main>
           <aside className="sidebar">
             <div
               onClick={() => {
-                console.log('physics clicked');
+                console.log('physics clicked')
+                setOnPhysics(true)
               }}
               className="block"
             >
-              <SubjectBlock
-                iconSize="70"
-                url="physics"
-                displayedName="physics"
-              />
+              <SubjectBlock iconSize="70" url="physics" displayedName="physics" />
+            </div>
+
+            <div
+              onClick={() => {
+                console.log('cs clicked')
+                setOnPhysics(false)
+              }}
+              className="block"
+            >
+              <SubjectBlock iconSize="50" url="computer" displayedName="Computer Science" />
             </div>
 
             <div onClick={() => {}} className="block">
-              <img
-                src="/icons/math.svg"
-                alt="mathematicsIcon"
-                height="70"
-                width="70"
-              />
+              <img src="/icons/math.svg" alt="mathematicsIcon" height="70" width="70" />
               <br />
               Mathematics
             </div>
 
             <div onClick={() => {}} className="block">
-              <img
-                src="/icons/economics.svg"
-                alt="economicsIcon"
-                height="70"
-                width="70"
-              />
+              <img src="/icons/economics.svg" alt="economicsIcon" height="70" width="70" />
               <br />
               economics
-            </div>
-
-            <div
-              onClick={() => {
-                console.log('cs clicked');
-              }}
-              className="block"
-            >
-              <img src="/icons/computer.svg" height="50" width="50" />
-              <br />
-              Computer Science
             </div>
 
             <div onClick={() => {}} className="block">
@@ -98,5 +86,5 @@ export default function HomePage() {
         </div>
       </MainLayout>
     </>
-  );
+  )
 }
