@@ -3,6 +3,7 @@ import MainLayout from '../components/MainLayout';
 //import '../styles/Home.module.css';
 
 import ForceGraph from '../components/home/ForceGraph';
+import OrbitGraph from '../components/home/OrbitGraph';
 import SubjectBlock from '../components/home/SubjectBlock';
 import { dummyTechtree } from '../lib/dummyTechtree';
 
@@ -12,7 +13,10 @@ export default function HomePage() {
       <MainLayout>
         <div className="container">
           <main>
-            <ForceGraph techtreeData={dummyTechtree.cs} category={'cs'} />
+            <OrbitGraph
+              techtreeData={dummyTechtree.physics}
+              category={'physics'}
+            />
           </main>
           <aside className="sidebar">
             <div
