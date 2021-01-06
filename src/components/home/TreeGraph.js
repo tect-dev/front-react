@@ -1,7 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3'
 import styles from '../../styles/Techtree.module.css'
-import { line } from 'd3'
 
 export default function ForceGraph({ techtreeData, category }) {
   const containerRef = React.useRef(null)
@@ -39,81 +38,53 @@ export default function ForceGraph({ techtreeData, category }) {
 function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   // linksData 대신, 객체 전체를 받아야지 이게 어느 과목인지도 확인할 수 있음.
 
-  const nodeRadius = 20
-  const orbitRadius1 = 0
-  const orbitRadius2 = 120
-  const orbitRadius3 = 200
-  const orbitRadius4 = 280
-  const links = techtreeData.links.map((d) => Object.assign({}, d))
-  const nodes = techtreeData.nodes.map((d) => {
-    switch (d.group) {
-      case 1:
-        return {
-          ...d,
-          r: 30,
-          R: 0,
-          phi0: Math.ceil(Math.random() * 360),
-          speed: Math.random() * 1 * 0.0001,
-        }
-      case 2:
-        return {
-          ...d,
-          r: nodeRadius,
-          R: orbitRadius2,
-          phi0: Math.ceil(Math.random() * 360),
-          speed: Math.random() * 1 * 0.0001,
-        }
-      case 3:
-        return {
-          ...d,
-          r: nodeRadius,
-          R: orbitRadius3,
-          phi0: Math.ceil(Math.random() * 360),
-          speed: Math.random() * 1 * 0.0001,
-        }
-      case 4:
-        return {
-          ...d,
-          r: nodeRadius,
-          R: orbitRadius4,
-          phi0: Math.ceil(Math.random() * 360),
-          speed: Math.random() * 1 * 0.0001,
-        }
-      default:
-        return {
-          ...d,
-          r: 10,
-          R: 300,
-          phi0: 0, //Math.ceil(Math.random() * 360),
-          speed: Math.random() * 5 * 0.0001,
-        }
-    }
-  })
-
   //const containerRect = container.getBoundingClientRect();
-  const height = 1000 //containerRect.height;
+  const height = 900 //containerRect.height;
   const width = 900 //containerRect.width;
-  let globalTimer = 0
 
   let xScale = d3.scaleLinear().domain([0, width]).range([0, width])
   let yScale = d3.scaleLinear().domain([0, height]).range([0, height])
 
+  const nodeRadius = 30
+
+  const links = techtreeData.links.map((d) => Object.assign({}, d))
+
+  function selectRank(rank, techtreeData, width, height) {
+    const selectedArray = []
+    techtreeData.nodes.map((d) => {
+      if (d.group === rank) {
+        selectedArray.push({ ...d })
+      }
+    })
+
+    const stepArea = (width / selectedArray.length) * 0.5
+
+    return selectedArray.map((d, index) => {
+      return {
+        ...d,
+        x: -0.5 * width + (2 * index + 1) * stepArea + (Math.random() - Math.random()) * 10,
+        y: (-0.5 + (2 * rank - 1) / 8) * height + (Math.random() - Math.random()) * 10,
+        r: nodeRadius,
+      }
+    })
+  }
+
+  const rank1Array = selectRank(1, techtreeData, width, height)
+  const rank2Array = selectRank(2, techtreeData, width, height)
+  const rank3Array = selectRank(3, techtreeData, width, height)
+  const rank4Array = selectRank(4, techtreeData, width, height)
+
+  const nodes = [...rank1Array, ...rank2Array, ...rank3Array, ...rank4Array]
+
   const svg = d3
     .select(container)
     .append('svg')
-    .attr('viewBox', [-width / 2, -height / 3, width, height * 0.75])
+    .attr('viewBox', [-width / 2, -height / 2, width, height])
 
-  svg.style('background', `url("${process.env.PUBLIC_URL}/images/space.png") no-repeat`)
+  const orbitColor = '#FFCC01' //'#FFFF56' //
 
-  const orbit = svg.append('g').attr('class', 'orbit') //.style('opacity', '0')
-
-  const orbitColor = '#FFFF56' // "#FFCC01"
-
-  const planetColorSet = ['#D4CDC5', '#99CC31', '#027FFF', '#FF7701']
-
-  orbit.append('circle').attr('r', orbitRadius2).attr('fill', 'none').attr('stroke', orbitColor)
-  orbit.append('circle').attr('r', orbitRadius3).attr('fill', 'none').attr('stroke', orbitColor)
-  orbit.append('circle').attr('r', orbitRadius4).attr('fill', 'none').attr('stroke', orbitColor)
+  //const planetColorSet = ['#D4CDC5', '#99CC31', '#027FFF', '#FF7701', '#00bebe']
+  const planetColorSet = ['#027FFF', '#00bebe']
 
   svg
     .append('defs')
@@ -145,7 +116,6 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .attr('stroke-opacity', 0.6)
     .attr('stroke-width', 2)
     .attr('marker-end', 'url(#arrowhead)')
-    .style('opacity', '0')
 
   const node = svg
     .append('g')
@@ -159,46 +129,60 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       return d.r
     })
     .attr('cx', (d) => {
-      return d.R
+      return d.x
     })
     .attr('cy', (d) => {
-      return 0
+      return d.y
     })
     .attr('class', (d) => {
       return `node${d.id}`
     })
     .attr('fill', (d) => {
-      switch (d.group) {
-        case 1:
-          return orbitColor
-        case 2:
-          return planetColorSet[2]
-        case 3:
-          return planetColorSet[3]
-        case 4:
-          return planetColorSet[1]
-        default:
-          return '#356EC3'
-      }
+      return planetColorSet[Math.floor(Math.random() * planetColorSet.length - 0.00001)]
     })
+    .style('cursor', 'pointer')
   //.attr('stroke', '#fff')
 
   node
     .on('mouseover', (d) => {
-      clearInterval(timeFlies)
       addTooltip(nodeHoverTooltip, d, d3.event.pageX, d3.event.pageY)
       fadeExceptSelected(d)
-      node.style('cursor', 'pointer')
     })
     .on('mouseout', (d) => {
-      timeFlies = setInterval(() => {
-        objectPositionUpdate()
-        globalTimer = globalTimer + 40
-      }, 40)
       tooltip.style('opacity', 0)
       node.style('opacity', '1')
-      orbit.style('opacity', '1')
-      link.style('opacity', '0')
+      link.style('opacity', '1')
+    })
+
+  const label = svg
+    .append('g')
+    .attr('class', 'labels')
+    .selectAll('text')
+    .data(nodes)
+    .enter()
+    .append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .attr('class', (d) => {
+      return d.id
+    })
+    //.attr("class", )
+    .text((d) => {
+      return d.label
+    })
+    .style('font-weight', 'bold')
+    .style('fill', '#fff')
+    .style('cursor', 'pointer')
+
+  label
+    .on('mouseover', (d) => {
+      addTooltip(nodeHoverTooltip, d, d3.event.pageX, d3.event.pageY)
+      fadeExceptSelected(d)
+    })
+    .on('mouseout', (d) => {
+      tooltip.style('opacity', 0)
+      node.style('opacity', '1')
+      link.style('opacity', '1')
     })
 
   const tooltip = d3.select(container).append('div')
@@ -213,8 +197,8 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   }
 
   function fadeExceptSelected(selectedNode) {
-    node.style('opacity', '0.2')
-    orbit.style('opacity', '0.2')
+    node.style('opacity', '0.1')
+    link.style('opacity', '0.1')
 
     links.map((linkElement, index) => {
       if (linkElement.source === selectedNode.id) {
@@ -233,48 +217,8 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     })
   }
 
-  //const trail = svg
-  //  .append('g')
-  //  .attr('class', 'trail')
-  //  .selectAll('path')
-  //  .data(nodes)
-  //  .join('path')
-  //  .attr('class', (d) => {
-  //    return `trail${d.id}`
-  //  })
-
-  function calculateTrailEnd(trailStartX, trailStartY) {
-    const radius = Math.sqrt(trailStartX * trailStartX + trailStartY * trailStartY)
-    const rootAngle = Math.acos(trailStartX / radius)
-    const finalAngle = rootAngle + 0.5
-    const trailEndX = radius * Math.cos(finalAngle)
-    const trailEndY = radius * Math.sin(finalAngle)
-
-    return [trailEndX, trailEndY]
-  }
-
   function objectPositionUpdate() {
-    node
-      .attr('cx', (d) => d.R * Math.cos(d.phi0 + globalTimer * d.speed))
-      .attr('cy', (d) => d.R * Math.sin(d.phi0 + globalTimer * d.speed))
-
-    // trail
-    //   .attr('d', (d) => {
-    //     const trailStartX = container.querySelector(`circle.node${d.id}`).getAttribute('cx')
-    //     const trailStartY = container.querySelector(`circle.node${d.id}`).getAttribute('cy')
-    //     const trailEndPosition = calculateTrailEnd(trailStartX, trailStartY)
-    //     return `M ${trailStartX} ${trailStartY} ${trailEndPosition[0]} ${trailEndPosition[1]}`
-    //   })
-    //   .style('fill', (d) => {
-    //     return 'none'
-    //   })
-    //   .style('stroke', (d) => {
-    //     return orbitColor
-    //   })
-    //   .style('stroke-width', (d) => {
-    //     return '8'
-    //   })
-
+    label.attr('x', (d) => d.x).attr('y', (d) => d.y)
     link
       .attr('x1', (d) => {
         return container.querySelector(`circle.node${d.source}`).getAttribute('cx')
@@ -289,15 +233,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
         return container.querySelector(`circle.node${d.target}`).getAttribute('cy')
       })
   }
-
-  let timeFlies = setInterval(() => {
-    //node.attr('transform', (d) => {
-    //  return `rotate(${d.phi0 + globalTimer * d.speed})`
-    //})
-
-    objectPositionUpdate()
-    globalTimer = globalTimer + 40
-  }, 40)
+  objectPositionUpdate()
 
   return {
     destroy: () => {

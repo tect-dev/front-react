@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import MainLayout from '../components/MainLayout'
 //import '../styles/Home.module.css';
-
+import TreeGraph from '../components/home/TreeGraph'
 import ForceGraph from '../components/home/ForceGraph'
 import OrbitGraph from '../components/home/OrbitGraph'
 import SubjectBlock from '../components/home/SubjectBlock'
@@ -14,8 +14,12 @@ export default function HomePage() {
 
   const TechtreeGraph = ({ subject }) => {
     switch (subject) {
+      case 'physicsOrigin':
+        return <TreeGraph techtreeData={dummyTechtree.physics} category={'physics'} />
       case 'physics':
         return <OrbitGraph techtreeData={dummyTechtree.physics} category={'physics'} />
+      case 'math':
+        return <TreeGraph techtreeData={dummyTechtree.cs} category={'cs'} />
       case 'cs':
         return <ForceGraph techtreeData={dummyTechtree.cs} category={'cs'} />
       case 'politics':
@@ -30,6 +34,16 @@ export default function HomePage() {
             <TechtreeGraph subject={selected} />
           </main>
           <aside className="sidebar">
+            <div
+              onClick={() => {
+                console.log('physics clicked')
+                //setOnPhysics(true)
+                setSelected('physicsOrigin')
+              }}
+              className="block"
+            >
+              <SubjectBlock iconSize="70" url="physics" displayedName="물리학 트리" />
+            </div>
             <div
               onClick={() => {
                 console.log('physics clicked')
@@ -63,7 +77,12 @@ export default function HomePage() {
               <SubjectBlock iconSize="50" url="computer" displayedName="정치외교학" />
             </div>
 
-            <div onClick={() => {}} className="block">
+            <div
+              onClick={() => {
+                setSelected('math')
+              }}
+              className="block"
+            >
               <img src="/icons/math.svg" alt="mathematicsIcon" height="70" width="70" />
               <br />
               Mathematics
