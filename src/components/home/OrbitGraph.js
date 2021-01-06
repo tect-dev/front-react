@@ -29,7 +29,11 @@ export default function ForceGraph({ techtreeData, category }) {
     return destroyFn
   }, [])
 
-  return <div ref={containerRef} className={styles.container} />
+  return (
+    <>
+      <div ref={containerRef} className={styles.container}></div>
+    </>
+  )
 }
 
 function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
@@ -98,13 +102,47 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .select(container)
     .append('svg')
     .attr('viewBox', [-width / 2, -height / 3, width, height * 0.75])
-    .style('background-color', 'black')
+  //.style('background-color', 'black')
+
+  svg.style('background', `url("${process.env.PUBLIC_URL}/images/space.png") no-repeat`)
 
   const orbit = svg.append('g').attr('class', 'orbit')
 
   orbit.append('circle').attr('r', orbitRadius2).attr('fill', 'none').attr('stroke', '#FFCC01')
   orbit.append('circle').attr('r', orbitRadius3).attr('fill', 'none').attr('stroke', '#FFCC01')
   orbit.append('circle').attr('r', orbitRadius4).attr('fill', 'none').attr('stroke', '#FFCC01')
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrowhead')
+    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+    .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+    .attr('refY', 0)
+    .attr('orient', 'auto')
+    .attr('markerWidth', 10)
+    .attr('markerHeight', 10)
+    .attr('xoverflow', 'visible')
+    .append('svg:path')
+    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+    .attr('fill', '#999')
+    .style('stroke', 'none')
+    .attr('stroke-width', 1)
+    .attr('id', 'vis')
+
+  const link = svg
+    .append('g')
+    .selectAll('line')
+    .data(links)
+    .join('line')
+    .attr('class', (d, index) => {
+      return `link${index}`
+    })
+    .attr('stroke', '#999')
+    .attr('stroke-opacity', 0.6)
+    .attr('stroke-width', 2)
+    .attr('marker-end', 'url(#arrowhead)')
+    .style('opacity', '0')
 
   const node = svg
     .append('g')
@@ -151,14 +189,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     })
     .on('mouseout', (d) => {
       timeFlies = setInterval(() => {
-        //const delta = Date.now() - t0
-
-        node.attr('transform', (d) => {
-          return `rotate(${d.phi0 + globalTimer * d.speed})`
-        })
-        node
-          .attr('cx', (d) => d.R * Math.cos(d.phi0 + globalTimer * d.speed))
-          .attr('cy', (d) => d.R * Math.sin(d.phi0 + globalTimer * d.speed))
+        objectPositionUpdate()
         globalTimer = globalTimer + 40
       }, 40)
       tooltip.style('opacity', 0)
@@ -175,7 +206,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       .attr('class', 'tooltip')
       .style('left', `${x - 40}px`)
       .style('top', `${y - 120}px`)
-      .style('opacity', 0.99)
+      .style('opacity', '0.85')
   }
 
   function fadeExceptSelected(selectedNode) {
@@ -198,42 +229,8 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       }
     })
   }
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrowhead')
-    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-    .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
-    .attr('refY', 0)
-    .attr('orient', 'auto')
-    .attr('markerWidth', 10)
-    .attr('markerHeight', 10)
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', '#999')
-    .style('stroke', 'none')
-    .attr('stroke-width', 1)
-    .attr('id', 'vis')
 
-  const link = svg
-    .append('g')
-    .selectAll('line')
-    .data(links)
-    .join('line')
-    .attr('class', (d, index) => {
-      return `link${index}`
-    })
-    .attr('stroke', '#999')
-    .attr('stroke-opacity', 0.6)
-    .attr('stroke-width', 2)
-    .attr('marker-end', 'url(#arrowhead)')
-    .style('opacity', '0')
-
-  let timeFlies = setInterval(() => {
-    node.attr('transform', (d) => {
-      return `rotate(${d.phi0 + globalTimer * d.speed})`
-    })
+  function objectPositionUpdate() {
     node
       .attr('cx', (d) => d.R * Math.cos(d.phi0 + globalTimer * d.speed))
       .attr('cy', (d) => d.R * Math.sin(d.phi0 + globalTimer * d.speed))
@@ -251,7 +248,14 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       .attr('y2', (d) => {
         return container.querySelector(`circle.node${d.target}`).getAttribute('cy')
       })
+  }
 
+  let timeFlies = setInterval(() => {
+    //node.attr('transform', (d) => {
+    //  return `rotate(${d.phi0 + globalTimer * d.speed})`
+    //})
+
+    objectPositionUpdate()
     globalTimer = globalTimer + 40
   }, 40)
 
