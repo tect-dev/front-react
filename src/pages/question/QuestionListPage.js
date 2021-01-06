@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import MainLayout from '../../components/MainLayout';
+import MainLayout from '../../components/layout/MainLayout';
 import { readQuestionList } from '../../redux/readPost';
 import { Link } from 'react-router-dom';
 import QuestionBlock from '../../components/question/QuestionBlock';

@@ -1,0 +1,137 @@
+@use '../config/index.scss' as *;
+
+/*
+header 1. nav item의 컨텐츠(텍스트, 이미지 등) 크기가 동적으로 변경돼도
+          정렬 유지
+header 2. layout 10. ul 태그에 대해 자동으로 설정되는 user style sheet
+          해제 (일시적인 버그)
+*/
+
+/* 참고자료
+https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
+*/
+
+.header {
+  display: flex;
+  justify-content: center;
+  width: inherit;
+  height: $header-height;
+  background: #fff;
+  position: fixed;  /* layout 3 */
+  top: 0;           /* layout 3 */
+  box-shadow:  0 1.5px 0 rgba(0,0,0,0.22);
+  z-index: 10;      /* layout 7 > issue 1 */
+
+  &-container {
+    display: flex;
+    width: $pc-max-width;
+    justify-content: space-between;  /* header 1 */
+    padding: 5px 5px 5px 5px;
+  }
+
+  .logo-container {
+    @include header-button-wrapper;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      user-select: none;
+      font-size: 36px;
+      font-family: Heebo, sans-serif;
+      cursor: pointer;
+      color: $primary-color;
+    }
+  }
+
+  .navbar {
+    display: flex;
+    height: 100%;
+    width: 60%;
+    // padding: 0 0 0 50px;
+
+    &-container {
+      @include header-button-wrapper;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    &-item {
+      @include header-button-item;
+
+      &-link {
+        display: flex;
+        align-items: center;
+        width: inherit;
+        height: 100%;
+      }
+
+      .active {
+        @include react-navlink-active;
+      }
+    }
+  }
+
+  &-search {    
+    @include header-button-wrapper;
+    align-items: center;
+
+    &-input {
+      width: 100%;
+    }
+  }
+
+  
+
+  .auth-container{
+    @include header-button-wrapper;
+    justify-content: center;
+    // width: 70px; /* header 1 */
+
+    .mypage-container{
+      @include header-button-item;
+    }
+
+    .login-container {
+      @include header-button-item;
+
+      .login-modal-btn {
+        @include btn;
+        font-family: Arial,sans-serif;
+        color: $primary-color;
+
+        &:hover{
+          transition: all ease-in 0.2s
+        }
+      }
+
+      // below is for modal design
+      .login-modal-input {
+        display: none;
+  
+        &:checked + label {
+          background: $primary-color;
+          color: white;
+        }
+      }
+  
+      .login-modal-input:checked ~ .login-modal {
+        display: block;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 1; visibility: visible;
+      }
+    }
+  }
+
+  @media screen and (max-width : 768px) {
+    &-container {
+      justify-content: space-between;
+    }
+
+    &-search {
+      display: none;
+    }
+    .navbar {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,86 @@
+@use './variables' as *;
+
+// header button item
+@mixin header-button-wrapper {
+    display: flex;
+    height: 100%;
+}
+
+@mixin header-button-item {
+    display: flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    color: #666
+}
+
+@mixin aspect-ratio-fixed-wrapper {
+    position: relative;
+}
+
+@mixin aspect-ratio-fixed-content {
+    position: absolute;
+}
+
+@mixin react-navlink-active {
+    font-size: 18px;
+    text-decoration-line: underline;
+    text-underline-position: under;
+    text-underline-offset: 5px;
+    color: $primary-color;
+    transition: 0.5s;
+}
+
+
+/* pseudo element 기반 close button */
+@mixin pseudo-close-btn-content {
+    content: "";
+    position: absolute;
+    top: 50%; left: 12px;
+    transform-origin: center;
+    width: 24px; height: 3px;
+    background: #000;
+}
+
+@mixin pseudo-close-btn {
+    position: fixed;
+    top: 0; right: 0;
+    cursor: pointer;
+    z-index: 1;
+
+    width: 50px;
+    height: 50px;
+
+    &::before {
+        @include pseudo-close-btn-content;
+        transform: rotate(45deg);
+    }
+    &::after {
+        @include pseudo-close-btn-content;
+        transform: rotate(-45deg);
+    }
+}
+
+/* Auth Providers Icon */
+
+/* Button */
+@mixin btn {
+    padding: 8px 10px;
+    border: 2px solid $primary-color;
+    border-radius: 5px;
+	outline: none;
+    cursor: pointer;
+    
+    &:hover {
+        background: $primary-color;
+        color: white;
+    }
+}
+
+@mixin primary-btn {
+    @include btn;
+    background: $primary-color;
+    color: white;
+}
