@@ -1,0 +1,36 @@
+// breakpoints
+$breakpoints : (
+    "layout" : (
+        "pc-1440"       : 1440px,
+        "pc-1320"       : 1320px,
+        "pc-1200"       : 1200px,
+        "pc-1080"       : 1080px,
+        "pc-960"        : 960px,
+    ),
+    "resolution" : (
+        // 이하 기준
+        "mini-mobile"   : 320px,
+        "mobile"        : 768px,
+        "tablet"        : 1024px,
+        "laptop"        : 1280px,
+        // over 1280px is for desktop
+    ),
+    "products" : (
+        "iPhoneX"      : 768px,
+    )
+);
+
+// layout config variables
+$pc-max-width: map-get($breakpoints, "layout", "pc-1200");
+
+$mobile-max-width: map-get($breakpoints, "resolution", "mobile");
+
+$header-height : 80px;
+$footer-height : 240px;
+
+// theme color
+$primary-color: #00bebe;
+$background-color : #fff;
+$normal-font-color : #00bebe;
+// $footer-background-color : #
+$layout-main-background: none;

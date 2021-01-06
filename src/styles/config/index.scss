@@ -1,0 +1,16 @@
+@import './mixins';
+@import './resets';
+@import './variables';
+
+
+// legacy rule인 @import는 사용하지 않으려고 했지만 
+// CSS class 속성을 제외한 variables, functions, mixins는
+// module 간에 한 번만 넘겨받을 수 있다.
+// 다음 모듈에도 그대로 값을 넘기려면 새로운 변수 공간에
+// 값을 할당해야 하는 번거로움이 있다.
+
+// @import가 완전히 deprecated된다면
+// scss-migrator를 사용해야 한다.
+
+
+// normalize.css CUSTOMIZATION

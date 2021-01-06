@@ -21,6 +21,9 @@ export default function App() {
         <Route path="/" exact={true} component={HomePage} />
         <Route path="/about" component={AboutPage} />
         <Route path="/user/:userID" component={ProfilePage} />
+
+        /* 임시로 만들어 놓음. */
+        <Route path="/mypage" component={ProfilePage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/question" exact={true} component={QuestionListPage} />
         <Route

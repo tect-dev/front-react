@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { readQuestionByUID } from '../../redux/readPost';
-import MainLayout from '../../components/MainLayout';
+import MainLayout from '../../components/layout/MainLayout';
 import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
 
 export default function QuestionDetailPage({ match }) {

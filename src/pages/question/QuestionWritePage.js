@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import MainLayout from '../../components/MainLayout';
+import MainLayout from '../../components/layout/MainLayout';
 import { useSelector } from 'react-redux';
 import QuestionWriteBlock from '../../components/question/QuestionWriteBlock';
 
