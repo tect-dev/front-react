@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 import styles from '../../styles/Techtree.module.css'
+import { line } from 'd3'
 
 export default function ForceGraph({ techtreeData, category }) {
   const containerRef = React.useRef(null)
@@ -163,6 +164,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       tooltip.style('opacity', 0)
       node.style('opacity', '1')
       orbit.style('opacity', '1')
+      link.style('opacity', '0')
     })
 
   const tooltip = d3.select(container).append('div')
@@ -180,59 +182,54 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     node.style('opacity', '0.2')
     orbit.style('opacity', '0.5')
 
-    links.map((linkElement) => {
-      // linkElement 의 source, target은 node 객체 값이 들어가있음.
+    links.map((linkElement, index) => {
       if (linkElement.source === selectedNode.id) {
-        // 여기서 target과 selected의 style만 바꿔주면 됨.
-        console.log(selectedNode)
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
         svg.select(`circle.node${linkElement.target}`).style('opacity', '1')
-        console.log('if!')
-        return
+
+        svg.select(`line.link${index}`).style('opacity', '1')
       } else if (linkElement.target === selectedNode.id) {
-        console.log('else if!')
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
         svg.select(`circle.node${linkElement.source}`).style('opacity', '1')
-        return
+
+        svg.select(`line.link${index}`).style('opacity', '1')
       } else {
-        console.log('else!')
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
-        return
       }
     })
   }
-  //svg
-  //  .append('defs')
-  //  .append('marker')
-  //  .attr('id', 'arrowhead')
-  //  .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-  //  .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
-  //  .attr('refY', 0)
-  //  .attr('orient', 'auto')
-  //  .attr('markerWidth', 10)
-  //  .attr('markerHeight', 10)
-  //  .attr('xoverflow', 'visible')
-  //  .append('svg:path')
-  //  .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-  //  .attr('fill', '#999')
-  //  .style('stroke', 'none')
-  //  .attr('stroke-width', 1)
-  //  .attr('id', 'vis')
-  //
-  //const link = svg
-  //  .append('g')
-  //
-  //  .selectAll('line')
-  //  .data(links)
-  //  .join('line')
-  //  .attr('class', (d) => {
-  //    return `link${d.index}`
-  //  })
-  //  .attr('stroke', '#999')
-  //  .attr('stroke-opacity', 0.6)
-  //  .attr('stroke-width', 2)
-  //  .attr('marker-end', 'url(#arrowhead)')
-  //
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrowhead')
+    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+    .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+    .attr('refY', 0)
+    .attr('orient', 'auto')
+    .attr('markerWidth', 10)
+    .attr('markerHeight', 10)
+    .attr('xoverflow', 'visible')
+    .append('svg:path')
+    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+    .attr('fill', '#999')
+    .style('stroke', 'none')
+    .attr('stroke-width', 1)
+    .attr('id', 'vis')
+
+  const link = svg
+    .append('g')
+    .selectAll('line')
+    .data(links)
+    .join('line')
+    .attr('class', (d, index) => {
+      return `link${index}`
+    })
+    .attr('stroke', '#999')
+    .attr('stroke-opacity', 0.6)
+    .attr('stroke-width', 2)
+    .attr('marker-end', 'url(#arrowhead)')
+    .style('opacity', '0')
+
   let timeFlies = setInterval(() => {
     node.attr('transform', (d) => {
       return `rotate(${d.phi0 + globalTimer * d.speed})`
@@ -241,19 +238,19 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       .attr('cx', (d) => d.R * Math.cos(d.phi0 + globalTimer * d.speed))
       .attr('cy', (d) => d.R * Math.sin(d.phi0 + globalTimer * d.speed))
 
-    //link
-    //  .attr('x1', (d) => {
-    //    return svg.select(`circle.node${d.source}`).cx
-    //  })
-    //  .attr('y1', (d) => {
-    //    return svg.select(`circle.node${d.source}`).cy
-    //  })
-    //  .attr('x2', (d) => {
-    //    return svg.select(`circle.node${d.target}`).cx
-    //  })
-    //  .attr('y2', (d) => {
-    //    return svg.select(`circle.node${d.target}`).cy
-    //  })
+    link
+      .attr('x1', (d) => {
+        return container.querySelector(`circle.node${d.source}`).getAttribute('cx')
+      })
+      .attr('y1', (d) => {
+        return container.querySelector(`circle.node${d.source}`).getAttribute('cy')
+      })
+      .attr('x2', (d) => {
+        return container.querySelector(`circle.node${d.target}`).getAttribute('cx')
+      })
+      .attr('y2', (d) => {
+        return container.querySelector(`circle.node${d.target}`).getAttribute('cy')
+      })
 
     globalTimer = globalTimer + 40
   }, 40)

@@ -36,24 +36,19 @@ export default function ClusteredForceGraph({ techtreeData, category }) {
 function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   //const links = techtreeData.links.map((d) => Object.assign({}, d));
   const m = 4 // number of distinct clusters
-  const maxRadius = 12
+  const maxRadius = 36
+  const minimumRadius = 12
   let clusters = new Array(m)
   const nodes = techtreeData.nodes.map((d) => {
     const i = Math.floor(Math.random() * m) // = 0~3
-    const r = Math.sqrt(((i + 1) / m) * -Math.log(Math.random())) * maxRadius
+    const r = Math.sqrt(((i + 1) / m) * -Math.log(Math.random())) * maxRadius + minimumRadius
 
     const newD = {
       ...d,
       cluster: d.group,
       radius: r,
-      x:
-        Math.cos((Math.floor(Math.random() * 4) / 4) * 2 * Math.PI) * 200 +
-        width / 2 +
-        Math.random(),
-      y:
-        Math.sin((Math.floor(Math.random() * 4) / 4) * 2 * Math.PI) * 200 +
-        height / 2 +
-        Math.random(),
+      x: Math.cos((i / m) * 2 * Math.PI) * 200 + width / 2 + Math.random(),
+      y: Math.sin((i / m) * 2 * Math.PI) * 200 + width / 2 + Math.random(),
     }
     if (!clusters[i] || r > clusters[i].radius) clusters[i] = newD
     return newD
@@ -146,7 +141,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       return d.id
     })
     .text((d) => {
-      return d.label
+      return d.name
     })
     .style('font-weight', 'bold')
     .style('fill', '#fff')
@@ -188,6 +183,9 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       .attr('r', function (d) {
         return d.radius
       })
+
+    // update label positions
+    label.attr('x', (d) => d.x).attr('y', (d) => d.y)
   }
   return {
     destroy: () => {
