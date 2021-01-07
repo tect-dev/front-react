@@ -1,0 +1,7 @@
+@use '../config' as *;
+
+.questionBlock {
+    border-radius: 10px;
+    height: 150px;
+    border: 2px solid $primary-color
+}
