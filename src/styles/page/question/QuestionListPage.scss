@@ -1,9 +1,17 @@
 @use '../../config' as *;
 
+/*
+questionListPage 1. 21년 1월 8일 기준 프론트에서 questionListPage에 접속하면
+                    로딩이 되는 footer가 끌어올려졌다가 다시 내려감.
+                    이를 해결하자.
+*/
+
 .questionList-container {
     margin: 20px 5px 5px 5px;
     display: grid;
+    height: inherit;
     grid-template-columns: 2fr 1fr;
+    gap: 0 20px;
     // padding: 0 50px 50px 0;
 }
 
@@ -23,11 +31,14 @@
 
 .questionList-left {
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column wrap;
+    height: 100%;
+    margin: 0 0 30px 0;
 }
 .questionList-left-top {
     display: flex;
     justify-content: space-between;
+    margin: 0 0 10px 0;
 }
 .questionList-title-container {
     display: grid;
@@ -36,12 +47,20 @@
 }
 
 .questionList {
-    margin: 10px 0 0 0;
     display: grid;
-    gap: 10px 0
+    gap: 20px 0
 
 }
 
+.questionList-right {
+    padding: 5px 10px 5px 10px;
+    border: 2px solid $primary-color;
+    border-radius: 5px;
+    height: 300px;
+}
+.questionList-right-title {
+    font-size: 24px;
+}
 
 @media screen and (max-width: 768px) {
     .questionList-container{

@@ -1,7 +1,89 @@
 @use '../config' as *;
 
 .questionBlock {
+    display: grid;
     border-radius: 10px;
-    height: 150px;
-    border: 2px solid $primary-color
+    height: 100%;
+    border: 2px solid $primary-color;
+    padding: 5px 10px;
+
+    &:hover {
+        border: 2px solid rgba($color: $primary-color, $alpha: 0.01);
+        background: rgba($color: $primary-color, $alpha: 0.05);
+        transition: all ease 0.3s;
+    }
+}
+
+.questionBlock-main{
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-between;
+}
+
+.questionBlock-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+.questionBlock-main-downside {
+    // display: flex;
+    margin: 10px 0 10px 0;
+}
+
+.questionBlock-hashtag {
+    display: inline-flex;
+    border-radius: 5px;
+    background: $primary-color;
+    color: rgba($color: #ffffff, $alpha: 0.9);
+    padding: 2px 2px;
+    margin: 2px 2px 0 2px;
+    width: inherit;
+
+    &:hover {
+        background: #00aabe;
+        color: rgba($color: #ffffff, $alpha: 1);
+        font-size: 18px;
+        transition: all ease-in 0.2s;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .questionBlock {
+        grid-template-columns: minmax(120px, 1fr) 4fr;
+    }
+    
+    .questionBlock-head {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        // .questionBlock에서 좌우 padding을 10으로 주었기 때문에
+        // .qeustionBlock-main과의 대칭을 고려하여 margin을
+        // 추가로 준다.
+        margin: 0 10px 0 0; 
+    }
+
+    .answerNum-container {
+        font-size: 48px;
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+    .questionBlock {
+        grid-template-rows: 0.8fr 3fr;
+    }
+    .questionBlock-head {
+        display: flex;
+        font-size: 18px;
+        align-items: center;
+    }
+    .questionBlock-points{
+        margin: 0 20px 0 0;
+    }
+    .answerNum-container{
+        margin: 0 5px 0 0;
+    }
 }
