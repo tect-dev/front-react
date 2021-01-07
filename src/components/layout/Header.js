@@ -38,9 +38,12 @@ export default function Header() {
           <NavLink to="/" className="logo">
             Tect.dev
           </NavLink>
-        </div>        
+        </div>      
+        <div className="menu-icon" onClick={handleMenuClick}>
+            {menuClick ? <FaTimes /> : <FaBars />}
+        </div>  
         <nav className="navbar">
-          <ul className="navbar-container">
+          <ul className={menuClick ? 'navbar-container clicked' : 'navbar-container'}>
             <li className="navbar-item">
               <NavLink to="/question" className="navbar-item-link">
                 Q/A
