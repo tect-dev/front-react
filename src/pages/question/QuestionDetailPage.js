@@ -20,8 +20,6 @@ export default function QuestionDetailPage({ match }) {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('match.params: ', match.params);
-    console.log('questionID: ', questionID);
     getQuestionAsync();
   }, [dispatch]);
 
@@ -33,6 +31,7 @@ export default function QuestionDetailPage({ match }) {
     );
 
   if (error) {
+    console.log(error)
     return (
       <MainLayout>
         <div>error...</div>

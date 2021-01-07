@@ -64,13 +64,12 @@ export default function QuestionListPage() {
               {data
                 ? data.map((element) => {
                     return (
-                      <>
                         <QuestionBlock
-                          questionUID={element._id}
-                          title={element.questionBody.title}
+                          key={element.questionBody.postID ? 
+                            element.questionBody.postID :
+                            element.questionBody.questionID}
+                          question={element.questionBody}
                         />
-                        {console.log(element)}
-                      </>
                     );
                   })
               : ''}
@@ -78,7 +77,9 @@ export default function QuestionListPage() {
               
           </div>
           <div className="questionList-right">
-
+            <div className="questionList-right-title">
+              Trending Tags
+            </div>
           </div>
         </div>
       </MainLayout>
