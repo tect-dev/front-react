@@ -130,8 +130,79 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     &-search {
       display: none;
     }
-    .navbar {
-      display: none;
-    }
+
+  }
+}
+
+
+@media screen and (max-width: 960px) {
+  .navbar-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 80px;
+    right: -150%;
+    opacity: 1;
+    transition: all 0.5s ease;
+  }
+
+  .navbar-container.clicked {
+    right: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    margin: 0;
+    z-index: 1;
+    background: #fff;
+    height: 100vh;
+  }
+
+  .navbar-item, .auth-container {
+    text-align: center;
+    padding: 2rem 1rem;
+    width: 100%;
+    display: table;
+  }
+
+  .nav-btns > button {
+    width: 80%;
+    font-size: 100%;
+    height: 150%;
+  }
+
+  .header-search {
+    display: none;
+  }
+
+  // .nav-links:hover {
+  //   border-radius: 0;
+  //   background: #00bebe;
+  //   border : none;
+  //   color: #fff;
+  //   transition: 250ms;
+  //   }
+  
+  // .navbar-logo {
+  //     position: absolute;
+  //     top: 0;
+  //     left: 0;
+  //     transform: translate(25%, 50%);
+  // }
+  
+  .menu-icon {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(-100%, 60%);
+      font-size: 1.8rem;
+      cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .menu-icon {
+    display: none;
   }
 }
