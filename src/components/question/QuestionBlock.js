@@ -29,7 +29,7 @@ export default function QuestionBlock({ question }) {
               #실험태그ddddddㅇㅇㅇㅇ
             </div>
             <div className="questionBlock-hashtag">
-              #가즈아앙아아아아앙
+              #가즈아앙아아아아앙아
             </div>
           </div>
         </div>

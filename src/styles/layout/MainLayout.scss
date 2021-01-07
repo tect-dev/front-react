@@ -49,15 +49,13 @@ html, body {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;  /* layout 1 */
-  // width를 100vw로 하면 visual viewport와 layout viewport가
-  // 일치하지 않아 가로바가 생긴다.
   width: 100%;
   min-height: 100vh;    /* layout 4 */
 
   &-main {
     margin: $header-height 0 0 0;  /* layout 3 */
     flex: 1 0 100%;   /* layout 8 */
-    display: inline-flex;
+    display: flex;
     flex-flow: column wrap;
     max-width: $pc-max-width;  /* layout 1 */
     background: $layout-main-background;  /* layout 8 */

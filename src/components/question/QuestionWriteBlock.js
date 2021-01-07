@@ -52,7 +52,7 @@ export default function QuestionWriteBlock() {
     <>
       <form onSubmit={onSubmitForm}>
         <div>
-          <label for="title">title:</label>
+          <label htmlFor="title">title:</label>
           <input
             type="text"
             id="title"
@@ -61,7 +61,7 @@ export default function QuestionWriteBlock() {
           />
         </div>
         <div>
-          <label for="content">content:</label>
+          <label htmlFor="content">content:</label>
           <textarea
             id="content"
             value={content}
@@ -81,7 +81,7 @@ export default function QuestionWriteBlock() {
             //  .processSync(content).result
           }
         </div>
-        <div class="button">
+        <div className="button">
           <button type="submit">Send your message</button>
         </div>
       </form>
