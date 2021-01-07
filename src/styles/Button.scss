@@ -8,6 +8,22 @@ Button 2.
           Issue with 
 */
 
+.btn--outline {
+  @include btn;
+  font-family: Arial,sans-serif;
+  color: $primary-color;
+
+  &:hover{
+    transition: all ease-in 0.2s
+  }
+}
+
+
+
+
+
+
+
 .login-submit {
     height: 40px;
     border: none;
@@ -34,13 +50,13 @@ Button 2.
   }
   
   
-  @media screen and (max-width: 768px){
-    .login-submit{
-      transition: ease-out 0.1s;
-      
-      &:active {
-        background: $primary-color;
-        color: #fff;
-      }
+@media screen and (max-width: 768px){
+  .login-submit{
+    transition: ease-out 0.1s;
+    
+    &:active {
+      background: $primary-color;
+      color: #fff;
     }
   }
+}
