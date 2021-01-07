@@ -71,12 +71,16 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     }
   }
 
-  &-search {    
+  &-search {
     @include header-button-wrapper;
     align-items: center;
 
     &-input {
+      padding: 8px 0 8px 4px;
+      font-size: 16px;
       width: 100%;
+      border-radius: 5px;
+      outline: none;
     }
   }
 

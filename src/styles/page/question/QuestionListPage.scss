@@ -7,18 +7,21 @@ questionListPage 1. 21년 1월 8일 기준 프론트에서 questionListPage에 �
 */
 
 .questionList-container {
-    margin: 20px 5px 5px 5px;
-    display: grid;
+    // width: inherit을 하지 않으면 너비가 고정되지 않아서
+    // 모바일 화면에서 가로바가 생긴다.
+    width: inherit;
     height: inherit;
-    grid-template-columns: 2fr 1fr;
-    gap: 0 20px;
-    // padding: 0 50px 50px 0;
+    margin: 20px 5px 5px 5px;
 }
 
-.questionList-Latest{
-    font-size: 24px;
-    font-weight: 700;
+@media screen and (min-width: 768px) {
+    .questionList-container {
+        display: grid;
+        grid-template-columns: minmax(auto, 1200px) 300px;
+        gap: 0 20px;
+    }
 }
+
 .ask-btn-container {
     display: flex;
     align-items: flex-end;
@@ -44,6 +47,15 @@ questionListPage 1. 21년 1월 8일 기준 프론트에서 questionListPage에 �
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 2vw;
+
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.questionList-Latest {
+    color: $primary-color;
+    border-bottom: 2px solid $primary-color;
+
 }
 
 .questionList {
@@ -64,7 +76,12 @@ questionListPage 1. 21년 1월 8일 기준 프론트에서 questionListPage에 �
 
 @media screen and (max-width: 768px) {
     .questionList-container{
-        grid-template-columns: 1fr;
+        // .questionList-container의 좌우 마진이 각각 5px로
+        //  잡혀있기 때문에 모바일에서 이를 조정해줌.
+        // width를 inherit으로 잡으면 container의 너비가
+        // 하위 요소들의 너비 합으로 잡히기 때문에 좌우 밀착이
+        // 안 된다.
+        width: calc(100vw - 10px);
     }
     .questionList-right{
         display: none;
