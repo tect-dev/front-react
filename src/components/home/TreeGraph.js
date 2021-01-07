@@ -84,7 +84,17 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   const orbitColor = '#FFCC01' //'#FFFF56' //
 
   //const planetColorSet = ['#D4CDC5', '#99CC31', '#027FFF', '#FF7701', '#00bebe']
-  const planetColorSet = ['#027FFF', '#00bebe']
+  function randomColor() {
+    const planetColorSet = [
+      '#027FFF',
+      '#00bebe',
+      '#66b7ce',
+      'rgb(0, 170, 170)',
+      'rgb(0, 140, 190)',
+      'rgb(0, 190, 170)',
+    ]
+    return planetColorSet[Math.floor(Math.random() * planetColorSet.length - 0.00001)]
+  }
 
   svg
     .append('defs')
@@ -99,7 +109,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .attr('xoverflow', 'visible')
     .append('svg:path')
     .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', orbitColor)
+    .attr('fill', randomColor())
     .style('stroke', 'none')
     .attr('stroke-width', 1)
     .attr('id', 'vis')
@@ -112,7 +122,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .attr('class', (d, index) => {
       return `link${index}`
     })
-    .attr('stroke', orbitColor)
+    .attr('stroke', randomColor())
     .attr('stroke-opacity', 0.6)
     .attr('stroke-width', 2)
     .attr('marker-end', 'url(#arrowhead)')
@@ -138,10 +148,28 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       return `node${d.id}`
     })
     .attr('fill', (d) => {
-      return planetColorSet[Math.floor(Math.random() * planetColorSet.length - 0.00001)]
+      return randomColor()
     })
     .style('cursor', 'pointer')
-  //.attr('stroke', '#fff')
+
+  const drag = () => {
+    const dragstarted = (d) => {
+      d.fx = d.x
+      d.fy = d.y
+    }
+
+    const dragged = (d) => {
+      d.fx = d3.event.x
+      d.fy = d3.event.y
+    }
+
+    const dragended = (d) => {
+      d.fx = null
+      d.fy = null
+    }
+
+    return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
+  }
 
   node
     .on('mouseover', (d) => {
@@ -153,6 +181,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       node.style('opacity', '1')
       link.style('opacity', '1')
     })
+  //.call(drag())
 
   const label = svg
     .append('g')
