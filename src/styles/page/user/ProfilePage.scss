@@ -33,7 +33,7 @@
   margin: 20px 0 0 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 0 10px;
+  gap: 10px 10px;
 
   .profile-card {
     border : 1px solid $primary-color;
@@ -47,8 +47,5 @@
     .profile-photo {
       padding: 20px 0;
     }
-  }
-  .profile-downside div {
-      background: yellow;
   }
 }
