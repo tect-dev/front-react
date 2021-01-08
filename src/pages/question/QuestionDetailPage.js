@@ -31,7 +31,7 @@ export default function QuestionDetailPage({ match }) {
     );
 
   if (error) {
-    console.log(error)
+    console.log(error);
     return (
       <MainLayout>
         <div>error...</div>
@@ -48,8 +48,8 @@ export default function QuestionDetailPage({ match }) {
     <>
       <MainLayout>
         <div>params: {questionID}</div>
-        <h2>title: {data.questionBody.title}</h2>
-        <div>본문: {data.questionBody.content}</div>
+        <h2>title: {data.question.questionBody.title}</h2>
+        <div>본문: {data.question.questionBody.content}</div>
 
         <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>

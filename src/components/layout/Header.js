@@ -5,7 +5,7 @@ import { loginSuccess, loginSuccessDelayed } from '../../redux/auth';
 import '../../styles/layout/Header.scss';
 import { FaTimes, FaBars } from 'react-icons/fa';
 
-import { LoginModal } from './LoginModal'
+import { LoginModal } from './LoginModal';
 
 export default function Header() {
   // useSelector: 리덕스 스토어의 상태를 조회하는 hooks.
@@ -28,8 +28,7 @@ export default function Header() {
   const handleMenuClick = () => setMenuClick(!menuClick);
   const closeMobileMenu = () => setMenuClick(false);
 
-  
-  const [isAuth, setIsAuth] = useState(true)
+  const [isAuth, setIsAuth] = useState(true);
 
   return (
     <header className="header">
@@ -38,15 +37,19 @@ export default function Header() {
           <NavLink to="/" className="logo">
             Tect.dev
           </NavLink>
-        </div>      
+        </div>
         <div className="menu-icon" onClick={handleMenuClick}>
-            {menuClick ? <FaTimes /> : <FaBars />}
-        </div>  
+          {menuClick ? <FaTimes /> : <FaBars />}
+        </div>
         <nav className="navbar">
-          <ul className={menuClick ? 'navbar-container clicked' : 'navbar-container'}>
+          <ul
+            className={
+              menuClick ? 'navbar-container clicked' : 'navbar-container'
+            }
+          >
             <li className="navbar-item">
               <NavLink to="/question" className="navbar-item-link">
-                Q/A
+                Q {`\&`} A
               </NavLink>
             </li>
             <li className="navbar-item">
@@ -60,28 +63,33 @@ export default function Header() {
               </NavLink>
             </li>
             <div className="header-search">
-              <input className="header-search-input"
-                placeholder="Search..."
-              />
+              <input className="header-search-input" placeholder="Search..." />
             </div>
             <div className="auth-container">
-              {loginState ?
-                (<div className="mypage-container">
+              {loginState ? (
+                <div className="mypage-container">
                   <NavLink to="/mypage" className="navbar-item-link">
                     MyPage
                   </NavLink>
-                </div>)
-                :(<div className="login-container">
-                  <input className="login-modal-input" type="checkbox" id="login-popup"/>
-                  <label htmlFor="login-popup" className="login-modal-btn">Login</label>
-                  <LoginModal labelFor="login-popup"/>
-                </div>)
-              }
+                </div>
+              ) : (
+                <div className="login-container">
+                  <input
+                    className="login-modal-input"
+                    type="checkbox"
+                    id="login-popup"
+                  />
+                  <label htmlFor="login-popup" className="login-modal-btn">
+                    Login
+                  </label>
+                  <LoginModal labelFor="login-popup" />
+                </div>
+              )}
             </div>
           </ul>
         </nav>
       </div>
-		</header>
+    </header>
     // <>
     //   <nav className="navbar">
     //     <div className="nav-container">
