@@ -1,11 +1,18 @@
 @use '../config' as *;
 
+/*
+QuestionBlock 1.  ellipsis 
+
+*/
+
 .questionBlock {
-    display: grid;
     border-radius: 10px;
     height: 100%;
     border: 2px solid $primary-color;
     padding: 5px 10px;
+
+
+    max-width: calc(100vw - 30px);
 
     &:hover {
         border: 2px solid rgba($color: $primary-color, $alpha: 0.01);
@@ -18,6 +25,10 @@
     display: flex;
     flex-flow: column wrap;
     justify-content: space-between;
+}
+
+.questionBlock-head {
+    margin: 0 0 10px 0;
 }
 
 .questionBlock-title {
@@ -49,6 +60,7 @@
 
 @media screen and (min-width: 768px) {
     .questionBlock {
+        display: grid;
         grid-template-columns: minmax(120px, 1fr) 4fr;
     }
     
@@ -67,12 +79,19 @@
     .answerNum-container {
         font-size: 48px;
     }
+
+    /* below is for QuestionBlock 1. */
+    .questionBlock-main-upside {
+        max-width: calc(100vw - 30px);
+    }
+
 }
 
 
 @media screen and (max-width: 768px) {
     .questionBlock {
-        grid-template-rows: 0.8fr 3fr;
+        display: flex;
+        flex-flow: column nowrap;
     }
     .questionBlock-head {
         display: flex;
@@ -84,5 +103,25 @@
     }
     .answerNum-container{
         margin: 0 5px 0 0;
+    }
+
+    /* below is for QuestionBlock 1. */
+    .questionBlock-main-upside {
+        max-width: calc(100vw - 30px);
+    }
+
+    .questionBlock-title {
+        max-height: 18px;
+        padding: 0 0 4px 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .questionBlock-content {
+        max-height: 54px;
+        padding: 4px 0 8px 0;
+        overflow: hidden;
+        
     }
 }
