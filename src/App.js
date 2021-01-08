@@ -21,6 +21,8 @@ export default function App() {
         <Route path="/" exact={true} component={HomePage} />
         <Route path="/about" component={AboutPage} />
         <Route path="/user/:userID" component={ProfilePage} />
+
+        <Route path="/mypage" component={ProfilePage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/question" exact={true} component={QuestionListPage} />
         <Route

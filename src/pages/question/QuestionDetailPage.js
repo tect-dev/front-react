@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { readQuestionByUID } from '../../redux/readPost';
-import MainLayout from '../../components/MainLayout';
+import MainLayout from '../../components/layout/MainLayout';
 import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
 
 export default function QuestionDetailPage({ match }) {
@@ -20,8 +20,6 @@ export default function QuestionDetailPage({ match }) {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('match.params: ', match.params);
-    console.log('questionID: ', questionID);
     getQuestionAsync();
   }, [dispatch]);
 
@@ -33,6 +31,7 @@ export default function QuestionDetailPage({ match }) {
     );
 
   if (error) {
+    console.log(error);
     return (
       <MainLayout>
         <div>error...</div>
@@ -49,8 +48,8 @@ export default function QuestionDetailPage({ match }) {
     <>
       <MainLayout>
         <div>params: {questionID}</div>
-        <h2>title: {data.questionBody.title}</h2>
-        <div>본문: {data.questionBody.content}</div>
+        <h2>title: {data.question.questionBody.title}</h2>
+        <div>본문: {data.question.questionBody.content}</div>
 
         <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>
