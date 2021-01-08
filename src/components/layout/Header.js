@@ -60,7 +60,9 @@ export default function Header() {
               </NavLink>
             </li>
             <div className="header-search">
-              <input className="header-search-input"/>
+              <input className="header-search-input"
+                placeholder="Search..."
+              />
             </div>
             <div className="auth-container">
               {loginState ?
