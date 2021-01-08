@@ -1,0 +1,189 @@
+/* general styles */
+
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.night-sky {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #111;
+  background: url('https://hd.unsplash.com/photo-1424460421773-58b49adfc68a');
+  background-size: cover;
+  overflow: hidden;
+}
+
+.star-box {
+  width: 450px;
+  height: 360px;
+  position: relative;
+  margin: 0 auto;
+}
+
+/* star styling */
+
+.star {
+  position: absolute;
+  box-shadow: 0 0 3px #fff;
+  border-radius: 50%;
+  fill: #a6b8ff;
+  animation-name: star;
+  animation-duration: 1s;
+}
+
+.twinkleStar1 {
+  width: 4px;
+  height: 5px;
+  left: 30%;
+  top: 64%;
+  background: #a6b8ff;
+  -webkit-animation: twinkle 0.5s alternate infinite;
+  animation: twinkle 0.5s alternate infinite;
+  -webkit-animation-delay: 1.61404s;
+  animation-delay: 1.61404s;
+}
+
+.twinkle-star-2 {
+  left: 3%;
+  top: 65%;
+  width: 4px;
+  height: 4px;
+  background: #f4ccbf;
+  -webkit-animation: twinkle 0.5s alternate infinite;
+  animation: twinkle 0.5s alternate infinite;
+  -webkit-animation-delay: 4.09091s;
+  animation-delay: 4.09091s;
+}
+
+.twinkle-star-3 {
+  background: #aaccff;
+  width: 3px;
+  height: 3px;
+  right: 27%;
+  top: 32%;
+  -webkit-animation: twinkle 0.75s alternate infinite;
+  animation: twinkle 0.75s alternate infinite;
+  -webkit-animation-delay: 1.77143s;
+  animation-delay: 1.77143s;
+}
+
+.twinkle-star-4 {
+  width: 7px;
+  height: 7px;
+  left: 70%;
+  top: 46%;
+  background: #ffc8ee;
+  -webkit-animation: twinkle 0.5s alternate infinite;
+  animation: twinkle 0.5s alternate infinite;
+  -webkit-animation-delay: 1.55357s;
+  animation-delay: 1.55357s;
+}
+
+.twinkle-star-5 {
+  background: #a4aaff;
+  width: 4px;
+  height: 4px;
+  left: 30.5%;
+  top: 43.5%;
+  -webkit-animation: twinkle 0.75s alternate infinite;
+  animation: twinkle 0.75s alternate infinite;
+  -webkit-animation-delay: 0.88462s;
+  animation-delay: 0.88462s;
+}
+
+.twinkle-star-6 {
+  background: #a6b8ff;
+  width: 2px;
+  height: 2px;
+  right: 19.5%;
+  top: 58.5%;
+  -webkit-animation: twinkle 0.5s alternate infinite;
+  animation: twinkle 0.5s alternate infinite;
+  -webkit-animation-delay: 0.66s;
+  animation-delay: 0.66s;
+}
+
+.twinkle-star-7 {
+  background: #a6b8ff;
+  width: 6px;
+  height: 7px;
+  right: 19%;
+  top: 77%;
+  -webkit-animation: twinkle 0.75s alternate infinite;
+  animation: twinkle 0.75s alternate infinite;
+  -webkit-animation-delay: 0.03279s;
+  animation-delay: 0.03279s;
+}
+
+.twinkle-star-8 {
+  background: #ffccaa;
+  width: 3px;
+  height: 3px;
+  right: 10%;
+  top: 20.5%;
+  -webkit-animation: twinkle 0.5s alternate infinite;
+  animation: twinkle 0.55s alternate infinite;
+  -webkit-animation-delay: 1.77143s;
+  animation-delay: 1.77143s;
+}
+
+.twinkle-star-9 {
+  background: #ffaaff;
+  width: 3px;
+  height: 3px;
+  right: 5%;
+  top: 29%;
+  -webkit-animation: twinkle 0.3s alternate infinite;
+  animation: twinkle 0.3s alternate infinite;
+  -webkit-animation-delay: 1.77143s;
+  animation-delay: 1.77143s;
+}
+
+/* line styling */
+
+.line {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  background: rgba(246, 218, 230, 0.65);
+  -webkit-animation: line 7s alternate infinite;
+  animation: line 7s alternate infinite;
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+}
+
+/* the keyframes! */
+
+@keyframes star {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes line {
+  0% {
+    opacity: 0.5;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

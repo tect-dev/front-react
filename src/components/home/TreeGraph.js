@@ -152,6 +152,25 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     })
     .style('cursor', 'pointer')
 
+  const label = svg
+    .append('g')
+    .attr('class', 'labels')
+    .selectAll('text')
+    .data(nodes)
+    .enter()
+    .append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .attr('class', (d) => {
+      return `label${d.id}`
+    })
+    .text((d) => {
+      return d.label
+    })
+    .style('font-weight', 'bold')
+    .style('fill', '#fff')
+    .style('cursor', 'pointer')
+
   const drag = () => {
     const dragstarted = (d) => {
       d.fx = d.x
@@ -177,31 +196,9 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       fadeExceptSelected(d)
     })
     .on('mouseout', (d) => {
-      tooltip.style('opacity', 0)
-      node.style('opacity', '1')
-      link.style('opacity', '1')
+      recoverOpacity()
     })
   //.call(drag())
-
-  const label = svg
-    .append('g')
-    .attr('class', 'labels')
-    .selectAll('text')
-    .data(nodes)
-    .enter()
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'central')
-    .attr('class', (d) => {
-      return d.id
-    })
-    //.attr("class", )
-    .text((d) => {
-      return d.label
-    })
-    .style('font-weight', 'bold')
-    .style('fill', '#fff')
-    .style('cursor', 'pointer')
 
   label
     .on('mouseover', (d) => {
@@ -209,9 +206,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       fadeExceptSelected(d)
     })
     .on('mouseout', (d) => {
-      tooltip.style('opacity', 0)
-      node.style('opacity', '1')
-      link.style('opacity', '1')
+      recoverOpacity()
     })
 
   const tooltip = d3.select(container).append('div')
@@ -228,22 +223,36 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   function fadeExceptSelected(selectedNode) {
     node.style('opacity', '0.1')
     link.style('opacity', '0.1')
+    label.style('opacity', '0.1')
 
     links.map((linkElement, index) => {
       if (linkElement.source === selectedNode.id) {
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
         svg.select(`circle.node${linkElement.target}`).style('opacity', '1')
 
+        svg.select(`text.label${selectedNode.id}`).style('opacity', '1')
+        svg.select(`text.label${linkElement.target}`).style('opacity', '1')
+
         svg.select(`line.link${index}`).style('opacity', '1')
       } else if (linkElement.target === selectedNode.id) {
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
         svg.select(`circle.node${linkElement.source}`).style('opacity', '1')
+        svg.select(`text.label${selectedNode.id}`).style('opacity', '1')
+        svg.select(`text.label${linkElement.source}`).style('opacity', '1')
 
         svg.select(`line.link${index}`).style('opacity', '1')
       } else {
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
+        svg.select(`text.label${selectedNode.id}`).style('opacity', '1')
       }
     })
+  }
+
+  function recoverOpacity() {
+    tooltip.style('opacity', 0)
+    node.style('opacity', '1')
+    link.style('opacity', '1')
+    label.style('opacity', '1')
   }
 
   function objectPositionUpdate() {

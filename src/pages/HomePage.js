@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
 import MainLayout from '../components/MainLayout'
 //import '../styles/Home.module.css';
+//import '../styles/techtree/Constellation.module.css'
 import TreeGraph from '../components/home/TreeGraph'
 import ForceGraph from '../components/home/ForceGraph'
 import OrbitGraph from '../components/home/OrbitGraph'
 import SubjectBlock from '../components/home/SubjectBlock'
 import { dummyTechtree } from '../lib/dummyTechtree'
 import ClusteredForceGraph from '../components/home/ClusteredForceGraph'
+import ConstellationGraph from '../components/home/ConstellationGraph'
 
 export default function HomePage() {
-  const [onPhysics, setOnPhysics] = useState(true)
-  const [selected, setSelected] = useState('physics')
+  const [selected, setSelected] = useState('physicsConstellation')
 
   const TechtreeGraph = ({ subject }) => {
     switch (subject) {
+      case 'physicsConstellation':
+        return <ConstellationGraph techtreeData={dummyTechtree.physics} category={'physics'} />
       case 'physicsOrigin':
         return <TreeGraph techtreeData={dummyTechtree.physics} category={'physics'} />
       case 'physics':
@@ -34,6 +37,16 @@ export default function HomePage() {
             <TechtreeGraph subject={selected} />
           </main>
           <aside className="sidebar">
+            <div
+              onClick={() => {
+                console.log('physics clicked')
+                //setOnPhysics(true)
+                setSelected('physicsConstellation')
+              }}
+              className="block"
+            >
+              <SubjectBlock iconSize="70" url="physics" displayedName="물리학 별자리" />
+            </div>
             <div
               onClick={() => {
                 console.log('physics clicked')
