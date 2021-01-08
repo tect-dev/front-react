@@ -1,28 +1,25 @@
 import React from 'react'
-import '../styles/Button.css'
-import { Link } from 'react-router-dom'
+import '../styles/Button.scss'
 
 const STYLES = ['btn--primary', 'btn--outline']
-
-const SIZES = ['btn--medium', 'btn--large']
+const SIZES = ['btn--medium', 'btn--large'] 
 
 export const Button = ({
+  className,
   children,
-  type,
-  onClick,
+  buttonSize,
   buttonStyle,
-  buttonSize
+  linkTo,
+  htmlHref,
+  htmlType,
+  onClick
 }) => {
-  const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle : STYLES[0]
-  const checkButtonSize = SIZES.includes(buttonSize) ? buttonStyle : STYLES[0]
+  const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle : STYLES[1]
+  const checkButtonSize = SIZES.includes(buttonSize) ? buttonStyle : SIZES[0]
 
-  return(
-    <button
-    className={`btn ${checkButtonStyle} ${checkButtonSize}`}
-    onClick={onClick}
-    type={type}
-    >
-    {children}
-    </button>
+  return (
+    <button className={`${className} ${checkButtonStyle} ${checkButtonSize}`} 
+            type={htmlType}
+            onClick={onClick}>{children}</button>
   )
 }

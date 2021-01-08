@@ -1,9 +1,13 @@
 import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import MainLayout from '../../components/MainLayout';
+import MainLayout from '../../components/layout/MainLayout';
 import { readQuestionList } from '../../redux/readPost';
 import { Link } from 'react-router-dom';
 import QuestionBlock from '../../components/question/QuestionBlock';
+
+import { Button } from '../../components/Button';
+
+import '../../styles/page/question/QuestionListPage.scss';
 
 export default function QuestionListPage() {
   const { loading, data, error } = useSelector((state) => {
@@ -41,23 +45,44 @@ export default function QuestionListPage() {
         <div>no data</div>
       </MainLayout>
     );
+
   return (
     <>
       <MainLayout>
-        <h2>question List</h2>
-        <Link to={'/question/write'}>글쓰기</Link>
-        {data
-          ? data.map((element) => {
-              return (
-                <>
-                  <QuestionBlock
-                    questionUID={element._id}
-                    title={element.questionBody.title}
-                  />
-                </>
-              );
-            })
-          : ''}
+        <div className="questionList-container">
+          <div className="questionList-left">
+            <div className="questionList-left-top">
+              <div className="questionList-title-container">
+                <div className="questionList-Latest">최신</div>
+                <div className="questionList-popular">인기</div>
+              </div>
+              <Link to={'/question/write'} className="ask-btn-container">
+                <Button className="ask-btn" buttonStyle="btn--outline">
+                  질문하기
+                </Button>
+              </Link>
+            </div>
+            <div className="questionList">
+              {data
+                ? data.map((element) => {
+                    return (
+                      <QuestionBlock
+                        key={
+                          element.questionBody.postID
+                            ? element.questionBody.postID
+                            : element.questionBody.questionID
+                        }
+                        question={element}
+                      />
+                    );
+                  })
+                : ''}
+            </div>
+          </div>
+          <div className="questionList-right">
+            <div className="questionList-right-title">Trending Tags</div>
+          </div>
+        </div>
       </MainLayout>
     </>
   );
