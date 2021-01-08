@@ -5,9 +5,9 @@ import { readQuestionList } from '../../redux/readPost';
 import { Link } from 'react-router-dom';
 import QuestionBlock from '../../components/question/QuestionBlock';
 
-import { Button } from "../../components/Button"
+import { Button } from '../../components/Button';
 
-import '../../styles/page/question/QuestionListPage.scss'
+import '../../styles/page/question/QuestionListPage.scss';
 
 export default function QuestionListPage() {
   const { loading, data, error } = useSelector((state) => {
@@ -57,29 +57,30 @@ export default function QuestionListPage() {
                 <div className="questionList-popular">인기</div>
               </div>
               <Link to={'/question/write'} className="ask-btn-container">
-                <Button className="ask-btn" buttonStyle="btn--outline">질문하기</Button>
+                <Button className="ask-btn" buttonStyle="btn--outline">
+                  질문하기
+                </Button>
               </Link>
             </div>
             <div className="questionList">
               {data
                 ? data.map((element) => {
                     return (
-                        <QuestionBlock
-                          key={element.questionBody.postID ? 
-                            element.questionBody.postID :
-                            element.questionBody.questionID}
-                          question={element.questionBody}
-                        />
+                      <QuestionBlock
+                        key={
+                          element.questionBody.postID
+                            ? element.questionBody.postID
+                            : element.questionBody.questionID
+                        }
+                        question={element}
+                      />
                     );
                   })
-              : ''}
+                : ''}
             </div>
-              
           </div>
           <div className="questionList-right">
-            <div className="questionList-right-title">
-              Trending Tags
-            </div>
+            <div className="questionList-right-title">Trending Tags</div>
           </div>
         </div>
       </MainLayout>
