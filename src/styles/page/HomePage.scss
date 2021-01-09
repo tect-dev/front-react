@@ -1,0 +1,56 @@
+@use '../config' as *;
+
+/* 
+HomePage 1. techtree svg가 내부적으로 explicit 크기를 갖지 않아서
+            부모 요소의 크기에 의해 결정된다. 모바일에서 svg의 크기를
+            결정하려면 layout의 크기를 명시적으로 지정해야 한다.
+*/
+
+@media screen and (min-width: 1200px) {
+    .homepage-container {
+        display: grid;
+        place-items: center;
+        grid-template-columns: 700px ($pc-max-width - 700px);
+        // gap: 0 50px;
+    }
+
+    .techtree-container {
+        width: 100%;
+    }
+
+    .subjects-sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        height: 500px;
+        width: 500px;
+
+        .block {
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+        
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .layout-main {
+        width: 100%;    /* HomePage 1. */
+    }
+    .homepage-container{
+        width: inherit;
+        display: grid;
+        justify-items: center;
+    }
+    .techtree-container {
+        width: 100%;
+    }
+
+    .subjects-sidebar {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        place-items: center;
+        gap: 10px 5px;
+    }
+}
