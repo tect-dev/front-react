@@ -50,7 +50,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   let xScale = d3.scaleLinear().domain([0, width]).range([0, width])
   let yScale = d3.scaleLinear().domain([0, height]).range([0, height])
 
-  const nodeRadius = 5
+  const nodeRadius = 15
 
   const links = techtreeData.links.map((d) => Object.assign({}, d))
 
@@ -106,25 +106,47 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     const twinkleColorSet = ['#a6b8ff', '#aaccff', '#a4aaff'] //,'#66b7ce','#ffc8ee','#f4ccbf']
     return twinkleColorSet[Math.floor(Math.random() * twinkleColorSet.length - 0.00001)]
   }
-  //
-  //svg
-  //  .append('defs')
-  //  .append('marker')
-  //  .attr('id', 'arrowhead')
-  //  .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-  //  .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
-  //  .attr('refY', 0)
-  //  .attr('orient', 'auto')
-  //  .attr('markerWidth', 10)
-  //  .attr('markerHeight', 10)
-  //  .attr('xoverflow', 'visible')
-  //  .append('svg:path')
-  //  .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-  //  .attr('fill', randomColor())
-  //  .style('stroke', 'none')
-  //  .attr('stroke-width', 1)
-  //  .attr('id', 'vis')
-  //
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrowhead')
+    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+    .attr('refX', nodeRadius) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+    .attr('refY', 0)
+    .attr('orient', 'auto')
+    .attr('markerWidth', 10)
+    .attr('markerHeight', 10)
+    .attr('xoverflow', 'visible')
+    .append('svg:path')
+    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+    .attr('fill', '#ddd')
+    .style('stroke', 'none')
+    .attr('stroke-width', 1)
+    .attr('id', 'vis')
+
+  const radialGradient = svg
+    .append('defs')
+    .append('radialGradient')
+    .attr('id', 'grad1')
+    .attr('cx', '50%')
+    .attr('cy', '50%')
+    .attr('r', '50%')
+    .attr('fx', '50%')
+    .attr('fy', '50%')
+
+  radialGradient
+    .append('stop')
+    .attr('offset', '0%')
+    .style('stop-color', 'rgb(255,255,255)')
+    .style('stop-opacity', '1')
+
+  radialGradient
+    .append('stop')
+    .attr('offset', '100%')
+    .style('stop-color', 'rgb(0,0,0)')
+    .style('stop-opacity', '0')
+
   const link = svg
     .append('g')
     .selectAll('line')
@@ -133,10 +155,10 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .attr('class', (d, index) => {
       return `link${index}`
     })
-    .attr('stroke', '#a6b8ff')
+    .attr('stroke', '#ddd')
     .attr('stroke-opacity', 0.6)
     .attr('stroke-width', 2)
-    //.attr('marker-end', 'url(#arrowhead)')
+    .attr('marker-end', 'url(#arrowhead)')
     .style('opacity', '0')
 
   const node = svg
@@ -149,9 +171,9 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   node
     .attr('r', (d) => {
       if (d.core) {
-        return d.r * 5
+        return nodeRadius * 2
       } else {
-        return d.r
+        return nodeRadius
       }
     })
     .attr('cx', (d) => {
@@ -163,6 +185,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .attr('class', (d) => {
       return `node${d.id}`
     })
+    .attr('fill', 'url(#grad1)')
     .style('cursor', 'pointer')
 
   const label = svg
@@ -173,33 +196,44 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .enter()
     .append('text')
     .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'central')
+    .attr('dominant-baseline', 'hanging')
     .attr('class', (d) => {
       return `label${d.id}`
     })
     .text((d) => {
-      if (d.core) {
-        return d.label
-      }
+      return d.label
     })
     .style('font-weight', 'bold')
-    .style('fill', '#fff')
+    .style('fill', '#ddd')
+    .style('opacity', '0')
     .style('cursor', 'pointer')
 
   node.transition().on('start', function repeat() {
     d3.active(this)
+
+      .duration(4000 * Math.random() + 1000)
+      .style('opacity', '0.5')
       .transition()
-      .duration(2500 * Math.random() + 2500)
-      .style('fill', getRandomTwinkleColor())
-      .transition()
-      .duration(2500 * Math.random() + 2500)
-      .style('opacity', '0.2')
-      .transition()
-      .duration(2500 * Math.random() + 2500)
+      .duration(4000 * Math.random() + 1000)
       .style('opacity', '1')
       .transition()
       .on('start', repeat)
   })
+
+  //label.transition().on('start', function repeat() {
+  //  d3.active(this)
+  //    .transition()
+  //    .duration(2500 * Math.random() + 2500)
+  //    //.style('fill', getRandomTwinkleColor())
+  //    .transition()
+  //    .duration(2500 * Math.random() + 2500)
+  //    .style('opacity', '0.1')
+  //    .transition()
+  //    .duration(2500 * Math.random() + 2500)
+  //    .style('opacity', '1')
+  //    .transition()
+  //    .on('start', repeat)
+  //})
 
   //label
   //  .transition()
@@ -266,7 +300,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       .html(hoverTooltip(node))
       .attr('class', 'tooltip')
       .style('left', `${x - 40}px`)
-      .style('top', `${y - 120}px`)
+      .style('top', `${y - 80}px`)
       .style('opacity', '0.85')
   }
 
@@ -274,13 +308,12 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     tooltip.style('opacity', 0)
     node.style('opacity', '1')
     link.style('opacity', '0')
-    label.style('opacity', '1')
+    label.style('opacity', 0)
   }
 
   function fadeExceptSelected(selectedNode) {
     node.style('opacity', '0.1')
     link.style('opacity', '0.1')
-    label.style('opacity', '0.1')
 
     links.map((linkElement, index) => {
       if (linkElement.source === selectedNode.id) {
@@ -307,7 +340,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   }
 
   function objectPositionUpdate() {
-    label.attr('x', (d) => d.x).attr('y', (d) => d.y)
+    label.attr('x', (d) => d.x).attr('y', (d) => d.y + 20)
     link
       .attr('x1', (d) => {
         return container.querySelector(`circle.node${d.source}`).getAttribute('cx')
