@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from '../components/layout/MainLayout';
-//import '../styles/Home.module.css';
+import '../styles/page/HomePage.scss'
 
 import ForceGraph from '../components/home/ForceGraph';
 import SubjectBlock from '../components/home/SubjectBlock';
@@ -10,11 +10,11 @@ export default function HomePage() {
   return (
     <>
       <MainLayout>
-        <div className="container">
-          <main>
+        <div className="homepage-container">
+          <main className="techtree-container">
             <ForceGraph techtreeData={dummyTechtree.cs} category={'cs'} />
           </main>
-          <aside className="sidebar">
+          <aside className="subjects-sidebar">
             <div
               onClick={() => {
                 console.log('physics clicked');
@@ -56,7 +56,7 @@ export default function HomePage() {
               }}
               className="block"
             >
-              <img src="/icons/computer.svg" height="50" width="50" />
+              <img src="/icons/computer.svg" height="70" width="70" />
               <br />
               Computer Science
             </div>
@@ -80,13 +80,13 @@ export default function HomePage() {
             </div>
 
             <div onClick={() => {}} className="block">
-              <img src="/icons/electricity.svg" height="50" width="50" />
+              <img src="/icons/electricity.svg" height="70" width="70" />
               <br />
               Electrical Engineering
             </div>
 
             <div onClick={() => {}} className="block">
-              <img src="/icons/earth.svg" height="50" width="50" />
+              <img src="/icons/earth.svg" height="70" width="70" />
               <br />
               Earth System
             </div>
