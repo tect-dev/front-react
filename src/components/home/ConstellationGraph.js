@@ -9,7 +9,7 @@ export default function ForceGraph({ techtreeData, category }) {
   const nodeHoverTooltip = (node) => {
     return `<div>     
       <p><b>${node.name}</b></p>
-      <p>최근 5년<br />마일리지 커트라인<br />${node.recentMileage}</p>
+      <p>${node.description ? node.description : ''}</p>
     </div>`
   }
 
@@ -31,7 +31,11 @@ export default function ForceGraph({ techtreeData, category }) {
 
   return (
     <>
-      <div ref={containerRef} className={techTreeStyles.container}></div>
+      <div class={constellationStyles.stars}></div>
+      <div class={constellationStyles.twinkling}></div>
+      <div className={techTreeStyles.container}>
+        <div ref={containerRef} className={techTreeStyles.constellation}></div>
+      </div>
     </>
   )
 }
@@ -46,7 +50,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   let xScale = d3.scaleLinear().domain([0, width]).range([0, width])
   let yScale = d3.scaleLinear().domain([0, height]).range([0, height])
 
-  const nodeRadius = 30
+  const nodeRadius = 5
 
   const links = techtreeData.links.map((d) => Object.assign({}, d))
 
@@ -82,7 +86,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .append('svg')
     .attr('viewBox', [-width / 2, -height / 2, width, height])
 
-  svg.style('background', `url("${process.env.PUBLIC_URL}/images/night.jpeg") no-repeat`)
+  //svg.style('background', '#000') //.style('background', `url("${process.env.PUBLIC_URL}/images/night.jpeg") no-repeat`)
 
   const orbitColor = '#FFCC01' //'#FFFF56' //
 
@@ -99,28 +103,28 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     return planetColorSet[Math.floor(Math.random() * planetColorSet.length - 0.00001)]
   }
   function getRandomTwinkleColor() {
-    const twinkleColorSet = ['#a6b8ff', '#f4ccbf', '#66b7ce', '#aaccff', '#ffc8ee', '#a4aaff']
+    const twinkleColorSet = ['#a6b8ff', '#aaccff', '#a4aaff'] //,'#66b7ce','#ffc8ee','#f4ccbf']
     return twinkleColorSet[Math.floor(Math.random() * twinkleColorSet.length - 0.00001)]
   }
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrowhead')
-    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-    .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
-    .attr('refY', 0)
-    .attr('orient', 'auto')
-    .attr('markerWidth', 10)
-    .attr('markerHeight', 10)
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', randomColor())
-    .style('stroke', 'none')
-    .attr('stroke-width', 1)
-    .attr('id', 'vis')
-
+  //
+  //svg
+  //  .append('defs')
+  //  .append('marker')
+  //  .attr('id', 'arrowhead')
+  //  .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+  //  .attr('refX', 23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+  //  .attr('refY', 0)
+  //  .attr('orient', 'auto')
+  //  .attr('markerWidth', 10)
+  //  .attr('markerHeight', 10)
+  //  .attr('xoverflow', 'visible')
+  //  .append('svg:path')
+  //  .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+  //  .attr('fill', randomColor())
+  //  .style('stroke', 'none')
+  //  .attr('stroke-width', 1)
+  //  .attr('id', 'vis')
+  //
   const link = svg
     .append('g')
     .selectAll('line')
@@ -129,10 +133,11 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .attr('class', (d, index) => {
       return `link${index}`
     })
-    .attr('stroke', randomColor())
+    .attr('stroke', '#a6b8ff')
     .attr('stroke-opacity', 0.6)
     .attr('stroke-width', 2)
-    .attr('marker-end', 'url(#arrowhead)')
+    //.attr('marker-end', 'url(#arrowhead)')
+    .style('opacity', '0')
 
   const node = svg
     .append('g')
@@ -143,7 +148,11 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
 
   node
     .attr('r', (d) => {
-      return d.r
+      if (d.core) {
+        return d.r * 5
+      } else {
+        return d.r
+      }
     })
     .attr('cx', (d) => {
       return d.x
@@ -152,17 +161,9 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       return d.y
     })
     .attr('class', (d) => {
-      return `node${d.id} ${constellationStyles.star} twinkleStar1`
+      return `node${d.id}`
     })
     .style('cursor', 'pointer')
-    .transition()
-    .duration(20000)
-    .delay(20000)
-  //.style('fill', '#a6b8ff')
-  //.style('-webkit-animation', 'twinkle 0.5s alternate infinite')
-  //.style('animation', 'twinkle 0.5s alternate infinite')
-  //.style('-webkit-animation-delay', '1.61404s')
-  //.style('animation-delay', '1.61404s')
 
   const label = svg
     .append('g')
@@ -177,11 +178,48 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       return `label${d.id}`
     })
     .text((d) => {
-      return d.label
+      if (d.core) {
+        return d.label
+      }
     })
     .style('font-weight', 'bold')
     .style('fill', '#fff')
     .style('cursor', 'pointer')
+
+  node.transition().on('start', function repeat() {
+    d3.active(this)
+      .transition()
+      .duration(2500 * Math.random() + 2500)
+      .style('fill', getRandomTwinkleColor())
+      .transition()
+      .duration(2500 * Math.random() + 2500)
+      .style('opacity', '0.2')
+      .transition()
+      .duration(2500 * Math.random() + 2500)
+      .style('opacity', '1')
+      .transition()
+      .on('start', repeat)
+  })
+
+  //label
+  //  .transition()
+  //  .delay(function (d, i) {
+  //    return Math.ceil(Math.random() * 1000) + 2000
+  //  })
+  //  .on('start', function repeat() {
+  //    d3.active(this)
+  //      .transition()
+  //      .duration(500)
+  //      .style('opacity', '0.5')
+  //      .transition()
+  //      .duration(500)
+  //      .style('opacity', '1')
+  //      .transition()
+  //      .delay(function (d, i) {
+  //        return Math.ceil(Math.random() * 1000) + 2000
+  //      })
+  //      .on('start', repeat)
+  //  })
 
   const drag = () => {
     const dragstarted = (d) => {
@@ -235,7 +273,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
   function recoverOpacity() {
     tooltip.style('opacity', 0)
     node.style('opacity', '1')
-    link.style('opacity', '1')
+    link.style('opacity', '0')
     label.style('opacity', '1')
   }
 
@@ -256,6 +294,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
       } else if (linkElement.target === selectedNode.id) {
         svg.select(`circle.node${selectedNode.id}`).style('opacity', '1')
         svg.select(`circle.node${linkElement.source}`).style('opacity', '1')
+
         svg.select(`text.label${selectedNode.id}`).style('opacity', '1')
         svg.select(`text.label${linkElement.source}`).style('opacity', '1')
 

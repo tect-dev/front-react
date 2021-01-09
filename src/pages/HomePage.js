@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import MainLayout from '../components/MainLayout'
 //import '../styles/Home.module.css';
 //import '../styles/techtree/Constellation.module.css'
+import '../styles/Techtree.module.css'
 import TreeGraph from '../components/home/TreeGraph'
 import ForceGraph from '../components/home/ForceGraph'
 import OrbitGraph from '../components/home/OrbitGraph'

@@ -1,6 +1,9 @@
 import React from 'react'
 import * as d3 from 'd3'
 import styles from '../../styles/Techtree.module.css'
+import techTreeStyles from '../../styles/Techtree.module.css'
+import constellationStyles from '../../styles/techtree/Constellation.module.css'
+
 import { line } from 'd3'
 
 export default function ForceGraph({ techtreeData, category }) {
@@ -31,7 +34,11 @@ export default function ForceGraph({ techtreeData, category }) {
 
   return (
     <>
-      <div ref={containerRef} className={styles.container}></div>
+      <div class={constellationStyles.stars}></div>
+      <div class={constellationStyles.twinkling}></div>
+      <div className={techTreeStyles.container}>
+        <div ref={containerRef} className={techTreeStyles.constellation}></div>
+      </div>
     </>
   )
 }
@@ -84,7 +91,7 @@ function runForceGraph(container, techtreeData, category, nodeHoverTooltip) {
     .select(container)
     .append('svg')
     .attr('viewBox', [-width / 2, -height / 2, width, height])
-  svg.style('background', `url("${process.env.PUBLIC_URL}/images/space.png") no-repeat`)
+  //svg.style('background', `url("${process.env.PUBLIC_URL}/images/space.png") no-repeat`)
 
   const orbitColor = '#FFCC01' // '#FFFF56'
 

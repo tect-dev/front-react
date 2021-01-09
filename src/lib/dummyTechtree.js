@@ -35,6 +35,9 @@ export const dummyTechtree = {
         label: '일역',
         group: 2,
         recentMileage: [1, 2, 4, 5, 6],
+        core: true,
+        description:
+          '1학기때는 Simple Harmonic Oscillator와 라그랑지안 역학을, 2학기때는 강체와 coupled oscillation 을 배운다. ',
       },
       {
         id: 5,
@@ -49,6 +52,7 @@ export const dummyTechtree = {
         label: '통계',
         group: 3,
         recentMileage: [1, 2, 4, 5, 6],
+        core: true,
       },
       {
         id: 7,
@@ -56,6 +60,7 @@ export const dummyTechtree = {
         label: '양자',
         group: 3,
         recentMileage: [1, 2, 4, 5, 6],
+        core: true,
       },
       {
         id: 8,
@@ -63,6 +68,7 @@ export const dummyTechtree = {
         label: '전자기',
         group: 3,
         recentMileage: [1, 2, 4, 5, 6],
+        core: true,
       },
       {
         id: 9,
