@@ -1,4 +1,5 @@
 import sanitize from 'sanitize-html';
+import { katexWhiteList } from './katexWhiteList';
 
 export const htmlFilter = (html) => {
   return sanitize(html, {
@@ -38,8 +39,7 @@ export const htmlFilter = (html) => {
       'img',
       'del',
       'input',
-
-      //...katexWhitelist.tags,
+      ...katexWhiteList.tags,
     ],
     allowedAttributes: {
       a: ['href', 'name', 'target'],
@@ -49,7 +49,7 @@ export const htmlFilter = (html) => {
       span: ['style'],
       input: ['type'],
       ol: ['start'],
-      //...katexWhitelist.attributes,
+      ...katexWhiteList.attributes,
     },
     allowedStyles: {
       '*': {
@@ -61,9 +61,9 @@ export const htmlFilter = (html) => {
         'text-align': [/^left$/, /^right$/, /^center$/],
       },
       span: {
-        // ...katexWhitelist.styles,
+        ...katexWhiteList.styles,
       },
     },
-    allowedIframeHostnames: ['www.youtube.com', 'codesandbox.io', 'codepen.io'],
+    //allowedIframeHostnames: ['www.youtube.com', 'codesandbox.io', 'codepen.io'],
   });
 };
