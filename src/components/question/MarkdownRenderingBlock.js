@@ -9,6 +9,7 @@ import stringify from 'rehype-stringify';
 import raw from 'rehype-raw';
 import slug from 'remark-slug';
 import { htmlFilter } from '../../lib/functions';
+import { prismPlugin } from '../../lib/prismPlugin';
 
 export default function MarkdownRenderingBlock({ content }) {
   const [html, setHtml] = useState(content);
@@ -17,19 +18,20 @@ export default function MarkdownRenderingBlock({ content }) {
     setHtml(
       // html 필터를 쓰면 latex 렌더링이 이상하게 된다!
       // 그래서 html 필터랑 katex whitelist 를 함께 쓰는듯.
-      //htmlFilter(
-      unified()
-        .use(breaks)
-        .use(parse)
-        .use(slug)
-        .use(remark2rehype)
-        .use(raw)
-        .use(math)
-        .use(katex)
-        .use(stringify)
-        .processSync(content)
-        .toString()
-      //)
+      htmlFilter(
+        unified()
+          .use(breaks)
+          .use(parse)
+          .use(slug)
+          //.use(prismPlugin)
+          .use(remark2rehype)
+          .use(raw)
+          .use(math)
+          .use(katex)
+          .use(stringify)
+          .processSync(content)
+          .toString()
+      )
     );
   }, [content]);
 
