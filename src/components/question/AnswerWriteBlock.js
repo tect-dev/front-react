@@ -4,7 +4,7 @@ import { uid } from 'uid';
 import { useInput } from '../../hooks/hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import { createAnswer } from '../../redux/createPost';
-import MarkdownPreviewBlock from './MarkdownPreviewBlock';
+import MarkdownRenderingBlock from './MarkdownRenderingBlock';
 
 export default function AnswerWriteBlock({ questionUID }) {
   const { loginState, userInfo } = useSelector((state) => {
@@ -55,7 +55,7 @@ export default function AnswerWriteBlock({ questionUID }) {
           ></textarea>
         </div>
         <div id="preview">
-          <MarkdownPreviewBlock content={content} />
+          <MarkdownRenderingBlock content={content} />
         </div>
         <div class="button">
           <button type="submit">Send your message</button>
