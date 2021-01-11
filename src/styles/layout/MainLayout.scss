@@ -40,7 +40,8 @@ layout 8. 디자인 공간의 배경화면 설정 가능
 layout 9. pc 화면의 스크롤바 디자인
 */
 
-html, body {
+html,
+body {
   // overflow-x: hidden;  /* layout 2 */
   word-break: break-all;
 }
@@ -48,16 +49,16 @@ html, body {
 .layout {
   display: flex;
   flex-flow: column nowrap;
-  align-items: center;  /* layout 1 */
+  align-items: center; /* layout 1 */
   width: 100%;
-  min-height: 100vh;    /* layout 4 */
+  min-height: 100vh; /* layout 4 */
 
   &-main {
-    margin: $header-height 0 0 0;  /* layout 3 */
-    flex: 1 0 100%;   /* layout 8 */
+    margin: $header-height 0 0 0; /* layout 3 */
+    flex: 1 0 100%; /* layout 8 */
     display: flex;
     flex-flow: column wrap;
-    max-width: $pc-max-width;  /* layout 1 */
-    background: $layout-main-background;  /* layout 8 */
+    max-width: $pc-max-width; /* layout 1 */
+    background: $layout-main-background; /* layout 8 */
   }
 }

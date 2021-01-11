@@ -10,13 +10,13 @@ import raw from 'rehype-raw';
 import slug from 'remark-slug';
 import { htmlFilter } from '../../lib/functions';
 
-export default function MarkdownPreviewBlock({ content }) {
+export default function MarkdownRenderingBlock({ content }) {
   const [html, setHtml] = useState(content);
 
   useEffect(() => {
     setHtml(
       // html 필터를 쓰면 latex 렌더링이 이상하게 된다!
-      // 근데 html 필터를 안써도 * 이나 블록인용문 같은건 제대로 렌더링 안됨.
+      // 그래서 html 필터랑 katex whitelist 를 함께 쓰는듯.
       //htmlFilter(
       unified()
         .use(breaks)
