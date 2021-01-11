@@ -50,38 +50,42 @@ export default function QuestionListPage() {
     <>
       <MainLayout>
         <div className="questionList-container">
-          <div className="questionList-left">
-            <div className="questionList-left-top">
-              <div className="questionList-title-container">
-                <div className="questionList-Latest">최신</div>
-                <div className="questionList-popular">인기</div>
+          <section>
+            <div className="questionList-left">
+              <div className="questionList-left-top">
+                <div className="questionList-title-container">
+                  <div className="questionList-Latest">최신</div>
+                  <div className="questionList-popular">인기</div>
+                </div>
+                <Link to={'/question/write'} className="ask-btn-container">
+                  <Button className="ask-btn" buttonStyle="btn--outline">
+                    질문하기
+                  </Button>
+                </Link>
               </div>
-              <Link to={'/question/write'} className="ask-btn-container">
-                <Button className="ask-btn" buttonStyle="btn--outline">
-                  질문하기
-                </Button>
-              </Link>
+              <div className="questionList">
+                {data
+                  ? data.map((element) => {
+                      return (
+                        <QuestionBlock
+                          key={
+                            element.questionBody.postID
+                              ? element.questionBody.postID
+                              : element.questionBody.questionID
+                          }
+                          question={element}
+                        />
+                      );
+                    })
+                  : ''}
+              </div>
             </div>
-            <div className="questionList">
-              {data
-                ? data.map((element) => {
-                    return (
-                      <QuestionBlock
-                        key={
-                          element.questionBody.postID
-                            ? element.questionBody.postID
-                            : element.questionBody.questionID
-                        }
-                        question={element}
-                      />
-                    );
-                  })
-                : ''}
+          </section>
+          <section>
+            <div className="questionList-right">
+              <div className="questionList-right-title">Trending Tags</div>
             </div>
-          </div>
-          <div className="questionList-right">
-            <div className="questionList-right-title">Trending Tags</div>
-          </div>
+          </section>
         </div>
       </MainLayout>
     </>
