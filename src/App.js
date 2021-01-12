@@ -15,6 +15,10 @@ export default function App() {
     <>
       <head>
         <meta name="description" content="세상 모든 테크트리, tect.dev" />
+        <link
+          href="https://myCDN.com/prism@v1.x/themes/prism.css"
+          rel="stylesheet"
+        />
       </head>
       {/* 라우트를 Switch 로 감싸면, 매칭되는 첫번째 페이지만 렌더를 해준다. */}
       <Switch>
