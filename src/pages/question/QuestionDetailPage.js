@@ -50,7 +50,13 @@ export default function QuestionDetailPage({ match }) {
         <div>params: {questionID}</div>
         <h2>title: {data.question.questionBody.title}</h2>
         <div>본문: {data.question.questionBody.content}</div>
-
+        {data.answers.map((answer, index) => {
+          return (
+            <div key={index}>
+              답변{index}: {answer.answerBody.content}
+            </div>
+          );
+        })}
         <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>
     </>

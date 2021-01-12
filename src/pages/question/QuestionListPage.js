@@ -55,7 +55,8 @@ export default function QuestionListPage() {
               <div className="questionList-left-top">
                 <div className="questionList-title-container">
                   <div className="questionList-Latest">최신</div>
-                  <div className="questionList-popular">인기</div>
+                  {/*인기순 정렬은 나중에 추가하자*/}
+                  {/*<div className="questionList-popular">인기</div>*/}
                 </div>
                 <Link to={'/question/write'} className="ask-btn-container">
                   <Button className="ask-btn" buttonStyle="btn--outline">

@@ -3,7 +3,7 @@ import '../../styles/question/QuestionBlock.scss';
 
 export default function QuestionBlock({ question }) {
   const summaryContent = question.questionBody.content.substr(0, 200);
-  console.log(summaryContent);
+  //console.log(summaryContent);
   return (
     <Link className="questionBlock" to={`/question/${question._id}`}>
       <div className="questionBlock-head">
@@ -20,9 +20,9 @@ export default function QuestionBlock({ question }) {
           <div className="questionBlock-content">{summaryContent}...더보기</div>
         </div>
         <div className="questionBlock-main-downside">
-          <div className="questionBlock-hashtag">#예제태그</div>
-          <div className="questionBlock-hashtag">#실험태그ddddddㅇㅇㅇㅇ</div>
-          <div className="questionBlock-hashtag">#가즈아앙아아아아앙아</div>
+          {question.questionBody.hashtags.map((element) => {
+            return <div className="questionBlock-hashtag">{element}</div>;
+          })}
         </div>
       </div>
     </Link>
