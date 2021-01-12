@@ -28,6 +28,10 @@ import 'prismjs/components/prism-rust.min';
 import 'prismjs/components/prism-yaml.min';
 import 'prismjs/components/prism-dart';
 
+//import { ssrEnabled } from '../utils';
+
+const ssrEnabled = process.env.REACT_APP_SSR === 'enabled';
+
 //export default function attacher({ include, exclude } = {}) {
 export const prismPlugin = ({ include, exclude } = {}) => {
   function visitor(node) {
@@ -50,7 +54,7 @@ export const prismPlugin = ({ include, exclude } = {}) => {
       data.hProperties = {};
     }
 
-    if (true) {
+    if (!ssrEnabled) {
       window.prism = Prism;
     }
 

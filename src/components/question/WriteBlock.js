@@ -26,7 +26,7 @@ export default function WriteBlock() {
     async (e) => {
       e.preventDefault();
       if (!title || !content) {
-        return alert('게시글을 작성하세요.');
+        return alert('제목과 본문을 작성해 주세요.');
       }
       const formData = new FormData();
       const uid24 = uid(24);
@@ -45,6 +45,9 @@ export default function WriteBlock() {
       //  formData.append('authorID', '비회원 글쓰기');
       //  formData.append('authorNickname', '임시닉네임');
       //}
+
+      // 여기서 디스패치 하는 함수를, 상위 컴포넌트에서 props 로 받아오게 하자.
+      // 그래야지 question, article 등등 범용성있게 쓸수있음.
       dispatch(createQuestion(formData));
     },
     [title, content]
@@ -79,6 +82,12 @@ export default function WriteBlock() {
               value={hashtagText}
               onChange={onChangeHashtagText}
             />
+          </div>
+          <div>
+            hashtag가 제대로 체크 되나:{' '}
+            {hashtagList.map((element) => {
+              return <div>{element}</div>;
+            })}
           </div>
 
           <div className="button">
