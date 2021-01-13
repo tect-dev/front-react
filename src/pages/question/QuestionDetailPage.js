@@ -4,8 +4,8 @@ import { readQuestionByUID } from '../../redux/readPost';
 import MainLayout from '../../components/layout/MainLayout';
 import QuestionSection from '../../components/question/QuestionSection';
 import AnswerSection from '../../components/question/AnswerSection';
-import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
-import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock';
+
+//import WriteBlock from '../../components/WriteBlock';
 
 export default function QuestionDetailPage({ match }) {
   const questionID = match.params.questionID;
@@ -15,9 +15,6 @@ export default function QuestionDetailPage({ match }) {
 
   const dispatch = useDispatch();
 
-  //const getPostAsync = useCallback(() => {
-  //  dispatch(readQuestionByUID(questionID));
-  //}, [dispatch]);
   const getQuestionAsync = useCallback(() => {
     dispatch(readQuestionByUID(questionID));
   }, [dispatch]);
@@ -54,7 +51,6 @@ export default function QuestionDetailPage({ match }) {
         <div>authorID: {data.question.questionBody.authorID}</div>
         <QuestionSection data={data} />
         <AnswerSection data={data} />
-        <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>
     </>
   );

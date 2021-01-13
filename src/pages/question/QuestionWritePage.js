@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
+import { Prompt } from 'react-router-dom';
+import { useInput } from '../../hooks/hooks';
 import MainLayout from '../../components/layout/MainLayout';
-import { useSelector } from 'react-redux';
-import QuestionEditorBlock from '../../components/MarkdownEditorBlock';
+import { useSelector, useDispatch } from 'react-redux';
+import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock';
+import QuestionWriteSection from '../../components/question/QuestionWriteSection';
+import { uid } from 'uid';
 
 export default function QuestionWritePage({ history }) {
   //useEffect(() => {
@@ -9,18 +13,21 @@ export default function QuestionWritePage({ history }) {
   //    history.block('페이지를 떠나시는건가요?');
   //  };
   //}, [history]);
-  const { loginState, userInfo } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userInfo: state.auth.userInfo };
+  const { content } = useSelector((state) => {
+    return { content: state.createPost.content };
   });
 
   return (
-    <>
-      <MainLayout>
-        {/* 마크다운 렌더되는걸 보려고 임시적으로 마진을 줬다. */}
-        <div style={{ margin: '0 25px 0 25px' }}>
-          <QuestionEditorBlock />
+    <MainLayout>
+      <section>
+        <QuestionWriteSection />
+      </section>
+      <section>
+        <div id="preview">
+          <div>Preview</div>
+          <MarkdownRenderingBlock content={content} />
         </div>
-      </MainLayout>
-    </>
+      </section>
+    </MainLayout>
   );
 }
