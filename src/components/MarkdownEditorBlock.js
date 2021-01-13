@@ -6,14 +6,14 @@ export default function MarkdownEditorBlock({
   onChangeContentProps,
   initialContent,
 }) {
-  const [content, setContent] = useState(initialContent);
+  //const [content, setContent] = useState(initialContent);
 
   return (
     <>
       <label htmlFor="content"></label>
       <textarea
         id="content"
-        value={content}
+        //value={content}
         onChange={onChangeContentProps}
       ></textarea>
     </>
