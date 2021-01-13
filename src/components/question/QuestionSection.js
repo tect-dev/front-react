@@ -19,10 +19,10 @@ export default function QuestionSection({ data }) {
 
   const dispatch = useDispatch();
 
-  const deleteQuestion = useCallback(() => {
+  const onDeleteQuestion = useCallback(() => {
     //alert('정말 삭제합니까?');
     dispatch(deleteQuestion(data.question._id));
-    window.location.href = `/question/`;
+    window.location.href = `/question`;
   }, [dispatch]);
   function deleteComment() {
     alert('정말 삭제합니까?');
@@ -74,7 +74,7 @@ export default function QuestionSection({ data }) {
           question 수정하기
         </Link>
       </button>
-      <button onClick={deleteQuestion}>question 삭제하기</button>
+      <button onClick={onDeleteQuestion}>question 삭제하기</button>
       {/*<CommentListBlock commentList={question.comments} />*/}
 
       <MarkdownEditorBlock

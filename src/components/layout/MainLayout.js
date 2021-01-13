@@ -1,15 +1,13 @@
 import React from 'react';
-import Header from './Header';
+import Navbar from './Navbar';
 import Footer from './Footer';
-import '../../styles/layout/MainLayout.scss'
+import '../../styles/layout/MainLayout.scss';
 
 export default function MainLayout({ children }) {
   return (
     <div className="layout">
-      <Header />
-      <div className="layout-main">
-        { children }
-      </div>
+      <Navbar />
+      <div className="layout-main">{children}</div>
       <Footer />
     </div>
   );

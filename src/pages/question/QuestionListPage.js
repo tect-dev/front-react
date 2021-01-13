@@ -66,17 +66,8 @@ export default function QuestionListPage() {
               </div>
               <div className="questionList">
                 {data
-                  ? data.map((element) => {
-                      return (
-                        <QuestionBlock
-                          key={
-                            element.questionBody.postID
-                              ? element.questionBody.postID
-                              : element.questionBody.questionID
-                          }
-                          question={element}
-                        />
-                      );
+                  ? data.map((element, index) => {
+                      return <QuestionBlock key={index} question={element} />;
                     })
                   : ''}
               </div>
