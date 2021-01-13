@@ -23,13 +23,12 @@ export default function AnswerWriteBlock({ questionUID }) {
       }
       const formData = new FormData();
       const uid24 = uid(24);
-
       formData.append('contentType', 'answer');
       formData.append('postID', questionUID);
       formData.append('answerID', uid24);
       formData.append('content', content);
-      formData.append('authorID', '123456789012345678901234');
       formData.append('authorNickname', '임시닉네임');
+      formData.append('authorID', '123456789012345678901234');
 
       //if (userInfo.userUID) {
       //  formData.append('authorID', userInfo.userUID);

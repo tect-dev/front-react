@@ -13,9 +13,16 @@ const initialState = {
     loading: false,
     error: null,
   },
+  comment: {
+    loading: false,
+    error: null,
+  },
+  content: '',
 };
 
 // action types
+
+const WRITE_CONTENT = 'write/WRITE_CONTENT';
 
 const CREATE_QUESTION_TRY = 'question/CREATE_QUESTION_TRY';
 const CREATE_QUESTION_SUCCESS = 'question/CREATE_QUESTION_SUCCESS';
@@ -34,6 +41,10 @@ const CREATE_COMMENT_SUCCESS = 'comment/CREATE_COMMENT_SUCCESS';
 const CREATE_COMMENT_FAIL = 'comment/CREATE_COMMENT_FAIL';
 
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
+
+export const writeContent = (content) => {
+  return { type: WRITE_CONTENT, content: content };
+};
 
 export const createQuestion = (data) => async (dispatch) => {
   dispatch({ type: CREATE_QUESTION_TRY });
@@ -92,10 +103,31 @@ export const createArticle = (data) => async (dispatch) => {
   }
 };
 
-// comment 작성 관련 작성.
+export const createComment = (data) => async (dispatch) => {
+  dispatch({ type: CREATE_COMMENT_TRY });
+  try {
+    const obj = JSON.stringify(Object.fromEntries(data));
+    //console.log(obj);
+    await axios({
+      method: 'post',
+      url: `/comment`,
+      headers: { 'Content-Type': 'application/json' },
+      data: obj,
+    });
+    await dispatch({ type: CREATE_COMMENT_SUCCESS });
+  } catch (e) {
+    console.log('error: ', e);
+    dispatch({ type: CREATE_COMMENT_FAIL, error: e });
+  }
+};
 
 export default function createPost(state = initialState, action) {
   switch (action.type) {
+    case WRITE_CONTENT:
+      return {
+        ...state,
+        content: action.content,
+      };
     case CREATE_QUESTION_TRY:
       return {
         ...state,
@@ -111,6 +143,7 @@ export default function createPost(state = initialState, action) {
           loading: false,
           error: null,
         },
+        content: '',
       };
     case CREATE_QUESTION_FAIL:
       return {
@@ -135,6 +168,7 @@ export default function createPost(state = initialState, action) {
           loading: false,
           error: null,
         },
+        content: '',
       };
     case CREATE_ANSWER_FAIL:
       return {
@@ -159,11 +193,37 @@ export default function createPost(state = initialState, action) {
           loading: false,
           error: null,
         },
+        content: '',
       };
     case CREATE_ARTICLE_FAIL:
       return {
         ...state,
         article: {
+          loading: false,
+          error: action.error,
+        },
+      };
+    case CREATE_COMMENT_TRY:
+      return {
+        ...state,
+        comment: {
+          loading: true,
+          error: null,
+        },
+      };
+    case CREATE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        comment: {
+          loading: false,
+          error: null,
+        },
+        content: '',
+      };
+    case CREATE_COMMENT_FAIL:
+      return {
+        ...state,
+        comment: {
           loading: false,
           error: action.error,
         },
