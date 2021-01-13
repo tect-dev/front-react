@@ -49,8 +49,8 @@ export const writeContent = (content) => {
 export const createQuestion = (data) => async (dispatch) => {
   dispatch({ type: CREATE_QUESTION_TRY });
   try {
-    const obj = JSON.stringify(Object.fromEntries(data));
-    //console.log(obj);
+    //const obj = JSON.stringify(Object.fromEntries(data));
+    const obj = JSON.stringify(data);
     await axios({
       method: 'post',
       url: `/question`,
@@ -58,8 +58,9 @@ export const createQuestion = (data) => async (dispatch) => {
       data: obj,
     });
     await dispatch({ type: CREATE_QUESTION_SUCCESS });
+    console.log('post 요청: ', obj);
     //왜 리다이렉션이 안되지??
-    //window.location.href = `/question/${obj.postID}`;
+    window.location.href = `http://localhost:3000/question/${obj.postID}`;
   } catch (e) {
     console.log('error: ', e);
     dispatch({ type: CREATE_QUESTION_FAIL, error: e });

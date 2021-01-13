@@ -13,20 +13,11 @@ export default function QuestionWritePage({ history }) {
   //    history.block('페이지를 떠나시는건가요?');
   //  };
   //}, [history]);
-  const { content } = useSelector((state) => {
-    return { content: state.createPost.content };
-  });
 
   return (
     <MainLayout>
       <section>
         <QuestionWriteSection />
-      </section>
-      <section>
-        <div id="preview">
-          <div>Preview</div>
-          <MarkdownRenderingBlock content={content} />
-        </div>
       </section>
     </MainLayout>
   );

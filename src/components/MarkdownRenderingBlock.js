@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import unified from 'unified';
 import remark from 'remark';
 import remarkParse from 'remark-parse';
-import remarkHtml from 'remark-html';
 import breaks from 'remark-breaks';
 import math from 'remark-math';
 import remark2rehype from 'remark-rehype';
@@ -163,7 +161,6 @@ export default function MarkdownRenderingBlock({ content }) {
         remark()
           .use(breaks)
           .use(remarkParse)
-          //.use(remarkHtml)
           .use(slug)
           .use(prismPlugin)
           .use(remark2rehype, { allowDangerousHTML: true })
