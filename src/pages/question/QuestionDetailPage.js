@@ -2,7 +2,10 @@ import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { readQuestionByUID } from '../../redux/readPost';
 import MainLayout from '../../components/layout/MainLayout';
+import QuestionSection from '../../components/question/QuestionSection';
+import AnswerSection from '../../components/question/AnswerSection';
 import AnswerWriteBlock from '../../components/question/AnswerWriteBlock';
+import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock';
 
 export default function QuestionDetailPage({ match }) {
   const questionID = match.params.questionID;
@@ -48,15 +51,9 @@ export default function QuestionDetailPage({ match }) {
     <>
       <MainLayout>
         <div>params: {questionID}</div>
-        <h2>title: {data.question.questionBody.title}</h2>
-        <div>본문: {data.question.questionBody.content}</div>
-        {data.answers.map((answer, index) => {
-          return (
-            <div key={index}>
-              답변{index}: {answer.answerBody.content}
-            </div>
-          );
-        })}
+        <div>authorID: {data.question.questionBody.authorID}</div>
+        <QuestionSection data={data} />
+        <AnswerSection data={data} />
         <AnswerWriteBlock questionUID={questionID} />
       </MainLayout>
     </>

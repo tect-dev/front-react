@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { uid } from 'uid';
-import { useInput } from '../../hooks/hooks';
+import { useInput } from '../hooks/hooks';
 import { useSelector, useDispatch } from 'react-redux';
-import { createQuestion } from '../../redux/createPost';
+import { createQuestion } from '../redux/createPost';
 import MarkdownRenderingBlock from './MarkdownRenderingBlock';
 
-export default function WriteBlock({ contentType, componentURL }) {
+export default function MarkdownEditorBlock({ contentType, bindingID }) {
   const { loginState, userInfo } = useSelector((state) => {
     return { loginState: state.auth.loginState, userInfo: state.auth.userInfo };
   });
-  const [title, onChangeTitle] = useInput();
-  const [content, onChangeContent] = useInput();
+  const [title, onChangeTitle] = useInput('');
+  const [content, onChangeContent] = useInput('');
   const [hashtagText, setHashtagText] = useState('');
   const [hashtagList, setHashtagList] = useState([]);
   //const hashtagPattern = /^\#[a-zA-Z0-9]+[\s\,]$/g;
@@ -36,7 +36,6 @@ export default function WriteBlock({ contentType, componentURL }) {
 
       setHashtagList(editedArray);
       console.log(hashtagList);
-      //console.log('hashtag List: ', hashtagPattern.exec(hashtagText));
     },
     [hashtagText]
   );

@@ -5,6 +5,7 @@ import readPost from './readPost';
 import createPost from './createPost';
 import updatePost from './updatePost';
 import deletePost from './deletePost';
+import write from './write';
 
 const rootReducer = combineReducers({
   auth,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   createPost,
   updatePost,
   deletePost,
+  write,
 });
 
 // reducer는 export default 해야된다는데 why??
