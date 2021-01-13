@@ -24,6 +24,7 @@ export default function QuestionSection({ data }) {
     dispatch(deleteQuestion(data.question._id));
     window.location.href = `/question`;
   }, [dispatch]);
+
   function deleteComment() {
     alert('정말 삭제합니까?');
   }
@@ -49,7 +50,7 @@ export default function QuestionSection({ data }) {
       //  formData.append('authorNickname', '임시닉네임');
       //}
 
-      //dispatch(createQuestion(formData));
+      //dispatch(createComment(formData));
     },
     [content]
   );

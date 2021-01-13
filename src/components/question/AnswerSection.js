@@ -3,6 +3,7 @@ import MarkdownRenderingBlock from '../MarkdownRenderingBlock';
 import CommentListBlock from '../CommentListBlock';
 import MarkdownEditorBlock from '../MarkdownEditorBlock';
 import { createAnswer } from '../../redux/createPost';
+import { deleteAnswer } from '../../redux/deletePost';
 import { useDispatch } from 'react-redux';
 import { uid } from 'uid';
 
@@ -31,6 +32,10 @@ export default function AnswerSection({ data }) {
     dispatch(createAnswer(formData));
   }
 
+  function onDeleteAnswer(id) {
+    dispatch(deleteAnswer(id));
+  }
+
   return (
     <>
       {data.answers.map((element, index) => {
@@ -40,7 +45,14 @@ export default function AnswerSection({ data }) {
               answer{index}
               <MarkdownRenderingBlock content={element.answerBody.content} />
             </div>
-
+            <button>answer 수정</button>
+            <button
+              onClick={() => {
+                onDeleteAnswer(element._id);
+              }}
+            >
+              answer 삭제
+            </button>
             {/* <CommentListBlock commentList={element.answerBody.comments} /> */}
             <MarkdownEditorBlock />
             <button>answer에 댓글달기</button>

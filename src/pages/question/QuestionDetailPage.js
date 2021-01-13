@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { readQuestionByUID } from '../../redux/readPost';
+import { Link } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import QuestionSection from '../../components/question/QuestionSection';
 import AnswerSection from '../../components/question/AnswerSection';
@@ -48,7 +49,11 @@ export default function QuestionDetailPage({ match }) {
     <>
       <MainLayout>
         <div>params: {questionID}</div>
-        <div>authorID: {data.question.questionBody.authorID}</div>
+        <div>
+          <Link to={`/user/${data.question.questionBody.authorID}`}>
+            authorNickname: {data.question.questionBody.authorNickname}
+          </Link>
+        </div>
         <QuestionSection data={data} />
         <AnswerSection data={data} />
       </MainLayout>
