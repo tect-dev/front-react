@@ -14,6 +14,7 @@ import './App.css';
 export default function App() {
   return (
     <>
+      {/* head 파일을 여기다 적으면, index.html 의 body 태그 하위로 들어가는듯. 그래서 콘솔이 에러를 낸다. react helmet 같은 라이브러리를 써야할듯 */}
       <head>
         <meta name="description" content="세상 모든 테크트리, tect.dev" />
         <link

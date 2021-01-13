@@ -34,7 +34,7 @@ export const deleteQuestion = (questionID) => async (dispatch) => {
     });
     await dispatch({ type: DELETE_QUESTION_SUCCESS });
     //왜 리다이렉션이 안되지??
-    //window.location.href = `/question/${obj.postID}`;
+    window.location.href = `/question`;
   } catch (e) {
     console.log('error: ', e);
     dispatch({ type: DELETE_QUESTION_FAIL, error: e });
