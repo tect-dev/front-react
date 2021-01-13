@@ -11,9 +11,9 @@ import katex from 'rehype-katex';
 import stringify from 'rehype-stringify';
 import raw from 'rehype-raw';
 import slug from 'remark-slug';
-import { htmlFilter } from '../../lib/functions';
-import { prismPlugin } from '../../lib/prismPlugin';
-import { prismThemes } from '../../lib/prismThemes';
+import { htmlFilter } from '../lib/functions';
+import { prismPlugin } from '../lib/prismPlugin';
+import { prismThemes } from '../lib/prismThemes';
 
 export const mediaQuery = (maxWidth) => `
   @media (max-width: ${maxWidth}px)

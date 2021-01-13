@@ -4,7 +4,7 @@ import { uid } from 'uid';
 import { useInput } from '../../hooks/hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import { createAnswer } from '../../redux/createPost';
-import MarkdownRenderingBlock from './MarkdownRenderingBlock';
+import MarkdownRenderingBlock from '../MarkdownRenderingBlock';
 
 export default function AnswerWriteBlock({ questionUID }) {
   const { loginState, userInfo } = useSelector((state) => {
@@ -23,13 +23,13 @@ export default function AnswerWriteBlock({ questionUID }) {
       }
       const formData = new FormData();
       const uid24 = uid(24);
-      formData.append('postID', uid24);
+
       formData.append('contentType', 'answer');
-      formData.append('itIsAnswerOf', questionUID);
+      formData.append('postID', questionUID);
+      formData.append('answerID', uid24);
       formData.append('content', content);
       formData.append('authorID', '123456789012345678901234');
       formData.append('authorNickname', '임시닉네임');
-      formData.append('hashtags', []);
 
       //if (userInfo.userUID) {
       //  formData.append('authorID', userInfo.userUID);
