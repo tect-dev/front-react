@@ -1,47 +1,48 @@
-import { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import MarkdownRenderingBlock from '../MarkdownRenderingBlock';
-import CommentListBlock from '../CommentListBlock';
-import MarkdownEditorBlock from '../MarkdownEditorBlock';
-import { uid } from 'uid';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useCallback } from 'react'
+import { Link } from 'react-router-dom'
+import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
+import CommentListBlock from '../CommentListBlock'
+import MarkdownEditorBlock from '../MarkdownEditorBlock'
+import { uid } from 'uid'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   deleteQuestion,
   deleteAnswer,
   deleteComment,
-} from '../../redux/deletePost';
-export default function QuestionSection({ data }) {
-  const [content, setContent] = useState('');
+} from '../../redux/deletePost'
+
+export default React.memo(function QuestionSection({ data }) {
+  const [content, setContent] = useState('')
 
   function onChangeContent(e) {
-    setContent(e.target.value);
+    setContent(e.target.value)
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const onDeleteQuestion = useCallback(() => {
     //alert('정말 삭제합니까?');
-    dispatch(deleteQuestion(data.question._id));
-    window.location.href = `/question`;
-  }, [dispatch]);
+    dispatch(deleteQuestion(data.question._id))
+    window.location.href = `/question`
+  }, [dispatch, data.question._id])
 
   function deleteComment() {
-    alert('정말 삭제합니까?');
+    alert('정말 삭제합니까?')
   }
 
   const onSubmitComment = useCallback(
     async (e) => {
-      e.preventDefault();
+      e.preventDefault()
       if (!content) {
-        return;
+        return
       }
-      const formData = new FormData();
-      const uid24 = uid(24);
-      formData.append('postID', uid24);
-      formData.append('contentType', 'question');
-      formData.append('content', content);
-      formData.append('authorID', '123456789012345678901234');
-      formData.append('authorNickname', '임시닉네임');
+      const formData = new FormData()
+      const uid24 = uid(24)
+      formData.append('postID', uid24)
+      formData.append('contentType', 'question')
+      formData.append('content', content)
+      formData.append('authorID', '123456789012345678901234')
+      formData.append('authorNickname', '임시닉네임')
       //if (userInfo.userUID) {
       //  formData.append('authorID', userInfo.userUID);
       //  formData.append('authorNickname', userInfo.userUID);
@@ -53,7 +54,7 @@ export default function QuestionSection({ data }) {
       //dispatch(createComment(formData));
     },
     [content]
-  );
+  )
 
   return (
     <>
@@ -61,13 +62,16 @@ export default function QuestionSection({ data }) {
       <div className="content">
         <MarkdownRenderingBlock content={data.question.questionBody.content} />
       </div>
+      <Link to={`/user/${data.question.questionBody.authorID}`}>
+        글쓴이: {data.question.questionBody.authorNickname}
+      </Link>
       <div className="hashtags">
         {data.question.questionBody.hashtags.map((tag, index) => {
           return (
             <div key={index}>
               해시태그{index}: {tag}
             </div>
-          );
+          )
         })}
       </div>
       <button>
@@ -84,5 +88,5 @@ export default function QuestionSection({ data }) {
       />
       <button onClick={onSubmitComment}>question 에 댓글달기</button>
     </>
-  );
-}
+  )
+})

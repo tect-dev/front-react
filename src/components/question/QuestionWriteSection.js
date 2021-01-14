@@ -1,72 +1,66 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { uid } from 'uid';
-import { useInput } from '../../hooks/hooks';
-import { useSelector, useDispatch } from 'react-redux';
-import { createQuestion } from '../../redux/createPost';
-import MarkdownEditorBlock from '../MarkdownEditorBlock';
-import MarkdownRenderingBlock from '../MarkdownRenderingBlock';
+import React, { useCallback, useEffect, useState } from 'react'
+import { uid } from 'uid'
+import { useInput } from '../../hooks/hooks'
+import { useSelector, useDispatch } from 'react-redux'
+import { createQuestion } from '../../redux/createPost'
+import MarkdownEditorBlock from '../MarkdownEditorBlock'
+import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 
-export default function QuestionWriteSection() {
-  const [title, onChangeTitle] = useInput('');
-  const [content, setContent] = useState('');
+export default React.memo(function QuestionWriteSection() {
+  const [title, onChangeTitle] = useInput('')
+  const [content, setContent] = useState('')
 
-  const [hashtagText, setHashtagText] = useState('');
-  const [hashtagList, setHashtagList] = useState([]);
+  const [hashtagText, setHashtagText] = useState('')
+  const [hashtagList, setHashtagList] = useState([])
   //const hashtagPattern = /^\#[a-zA-Z0-9]+[\s\,]$/g;
-  const splitPoint = /\,/g;
-  const dispatch = useDispatch();
+  const splitPoint = /\,/g
+  const dispatch = useDispatch()
 
   function onChangeContent(e) {
-    setContent(e.target.value);
+    setContent(e.target.value)
   }
 
   useEffect(() => {
     if (hashtagList.length > 10) {
-      setHashtagText(hashtagText.substr(0, hashtagText.length - 1));
-      hashtagList.pop();
-      alert('태그의 갯수가 너무 많아요!');
+      setHashtagText(hashtagText.substr(0, hashtagText.length - 1))
+      hashtagList.pop()
+      alert('태그의 갯수가 너무 많아요!')
     }
-  }, [hashtagList]);
+  }, [hashtagList])
 
   const onChangeHashtagText = useCallback(
     (e) => {
-      setHashtagText(e.target.value);
-      let splitedArray = e.target.value.split(splitPoint);
+      setHashtagText(e.target.value)
+      let splitedArray = e.target.value.split(splitPoint)
       const editedArray = splitedArray
         .map((element) => {
-          return element.replace(/[^가-힣|a-z|A-Z|0-9]/g, '');
+          return element.replace(/[^가-힣|a-z|A-Z|0-9]/g, '')
         })
-        .filter((string) => string.length > 0);
-      console.log('editedArray : ', editedArray);
-      setHashtagList(editedArray);
-      console.log('hashtag Array : ', hashtagList);
+        .filter((string) => string.length > 0)
+      console.log('editedArray : ', editedArray)
+      setHashtagList(editedArray)
+      console.log('hashtag Array : ', hashtagList)
     },
     [hashtagText]
-  );
+  )
 
   const onSubmitForm = useCallback(
     async (e) => {
-      e.preventDefault();
+      e.preventDefault()
       if (!title || !content) {
-        return alert('제목과 본문을 작성해 주세요.');
+        return alert('제목과 본문을 작성해 주세요.')
       }
-      //const formData = new FormData();
-      const uid24 = uid(24);
+
+      const uid24 = uid(24)
       const formData = {
         postID: uid24,
         title: title,
+        contentType: 'question',
         content: content,
         authorID: '123456789012345678901234',
         authorNickname: '익명',
         hashtags: hashtagList,
-      };
-      //formData.append('postID', uid24);
-      //formData.append('contentType', 'question');
-      //formData.append('title', title);
-      //formData.append('content', content);
-      //formData.append('authorID', '123456789012345678901234');
-      //formData.append('authorNickname', '임시닉네임');
-      //formData.append('hashtags', JSON.stringify(hashtagList));
+      }
 
       //if (userInfo.userUID) {
       //  formData.append('authorID', userInfo.userUID);
@@ -76,10 +70,10 @@ export default function QuestionWriteSection() {
       //  formData.append('authorNickname', '임시닉네임');
       //}
 
-      dispatch(createQuestion(formData));
+      dispatch(createQuestion(formData))
     },
     [title, content, hashtagList]
-  );
+  )
 
   return (
     <>
@@ -117,7 +111,7 @@ export default function QuestionWriteSection() {
                     {element}
                   </a>
                 </div>
-              );
+              )
             })}
           </div>
           <div className="button">
@@ -129,5 +123,5 @@ export default function QuestionWriteSection() {
         <MarkdownRenderingBlock content={content} />
       </section>
     </>
-  );
-}
+  )
+})

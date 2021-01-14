@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { writeContent } from '../redux/createPost';
+import React, { useCallback, useEffect, useState } from 'react'
 
-export default function MarkdownEditorBlock({
+export default React.memo(function MarkdownEditorBlock({
   onChangeContentProps,
-  initialContent,
+  contentProps,
 }) {
   //const [content, setContent] = useState(initialContent);
 
@@ -13,9 +11,9 @@ export default function MarkdownEditorBlock({
       <label htmlFor="content"></label>
       <textarea
         id="content"
-        //value={content}
+        value={contentProps}
         onChange={onChangeContentProps}
       ></textarea>
     </>
-  );
-}
+  )
+})

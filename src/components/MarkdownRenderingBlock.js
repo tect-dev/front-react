@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import remark from 'remark';
 import remarkParse from 'remark-parse';
@@ -149,7 +149,7 @@ const MarkdownStyledBlock = styled.div`
   }
 `;
 
-export default function MarkdownRenderingBlock({ content }) {
+export default React.memo(function MarkdownRenderingBlock({ content }) {
   const [html, setHtml] = useState(content);
 
   useEffect(() => {
@@ -182,4 +182,4 @@ export default function MarkdownRenderingBlock({ content }) {
       ></MarkdownStyledBlock>
     </>
   );
-}
+});
