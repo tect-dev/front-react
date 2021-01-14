@@ -1,54 +1,92 @@
-import { useState } from 'react';
-import MarkdownRenderingBlock from '../MarkdownRenderingBlock';
-import CommentListBlock from '../CommentListBlock';
-import MarkdownEditorBlock from '../MarkdownEditorBlock';
-import { createAnswer } from '../../redux/createPost';
-import { deleteAnswer } from '../../redux/deletePost';
-import { useDispatch } from 'react-redux';
-import { uid } from 'uid';
+import React, { useEffect, useState, useCallback } from 'react'
+import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
+import CommentListBlock from '../CommentListBlock'
+import MarkdownEditorBlock from '../MarkdownEditorBlock'
+import { createAnswer } from '../../redux/createPost'
+import { deleteAnswer } from '../../redux/deletePost'
+import { useDispatch } from 'react-redux'
+import { uid } from 'uid'
 
-export default function AnswerSection({ data }) {
-  const [content, setContent] = useState('');
-  const dispatch = useDispatch();
+export default React.memo(function AnswerSection({ data }) {
+  const [answers, setAnswers] = useState(data.answers)
+  const [content, setContent] = useState('')
+  const dispatch = useDispatch()
 
-  function onChangeContent(e) {
-    setContent(e.target.value);
-  }
+  const onChangeContent = useCallback(
+    (e) => {
+      setContent(e.target.value)
+    },
+    [content]
+  )
 
-  function addAnswer(e) {
-    e.preventDefault();
-    if (!content) {
-      return alert('게시글을 작성하세요.');
-    }
-    const formData = new FormData();
-    const uid24 = uid(24);
-    formData.append('contentType', 'answer');
-    formData.append('postID', data.question._id);
-    formData.append('answerID', uid24);
-    formData.append('content', content);
-    formData.append('authorNickname', '임시닉네임');
-    formData.append('authorID', '123456789012345678901234');
+  const addAnswer = useCallback(
+    (e) => {
+      e.preventDefault()
+      if (!content) {
+        return alert('게시글을 작성하세요.')
+      }
+      const tempAuthorID = '123456789012345678901234'
+      //const tempDate = new Date()
+      //const nowTime = tempDate.now()
+      const uid24 = uid(24)
+      const formData = {
+        answerID: uid24,
+        postID: data.question._id,
+        contentType: 'answer',
+        content: content,
+        authorID: tempAuthorID,
+        authorNickname: '익명',
+      }
+      const tempAnswer = {
+        __v: 0,
+        _id: uid24,
+        answerBody: {
+          answerID: uid24,
+          authorID: tempAuthorID,
+          authorNickname: '익명',
+          content: content,
+          createdAt: '지금', // Date.now() 가 알수없는 오류를 낸다. 생각해보니 걍 이런식으로 써도 될듯.
+          lastUpdate: '지금',
+          postID: data.question._id,
+        },
+      }
+      dispatch(createAnswer(formData))
+      setAnswers([...answers, tempAnswer])
+      setContent('')
+    },
+    [content, answers]
+  )
 
-    dispatch(createAnswer(formData));
-  }
-
-  function onDeleteAnswer(id) {
-    dispatch(deleteAnswer(id));
-  }
+  const onDeleteAnswer = useCallback(
+    (answerID, index) => {
+      dispatch(deleteAnswer(answerID))
+      answers.splice(index, 1)
+      setAnswers([...answers])
+    },
+    [answers]
+  )
 
   return (
     <>
-      {data.answers.map((element, index) => {
+      {answers.map((element, index) => {
         return (
           <div key={index}>
             <div className="content">
               answer{index}
-              <MarkdownRenderingBlock content={element.answerBody.content} />
+              {element.answerBody ? (
+                <MarkdownRenderingBlock content={element.answerBody.content} />
+              ) : (
+                ''
+              )}
             </div>
+            <div>답변 작성자 닉네임: {element.answerBody.authorNickname}</div>
+            <div>마지막 업데이트 날짜: {element.answerBody.lastUpdate}</div>
+            <div></div>
+            <div></div>
             <button>answer 수정</button>
             <button
               onClick={() => {
-                onDeleteAnswer(element._id);
+                onDeleteAnswer(element._id, index)
               }}
             >
               answer 삭제
@@ -57,14 +95,15 @@ export default function AnswerSection({ data }) {
             <MarkdownEditorBlock />
             <button>answer에 댓글달기</button>
           </div>
-        );
+        )
       })}
 
       <MarkdownEditorBlock
         className="answerWrite"
         onChangeContentProps={onChangeContent}
+        contentProps={content}
       />
       <button onClick={addAnswer}>answer 추가하기</button>
     </>
-  );
-}
+  )
+})
