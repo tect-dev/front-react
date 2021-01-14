@@ -82,7 +82,7 @@ export default function Header() {
                   <label htmlFor="login-popup" className="login-modal-btn">
                     Login
                   </label>
-                  <LoginModal labelFor="login-popup" />
+                  <LoginModal labelFor="login-popup"/>
                 </div>
               )}
             </div>

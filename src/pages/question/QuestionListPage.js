@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import QuestionBlock from '../../components/question/QuestionBlock';
 
 import { Button } from '../../components/Button';
+import { Spinner } from '../../components/Spinner'
 
 import '../../styles/page/question/QuestionListPage.scss';
 
@@ -29,7 +30,7 @@ export default function QuestionListPage() {
   if (loading)
     return (
       <MainLayout>
-        <div>로딩중...</div>
+        <Spinner />
       </MainLayout>
     );
   if (error)

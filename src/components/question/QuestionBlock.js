@@ -9,7 +9,7 @@ export default function QuestionBlock({ question }) {
       <div className="questionBlock-head">
         {/* 1000만 미만의 포인트에 대해서는 PC 버전이 깨지지 않음.✭ */}
         <div className="questionBlock-points"> ✭ 1,000,000</div>
-        <div className="answerNum-container">{question.answerList.length}</div>
+        <div className="answerNum-container">{question.answerList ? question?.answerList?.length : 0}</div>
         <div>Answers</div>
       </div>
       <div className="questionBlock-main">

@@ -90,10 +90,19 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
           }
         }
 
-        .authProviders {
+        .authProviders-container {
           display: flex;
           flex-flow: wrap;
           justify-content: space-evenly;
+
+          & > button {
+            background: none;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+          }
         }
       }
     }
