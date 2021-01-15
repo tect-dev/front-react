@@ -1,17 +1,22 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import QuestionListPage from './pages/question/QuestionListPage';
-import QuestionWritePage from './pages/question/QuestionWritePage';
-import QuestionEditPage from './pages/question/QuestionEditPage';
-import QuestionDetailPage from './pages/question/QuestionDetailPage';
-import ProfilePage from './pages/user/ProfilePage';
-import LoginPage from './pages/LoginPage';
-import NotFoundPage from './pages/NotFoundPage';
-import './App.css';
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import AboutPage from './pages/AboutPage'
+import QuestionListPage from './pages/question/QuestionListPage'
+import QuestionWritePage from './pages/question/QuestionWritePage'
+import QuestionEditPage from './pages/question/QuestionEditPage'
+import QuestionDetailPage from './pages/question/QuestionDetailPage'
+import ProfilePage from './pages/user/ProfilePage'
+import LoginPage from './pages/LoginPage'
+import NotFoundPage from './pages/NotFoundPage'
+import { useSelector, useDispatch } from 'react-redux'
+import './App.css'
 
 export default function App() {
+  const { userInfo } = useSelector((state) => {
+    return state.auth
+  })
+  const dispatch = useDispatch()
   return (
     <>
       {/* head 파일을 여기다 적으면, index.html 의 body 태그 하위로 들어가는듯. 그래서 콘솔이 에러를 낸다. react helmet 같은 라이브러리를 써야할듯 */}
@@ -41,5 +46,5 @@ export default function App() {
         <Route component={NotFoundPage} />
       </Switch>
     </>
-  );
+  )
 }

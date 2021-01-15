@@ -4,12 +4,23 @@ import CommentListBlock from '../CommentListBlock'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import { createAnswer } from '../../redux/createPost'
 import { deleteAnswer } from '../../redux/deletePost'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { uid } from 'uid'
+import { Link } from 'react-router-dom'
 
 export default React.memo(function AnswerSection({ data }) {
   const [answers, setAnswers] = useState(data.answers)
   const [content, setContent] = useState('')
+  const { userID, userNickname } = useSelector((state) => {
+    return {
+      userID: state.auth.userID,
+      userNickname: state.auth.userNickname,
+    }
+  }) || {
+    userID: '123456789012345678901234',
+    userNickname: '익명',
+  }
+
   const dispatch = useDispatch()
 
   const onChangeContent = useCallback(
@@ -34,16 +45,16 @@ export default React.memo(function AnswerSection({ data }) {
         postID: data.question._id,
         contentType: 'answer',
         content: content,
-        authorID: tempAuthorID,
-        authorNickname: '익명',
+        authorID: userID,
+        authorNickname: userNickname,
       }
       const tempAnswer = {
         __v: 0,
         _id: uid24,
         answerBody: {
           answerID: uid24,
-          authorID: tempAuthorID,
-          authorNickname: '익명',
+          authorID: userID,
+          authorNickname: userNickname,
           content: content,
           createdAt: '지금', // Date.now() 가 알수없는 오류를 낸다. 생각해보니 걍 이런식으로 써도 될듯.
           lastUpdate: '지금',
@@ -79,18 +90,28 @@ export default React.memo(function AnswerSection({ data }) {
                 ''
               )}
             </div>
-            <div>답변 작성자 닉네임: {element.answerBody.authorNickname}</div>
+            <div>
+              <Link to={`/user/${element.answerBody.authorID}`}>
+                답변 작성자 닉네임: {element.answerBody.authorNickname}
+              </Link>
+            </div>
             <div>마지막 업데이트 날짜: {element.answerBody.lastUpdate}</div>
-            <div></div>
-            <div></div>
-            <button>answer 수정</button>
-            <button
-              onClick={() => {
-                onDeleteAnswer(element._id, index)
-              }}
-            >
-              answer 삭제
-            </button>
+
+            {element.answerBody.authorID === userID ? (
+              <>
+                <button>answer 수정</button>
+                <button
+                  onClick={() => {
+                    onDeleteAnswer(element._id, index)
+                  }}
+                >
+                  answer 삭제
+                </button>
+              </>
+            ) : (
+              ''
+            )}
+
             {/* <CommentListBlock commentList={element.answerBody.comments} /> */}
             <MarkdownEditorBlock />
             <button>answer에 댓글달기</button>

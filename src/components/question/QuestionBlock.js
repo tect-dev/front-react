@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
-import '../../styles/question/QuestionBlock.scss';
+import { Link } from 'react-router-dom'
+import '../../styles/question/QuestionBlock.scss'
 
 export default function QuestionBlock({ question }) {
-  const summaryContent = question.questionBody.content.substr(0, 200);
+  const summaryContent = question.questionBody.content.substr(0, 200)
   //console.log(summaryContent);
   return (
     <Link className="questionBlock" to={`/question/${question._id}`}>
@@ -20,11 +20,15 @@ export default function QuestionBlock({ question }) {
           <div className="questionBlock-content">{summaryContent}...더보기</div>
         </div>
         <div className="questionBlock-main-downside">
-          {question.questionBody.hashtags.map((element) => {
-            return <div className="questionBlock-hashtag">{element}</div>;
+          {question.questionBody.hashtags.map((element, index) => {
+            return (
+              <div className="questionBlock-hashtag" key={index}>
+                {element}
+              </div>
+            )
           })}
         </div>
       </div>
     </Link>
-  );
+  )
 }

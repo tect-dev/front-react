@@ -5,15 +5,26 @@ import { useSelector, useDispatch } from 'react-redux'
 import { createQuestion } from '../../redux/createPost'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
+import { useHistory } from 'react-router-dom'
 
 export default React.memo(function QuestionWriteSection() {
   const [title, onChangeTitle] = useInput('')
   const [content, setContent] = useState('')
-
   const [hashtagText, setHashtagText] = useState('')
   const [hashtagList, setHashtagList] = useState([])
   //const hashtagPattern = /^\#[a-zA-Z0-9]+[\s\,]$/g;
   const splitPoint = /\,/g
+
+  const { userID, userNickname } = useSelector((state) => {
+    return {
+      userID: state.auth.userID,
+      userNickname: state.auth.userNickname,
+    }
+  }) || {
+    userID: '123456789012345678901234',
+    userNickname: '익명',
+  }
+
   const dispatch = useDispatch()
 
   function onChangeContent(e) {
@@ -37,9 +48,8 @@ export default React.memo(function QuestionWriteSection() {
           return element.replace(/[^가-힣|a-z|A-Z|0-9]/g, '')
         })
         .filter((string) => string.length > 0)
-      console.log('editedArray : ', editedArray)
+
       setHashtagList(editedArray)
-      console.log('hashtag Array : ', hashtagList)
     },
     [hashtagText]
   )
@@ -57,18 +67,10 @@ export default React.memo(function QuestionWriteSection() {
         title: title,
         contentType: 'question',
         content: content,
-        authorID: '123456789012345678901234',
-        authorNickname: '익명',
+        authorID: userID,
+        authorNickname: userNickname,
         hashtags: hashtagList,
       }
-
-      //if (userInfo.userUID) {
-      //  formData.append('authorID', userInfo.userUID);
-      //  formData.append('authorNickname', userInfo.userUID);
-      //} else {
-      //  formData.append('authorID', '비회원 글쓰기');
-      //  formData.append('authorNickname', '임시닉네임');
-      //}
 
       dispatch(createQuestion(formData))
     },

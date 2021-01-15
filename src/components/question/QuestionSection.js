@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useCallback, useEffect } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import CommentListBlock from '../CommentListBlock'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
@@ -13,17 +13,25 @@ import {
 
 export default React.memo(function QuestionSection({ data }) {
   const [content, setContent] = useState('')
-
+  const { isDeleted, userID } = useSelector((state) => {
+    return { isDeleted: state.deletePost.isDeleted, userID: state.auth.userID }
+  }) || { isDeleted: false, userID: null }
+  const history = useHistory()
   function onChangeContent(e) {
     setContent(e.target.value)
   }
+
+  useEffect(() => {
+    if (isDeleted) {
+      history.push('/question')
+    }
+  }, [isDeleted])
 
   const dispatch = useDispatch()
 
   const onDeleteQuestion = useCallback(() => {
     //alert('정말 삭제합니까?');
     dispatch(deleteQuestion(data.question._id))
-    window.location.href = `/question`
   }, [dispatch, data.question._id])
 
   function deleteComment() {
@@ -74,12 +82,19 @@ export default React.memo(function QuestionSection({ data }) {
           )
         })}
       </div>
-      <button>
-        <Link to={`/question/edit/${data.question._id}`}>
-          question 수정하기
-        </Link>
-      </button>
-      <button onClick={onDeleteQuestion}>question 삭제하기</button>
+      {data.question.questionBody.authorID === userID ? (
+        <>
+          <button>
+            <Link to={`/question/edit/${data.question._id}`}>
+              question 수정하기
+            </Link>
+          </button>
+          <button onClick={onDeleteQuestion}>question 삭제하기</button>
+        </>
+      ) : (
+        ''
+      )}
+
       {/*<CommentListBlock commentList={question.comments} />*/}
 
       <MarkdownEditorBlock
