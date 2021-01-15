@@ -23,8 +23,14 @@ export default function QuestionListPage() {
     dispatch(readQuestionList());
   }, [dispatch]);
 
-  useEffect(async () => {
-    getQuestionListAsync();
+  useEffect(async() => {
+    // questionList cache
+    // data가 있을 때는 백엔드에 요청을 보내지 않도록 분기 처리함.
+    if(data){
+      return
+    } else {
+      getQuestionListAsync();
+    }
   }, [dispatch]);
 
   if (loading)
