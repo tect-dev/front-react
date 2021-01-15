@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import MainLayout from '../../components/layout/MainLayout'
 import QuestionSection from '../../components/question/QuestionSection'
 import AnswerSection from '../../components/question/AnswerSection'
+import { Spinner } from '../../components/Spinner'
 
 //import WriteBlock from '../../components/WriteBlock';
 
@@ -27,7 +28,7 @@ export default function QuestionDetailPage({ match }) {
   if (loading)
     return (
       <MainLayout>
-        <div>로딩중...</div>
+        <Spinner />
       </MainLayout>
     )
 

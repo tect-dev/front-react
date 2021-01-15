@@ -4,6 +4,7 @@ import MainLayout from '../../components/layout/MainLayout'
 import { readQuestionList } from '../../redux/readPost'
 import { Link } from 'react-router-dom'
 import QuestionBlock from '../../components/question/QuestionBlock'
+import { Spinner } from '../../components/Spinner'
 
 import { Button } from '../../components/Button'
 
@@ -30,7 +31,7 @@ export default function QuestionListPage() {
   if (loading)
     return (
       <MainLayout>
-        <div>로딩중...</div>
+        <Spinner />
       </MainLayout>
     )
   if (error)
