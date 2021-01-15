@@ -7,9 +7,14 @@ import { deleteAnswer } from '../../redux/deletePost'
 import { useDispatch, useSelector } from 'react-redux'
 import { uid } from 'uid'
 import { Link } from 'react-router-dom'
+import { sortISOByTimeStamp } from '../../lib/functions'
 
 export default React.memo(function AnswerSection({ data }) {
-  const [answers, setAnswers] = useState(data.answers)
+  const [answers, setAnswers] = useState(
+    data.answers.sort((a, b) => {
+      sortISOByTimeStamp(a.answerBody.createdAt, b.answerBody.createdAt, -1)
+    })
+  )
   const [content, setContent] = useState('')
   const { userID, userNickname } = useSelector((state) => {
     return {
@@ -17,7 +22,7 @@ export default React.memo(function AnswerSection({ data }) {
       userNickname: state.auth.userNickname,
     }
   }) || {
-    userID: '123456789012345678901234',
+    userID: null,
     userNickname: '익명',
   }
 
@@ -97,7 +102,7 @@ export default React.memo(function AnswerSection({ data }) {
             </div>
             <div>마지막 업데이트 날짜: {element.answerBody.lastUpdate}</div>
 
-            {element.answerBody.authorID === userID ? (
+            {userID !== null && userID === element.answerBody.authorID ? (
               <>
                 <button>answer 수정</button>
                 <button

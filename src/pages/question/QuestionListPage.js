@@ -24,7 +24,7 @@ export default function QuestionListPage() {
 
   useEffect(async () => {
     getQuestionListAsync()
-    console.log(data)
+    //console.log(data)
   }, [dispatch])
 
   if (loading)

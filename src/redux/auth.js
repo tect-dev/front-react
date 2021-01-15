@@ -10,7 +10,7 @@ const CREATE_USER_FAIL = 'auth/CREATE_USER_FAIL'
 
 const initialState = {
   loginState: false,
-  userID: '123456789012345678901234',
+  userID: null,
   userNickname: '익명',
   loading: false,
 }

@@ -1,5 +1,19 @@
-import sanitize from 'sanitize-html';
-import { katexWhiteList } from './katexWhiteList';
+import sanitize from 'sanitize-html'
+import { katexWhiteList } from './katexWhiteList'
+
+export function sortISOByTimeStamp(
+  toBeLessIndex,
+  toBeMoreIndex,
+  reverseFactor
+) {
+  if (Date.parse(toBeLessIndex) > Date.parse(toBeMoreIndex)) {
+    return -1 * reverseFactor
+  } else if (Date.parse(toBeLessIndex) < Date.parse(toBeMoreIndex)) {
+    return 1 * reverseFactor
+  } else {
+    return 0
+  }
+}
 
 export const htmlFilter = (html) => {
   return sanitize(html, {
@@ -65,5 +79,5 @@ export const htmlFilter = (html) => {
       },
     },
     //allowedIframeHostnames: ['www.youtube.com', 'codesandbox.io', 'codepen.io'],
-  });
-};
+  })
+}
