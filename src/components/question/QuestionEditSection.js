@@ -2,17 +2,33 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { uid } from 'uid'
 import { useInput } from '../../hooks/hooks'
 import { useSelector, useDispatch } from 'react-redux'
-import { createQuestion } from '../../redux/createPost'
+import { updateQuestion } from '../../redux/updatePost'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 
-export default React.memo(function QuestionWriteSection() {
-  const [title, onChangeTitle] = useInput('')
-  const [content, setContent] = useState('')
-  const [hashtagText, setHashtagText] = useState('')
-  const [hashtagList, setHashtagList] = useState([])
-
+export default React.memo(function QuestionEditSection({ initialData }) {
+  const [title, onChangeTitle] = useInput(
+    initialData.question.questionBody.title
+  )
+  const [content, setContent] = useState(
+    initialData.question.questionBody.content
+  )
+  const [hashtagText, setHashtagText] = useState(
+    mergeArray(initialData.question.questionBody.hashtags, `\,`)
+  )
+  const [hashtagList, setHashtagList] = useState(
+    initialData.question.questionBody.hashtags
+  )
+  const questionID = initialData.question._id || 'error'
   const splitPoint = /\,/g
+
+  function mergeArray(array, splitter) {
+    let mergedOne = ''
+    for (const element of array) {
+      mergedOne = mergedOne + element + splitter
+    }
+    return mergedOne
+  }
 
   const { userID, userNickname } = useSelector((state) => {
     return {
@@ -60,9 +76,8 @@ export default React.memo(function QuestionWriteSection() {
         return alert('제목과 본문을 작성해 주세요.')
       }
 
-      const uid24 = uid(24)
       const formData = {
-        postID: uid24,
+        postID: questionID,
         title: title,
         contentType: 'question',
         content: content,
@@ -71,7 +86,7 @@ export default React.memo(function QuestionWriteSection() {
         hashtags: hashtagList,
       }
 
-      dispatch(createQuestion(formData))
+      dispatch(updateQuestion(formData))
     },
     [title, content, hashtagList]
   )
@@ -91,7 +106,7 @@ export default React.memo(function QuestionWriteSection() {
           </div>
           본문
           <MarkdownEditorBlock
-            initialContent={''}
+            contentProps={content}
             onChangeContentProps={onChangeContent}
           />
           <div>

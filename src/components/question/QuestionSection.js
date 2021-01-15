@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import CommentListBlock from '../CommentListBlock'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
@@ -13,26 +13,20 @@ import {
 
 export default React.memo(function QuestionSection({ data }) {
   const [content, setContent] = useState('')
-  const { isDeleted, userID } = useSelector((state) => {
-    return { isDeleted: state.deletePost.isDeleted, userID: state.auth.userID }
-  }) || { isDeleted: false, userID: null }
-  const history = useHistory()
+  const { userID } = useSelector((state) => {
+    return { userID: state.auth.userID }
+  }) || { userID: null }
+
   function onChangeContent(e) {
     setContent(e.target.value)
   }
-
-  useEffect(() => {
-    if (isDeleted) {
-      history.push('/question')
-    }
-  }, [isDeleted])
 
   const dispatch = useDispatch()
 
   const onDeleteQuestion = useCallback(() => {
     //alert('정말 삭제합니까?');
     dispatch(deleteQuestion(data.question._id))
-  }, [dispatch, data.question._id])
+  }, [dispatch])
 
   function deleteComment() {
     alert('정말 삭제합니까?')
@@ -51,15 +45,6 @@ export default React.memo(function QuestionSection({ data }) {
       formData.append('content', content)
       formData.append('authorID', '123456789012345678901234')
       formData.append('authorNickname', '임시닉네임')
-      //if (userInfo.userUID) {
-      //  formData.append('authorID', userInfo.userUID);
-      //  formData.append('authorNickname', userInfo.userUID);
-      //} else {
-      //  formData.append('authorID', '비회원 글쓰기');
-      //  formData.append('authorNickname', '임시닉네임');
-      //}
-
-      //dispatch(createComment(formData));
     },
     [content]
   )
@@ -67,6 +52,8 @@ export default React.memo(function QuestionSection({ data }) {
   return (
     <>
       <div className="title">Title: {data.question.questionBody.title}</div>
+      <div>작성일: {data.question.questionBody.createdAt}</div>
+      <div>최종 수정일: {data.question.questionBody.lastUpdate}</div>
       <div className="content">
         <MarkdownRenderingBlock content={data.question.questionBody.content} />
       </div>
@@ -82,7 +69,8 @@ export default React.memo(function QuestionSection({ data }) {
           )
         })}
       </div>
-      {data.question.questionBody.authorID === userID ? (
+      {data.question.questionBody.authorID === userID &&
+      data.answers.length === 0 ? (
         <>
           <button>
             <Link to={`/question/edit/${data.question._id}`}>

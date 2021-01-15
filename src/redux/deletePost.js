@@ -3,7 +3,6 @@ import axios from 'axios'
 const initialState = {
   loading: false,
   error: null,
-  isDeleted: false,
 }
 
 // action types
@@ -26,7 +25,11 @@ const DELETE_COMMENT_FAIL = 'comment/DELETE_COMMENT_FAIL'
 
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
 
-export const deleteQuestion = (questionID) => async (dispatch) => {
+export const deleteQuestion = (questionID) => async (
+  dispatch,
+  getState,
+  { history }
+) => {
   dispatch({ type: DELETE_QUESTION_TRY })
   try {
     await axios({
@@ -34,9 +37,7 @@ export const deleteQuestion = (questionID) => async (dispatch) => {
       url: `/question/${questionID}`,
     })
     await dispatch({ type: DELETE_QUESTION_SUCCESS })
-    // 리다이렉션 하면 웹이 새로고침돼서 로그인 상태가 풀려버린다.
-    // redux 에서 리다이렉션 하지말것.
-    //window.location.href = `/question`
+    history.push('/question')
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: DELETE_QUESTION_FAIL, error: e })
@@ -101,7 +102,6 @@ export default function deletePost(state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        isDeleted: true,
       }
     case DELETE_QUESTION_FAIL:
       return {
@@ -120,7 +120,6 @@ export default function deletePost(state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        isDeleted: true,
       }
     case DELETE_ANSWER_FAIL:
       return {
@@ -139,7 +138,6 @@ export default function deletePost(state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        isDeleted: true,
       }
     case DELETE_ARTICLE_FAIL:
       return {

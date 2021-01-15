@@ -1,6 +1,7 @@
 // postingAPI.함수이름 으로 사용하게 모든 함수를 임포트(import * as postingAPI)
 
-import axios from 'axios';
+import axios from 'axios'
+import { sortISOByTimeStamp } from '../lib/functions'
 
 const initialState = {
   questionList: {
@@ -23,77 +24,79 @@ const initialState = {
     data: null,
     error: null,
   },
-};
+}
 
 // action types
-const READ_QUESTION_LIST_TRY = 'question/READ_QUESTION_LIST_TRY';
-const READ_QUESTION_LIST_SUCCESS = 'question/READ_QUESTION_LIST_SUCCESS';
-const READ_QUESTION_LIST_FAIL = 'question/READ_QUESTION_LIST_FAIL';
+const READ_QUESTION_LIST_TRY = 'question/READ_QUESTION_LIST_TRY'
+const READ_QUESTION_LIST_SUCCESS = 'question/READ_QUESTION_LIST_SUCCESS'
+const READ_QUESTION_LIST_FAIL = 'question/READ_QUESTION_LIST_FAIL'
 
-const READ_QUESTION_TRY = 'question/READ_QUESTION_TRY';
-const READ_QUESTION_SUCCESS = 'question/READ_QUESTION_SUCCESS';
-const READ_QUESTION_FAIL = 'question/READ_QUESTION_FAIL';
+const READ_QUESTION_TRY = 'question/READ_QUESTION_TRY'
+const READ_QUESTION_SUCCESS = 'question/READ_QUESTION_SUCCESS'
+const READ_QUESTION_FAIL = 'question/READ_QUESTION_FAIL'
 
-const READ_ARTICLE_LIST_TRY = 'article/READ_ARTICLE_LIST_TRY';
-const READ_ARTICLE_LIST_SUCCESS = 'article/READ_ARTICLE_LIST_SUCCESS';
-const READ_ARTICLE_LIST_FAIL = 'article/READ_ARTICLE_LIST_FAIL';
+const READ_ARTICLE_LIST_TRY = 'article/READ_ARTICLE_LIST_TRY'
+const READ_ARTICLE_LIST_SUCCESS = 'article/READ_ARTICLE_LIST_SUCCESS'
+const READ_ARTICLE_LIST_FAIL = 'article/READ_ARTICLE_LIST_FAIL'
 
-const READ_ARTICLE_TRY = 'article/READ_ARTICLE_TRY';
-const READ_ARTICLE_SUCCESS = 'article/READ_ARTICLE_SUCCESS';
-const READ_ARTICLE_FAIL = 'article/READ_ARTICLE_FAIL';
+const READ_ARTICLE_TRY = 'article/READ_ARTICLE_TRY'
+const READ_ARTICLE_SUCCESS = 'article/READ_ARTICLE_SUCCESS'
+const READ_ARTICLE_FAIL = 'article/READ_ARTICLE_FAIL'
 
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
 
 export const readQuestionList = () => async (dispatch) => {
-  dispatch({ type: READ_QUESTION_LIST_TRY });
+  dispatch({ type: READ_QUESTION_LIST_TRY })
   try {
-    const res = await axios.get('/question');
-    // 브라우저 캐싱기능 구현 확인을 위해 의도적으로 setTimeout 을 뒀음.
-    setTimeout(() => {
-      dispatch({ type: READ_QUESTION_LIST_SUCCESS, questionList: res.data });
-    }, 500);
+    const res = await axios.get('/question')
+    dispatch({
+      type: READ_QUESTION_LIST_SUCCESS,
+      questionList: res.data.sort((a, b) => {
+        return sortISOByTimeStamp(
+          a.questionBody.createdAt,
+          b.questionBody.createdAt,
+          1
+        )
+      }),
+    })
   } catch (e) {
-    console.log('error: ', e);
-    dispatch({ type: READ_QUESTION_LIST_FAIL, error: e });
+    console.log('error: ', e)
+    dispatch({ type: READ_QUESTION_LIST_FAIL, error: e })
   }
-};
+}
 
 export const readArticleList = () => async (dispatch) => {
-  dispatch({ type: READ_ARTICLE_LIST_TRY });
+  dispatch({ type: READ_ARTICLE_LIST_TRY })
   try {
-    const res = await axios.get('/article');
-    dispatch({ type: READ_ARTICLE_LIST_SUCCESS, articleList: res.data });
+    const res = await axios.get('/article')
+    dispatch({ type: READ_ARTICLE_LIST_SUCCESS, articleList: res.data })
   } catch (e) {
-    console.log('error: ', e);
-    dispatch({ type: READ_ARTICLE_LIST_FAIL, error: e });
+    console.log('error: ', e)
+    dispatch({ type: READ_ARTICLE_LIST_FAIL, error: e })
   }
-};
+}
 
 export const readQuestionByUID = (uid) => async (dispatch) => {
-  dispatch({ type: READ_QUESTION_TRY });
+  dispatch({ type: READ_QUESTION_TRY })
   try {
-    const res = await axios.get(`/question/${uid}`);
-    setTimeout(() => {
-      dispatch({ type: READ_QUESTION_SUCCESS, question: res.data });
-    }, 500);
+    const res = await axios.get(`/question/${uid}`)
+    dispatch({ type: READ_QUESTION_SUCCESS, question: res.data })
   } catch (e) {
-    console.log('error: ', e);
-    dispatch({ type: READ_QUESTION_FAIL, error: e });
+    console.log('error: ', e)
+    dispatch({ type: READ_QUESTION_FAIL, error: e })
   }
-};
+}
 
 export const readArticleByUID = (uid) => async (dispatch) => {
-  dispatch({ type: READ_ARTICLE_TRY });
+  dispatch({ type: READ_ARTICLE_TRY })
   try {
-    const res = await axios.get(`/article/${uid}`);
-    setTimeout(() => {
-      dispatch({ type: READ_ARTICLE_SUCCESS, article: res.data });
-    }, 500);
+    const res = await axios.get(`/article/${uid}`)
+    dispatch({ type: READ_ARTICLE_SUCCESS, article: res.data })
   } catch (e) {
-    console.log('error: ', e);
-    dispatch({ type: READ_ARTICLE_FAIL, error: e });
+    console.log('error: ', e)
+    dispatch({ type: READ_ARTICLE_FAIL, error: e })
   }
-};
+}
 
 export default function readPost(state = initialState, action) {
   switch (action.type) {
@@ -105,7 +108,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: null,
         },
-      };
+      }
     case READ_QUESTION_LIST_SUCCESS:
       return {
         ...state,
@@ -114,7 +117,7 @@ export default function readPost(state = initialState, action) {
           data: action.questionList,
           error: null,
         },
-      };
+      }
     case READ_QUESTION_LIST_FAIL:
       return {
         ...state,
@@ -123,7 +126,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: action.error,
         },
-      };
+      }
 
     case READ_QUESTION_TRY:
       return {
@@ -133,7 +136,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: null,
         },
-      };
+      }
     case READ_QUESTION_SUCCESS:
       return {
         ...state,
@@ -142,7 +145,7 @@ export default function readPost(state = initialState, action) {
           data: action.question,
           error: null,
         },
-      };
+      }
     case READ_QUESTION_FAIL:
       return {
         ...state, // 테스트를 위해 각주처리. 실제 서버가 돌아가면 각주 풀어줘야함.
@@ -151,7 +154,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: action.error,
         },
-      };
+      }
 
     case READ_ARTICLE_LIST_TRY:
       return {
@@ -161,7 +164,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: null,
         },
-      };
+      }
     case READ_ARTICLE_LIST_SUCCESS:
       return {
         ...state,
@@ -170,7 +173,7 @@ export default function readPost(state = initialState, action) {
           data: action.articleList,
           error: null,
         },
-      };
+      }
     case READ_ARTICLE_LIST_FAIL:
       return {
         ...state,
@@ -179,7 +182,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: action.error,
         },
-      };
+      }
 
     case READ_ARTICLE_TRY:
       return {
@@ -189,7 +192,7 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: null,
         },
-      };
+      }
     case READ_ARTICLE_SUCCESS:
       return {
         ...state,
@@ -198,7 +201,7 @@ export default function readPost(state = initialState, action) {
           data: action.article,
           error: null,
         },
-      };
+      }
     case READ_ARTICLE_FAIL:
       return {
         ...state,
@@ -207,8 +210,8 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: action.error,
         },
-      };
+      }
     default:
-      return state;
+      return state
   }
 }
