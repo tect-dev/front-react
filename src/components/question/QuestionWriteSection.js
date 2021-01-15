@@ -19,10 +19,7 @@ export default React.memo(function QuestionWriteSection() {
       userID: state.auth.userID,
       userNickname: state.auth.userNickname,
     }
-  }) || {
-    userID: '123456789012345678901234',
-    userNickname: '익명',
-  }
+  })
 
   const dispatch = useDispatch()
 

@@ -15,7 +15,7 @@ export default React.memo(function QuestionSection({ data }) {
   const [content, setContent] = useState('')
   const { userID } = useSelector((state) => {
     return { userID: state.auth.userID }
-  }) || { userID: null }
+  })
 
   function onChangeContent(e) {
     setContent(e.target.value)
@@ -70,7 +70,8 @@ export default React.memo(function QuestionSection({ data }) {
         })}
       </div>
       {data.question.questionBody.authorID === userID &&
-      data.answers.length === 0 ? (
+      data.answers.length === 0 &&
+      userID !== '000000000000000000000000' ? (
         <>
           <button>
             <Link to={`/question/edit/${data.question._id}`}>
