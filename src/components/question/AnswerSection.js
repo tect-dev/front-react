@@ -21,10 +21,7 @@ export default React.memo(function AnswerSection({ data }) {
       userID: state.auth.userID,
       userNickname: state.auth.userNickname,
     }
-  }) || {
-    userID: null,
-    userNickname: '익명',
-  }
+  })
 
   const dispatch = useDispatch()
 
@@ -102,7 +99,8 @@ export default React.memo(function AnswerSection({ data }) {
             </div>
             <div>마지막 업데이트 날짜: {element.answerBody.lastUpdate}</div>
 
-            {userID !== null && userID === element.answerBody.authorID ? (
+            {userID !== '000000000000000000000000' &&
+            userID === element.answerBody.authorID ? (
               <>
                 <button>answer 수정</button>
                 <button
