@@ -4,14 +4,17 @@ const initialState = {
   question: {
     loading: false,
     error: null,
+    isAdded: false,
   },
   answer: {
     loading: false,
     error: null,
+    isAdded: false,
   },
   article: {
     loading: false,
     error: null,
+    isAdded: false,
   },
 }
 
@@ -34,11 +37,14 @@ const CREATE_COMMENT_SUCCESS = 'comment/CREATE_COMMENT_SUCCESS'
 const CREATE_COMMENT_FAIL = 'comment/CREATE_COMMENT_FAIL'
 
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
-
-export const createQuestion = (data) => async (dispatch) => {
+// 3번째 인자를 이용하면 withExtraArgument 에서 넣어준 값을 사용할 수 있다.
+export const createQuestion = (data) => async (
+  dispatch,
+  getState,
+  { history }
+) => {
   dispatch({ type: CREATE_QUESTION_TRY })
   try {
-    //const obj = JSON.stringify(Object.fromEntries(data));
     const obj = JSON.stringify(data)
     await axios({
       method: 'post',
@@ -48,8 +54,8 @@ export const createQuestion = (data) => async (dispatch) => {
     })
     await dispatch({ type: CREATE_QUESTION_SUCCESS })
 
+    history.push(`/question/${data.postID}`)
     // obj 는 스트링으로 만든거라서, data 를 써야함.
-    window.location.href = `http://localhost:3000/question/${data.postID}`
   } catch (e) {
     alert('error: ', e)
     dispatch({ type: CREATE_QUESTION_FAIL, error: e })
@@ -109,8 +115,8 @@ export default function createPost(state = initialState, action) {
         question: {
           loading: false,
           error: null,
+          isAdded: true,
         },
-        content: '',
       }
     case CREATE_QUESTION_FAIL:
       return {
@@ -134,8 +140,8 @@ export default function createPost(state = initialState, action) {
         answer: {
           loading: false,
           error: null,
+          isAdded: true,
         },
-        content: '',
       }
     case CREATE_ANSWER_FAIL:
       return {

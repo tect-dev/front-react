@@ -1,34 +1,35 @@
-import React, { useState, useCallback } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { loginSuccess, loginSuccessDelayed } from '../../redux/auth';
-import '../../styles/layout/Header.scss';
-import { FaTimes, FaBars } from 'react-icons/fa';
+import React, { useState, useCallback } from 'react'
+import { NavLink } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { LoginModal } from './LoginModal';
+import '../../styles/layout/Header.scss'
+import { FaTimes, FaBars } from 'react-icons/fa'
+
+import { LoginModal } from './LoginModal'
 
 export default function Header() {
   // useSelector: 리덕스 스토어의 상태를 조회하는 hooks.
   // state 의 값은 리덕스 스토에다가 getState() 를 호출했을때 나오는 값과 같음.
-  const { loginState, userInfo } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userInfo: state.auth.user };
-  });
+  const { loginState, userID, userNickname } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      userID: state.auth.userID,
+      userNickname: state.auth.userNickname,
+    }
+  })
 
   // useDispatch : 리덕스 스토어의 dispatch 를 함수에서 쓸 수 있게 해주는 hooks.
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   // useCallback : 함수의 불필요한 리렌더링을 막기 위한 hooks.
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
-  const onLogin = useCallback(() => {
-    dispatch(loginSuccessDelayed());
-  }, [dispatch]);
 
-  const [menuClick, setMenuClick] = useState(false);
+  const [menuClick, setMenuClick] = useState(false)
 
-  const handleMenuClick = () => setMenuClick(!menuClick);
-  const closeMobileMenu = () => setMenuClick(false);
+  const handleMenuClick = () => setMenuClick(!menuClick)
+  const closeMobileMenu = () => setMenuClick(false)
 
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuth, setIsAuth] = useState(true)
 
   return (
     <header className="header">
@@ -68,7 +69,7 @@ export default function Header() {
             <div className="auth-container">
               {loginState ? (
                 <div className="mypage-container">
-                  <NavLink to="/mypage" className="navbar-item-link">
+                  <NavLink to={`/user/${userID}`} className="navbar-item-link">
                     MyPage
                   </NavLink>
                 </div>
@@ -154,5 +155,5 @@ export default function Header() {
     //     </div>
     //   </nav>
     // </>
-  );
+  )
 }
