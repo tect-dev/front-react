@@ -7,6 +7,7 @@ import QuestionBlock from '../../components/question/QuestionBlock'
 import { Spinner } from '../../components/Spinner'
 
 import { Button } from '../../components/Button'
+import { Pagination } from '../../components/Pagination'
 
 import '../../styles/page/question/QuestionListPage.scss'
 
@@ -24,8 +25,11 @@ export default function QuestionListPage() {
   }, [dispatch])
 
   useEffect(async () => {
-    getQuestionListAsync()
-    //console.log(data)
+    if(data){
+      return
+    } else {
+      getQuestionListAsync();
+    }
   }, [dispatch])
 
   if (loading)
@@ -67,15 +71,7 @@ export default function QuestionListPage() {
                 </Link>
               </div>
               <div className="questionList">
-                {data
-                  ? data.map((element, index) => {
-                      return (
-                        <div key={index}>
-                          <QuestionBlock question={element} />
-                        </div>
-                      )
-                    })
-                  : ''}
+                <Pagination data={data}/>
               </div>
             </div>
           </section>
