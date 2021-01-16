@@ -19,6 +19,15 @@ export const onClickTag = () => {
   alert('tag is clicked!')
 }
 
+export function textTooLongAlert(text, maximumLength) {
+  if (text.length > maximumLength) {
+    alert('too long')
+    return text.slice(0, maximumLength - 1)
+  } else {
+    return text
+  }
+}
+
 export const htmlFilter = (html) => {
   return sanitize(html, {
     allowedTags: [

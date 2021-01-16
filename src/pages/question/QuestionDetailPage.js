@@ -1,13 +1,11 @@
 import { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { readQuestionByUID } from '../../redux/readPost'
-import { Link } from 'react-router-dom'
+import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
 import MainLayout from '../../components/layout/MainLayout'
 import QuestionSection from '../../components/question/QuestionSection'
 import AnswerSection from '../../components/question/AnswerSection'
 import { Spinner } from '../../components/Spinner'
-
-//import WriteBlock from '../../components/WriteBlock';
 
 export default function QuestionDetailPage({ match }) {
   const questionID = match.params.questionID
@@ -19,7 +17,7 @@ export default function QuestionDetailPage({ match }) {
 
   const getQuestionAsync = useCallback(() => {
     dispatch(readQuestionByUID(questionID))
-  }, [dispatch])
+  }, [dispatch, questionID])
 
   useEffect(() => {
     getQuestionAsync()
@@ -49,8 +47,12 @@ export default function QuestionDetailPage({ match }) {
   return (
     <>
       <MainLayout>
-        <QuestionSection data={data} />
-        <AnswerSection data={data} />
+        <HalfWidthContainer>
+          <QuestionSection data={data} />
+        </HalfWidthContainer>
+        <HalfWidthContainer>
+          <AnswerSection data={data} />
+        </HalfWidthContainer>
       </MainLayout>
     </>
   )
