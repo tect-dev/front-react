@@ -41,6 +41,7 @@ export const deleteQuestion = (questionID) => async (
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: DELETE_QUESTION_FAIL, error: e })
+    alert('게시글을 삭제하는데 오류가 발생했습니다.')
   }
 }
 
@@ -56,6 +57,7 @@ export const deleteAnswer = (answerID) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: DELETE_ANSWER_FAIL, error: e })
+    alert('게시글을 삭제하는데 오류가 발생했습니다.')
   }
 }
 

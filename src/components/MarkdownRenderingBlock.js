@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import remark from 'remark';
-import remarkParse from 'remark-parse';
-import breaks from 'remark-breaks';
-import math from 'remark-math';
-import remark2rehype from 'remark-rehype';
-import katex from 'rehype-katex';
-import stringify from 'rehype-stringify';
-import raw from 'rehype-raw';
-import slug from 'remark-slug';
-import { htmlFilter } from '../lib/functions';
-import { prismPlugin } from '../lib/prismPlugin';
-import { prismThemes } from '../lib/prismThemes';
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import remark from 'remark'
+import remarkParse from 'remark-parse'
+import breaks from 'remark-breaks'
+import math from 'remark-math'
+import remark2rehype from 'remark-rehype'
+import katex from 'rehype-katex'
+import stringify from 'rehype-stringify'
+import raw from 'rehype-raw'
+import slug from 'remark-slug'
+import { htmlFilter } from '../lib/functions'
+import { prismPlugin } from '../lib/prismPlugin'
+import { prismThemes } from '../lib/prismThemes'
 
 export const mediaQuery = (maxWidth) => `
   @media (max-width: ${maxWidth}px)
-`;
+`
 const media = {
   xxlarge: mediaQuery(1920),
   xlarge: mediaQuery(1440),
@@ -24,7 +24,7 @@ const media = {
   small: mediaQuery(768),
   xsmall: mediaQuery(375),
   custom: mediaQuery,
-};
+}
 
 export const palette = {
   /* teal */
@@ -60,7 +60,7 @@ export const palette = {
   red7: '#f03e3e',
   red8: '#e03131',
   red9: '#c92a2a',
-};
+}
 
 const MarkdownStyledBlock = styled.div`
   &.atom-one-dark {
@@ -68,6 +68,9 @@ const MarkdownStyledBlock = styled.div`
   }
   &.atom-one-light {
     ${prismThemes['atom-one-light']}
+  }
+  &.vscDark {
+    ${prismThemes['vscDark']}
   }
   &.github {
     ${prismThemes['github']}
@@ -77,6 +80,9 @@ const MarkdownStyledBlock = styled.div`
   }
   &.dracula {
     ${prismThemes['dracula']}
+  }
+  &.tomorrow-night {
+    ${prismThemes['tomorrow-night']}
   }
   pre {
     font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas,
@@ -147,10 +153,10 @@ const MarkdownStyledBlock = styled.div`
   .katex-mathml {
     display: none;
   }
-`;
+`
 
 export default React.memo(function MarkdownRenderingBlock({ content }) {
-  const [html, setHtml] = useState(content);
+  const [html, setHtml] = useState(content)
 
   useEffect(() => {
     setHtml(
@@ -171,15 +177,15 @@ export default React.memo(function MarkdownRenderingBlock({ content }) {
           .processSync(content)
           .toString()
       )
-    );
-  }, [content]);
+    )
+  }, [content])
 
   return (
     <>
       <MarkdownStyledBlock
-        className={'atom-one-light'}
+        className={'dracula'}
         dangerouslySetInnerHTML={{ __html: html }}
       ></MarkdownStyledBlock>
     </>
-  );
-});
+  )
+})
