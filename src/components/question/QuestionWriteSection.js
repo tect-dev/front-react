@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { createQuestion } from '../../redux/createPost'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
+import { TagBlock } from '../TagBlock'
+import { Button } from '../Button'
 
 export default React.memo(function QuestionWriteSection() {
   const [title, onChangeTitle] = useInput('')
@@ -78,7 +80,11 @@ export default React.memo(function QuestionWriteSection() {
       <section>
         <form onSubmit={onSubmitForm}>
           <div>
-            <label htmlFor="title">title: </label>
+            <label htmlFor="title">
+              <h3>제목</h3>
+              제목만으로도 무슨 내용인지 파악할 수 있게 적어주세요.
+            </label>
+            <br />
             <input
               type="text"
               id="title"
@@ -86,34 +92,47 @@ export default React.memo(function QuestionWriteSection() {
               onChange={onChangeTitle}
             />
           </div>
-          본문
+          <h3>본문</h3>
+
           <MarkdownEditorBlock
             initialContent={''}
             onChangeContentProps={onChangeContent}
           />
           <div>
-            <label htmlFor="hashtag">hashtag: </label>
-            <input
-              type="text"
-              id="hashtag"
-              value={hashtagText}
-              onChange={onChangeHashtagText}
-            />
+            <label htmlFor="hashtag">
+              <h3>Tags</h3>
+              태그는 쉼표로 구분되며, 10개까지 입력이 가능합니다{' '}
+            </label>
+            <div>
+              <input
+                type="text"
+                id="hashtag"
+                value={hashtagText}
+                onChange={onChangeHashtagText}
+              />
+            </div>
           </div>
           <div>
-            hashtag가 제대로 체크 되나:{' '}
             {hashtagList.map((element, index) => {
               return (
-                <div key={index}>
-                  <a href="/" style={{ color: 'blue' }}>
-                    {element}
-                  </a>
-                </div>
+                <TagBlock
+                  key={index}
+                  text={element}
+                  function={(e) => {
+                    e.preventDefault()
+                  }}
+                />
               )
             })}
           </div>
           <div className="button">
-            <button type="submit">Send your message</button>
+            <Button
+              className="ask-btn"
+              type="submit"
+              buttonStyle="btn--outline"
+            >
+              작성 완료
+            </Button>
           </div>
         </form>
       </section>

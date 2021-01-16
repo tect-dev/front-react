@@ -15,6 +15,10 @@ export function sortISOByTimeStamp(
   }
 }
 
+export const onClickTag = () => {
+  alert('tag is clicked!')
+}
+
 export const htmlFilter = (html) => {
   return sanitize(html, {
     allowedTags: [

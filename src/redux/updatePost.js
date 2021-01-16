@@ -50,18 +50,18 @@ export const updateQuestion = (data) => async (
   }
 }
 
-export const updateAnswer = (data) => async (dispatch) => {
+export const updateAnswer = (answerID, data) => async (dispatch) => {
   dispatch({ type: UPDATE_ANSWER_TRY })
   try {
     const obj = JSON.stringify(data)
     await axios({
-      method: 'post',
-      url: `/answer`,
+      method: 'put',
+      url: `/answer/${answerID}`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
     dispatch({ type: UPDATE_ANSWER_SUCCESS })
-    console.log('answer added')
+    console.log('answer updated')
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: UPDATE_ANSWER_FAIL, error: e })
@@ -73,7 +73,7 @@ export const updateArticle = (data) => async (dispatch) => {
   try {
     const obj = JSON.stringify(Object.fromEntries(data))
     await axios({
-      method: 'post',
+      method: 'put',
       url: `/article`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import CommentListBlock from '../CommentListBlock'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
+import { TagBlock } from '../TagBlock'
+import { Button } from '../Button'
 import { uid } from 'uid'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -64,7 +66,13 @@ export default React.memo(function QuestionSection({ data }) {
         {data.question.questionBody.hashtags.map((tag, index) => {
           return (
             <div key={index}>
-              해시태그{index}: {tag}
+              해시태그{index}:{' '}
+              <TagBlock
+                text={tag}
+                function={() => {
+                  alert('tag clicked!')
+                }}
+              />
             </div>
           )
         })}

@@ -4,15 +4,20 @@ export default React.memo(function MarkdownEditorBlock({
   onChangeContentProps,
   contentProps,
 }) {
-  //const [content, setContent] = useState(initialContent);
+  const [content, setContent] = useState(contentProps)
+
+  const onChangeContent = useCallback((e) => {
+    setContent(e.target.value)
+    onChangeContentProps(e)
+  }, [])
 
   return (
     <>
       <label htmlFor="content"></label>
       <textarea
         id="content"
-        value={contentProps}
-        onChange={onChangeContentProps}
+        value={content}
+        onChange={onChangeContent}
       ></textarea>
     </>
   )
