@@ -87,6 +87,10 @@ export default React.memo(function AnswerSection({ data }) {
 
   const onUpdateAnswer = useCallback(
     (answerID, index) => {
+      if(!editedAnswerContent){
+        alert('본문을 입력해 주세요.')
+        return
+      }
       const data = { content: editedAnswerContent }
       dispatch(updateAnswer(answerID, data))
       setEditingAnswer(false)
