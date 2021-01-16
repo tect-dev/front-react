@@ -10,6 +10,7 @@ import { uid } from 'uid'
 import { Link } from 'react-router-dom'
 import { sortISOByTimeStamp } from '../../lib/functions'
 import { Button } from '../../components/Button'
+import styled from 'styled-components'
 
 export default React.memo(function AnswerSection({ data }) {
   const [answers, setAnswers] = useState(
@@ -43,12 +44,9 @@ export default React.memo(function AnswerSection({ data }) {
   }
 
   // 새로운 answer 를 추가할때 사용된다.
-  const onChangeContent = useCallback(
-    (value) => {
-      setContent(value)
-    },
-    [content]
-  )
+  const onChangeContent = useCallback((value) => {
+    setContent(value)
+  }, [])
 
   const addAnswer = useCallback(
     (e) => {
@@ -83,7 +81,7 @@ export default React.memo(function AnswerSection({ data }) {
       setAnswers([...answers, tempAnswer])
       setContent('')
     },
-    [content, answers]
+    [content, answers, data.question._id, dispatch, userID, userNickname]
   )
 
   const onUpdateAnswer = useCallback(
@@ -115,7 +113,7 @@ export default React.memo(function AnswerSection({ data }) {
         })
       )
     },
-    [editedAnswerContent, answers]
+    [editedAnswerContent, answers, dispatch]
   )
 
   const onDeleteAnswer = useCallback(
@@ -124,14 +122,14 @@ export default React.memo(function AnswerSection({ data }) {
       answers.splice(index, 1)
       setAnswers([...answers])
     },
-    [answers]
+    [answers, dispatch]
   )
 
   return (
-    <>
+    <AnswerContainer>
       {answers.map((element, index) => {
         return (
-          <div key={index}>
+          <AnswerBlock key={index}>
             {isEditingAnswer && editedAnswerIndex === index ? (
               // answer 가 수정중일때
               <div key={index}>
@@ -197,7 +195,7 @@ export default React.memo(function AnswerSection({ data }) {
                 <Button>answer에 댓글달기</Button>
               </div>
             )}
-          </div>
+          </AnswerBlock>
         )
       })}
 
@@ -209,6 +207,15 @@ export default React.memo(function AnswerSection({ data }) {
       />
       <MarkdownRenderingBlock content={content} />
       <Button onClick={addAnswer}>answer 추가하기</Button>
-    </>
+    </AnswerContainer>
   )
 })
+
+const AnswerContainer = styled.div`
+  width: inherit;
+`
+
+const AnswerBlock = styled.div`
+  margin-top: 20px;
+  margin-bottom: 40px;
+`

@@ -7,11 +7,8 @@ import { TagBlock } from '../TagBlock'
 import { Button } from '../Button'
 import { uid } from 'uid'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  deleteQuestion,
-  deleteAnswer,
-  deleteComment,
-} from '../../redux/deletePost'
+import { deleteQuestion, deleteComment } from '../../redux/deletePost'
+import styled from 'styled-components'
 
 export default React.memo(function QuestionSection({ data }) {
   const [content, setContent] = useState('')
@@ -52,7 +49,7 @@ export default React.memo(function QuestionSection({ data }) {
   )
 
   return (
-    <>
+    <QuestionContainer>
       <div className="title">Title: {data.question.questionBody.title}</div>
       <div>작성일: {data.question.questionBody.createdAt}</div>
       <div>최종 수정일: {data.question.questionBody.lastUpdate}</div>
@@ -66,7 +63,6 @@ export default React.memo(function QuestionSection({ data }) {
         {data.question.questionBody.hashtags.map((tag, index) => {
           return (
             <div key={index}>
-              해시태그{index}:{' '}
               <TagBlock
                 text={tag}
                 function={() => {
@@ -99,6 +95,10 @@ export default React.memo(function QuestionSection({ data }) {
         onChangeContentProps={onChangeContent}
       />
       <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
-    </>
+    </QuestionContainer>
   )
 })
+
+const QuestionContainer = styled.div`
+  width: inherit;
+`

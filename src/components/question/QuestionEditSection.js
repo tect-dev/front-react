@@ -52,7 +52,7 @@ export default React.memo(function QuestionEditSection({ initialData }) {
       hashtagList.pop()
       alert('태그의 갯수가 너무 많아요!')
     }
-  }, [hashtagList])
+  }, [hashtagList, hashtagText])
 
   const onChangeHashtagText = useCallback(
     (e) => {
@@ -66,7 +66,7 @@ export default React.memo(function QuestionEditSection({ initialData }) {
 
       setHashtagList(editedArray)
     },
-    [hashtagText]
+    [hashtagText, splitPoint]
   )
 
   const onSubmitForm = useCallback(
@@ -88,7 +88,7 @@ export default React.memo(function QuestionEditSection({ initialData }) {
 
       dispatch(updateQuestion(formData))
     },
-    [title, content, hashtagList]
+    [title, content, hashtagList, dispatch, questionID, userID, userNickname]
   )
 
   return (

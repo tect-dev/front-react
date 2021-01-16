@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { uid } from 'uid'
-import { useInput } from '../../hooks/hooks'
 import { useSelector, useDispatch } from 'react-redux'
 import { createQuestion } from '../../redux/createPost'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import { TagBlock } from '../TagBlock'
 import { Button } from '../Button'
+import styled from 'styled-components'
+import { textTooLongAlert } from '../../lib/functions'
+import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
 
 export default React.memo(function QuestionWriteSection() {
-  const [title, onChangeTitle] = useInput('')
+  const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [hashtagText, setHashtagText] = useState('')
   const [hashtagList, setHashtagList] = useState([])
@@ -25,7 +27,15 @@ export default React.memo(function QuestionWriteSection() {
 
   const dispatch = useDispatch()
 
+  const onChangeTitle = useCallback(
+    (e) => {
+      setTitle(textTooLongAlert(e.target.value, 100))
+    },
+    [title]
+  )
+
   function onChangeContent(value) {
+    textTooLongAlert(value, 50000)
     setContent(value)
   }
 
@@ -39,7 +49,7 @@ export default React.memo(function QuestionWriteSection() {
 
   const onChangeHashtagText = useCallback(
     (e) => {
-      setHashtagText(e.target.value)
+      setHashtagText(textTooLongAlert(e.target.value, 100))
       let splitedArray = e.target.value.split(splitPoint)
       const editedArray = splitedArray
         .map((element) => {
@@ -76,70 +86,85 @@ export default React.memo(function QuestionWriteSection() {
   )
 
   return (
-    <>
-      <section style={{ display: 'inline-flex' }}>
-        <form onSubmit={onSubmitForm}>
-          <div>
-            <label htmlFor="title">
-              <h3>제목</h3>
-            </label>
-
-            <input
-              type="text"
-              id="title"
-              value={title}
-              maxLength="300"
-              onChange={onChangeTitle}
-            />
-          </div>
-          <h3>본문</h3>
-
-          <MarkdownEditorBlock
-            contentProps={content}
-            onChangeContentProps={onChangeContent}
-            height="400px"
-          />
-          <div>
-            <label htmlFor="hashtag">
-              <h3>Tags</h3>
-              태그는 쉼표로 구분되며, 10개까지 입력이 가능합니다{' '}
-            </label>
+    <div>
+      <HalfWidthContainer>
+        <EditorContainer>
+          <form onSubmit={onSubmitForm}>
             <div>
+              <label htmlFor="title">
+                <h3>제목</h3>
+              </label>
+
               <input
                 type="text"
-                id="hashtag"
-                value={hashtagText}
-                onChange={onChangeHashtagText}
+                id="title"
+                value={title}
+                maxLength="300"
+                onChange={onChangeTitle}
               />
             </div>
-          </div>
-          <div>
-            {hashtagList.map((element, index) => {
-              return (
-                <TagBlock
-                  key={index}
-                  text={element}
-                  function={(e) => {
-                    e.preventDefault()
-                  }}
+            <h3>본문</h3>
+
+            <MarkdownEditorBlock
+              contentProps={content}
+              onChangeContentProps={onChangeContent}
+              height="400px"
+            />
+            <div>
+              <label htmlFor="hashtag">
+                <h3>Tags</h3>
+                태그는 쉼표로 구분되며, 10개까지 입력 가능합니다{' '}
+              </label>
+              <div>
+                <input
+                  type="text"
+                  id="hashtag"
+                  value={hashtagText}
+                  onChange={onChangeHashtagText}
                 />
-              )
-            })}
+              </div>
+            </div>
+            <div>
+              {hashtagList.map((element, index) => {
+                return (
+                  <TagBlock
+                    key={index}
+                    text={element}
+                    function={(e) => {
+                      e.preventDefault()
+                    }}
+                  />
+                )
+              })}
+            </div>
+            <div className="button">
+              <Button
+                className="ask-btn"
+                type="submit"
+                buttonStyle="btn--outline"
+              >
+                작성 완료
+              </Button>
+            </div>
+          </form>
+        </EditorContainer>
+      </HalfWidthContainer>
+      <HalfWidthContainer>
+        <PreviewContainer>
+          <div>
+            <h2>Preview</h2>
           </div>
-          <div className="button">
-            <Button
-              className="ask-btn"
-              type="submit"
-              buttonStyle="btn--outline"
-            >
-              작성 완료
-            </Button>
-          </div>
-        </form>
-      </section>
-      <section style={{ display: 'inline-flex' }}>
-        <MarkdownRenderingBlock content={content} />
-      </section>
-    </>
+          <MarkdownRenderingBlock content={content} />
+        </PreviewContainer>
+      </HalfWidthContainer>
+    </div>
   )
 })
+
+const EditorContainer = styled.div`
+  display: block;
+`
+
+const PreviewContainer = styled.div`
+  display: block;
+`

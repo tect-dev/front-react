@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from './Button'
 import styled from 'styled-components'
 import { FaBold, FaItalic, FaLink, FaCode, FaSuperscript } from 'react-icons/fa'
+import { mediaQuery, colorPalette, mediaSize } from '../lib/constants'
 
 export default React.memo(function MarkdownEditorBlock({
   onChangeContentProps,
@@ -92,32 +93,60 @@ export default React.memo(function MarkdownEditorBlock({
 
   return (
     <>
-      <div>
-        <Button onClick={addCodeBlock}>
-          <FaCode />
-        </Button>
-        <Button onClick={addMathBlock}>
-          <FaSuperscript />
-        </Button>
-        <Button onClick={addBoldText}>
-          <FaBold />
-        </Button>
-        <Button onClick={addLargeTitle}>L</Button>
-        <Button onClick={addSmallTitle}>S</Button>
-        <Button onClick={addItalicText}>
-          <FaItalic />
-        </Button>
-        <Button onClick={addLink}>
-          <FaLink />
-        </Button>
-        <label htmlFor="content"></label>
-        <textarea
-          id="content"
-          value={contentProps}
-          onChange={onChangeContent}
-          style={{ width: width, height: height }}
-        ></textarea>
-      </div>
+      <EditorContainer>
+        <MarkdownToolkit>
+          <Button onClick={addCodeBlock}>
+            <FaCode />
+          </Button>
+          <Button onClick={addMathBlock}>
+            <FaSuperscript />
+          </Button>
+          <Button onClick={addBoldText}>
+            <FaBold />
+          </Button>
+          <Button onClick={addLargeTitle}>L</Button>
+          <Button onClick={addSmallTitle}>S</Button>
+          <Button onClick={addItalicText}>
+            <FaItalic />
+          </Button>
+          <Button onClick={addLink}>
+            <FaLink />
+          </Button>
+        </MarkdownToolkit>
+        <div>
+          <label htmlFor="content"></label>
+          <StyledTextarea
+            id="content"
+            value={contentProps}
+            onChange={onChangeContent}
+            style={{ width: width, height: height }}
+          ></StyledTextarea>
+        </div>
+      </EditorContainer>
     </>
   )
 })
+
+const MarkdownToolkit = styled.div`
+  display: inline-flex;
+
+  margin-bottom: 10px;
+  justify-content: space-around;
+`
+const EditorContainer = styled.div`
+  ${mediaSize.small} {
+  }
+`
+const StyledTextarea = styled.textarea`
+  border: none;
+  background-color: '#999999' !important;
+  &:active {
+    border: none;
+  }
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    border: none;
+  }
+`

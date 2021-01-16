@@ -1,11 +1,6 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { Prompt } from 'react-router-dom';
-import { useInput } from '../../hooks/hooks';
-import MainLayout from '../../components/layout/MainLayout';
-import { useSelector, useDispatch } from 'react-redux';
-import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock';
-import QuestionWriteSection from '../../components/question/QuestionWriteSection';
-import { uid } from 'uid';
+import React, { useEffect, useCallback, useState } from 'react'
+import MainLayout from '../../components/layout/MainLayout'
+import QuestionWriteSection from '../../components/question/QuestionWriteSection'
 
 export default function QuestionWritePage({ history }) {
   //useEffect(() => {
@@ -16,9 +11,7 @@ export default function QuestionWritePage({ history }) {
 
   return (
     <MainLayout>
-      <section>
-        <QuestionWriteSection />
-      </section>
+      <QuestionWriteSection />
     </MainLayout>
-  );
+  )
 }
