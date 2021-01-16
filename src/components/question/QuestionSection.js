@@ -19,8 +19,8 @@ export default React.memo(function QuestionSection({ data }) {
     return { userID: state.auth.userID }
   })
 
-  function onChangeContent(e) {
-    setContent(e.target.value)
+  function onChangeContent(value) {
+    setContent(value)
   }
 
   const dispatch = useDispatch()
@@ -81,12 +81,12 @@ export default React.memo(function QuestionSection({ data }) {
       data.answers.length === 0 &&
       userID !== '000000000000000000000000' ? (
         <>
-          <button>
+          <Button>
             <Link to={`/question/edit/${data.question._id}`}>
               question 수정하기
             </Link>
-          </button>
-          <button onClick={onDeleteQuestion}>question 삭제하기</button>
+          </Button>
+          <Button onClick={onDeleteQuestion}>question 삭제하기</Button>
         </>
       ) : (
         ''
@@ -98,7 +98,7 @@ export default React.memo(function QuestionSection({ data }) {
         initialContent={''}
         onChangeContentProps={onChangeContent}
       />
-      <button onClick={onSubmitComment}>question 에 댓글달기</button>
+      <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
     </>
   )
 })

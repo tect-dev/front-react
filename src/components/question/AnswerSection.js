@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { uid } from 'uid'
 import { Link } from 'react-router-dom'
 import { sortISOByTimeStamp } from '../../lib/functions'
+import { Button } from '../../components/Button'
 
 export default React.memo(function AnswerSection({ data }) {
   const [answers, setAnswers] = useState(
@@ -37,14 +38,14 @@ export default React.memo(function AnswerSection({ data }) {
     setEditedAnswerContent(answer.answerBody.content)
   }
 
-  function onChangeAnswerContent(e) {
-    setEditedAnswerContent(e.target.value)
+  function onChangeAnswerContent(value) {
+    setEditedAnswerContent(value)
   }
 
   // 새로운 answer 를 추가할때 사용된다.
   const onChangeContent = useCallback(
-    (e) => {
-      setContent(e.target.value)
+    (value) => {
+      setContent(value)
     },
     [content]
   )
@@ -87,7 +88,7 @@ export default React.memo(function AnswerSection({ data }) {
 
   const onUpdateAnswer = useCallback(
     (answerID, index) => {
-      if(!editedAnswerContent){
+      if (!editedAnswerContent) {
         alert('본문을 입력해 주세요.')
         return
       }
@@ -130,21 +131,23 @@ export default React.memo(function AnswerSection({ data }) {
     <>
       {answers.map((element, index) => {
         return (
-          <>
+          <div key={index}>
             {isEditingAnswer && editedAnswerIndex === index ? (
               // answer 가 수정중일때
               <div key={index}>
                 <MarkdownEditorBlock
-                  contentProps={element.answerBody.content}
+                  contentProps={editedAnswerContent}
                   onChangeContentProps={onChangeAnswerContent}
+                  height="350px"
                 />
-                <button
+                <MarkdownRenderingBlock content={editedAnswerContent} />
+                <Button
                   onClick={() => {
                     onUpdateAnswer(element._id, index)
                   }}
                 >
                   수정완료
-                </button>
+                </Button>
               </div>
             ) : (
               // answer 가 수정중이 아닐때
@@ -169,20 +172,20 @@ export default React.memo(function AnswerSection({ data }) {
                 {userID !== '000000000000000000000000' &&
                 userID === element.answerBody.authorID ? (
                   <>
-                    <button
+                    <Button
                       onClick={() => {
                         startEditAnswer(element, index)
                       }}
                     >
                       answer 수정
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => {
                         onDeleteAnswer(element._id, index)
                       }}
                     >
                       answer 삭제
-                    </button>
+                    </Button>
                   </>
                 ) : (
                   ''
@@ -190,10 +193,11 @@ export default React.memo(function AnswerSection({ data }) {
 
                 {/* <CommentListBlock commentList={element.answerBody.comments} /> */}
                 <MarkdownEditorBlock />
-                <button>answer에 댓글달기</button>
+
+                <Button>answer에 댓글달기</Button>
               </div>
             )}
-          </>
+          </div>
         )
       })}
 
@@ -201,8 +205,10 @@ export default React.memo(function AnswerSection({ data }) {
         className="answerWrite"
         onChangeContentProps={onChangeContent}
         contentProps={content}
+        height="350px"
       />
-      <button onClick={addAnswer}>answer 추가하기</button>
+      <MarkdownRenderingBlock content={content} />
+      <Button onClick={addAnswer}>answer 추가하기</Button>
     </>
   )
 })

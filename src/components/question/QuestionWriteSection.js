@@ -25,8 +25,8 @@ export default React.memo(function QuestionWriteSection() {
 
   const dispatch = useDispatch()
 
-  function onChangeContent(e) {
-    setContent(e.target.value)
+  function onChangeContent(value) {
+    setContent(value)
   }
 
   useEffect(() => {
@@ -77,26 +77,27 @@ export default React.memo(function QuestionWriteSection() {
 
   return (
     <>
-      <section>
+      <section style={{ display: 'inline-flex' }}>
         <form onSubmit={onSubmitForm}>
           <div>
             <label htmlFor="title">
               <h3>제목</h3>
-              제목만으로도 무슨 내용인지 파악할 수 있게 적어주세요.
             </label>
-            <br />
+
             <input
               type="text"
               id="title"
               value={title}
+              maxLength="300"
               onChange={onChangeTitle}
             />
           </div>
           <h3>본문</h3>
 
           <MarkdownEditorBlock
-            initialContent={''}
+            contentProps={content}
             onChangeContentProps={onChangeContent}
+            height="400px"
           />
           <div>
             <label htmlFor="hashtag">
@@ -136,7 +137,7 @@ export default React.memo(function QuestionWriteSection() {
           </div>
         </form>
       </section>
-      <section>
+      <section style={{ display: 'inline-flex' }}>
         <MarkdownRenderingBlock content={content} />
       </section>
     </>

@@ -42,8 +42,8 @@ export default React.memo(function QuestionEditSection({ initialData }) {
 
   const dispatch = useDispatch()
 
-  function onChangeContent(e) {
-    setContent(e.target.value)
+  function onChangeContent(value) {
+    setContent(value)
   }
 
   useEffect(() => {
@@ -108,6 +108,7 @@ export default React.memo(function QuestionEditSection({ initialData }) {
           <MarkdownEditorBlock
             contentProps={content}
             onChangeContentProps={onChangeContent}
+            height="400px"
           />
           <div>
             <label htmlFor="hashtag">hashtag: </label>
