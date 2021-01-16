@@ -2,6 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@800&display=swap');
 
 a {
-    text-decoration-line: none;
-    color: inherit;
+  text-decoration-line: none;
+  color: inherit;
+  &:hover {
+    color: #00bebe;
+  }
 }
