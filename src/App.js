@@ -21,15 +21,16 @@ export default function App() {
     authService.onAuthStateChanged((user) => {
       if (user) {
         console.log('user: ', user)
-        localStorage.setItem(
-          'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D',
-          true
-        )
+        //localStorage.setItem(
+        //  'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D',
+        //  true
+        //)
         dispatch(checkAuth(user))
       } else {
-        localStorage.removeItem(
-          'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
-        )
+        console.log('user: ', user)
+        // localStorage.removeItem(
+        //   'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
+        // )
       }
     })
     console.log('useLayoutEffect:')
