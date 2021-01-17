@@ -8,7 +8,7 @@ import { LoginModal } from './LoginModal'
 export default function Navbar() {
   // useSelector: 리덕스 스토어의 상태를 조회하는 hooks.
   // state 의 값은 리덕스 스토에다가 getState() 를 호출했을때 나오는 값과 같음.
-  const { userID, userNickname } = useSelector((state) => {
+  const { userID, userNickname, loginState } = useSelector((state) => {
     console.log('useSelector:')
     return {
       loginState: state.auth.loginState,
@@ -17,11 +17,11 @@ export default function Navbar() {
     }
   })
 
-  const loginState = JSON.parse(
-    localStorage.getItem(
-      'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
-    )
-  )
+  //const loginState = JSON.parse(
+  //  localStorage.getItem(
+  //    'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
+  //  )
+  //)
 
   // useCallback : 함수의 불필요한 리렌더링을 막기 위한 hooks.
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
