@@ -9,6 +9,8 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
+  const [nickname, setNickname] = useState()
+  const [isSignUp, setIsSignUp] = useState(false)
 
   // 굉장히 fancy한 방법인데 콘솔창이 경고를 띄운다..
   //const onChange = (e) => {
@@ -36,6 +38,13 @@ export const LoginModal = React.memo(({ labelFor }) => {
     [password]
   )
 
+  const onChangeNickname = useCallback(
+    (e) => {
+      setNickname(e.target.value)
+    },
+    [nickname]
+  )
+
   const onEmailLogin = useCallback(
     (e) => {
       e.preventDefault()
@@ -47,9 +56,9 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onEmailSignUp = useCallback(
     (e) => {
       e.preventDefault()
-      dispatch(emailSignUp(email, password))
+      dispatch(emailSignUp(email, password, nickname))
     },
-    [dispatch, email, password]
+    [dispatch, email, password, nickname]
   )
 
   return (
@@ -65,7 +74,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 id="login-id-input"
                 className="login-input"
                 type="email"
-                placeholder="Enter Email"
+                placeholder="Enter Login Email"
                 required
                 name="email"
                 value={email}
@@ -81,14 +90,40 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 value={password}
                 onChange={onChangePassword}
               />
-              <Button className="login-submit" onClick={onEmailLogin}>
-                {' '}
-                Login{' '}
-              </Button>
-              <Button className="login-submit" onClick={onEmailSignUp}>
-                {' '}
-                Sign Up{' '}
-              </Button>
+              {isSignUp ? (
+                <input
+                  className="login-input"
+                  type="text"
+                  placeholder="Enter Nickname"
+                  required
+                  name="nickname"
+                  value={nickname}
+                  onChange={onChangeNickname}
+                />
+              ) : (
+                ''
+              )}
+
+              {isSignUp ? (
+                <Button className="login-submit" onClick={onEmailSignUp}>
+                  Sign Up
+                </Button>
+              ) : (
+                <>
+                  {' '}
+                  <Button className="login-submit" onClick={onEmailLogin}>
+                    Login
+                  </Button>
+                  <Button
+                    className="login-submit"
+                    onClick={() => {
+                      setIsSignUp(true)
+                    }}
+                  >
+                    Sign Up?
+                  </Button>
+                </>
+              )}
 
               <div className="auth-help">
                 <div className="auth-help-element">

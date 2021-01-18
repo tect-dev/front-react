@@ -85,22 +85,20 @@ export default React.memo(function QuestionSection({ data }) {
           {data.question.questionBody.authorNickname}
         </Link>
       </div>
-      {
-        /*data.question.questionBody.authorID === userID &&
+      {data.question.questionBody.authorID === userID &&
       data.answers.length === 0 &&
-      userID !== '000000000000000000000000' */ true ? (
-          <>
-            <Button>
-              <Link to={`/question/edit/${data.question._id}`}>
-                질문 수정하기
-              </Link>
-            </Button>
-            <Button onClick={onDeleteQuestion}>질문 삭제하기</Button>
-          </>
-        ) : (
-          ''
-        )
-      }
+      userID !== '000000000000000000000000' ? (
+        <>
+          <Button>
+            <Link to={`/question/edit/${data.question._id}`}>
+              질문 수정하기
+            </Link>
+          </Button>
+          <Button onClick={onDeleteQuestion}>질문 삭제하기</Button>
+        </>
+      ) : (
+        ''
+      )}
 
       {/*<CommentListBlock commentList={question.comments} />
       <MarkdownEditorBlock
