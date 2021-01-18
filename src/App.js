@@ -6,6 +6,7 @@ import QuestionListPage from './pages/question/QuestionListPage'
 import QuestionWritePage from './pages/question/QuestionWritePage'
 import QuestionEditPage from './pages/question/QuestionEditPage'
 import QuestionDetailPage from './pages/question/QuestionDetailPage'
+import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
 import ProfilePage from './pages/user/ProfilePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -42,6 +43,7 @@ export default function App() {
           component={QuestionWritePage}
         />
         <Route path="/question/edit/:questionID" component={QuestionEditPage} />
+        <Route path="/searched" component={QuestionSearchResultPage} />
         <Route path="/question/:questionID" component={QuestionDetailPage} />
         <Route component={NotFoundPage} />
       </Switch>
