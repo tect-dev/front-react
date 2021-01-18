@@ -6,6 +6,7 @@ import QuestionListPage from './pages/question/QuestionListPage'
 import QuestionWritePage from './pages/question/QuestionWritePage'
 import QuestionEditPage from './pages/question/QuestionEditPage'
 import QuestionDetailPage from './pages/question/QuestionDetailPage'
+import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
 import ProfilePage from './pages/user/ProfilePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -18,7 +19,7 @@ import { authService, firebaseInstance } from './lib/firebase'
 function App() {
   const dispatch = useDispatch()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
         console.log('user: ', user)
@@ -29,16 +30,12 @@ function App() {
         dispatch(checkAuth(user))
       } else {
         console.log('user: ', user)
+        dispatch(checkAuth(user))
         // localStorage.removeItem(
         //   'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
         // )
       }
     })
-    console.log('useLayoutEffect:')
-  }, [])
-
-  useEffect(() => {
-    console.log('useEffect:')
   }, [])
 
   return (
@@ -66,6 +63,7 @@ function App() {
           component={QuestionWritePage}
         />
         <Route path="/question/edit/:questionID" component={QuestionEditPage} />
+        <Route path="/searched" component={QuestionSearchResultPage} />
         <Route path="/question/:questionID" component={QuestionDetailPage} />
         <Route component={NotFoundPage} />
       </Switch>

@@ -1,29 +1,36 @@
-import { useCallback, useState, useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { readSearchedResults } from '../../redux/readPost'
 import MainLayout from '../../components/layout/MainLayout'
-import { readQuestionList } from '../../redux/readPost'
-import { Link } from 'react-router-dom'
-import QuestionBlock from '../../components/question/QuestionBlock'
 import { Spinner } from '../../components/Spinner'
 
+// QuestionListPage의 디자인과 구성을 상속한다.
+import { Link } from 'react-router-dom'
 import { Button } from '../../components/Button'
+import '../../styles/page/question/QuestionListPage.scss'
 import { Pagination } from '../../components/Pagination'
 
-import '../../styles/page/question/QuestionListPage.scss'
-
-export default function QuestionListPage() {
+const QuestionSearchResultPage = () => {
   const { loading, data, error } = useSelector((state) => {
-    return state.readPost.questionList
+    return state.readPost.searchedResults
   })
+
+  const location = useLocation()
 
   const dispatch = useDispatch()
 
-  // useCallback : 함수의 불필요한 리렌더링을 막기 위한 hooks.
-  // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
+  const getSearchResultsAsync = useCallback((params) => {
+    dispatch(readSearchedResults(params))
+  }, [dispatch])
 
   useEffect(() => {
-    dispatch(readQuestionList())
-  }, [dispatch])
+    const searchParams = new URLSearchParams(location.search)
+    const querystring = searchParams.get("query")
+    getSearchResultsAsync(querystring)
+  }, [dispatch, location])
+
+
 
   if (loading)
     return (
@@ -31,20 +38,24 @@ export default function QuestionListPage() {
         <Spinner />
       </MainLayout>
     )
-  if (error)
+
+  if (error) {
+    console.log(error)
     return (
       <MainLayout>
         <div>error...</div>
       </MainLayout>
     )
-
-  if (!data)
+  }
+  // if (!data | data.length === 0){
+  if (!data | data?.length === 0){
     return (
-      <MainLayout>
-        <div>no data</div>
-      </MainLayout>
+      <>
+        <MainLayout>no data</MainLayout>
+      </>
     )
-
+  }
+    
   return (
     <>
       <MainLayout>
@@ -53,7 +64,7 @@ export default function QuestionListPage() {
             <div className="questionList-left">
               <div className="questionList-left-top">
                 <div className="questionList-title-container">
-                  <div className="questionList-Latest">최신</div>
+                  <div className="questionList-Latest">검색결과</div>
                   {/*인기순 정렬은 나중에 추가하자*/}
                   {/*<div className="questionList-popular">인기</div>*/}
                 </div>
@@ -64,17 +75,21 @@ export default function QuestionListPage() {
                 </Link>
               </div>
               <div className="questionList">
-                <Pagination data={data} />
+                <Pagination data={data}/>
               </div>
             </div>
           </section>
           <section>
             <div className="questionList-right">
-              <div className="questionList-right-title">Tags</div>
+              <div className="questionList-right-title">Trending Tags</div>
             </div>
           </section>
         </div>
       </MainLayout>
     </>
   )
+
+  
 }
+
+export default QuestionSearchResultPage

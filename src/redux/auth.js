@@ -100,14 +100,10 @@ export const checkAuth = (user) => {
 export const emailLogin = (email, password) => async (dispatch) => {
   dispatch({ type: LOG_IN_TRY })
   try {
-    await authService
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        session_login()
-      })
-      .then((res) => {
-        console.log('로그인 결과 res: ', res)
-      })
+    await authService.signInWithEmailAndPassword(email, password).then(() => {
+      session_login()
+    })
+
     dispatch({ type: LOG_IN_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
@@ -123,9 +119,7 @@ export const emailSignUp = (email, password) => async (dispatch) => {
       .then(() => {
         session_signup(email)
       })
-      .then((res) => {
-        console.log('회원가입 결과 res: ', res)
-      })
+
     dispatch({ type: CREATE_USER_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
