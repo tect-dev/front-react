@@ -14,7 +14,7 @@ import withFirebaseAuth from 'react-with-firebase-auth'
 import './App.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { checkAuth } from './redux/auth'
-import { authService, firebaseInstance } from './lib/firebase'
+import { authService } from './lib/firebase'
 
 function App() {
   const dispatch = useDispatch()
