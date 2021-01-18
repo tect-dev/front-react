@@ -5,6 +5,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { updateQuestion } from '../../redux/updatePost'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
+import { TagBlock } from '../TagBlock'
+import { Button } from '../Button'
+import styled from 'styled-components'
+import { textTooLongAlert } from '../../lib/functions'
+import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
 
 export default React.memo(function QuestionEditSection({ initialData }) {
   const [title, onChangeTitle] = useInput(
@@ -42,8 +47,9 @@ export default React.memo(function QuestionEditSection({ initialData }) {
 
   const dispatch = useDispatch()
 
-  function onChangeContent(e) {
-    setContent(e.target.value)
+  function onChangeContent(value) {
+    textTooLongAlert(value, 50000)
+    setContent(value)
   }
 
   useEffect(() => {
@@ -52,7 +58,7 @@ export default React.memo(function QuestionEditSection({ initialData }) {
       hashtagList.pop()
       alert('태그의 갯수가 너무 많아요!')
     }
-  }, [hashtagList])
+  }, [hashtagList, hashtagText])
 
   const onChangeHashtagText = useCallback(
     (e) => {
@@ -66,7 +72,7 @@ export default React.memo(function QuestionEditSection({ initialData }) {
 
       setHashtagList(editedArray)
     },
-    [hashtagText]
+    [hashtagText, splitPoint]
   )
 
   const onSubmitForm = useCallback(
@@ -88,56 +94,94 @@ export default React.memo(function QuestionEditSection({ initialData }) {
 
       dispatch(updateQuestion(formData))
     },
-    [title, content, hashtagList]
+    [title, content, hashtagList, dispatch, questionID, userID, userNickname]
   )
 
   return (
     <>
-      <section>
+      <HalfWidthContainer>
         <form onSubmit={onSubmitForm}>
           <div>
-            <label htmlFor="title">title: </label>
-            <input
+            <StyledTitleInput
               type="text"
               id="title"
               value={title}
+              maxLength="300"
               onChange={onChangeTitle}
+              placeholder="title"
             />
           </div>
-          본문
+
           <MarkdownEditorBlock
             contentProps={content}
             onChangeContentProps={onChangeContent}
+            height="400px"
+            width="41vw"
           />
           <div>
-            <label htmlFor="hashtag">hashtag: </label>
-            <input
+            <StyledTagInput
               type="text"
               id="hashtag"
               value={hashtagText}
               onChange={onChangeHashtagText}
+              placeholder="태그는 쉼표로 구분되며, 10개까지 입력 가능합니다"
             />
           </div>
           <div>
-            hashtag가 제대로 체크 되나:{' '}
             {hashtagList.map((element, index) => {
               return (
-                <div key={index}>
-                  <a href="/" style={{ color: 'blue' }}>
-                    {element}
-                  </a>
-                </div>
+                <TagBlock
+                  key={index}
+                  text={element}
+                  function={(e) => {
+                    e.preventDefault()
+                  }}
+                />
               )
             })}
           </div>
-          <div className="button">
-            <button type="submit">Send your message</button>
-          </div>
+          <br />
+          <Button className="ask-btn" type="submit" buttonStyle="btn--outline">
+            작성 완료
+          </Button>
+          <br />
         </form>
-      </section>
-      <section>
-        <MarkdownRenderingBlock content={content} />
-      </section>
+      </HalfWidthContainer>
+      <HalfWidthContainer>
+        <PreviewContainer>
+          <div>
+            <h2>Preview</h2>
+            <br />
+          </div>
+          <MarkdownRenderingBlock content={content} />
+        </PreviewContainer>
+      </HalfWidthContainer>
     </>
   )
 })
+
+const EditorContainer = styled.div``
+
+const PreviewContainer = styled.div`
+  display: block;
+`
+
+const StyledTitleInput = styled.input`
+  height: 60px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: text;
+  border: none;
+  outline: none;
+  padding: 0.2rem;
+  width: 42vw;
+`
+const StyledTagInput = styled.input`
+  height: 60px;
+  font-size: 15px;
+  cursor: text;
+  border: none;
+  outline: none;
+  padding: 0.2rem;
+  width: 42vw;
+`

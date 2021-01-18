@@ -7,11 +7,8 @@ import { TagBlock } from '../TagBlock'
 import { Button } from '../Button'
 import { uid } from 'uid'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  deleteQuestion,
-  deleteAnswer,
-  deleteComment,
-} from '../../redux/deletePost'
+import { deleteQuestion, deleteComment } from '../../redux/deletePost'
+import styled from 'styled-components'
 
 export default React.memo(function QuestionSection({ data }) {
   const [content, setContent] = useState('')
@@ -19,8 +16,8 @@ export default React.memo(function QuestionSection({ data }) {
     return { userID: state.auth.userID }
   })
 
-  function onChangeContent(e) {
-    setContent(e.target.value)
+  function onChangeContent(value) {
+    setContent(value)
   }
 
   const dispatch = useDispatch()
@@ -52,53 +49,69 @@ export default React.memo(function QuestionSection({ data }) {
   )
 
   return (
-    <>
-      <div className="title">Title: {data.question.questionBody.title}</div>
-      <div>작성일: {data.question.questionBody.createdAt}</div>
-      <div>최종 수정일: {data.question.questionBody.lastUpdate}</div>
-      <div className="content">
-        <MarkdownRenderingBlock content={data.question.questionBody.content} />
+    <QuestionContainer>
+      <div className="title">
+        <h2>Q. {data.question.questionBody.title}</h2>
+        <br />
       </div>
-      <Link to={`/user/${data.question.questionBody.authorID}`}>
-        글쓴이: {data.question.questionBody.authorNickname}
-      </Link>
       <div className="hashtags">
         {data.question.questionBody.hashtags.map((tag, index) => {
           return (
-            <div key={index}>
-              해시태그{index}:{' '}
-              <TagBlock
-                text={tag}
-                function={() => {
-                  alert('tag clicked!')
-                }}
-              />
-            </div>
+            <TagBlock
+              key={index}
+              text={tag}
+              function={() => {
+                alert('tag clicked!')
+              }}
+            />
           )
         })}
+        <br />
+        <br />
       </div>
-      {data.question.questionBody.authorID === userID &&
+      <div className="content">
+        <MarkdownRenderingBlock content={data.question.questionBody.content} />
+        <br />
+        <br />
+      </div>
+
+      <div>
+        {data.question.updatedAt.substr(0, 4)}년{' '}
+        {data.question.updatedAt.substr(5, 2)}월{' '}
+        {data.question.updatedAt.substr(8, 2)}일
+      </div>
+      <div>
+        <Link to={`/user/${data.question.questionBody.authorID}`}>
+          {data.question.questionBody.authorNickname}
+        </Link>
+      </div>
+      {
+        /*data.question.questionBody.authorID === userID &&
       data.answers.length === 0 &&
-      userID !== '000000000000000000000000' ? (
-        <>
-          <button>
-            <Link to={`/question/edit/${data.question._id}`}>
-              question 수정하기
-            </Link>
-          </button>
-          <button onClick={onDeleteQuestion}>question 삭제하기</button>
-        </>
-      ) : (
-        ''
-      )}
+      userID !== '000000000000000000000000' */ true ? (
+          <>
+            <Button>
+              <Link to={`/question/edit/${data.question._id}`}>
+                질문 수정하기
+              </Link>
+            </Button>
+            <Button onClick={onDeleteQuestion}>질문 삭제하기</Button>
+          </>
+        ) : (
+          ''
+        )
+      }
 
-      {/*<CommentListBlock commentList={question.comments} />*/}
-
+      {/*<CommentListBlock commentList={question.comments} />
       <MarkdownEditorBlock
         initialContent={''}
         onChangeContentProps={onChangeContent}
       />
-      <button onClick={onSubmitComment}>question 에 댓글달기</button>
-    </>
+      <Button onClick={onSubmitComment}>question 에 댓글달기</Button>*/}
+    </QuestionContainer>
   )
 })
+
+const QuestionContainer = styled.div`
+  padding: 1rem 1.5rem;
+`

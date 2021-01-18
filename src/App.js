@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
@@ -9,14 +9,38 @@ import QuestionDetailPage from './pages/question/QuestionDetailPage'
 import ProfilePage from './pages/user/ProfilePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
-import { useSelector, useDispatch } from 'react-redux'
+import withFirebaseAuth from 'react-with-firebase-auth'
 import './App.css'
+import { useSelector, useDispatch } from 'react-redux'
+import { checkAuth } from './redux/auth'
+import { authService, firebaseInstance } from './lib/firebase'
 
-export default function App() {
-  const { userInfo } = useSelector((state) => {
-    return state.auth
-  })
+function App() {
   const dispatch = useDispatch()
+
+  useLayoutEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      if (user) {
+        console.log('user: ', user)
+        //localStorage.setItem(
+        //  'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D',
+        //  true
+        //)
+        dispatch(checkAuth(user))
+      } else {
+        console.log('user: ', user)
+        // localStorage.removeItem(
+        //   'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
+        // )
+      }
+    })
+    console.log('useLayoutEffect:')
+  }, [])
+
+  useEffect(() => {
+    console.log('useEffect:')
+  }, [])
+
   return (
     <>
       {/* head 파일을 여기다 적으면, index.html 의 body 태그 하위로 들어가는듯. 그래서 콘솔이 에러를 낸다. react helmet 같은 라이브러리를 써야할듯 */}
@@ -48,3 +72,5 @@ export default function App() {
     </>
   )
 }
+
+export default App

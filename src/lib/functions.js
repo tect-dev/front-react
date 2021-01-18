@@ -1,6 +1,17 @@
 import sanitize from 'sanitize-html'
 import { katexWhiteList } from './katexWhiteList'
 
+export function isoStringToNaturalLanguage(isoString) {
+  if (isoString.length < 4) {
+    return isoString
+  } else {
+    return `${isoString.substr(0, 4)}년 ${isoString.substr(
+      5,
+      2
+    )}월 ${isoString.substr(8, 2)}일`
+  }
+}
+
 export function sortISOByTimeStamp(
   toBeLessIndex,
   toBeMoreIndex,
@@ -17,6 +28,15 @@ export function sortISOByTimeStamp(
 
 export const onClickTag = () => {
   alert('tag is clicked!')
+}
+
+export function textTooLongAlert(text, maximumLength) {
+  if (text.length > maximumLength) {
+    alert('too long')
+    return text.slice(0, maximumLength - 1)
+  } else {
+    return text
+  }
 }
 
 export const htmlFilter = (html) => {
