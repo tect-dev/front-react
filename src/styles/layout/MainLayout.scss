@@ -47,7 +47,8 @@ body {
 }
 
 .layout {
-  /*flex-flow: column nowrap;*/
+  display: flex;
+  flex-flow: column nowrap;
   align-items: center; /* layout 1 */
   width: 100%;
   min-height: 100vh; /* layout 4 */
@@ -60,9 +61,9 @@ body {
       display: block;
     }
 
-    /*display: flex;*/
-    /*flex-flow: column wrap;*/
-    /* max-width: $pc-max-width; layout 1 */
-    /*background: $layout-main-background; /* layout 8 */
+    display: flex;
+    flex-flow: column wrap;
+    max-width: $pc-max-width;  /* layout 1 */
+    background: $layout-main-background; /* layout 8 */
   }
 }
