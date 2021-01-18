@@ -28,7 +28,7 @@ const session_login = () => {
     .getIdToken(/* forceRefresh */ true)
     .then((idToken) => {
       axios({
-        url: 'http://localhost:1818/login/sessionLogin',
+        url: '/login/sessionLogin',
         method: 'POST',
         data: {
           firebaseToken: idToken,
@@ -42,19 +42,17 @@ const session_login = () => {
     })
 }
 
-const session_signup = (email) => {
+const session_signup = (userNickname) => {
   authService.currentUser
     .getIdToken(/* forceRefresh */ true)
     .then((idToken) => {
       axios({
-        url: 'http://localhost:1818/login/account',
+        url: '/login/account',
         method: 'POST',
         data: {
           firebaseToken: idToken,
-          authorNickname: 'lee',
-          email: email,
-          point: '10',
-          posts: ['hi', 'hello'],
+          nickname: userNickname,
+          point: 1000,
           //crsfToken : crsfToekn
         },
         withCredentials: true,
@@ -69,23 +67,29 @@ const session_signup = (email) => {
 // 액션 생성함수를 정의하고, 생성함수를 export 할 것이다.
 // thunk 사용시에는 액션생성함수 따로 안만듬.
 
-export const login = () => async (dispatch) => {
-  try {
-    dispatch({ type: LOG_IN_SUCCESS })
-  } catch (e) {
-    console.log('error: ', e)
-    dispatch({ type: LOG_IN_FAIL })
-  }
-}
-
 export const checkAuth = (user) => {
-  console.log('checkAuth:')
   if (user) {
+    console.log('유저:', user)
+    const userInfo = {
+      userID: user.uid,
+      userEmail: user.email,
+      userNickname: `${user.displayName}`,
+    }
+    localStorage.setItem('user', JSON.stringify(userInfo))
     return {
       type: CHECK_AUTH,
       loginState: true,
-      userNickname: user.email,
+      userNickname: `${user.displayName}`,
       userID: user.uid,
+    }
+  } else if (localStorage.getItem('user')) {
+    const userInfo = JSON.parse(localStorage.getItem('user'))
+    console.log('로컬스토리지 이용한 유저정보 갱신:', userInfo)
+    return {
+      type: CHECK_AUTH,
+      loginState: true,
+      userID: userInfo.userID,
+      userNickname: userInfo.userNickname,
     }
   } else {
     return {
@@ -131,10 +135,9 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: LOG_OUT_TRY })
 
   try {
+    axios({ url: '/login/sessionLogout', method: 'GET' })
     authService.signOut()
-    localStorage.removeItem(
-      'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
-    )
+    localStorage.removeItem('user')
     dispatch({ type: LOG_OUT_SUCCESS })
   } catch (e) {
     dispatch({ type: LOG_OUT_FAIL })

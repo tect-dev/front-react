@@ -10,7 +10,6 @@ import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
 import ProfilePage from './pages/user/ProfilePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
-import withFirebaseAuth from 'react-with-firebase-auth'
 import './App.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { checkAuth } from './redux/auth'
@@ -21,21 +20,17 @@ function App() {
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
+      console.log('호출됨: onAuthStateChanged')
       if (user) {
-        console.log('user: ', user)
-        //localStorage.setItem(
-        //  'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D',
-        //  true
-        //)
+        console.log('user:', user)
         dispatch(checkAuth(user))
       } else {
-        console.log('user: ', user)
+        console.log('user가 null임')
         dispatch(checkAuth(user))
-        // localStorage.removeItem(
-        //   'FE37F882DCF4A30642E6B59D595F0760B0F1C3FE86F466922270B61E6D09106D'
-        // )
       }
     })
+    const currentUser = authService.currentUser
+    console.log('currentUser: ', currentUser)
   }, [])
 
   return (

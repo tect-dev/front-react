@@ -4,7 +4,7 @@ import MainLayout from '../../components/layout/MainLayout'
 import { useSelector, useDispatch } from 'react-redux'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
 import QuestionEditSection from '../../components/question/QuestionEditSection'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
 
 export default function QuestionEditPage() {
   const { data, userID } = useSelector((state) => {
@@ -13,22 +13,28 @@ export default function QuestionEditPage() {
       userID: state.auth.userID,
     }
   }) || {
-    data: { question: { questionBody: '' } },
+    data: null,
     userID: null,
   }
 
   const history = useHistory()
 
-  useEffect(() => {
-    if (data.question.questionBody.authorID !== userID) {
-      alert('잘못된 접근입니다.')
-      history.push('/question')
-    }
-  }, [history])
+  //useEffect(() => {
+  //  if (data.question.questionBody.authorID !== userID) {
+  //    alert('잘못된 접근입니다.')
+  //    history.push('/question')
+  //  }
+  //}, [history])
 
   return (
     <MainLayout>
-      <QuestionEditSection initialData={data} />
+      {data ? (
+        <QuestionEditSection initialData={data} />
+      ) : (
+        <>
+          <Redirect to="/question" />
+        </>
+      )}
     </MainLayout>
   )
 }
