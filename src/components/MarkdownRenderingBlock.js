@@ -137,11 +137,9 @@ export default React.memo(function MarkdownRenderingBlock({ content }) {
   }, [content])
 
   return (
-    <>
-      <MarkdownStyledBlock
-        className={'dracula'}
-        dangerouslySetInnerHTML={{ __html: html.replaceAll(`\n`, `<br />`) }}
-      ></MarkdownStyledBlock>
-    </>
+    <MarkdownStyledBlock
+      className={'dracula'}
+      dangerouslySetInnerHTML={{ __html: html.replaceAll(`\n`, `<br />`) }}
+    ></MarkdownStyledBlock>
   )
 })

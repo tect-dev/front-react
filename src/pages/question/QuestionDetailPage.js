@@ -3,9 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { readQuestionByUID } from '../../redux/readPost'
 import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
 import MainLayout from '../../components/layout/MainLayout'
+import Navbar from '../../components/layout/Navbar'
+import Footer from '../../components/layout/Footer'
 import QuestionSection from '../../components/question/QuestionSection'
 import AnswerSection from '../../components/question/AnswerSection'
 import { Spinner } from '../../components/Spinner'
+
+import '../../styles/layout/MainLayout.scss'
 
 export default function QuestionDetailPage({ match }) {
   const questionID = match.params.questionID
@@ -46,14 +50,18 @@ export default function QuestionDetailPage({ match }) {
     )
   return (
     <>
-      <MainLayout>
-        <HalfWidthContainer>
-          <QuestionSection data={data} />
-        </HalfWidthContainer>
-        <HalfWidthContainer>
-          <AnswerSection data={data} />
-        </HalfWidthContainer>
-      </MainLayout>
+      <div className="layout">
+        <Navbar />
+        <div className="layout-main-doubleside">
+          <HalfWidthContainer>
+            <QuestionSection data={data} />
+          </HalfWidthContainer>
+          <HalfWidthContainer>
+            <AnswerSection data={data} />
+          </HalfWidthContainer>
+        </div>
+        <Footer />
+      </div>
     </>
   )
 }
