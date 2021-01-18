@@ -24,6 +24,11 @@ const initialState = {
     data: null,
     error: null,
   },
+  searchedResults: {
+    loading: false,
+    data: null,
+    error: null
+  }
 }
 
 // action types
@@ -42,6 +47,10 @@ const READ_ARTICLE_LIST_FAIL = 'article/READ_ARTICLE_LIST_FAIL'
 const READ_ARTICLE_TRY = 'article/READ_ARTICLE_TRY'
 const READ_ARTICLE_SUCCESS = 'article/READ_ARTICLE_SUCCESS'
 const READ_ARTICLE_FAIL = 'article/READ_ARTICLE_FAIL'
+
+const READ_SEARCHED_TRY = 'searched/READ_SEARCHED_TRY'
+const READ_SEARCHED_SUCCESS = 'searched/READ_SEARCHED_SUCCESS'
+const READ_SEARCHED_FAIL = 'searched/READ_SEARCHED_FAIL'
 
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
 
@@ -95,6 +104,23 @@ export const readArticleByUID = (uid) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: READ_ARTICLE_FAIL, error: e })
+  }
+}
+
+export const readSearchedResults = (querystring) => async (dispatch) => {
+  dispatch({ type: READ_SEARCHED_TRY })
+  try {
+    const obj = JSON.stringify({target: querystring})
+    const res = await axios({
+      method: 'post',
+      url: `/question/search`,
+      headers: { 'Content-Type': 'application/json' },
+      data: obj,
+    })
+    dispatch({ type: READ_SEARCHED_SUCCESS, searchedResults: res.data })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: READ_SEARCHED_FAIL, error: e })
   }
 }
 
@@ -206,6 +232,33 @@ export default function readPost(state = initialState, action) {
       return {
         ...state,
         article: {
+          loading: false,
+          data: null,
+          error: action.error,
+        },
+      }
+    case READ_SEARCHED_TRY:
+      return {
+        ...state,
+        searchedResults: {
+          loading: true,
+          data: null,
+          error: null,
+        },
+      }
+    case READ_SEARCHED_SUCCESS:
+      return {
+        ...state,
+        searchedResults: {
+          loading: false,
+          data: action.searchedResults,
+          error: null,
+        },
+      }
+    case READ_SEARCHED_FAIL:
+      return {
+        ...state,
+        searchedResults: {
           loading: false,
           data: null,
           error: action.error,
