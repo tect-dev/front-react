@@ -12,55 +12,7 @@ import slug from 'remark-slug'
 import { htmlFilter } from '../lib/functions'
 import { prismPlugin } from '../lib/prismPlugin'
 import { prismThemes } from '../lib/prismThemes'
-
-export const mediaQuery = (maxWidth) => `
-  @media (max-width: ${maxWidth}px)
-`
-const media = {
-  xxlarge: mediaQuery(1920),
-  xlarge: mediaQuery(1440),
-  large: mediaQuery(1200),
-  medium: mediaQuery(1024),
-  small: mediaQuery(768),
-  xsmall: mediaQuery(375),
-  custom: mediaQuery,
-}
-
-export const palette = {
-  /* teal */
-  teal0: '#F3FFFB',
-  teal1: '#C3FAE8',
-  teal2: '#96F2D7',
-  teal3: '#63E6BE',
-  teal4: '#38D9A9',
-  teal5: '#20C997',
-  teal6: '#12B886',
-  teal7: '#0CA678',
-  teal8: '#099268',
-  teal9: '#087F5B',
-  /* gray */
-  gray0: '#F8F9FA',
-  gray1: '#F1F3F5',
-  gray2: '#E9ECEF',
-  gray3: '#DEE2E6',
-  gray4: '#CED4DA',
-  gray5: '#ADB5BD',
-  gray6: '#868E96',
-  gray7: '#495057',
-  gray8: '#343A40',
-  gray9: '#212529',
-  /* red */
-  red0: '#fff5f5',
-  red1: '#ffe3e3',
-  red2: '#ffc9c9',
-  red3: '#ffa8a8',
-  red4: '#ff8787',
-  red5: '#ff6b6b',
-  red6: '#fa5252',
-  red7: '#f03e3e',
-  red8: '#e03131',
-  red9: '#c92a2a',
-}
+import { colorPalette, mediaQuery, mediaSize } from '../lib/constants'
 
 const MarkdownStyledBlock = styled.div`
   &.atom-one-dark {
@@ -93,7 +45,7 @@ const MarkdownStyledBlock = styled.div`
     line-height: 1.5;
     overflow-x: auto;
     letter-spacing: 0px;
-    ${media.small} {
+    ${mediaSize.small} {
       font-size: 0.75rem;
       padding: 0.75rem;
     }
@@ -127,12 +79,12 @@ const MarkdownStyledBlock = styled.div`
   table {
     min-width: 40%;
     max-width: 100%;
-    border: 1px solid ${palette.gray7};
+    border: 1px solid ${colorPalette.gray7};
     border-collapse: collapse;
     font-size: 0.875rem;
     thead > tr > th {
       /* text-align: left; */
-      border-bottom: 4px solid ${palette.gray7};
+      border-bottom: 4px solid ${colorPalette.gray7};
     }
     th,
     td {
@@ -141,10 +93,10 @@ const MarkdownStyledBlock = styled.div`
     }
     td + td,
     th + th {
-      border-left: 1px solid ${palette.gray7};
+      border-left: 1px solid ${colorPalette.gray7};
     }
     tr:nth-child(even) {
-      background: ${palette.gray1};
+      background: ${colorPalette.gray1};
     }
     tr:nth-child(odd) {
       background: white;
@@ -152,6 +104,10 @@ const MarkdownStyledBlock = styled.div`
   }
   .katex-mathml {
     display: none;
+  }
+  width: 39vw;
+  ${mediaSize.small} {
+    width: 95vw;
   }
 `
 
@@ -184,7 +140,7 @@ export default React.memo(function MarkdownRenderingBlock({ content }) {
     <>
       <MarkdownStyledBlock
         className={'dracula'}
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: html.replaceAll(`\n`, `<br />`) }}
       ></MarkdownStyledBlock>
     </>
   )

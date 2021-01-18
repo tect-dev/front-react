@@ -8,7 +8,13 @@ import { deleteAnswer } from '../../redux/deletePost'
 import { useDispatch, useSelector } from 'react-redux'
 import { uid } from 'uid'
 import { Link } from 'react-router-dom'
-import { sortISOByTimeStamp } from '../../lib/functions'
+import {
+  sortISOByTimeStamp,
+  isoStringToNaturalLanguage,
+} from '../../lib/functions'
+import { Button } from '../../components/Button'
+import styled from 'styled-components'
+import { userDefaultID, mediaSize } from '../../lib/constants'
 
 export default React.memo(function AnswerSection({ data }) {
   const [answers, setAnswers] = useState(
@@ -37,17 +43,14 @@ export default React.memo(function AnswerSection({ data }) {
     setEditedAnswerContent(answer.answerBody.content)
   }
 
-  function onChangeAnswerContent(e) {
-    setEditedAnswerContent(e.target.value)
+  function onChangeAnswerContent(value) {
+    setEditedAnswerContent(value)
   }
 
   // 새로운 answer 를 추가할때 사용된다.
-  const onChangeContent = useCallback(
-    (e) => {
-      setContent(e.target.value)
-    },
-    [content]
-  )
+  const onChangeContent = useCallback((value) => {
+    setContent(value)
+  }, [])
 
   const addAnswer = useCallback(
     (e) => {
@@ -82,12 +85,12 @@ export default React.memo(function AnswerSection({ data }) {
       setAnswers([...answers, tempAnswer])
       setContent('')
     },
-    [content, answers]
+    [content, answers, data.question._id, dispatch, userID, userNickname]
   )
 
   const onUpdateAnswer = useCallback(
     (answerID, index) => {
-      if(!editedAnswerContent){
+      if (!editedAnswerContent) {
         alert('본문을 입력해 주세요.')
         return
       }
@@ -114,7 +117,7 @@ export default React.memo(function AnswerSection({ data }) {
         })
       )
     },
-    [editedAnswerContent, answers]
+    [editedAnswerContent, answers, dispatch]
   )
 
   const onDeleteAnswer = useCallback(
@@ -123,34 +126,37 @@ export default React.memo(function AnswerSection({ data }) {
       answers.splice(index, 1)
       setAnswers([...answers])
     },
-    [answers]
+    [answers, dispatch]
   )
 
   return (
-    <>
+    <AnswerContainer>
+      <h3>{answers.length} Answers</h3>
       {answers.map((element, index) => {
         return (
-          <>
+          <AnswerBlock key={index}>
             {isEditingAnswer && editedAnswerIndex === index ? (
               // answer 가 수정중일때
               <div key={index}>
                 <MarkdownEditorBlock
-                  contentProps={element.answerBody.content}
+                  contentProps={editedAnswerContent}
                   onChangeContentProps={onChangeAnswerContent}
+                  height="350px"
+                  width="41vw"
                 />
-                <button
+                <MarkdownRenderingBlock content={editedAnswerContent} />
+                <Button
                   onClick={() => {
                     onUpdateAnswer(element._id, index)
                   }}
                 >
                   수정완료
-                </button>
+                </Button>
               </div>
             ) : (
               // answer 가 수정중이 아닐때
               <div key={index}>
                 <div className="content">
-                  answer{index}
                   {element.answerBody ? (
                     <MarkdownRenderingBlock
                       content={element.answerBody.content}
@@ -158,51 +164,78 @@ export default React.memo(function AnswerSection({ data }) {
                   ) : (
                     ''
                   )}
+                  <br />
+                </div>
+
+                <div>
+                  {isoStringToNaturalLanguage(element.answerBody.lastUpdate)}
                 </div>
                 <div>
-                  <Link to={`/user/${element.answerBody.authorID}`}>
-                    답변 작성자 닉네임: {element.answerBody.authorNickname}
-                  </Link>
+                  {element.answerBody.authorID === userDefaultID ? (
+                    `${element.answerBody.authorNickname}`
+                  ) : (
+                    <Link to={`/user/${element.answerBody.authorID}`}>
+                      {element.answerBody.authorNickname}
+                    </Link>
+                  )}
                 </div>
-                <div>마지막 업데이트 날짜: {element.answerBody.lastUpdate}</div>
 
                 {userID !== '000000000000000000000000' &&
                 userID === element.answerBody.authorID ? (
                   <>
-                    <button
+                    <Button
                       onClick={() => {
                         startEditAnswer(element, index)
                       }}
                     >
-                      answer 수정
-                    </button>
-                    <button
+                      답변 수정
+                    </Button>
+                    <Button
                       onClick={() => {
                         onDeleteAnswer(element._id, index)
                       }}
                     >
-                      answer 삭제
-                    </button>
+                      답변 삭제
+                    </Button>
                   </>
                 ) : (
                   ''
                 )}
 
-                {/* <CommentListBlock commentList={element.answerBody.comments} /> */}
+                {/* <CommentListBlock commentList={element.answerBody.comments} /> 
                 <MarkdownEditorBlock />
-                <button>answer에 댓글달기</button>
+                <Button>answer에 댓글달기</Button>*/}
               </div>
             )}
-          </>
+          </AnswerBlock>
         )
       })}
-
       <MarkdownEditorBlock
         className="answerWrite"
         onChangeContentProps={onChangeContent}
         contentProps={content}
+        height="250px"
+        width="40vw"
       />
-      <button onClick={addAnswer}>answer 추가하기</button>
-    </>
+      <br />
+      <h3>Answer Preview</h3>
+      <br />
+      <MarkdownRenderingBlock content={content} />
+      <br />
+      <Button onClick={addAnswer}>답변 추가하기</Button>
+    </AnswerContainer>
   )
 })
+
+const AnswerContainer = styled.div`
+  padding: 1rem 1.5rem;
+`
+
+const AnswerBlock = styled.div`
+  margin-top: 20px;
+  margin-bottom: 40px;
+  padding: 20px;
+  ${mediaSize.small} {
+  }
+  box-shadow: 4px 2px 6px 0px #d7dbe2, -4px -2px 4px 0px #ffffff;
+`

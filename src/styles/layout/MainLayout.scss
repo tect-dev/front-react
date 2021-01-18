@@ -47,18 +47,22 @@ body {
 }
 
 .layout {
-  display: flex;
-  flex-flow: column nowrap;
+  /*flex-flow: column nowrap;*/
   align-items: center; /* layout 1 */
   width: 100%;
   min-height: 100vh; /* layout 4 */
 
   &-main {
-    margin: $header-height 0 0 0; /* layout 3 */
+    display: inline-flex;
+    margin: $header-height + 10px 10px 0 10px; /* layout 3 */
     flex: 1 0 100%; /* layout 8 */
-    display: flex;
-    flex-flow: column wrap;
-    max-width: $pc-max-width; /* layout 1 */
-    background: $layout-main-background; /* layout 8 */
+    @media (max-width: 768px) {
+      display: block;
+    }
+
+    /*display: flex;*/
+    /*flex-flow: column wrap;*/
+    /* max-width: $pc-max-width; layout 1 */
+    /*background: $layout-main-background; /* layout 8 */
   }
 }

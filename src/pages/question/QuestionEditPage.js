@@ -28,17 +28,7 @@ export default function QuestionEditPage() {
 
   return (
     <MainLayout>
-      <section>
-        <QuestionEditSection initialData={data} />
-      </section>
-      <section>
-        <div id="preview">
-          <div>Preview</div>
-          <MarkdownRenderingBlock
-            content={data.question.questionBody.content}
-          />
-        </div>
-      </section>
+      <QuestionEditSection initialData={data} />
     </MainLayout>
   )
 }
