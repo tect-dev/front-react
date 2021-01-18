@@ -40,9 +40,9 @@ export const Pagination = ({ data, total }) => {
               : ""}
 
             {(index===pageBtns[0] | index===pageBtns[pageBtns.length - 1])
-            ? <PageBtn element={element}/>
+            ? <PageBtn element={element} key={index}/>
             :  element >= (nowPage - 1) - (btnShowNum / 2) & element <= (nowPage - 1) + (btnShowNum / 2)
-              ? <PageBtn element={element}/>
+              ? <PageBtn element={element} key={index}/>
               : null}
 
             {nowPage > (pageBtns[0] + 2) && index===pageBtns[0]
