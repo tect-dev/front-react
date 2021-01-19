@@ -1,13 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import '../styles/Pagination.scss'
 
 import QuestionBlock from './question/QuestionBlock'
 
 export const Pagination = ({ data, total }) => {
+  const history = useHistory()
   // total 인자를 백엔드에서 받기 전까지 임시로 사용
   !total ? (total = data.length) : console.log('')
 
-  const [nowPage, setNowPage] = useState(1)
+  const pathname = useLocation().pathname
+
+  // query 방식 삭제
+  const { page } = useParams()
+  // const [nowPage, setNowPage] = useState(page)
+  let nowPage = page
+
+
   // page당 어느 정도의 게시물을 보여줄 것인가
   const [perPage, setPerPage] = useState(4)
 
@@ -18,12 +27,24 @@ export const Pagination = ({ data, total }) => {
     ...Array(Math.ceil(total / perPage)).keys(),
   ])
 
+  useEffect(()=>{
+    return
+  })
   const PageBtn = ({ element }) => {
+    const arr = pathname.split('/')
+    arr.pop()
+    const basePath = arr.join("/")
     return (
       <li
         key={element}
-        className={`page-btn ${element + 1 === nowPage ? 'present' : ''}`}
-        onClick={() => setNowPage(element + 1)}
+        className={`page-btn ${element + 1 == nowPage ? 'present' : ''}`}
+        onClick={() => {
+          history.push({
+            pathname: `${basePath}/${element + 1}`
+          })
+          nowPage = element + 1
+          // setNowPage(element + 1)
+        }}
       >
         {element + 1}
       </li>
@@ -81,7 +102,8 @@ export const Pagination = ({ data, total }) => {
                     className="page-btn"
                     onClick={() => {
                       if (nowPage != 1) {
-                        setNowPage(nowPage - 1)
+                        nowPage = nowPage - 1
+                        // setNowPage(nowPage - 1)
                       }
                     }}
                   >
@@ -97,8 +119,8 @@ export const Pagination = ({ data, total }) => {
                     className="page-btn"
                     onClick={() => {
                       if (nowPage != Math.ceil(total / perPage)) {
-                        console.log(nowPage)
-                        setNowPage(nowPage + 1)
+                        nowPage = nowPage + 1
+                        // setNowPage(nowPage + 1)
                       }
                     }}
                   >

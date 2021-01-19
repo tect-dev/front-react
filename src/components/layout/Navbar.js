@@ -11,15 +11,16 @@ export default function Navbar() {
     if (e.code === 'Enter' && searchValue !== '') {
       // 시큐어 코딩 필요
       router.push({
-        pathname: '/searched',
-        search: `?query=${searchValue}`,
+        pathname: `/searched/${searchValue}/1`,
+        // 기존 쿼리 방식 삭제
+        // search: `?query=${searchValue}`,
       })
     }
   }
   // useSelector: 리덕스 스토어의 상태를 조회하는 hooks.
   // state 의 값은 리덕스 스토에다가 getState() 를 호출했을때 나오는 값과 같음.
   const { userID, userNickname, loginState } = useSelector((state) => {
-    console.log('useSelector:')
+    // console.log('useSelector:')
     return {
       loginState: state.auth.loginState,
       userID: state.auth.userID,
@@ -61,7 +62,7 @@ export default function Navbar() {
             }
           >
             <li className="navbar-item">
-              <NavLink to="/question" className="navbar-item-link">
+              <NavLink to={{pathname: "/question/list/1"}} className="navbar-item-link">
                 Q {`\&`} A
               </NavLink>
             </li>
