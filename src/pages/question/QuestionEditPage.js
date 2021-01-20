@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { useInput } from '../../hooks/hooks'
 import MainLayout from '../../components/layout/MainLayout'
+import DoublesideLayout from '../../components/layout/DoublesideLayout'
 import { useSelector, useDispatch } from 'react-redux'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
 import QuestionEditSection from '../../components/question/QuestionEditSection'
@@ -27,14 +28,14 @@ export default function QuestionEditPage() {
   //}, [history])
 
   return (
-    <MainLayout>
+    <DoublesideLayout>
       {data ? (
         <QuestionEditSection initialData={data} />
       ) : (
         <>
-          <Redirect to="/question" />
+          <Redirect to="/question/list/1" />
         </>
       )}
-    </MainLayout>
+    </DoublesideLayout>
   )
 }

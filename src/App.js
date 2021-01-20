@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import QuestionListPage from './pages/question/QuestionListPage'
@@ -13,7 +13,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import './App.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { checkAuth } from './redux/auth'
-import { authService, firebaseInstance } from './lib/firebase'
+import { authService } from './lib/firebase'
 
 function App() {
   const dispatch = useDispatch()
@@ -44,6 +44,7 @@ function App() {
         />
       </head>
       {/* 라우트를 Switch 로 감싸면, 매칭되는 첫번째 페이지만 렌더를 해준다. */}
+      <BrowserRouter>
       <Switch>
         <Route path="/" exact={true} component={HomePage} />
         <Route path="/about" component={AboutPage} />
@@ -51,17 +52,18 @@ function App() {
 
         <Route path="/mypage" component={ProfilePage} />
         <Route path="/login" component={LoginPage} />
-        <Route path="/question" exact={true} component={QuestionListPage} />
+        <Route path="/question/list/:page" exact={true} component={QuestionListPage} />
         <Route
           path="/question/write"
           exact={true}
           component={QuestionWritePage}
         />
         <Route path="/question/edit/:questionID" component={QuestionEditPage} />
-        <Route path="/searched" component={QuestionSearchResultPage} />
+        <Route path="/searched/:searchValue/:page" component={QuestionSearchResultPage} />
         <Route path="/question/:questionID" component={QuestionDetailPage} />
         <Route component={NotFoundPage} />
       </Switch>
+      </BrowserRouter>
     </>
   )
 }

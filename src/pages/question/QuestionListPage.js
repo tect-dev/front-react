@@ -11,7 +11,7 @@ import { Pagination } from '../../components/Pagination'
 
 import '../../styles/page/question/QuestionListPage.scss'
 
-export default function QuestionListPage() {
+export default function QuestionListPage({ location }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.questionList
   })
