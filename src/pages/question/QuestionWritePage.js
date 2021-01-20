@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import MainLayout from '../../components/layout/MainLayout'
 import QuestionWriteSection from '../../components/question/QuestionWriteSection'
+import DoublesideLayout from '../../components/layout/DoublesideLayout'
 
 export default function QuestionWritePage({ history }) {
   //useEffect(() => {
@@ -10,8 +10,8 @@ export default function QuestionWritePage({ history }) {
   //}, [history]);
 
   return (
-    <MainLayout>
+    <DoublesideLayout>
       <QuestionWriteSection />
-    </MainLayout>
+    </DoublesideLayout>
   )
 }

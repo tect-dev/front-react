@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { readSearchedResults } from '../../redux/readPost'
 import MainLayout from '../../components/layout/MainLayout'
 import { Spinner } from '../../components/Spinner'
@@ -16,21 +16,23 @@ const QuestionSearchResultPage = () => {
     return state.readPost.searchedResults
   })
 
-  const location = useLocation()
-
   const dispatch = useDispatch()
 
-  const getSearchResultsAsync = useCallback((params) => {
-    dispatch(readSearchedResults(params))
-  }, [dispatch])
+  const getSearchResultsAsync = useCallback(
+    (params) => {
+      dispatch(readSearchedResults(params))
+    },
+    [dispatch]
+  )
 
+  const { searchValue } = useParams()
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const querystring = searchParams.get("query")
-    getSearchResultsAsync(querystring)
-  }, [dispatch, location])
-
-
+    // 기존 쿼리방식 삭제
+    // const searchParams = new URLSearchParams(location.search)
+    // const querystring = searchParams.get("query")
+    // getSearchResultsAsync(querystring)
+    getSearchResultsAsync(searchValue)
+  }, [dispatch, searchValue])
 
   if (loading)
     return (
@@ -48,14 +50,14 @@ const QuestionSearchResultPage = () => {
     )
   }
   // if (!data | data.length === 0){
-  if (!data | data?.length === 0){
+  if (!data | (data?.length === 0)) {
     return (
       <>
         <MainLayout>no data</MainLayout>
       </>
     )
   }
-    
+
   return (
     <>
       <MainLayout>
@@ -75,7 +77,7 @@ const QuestionSearchResultPage = () => {
                 </Link>
               </div>
               <div className="questionList">
-                <Pagination data={data}/>
+                <Pagination data={data} />
               </div>
             </div>
           </section>
@@ -88,8 +90,6 @@ const QuestionSearchResultPage = () => {
       </MainLayout>
     </>
   )
-
-  
 }
 
 export default QuestionSearchResultPage
