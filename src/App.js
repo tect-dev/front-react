@@ -9,6 +9,7 @@ import QuestionDetailPage from './pages/question/QuestionDetailPage'
 import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
 import ProfilePage from './pages/user/ProfilePage'
 import LoginPage from './pages/LoginPage'
+import TechtreeEditPage from './pages/techtree/TechtreeEditPage'
 import NotFoundPage from './pages/NotFoundPage'
 import './App.css'
 import { useSelector, useDispatch } from 'react-redux'
@@ -48,7 +49,7 @@ function App() {
         <Route path="/" exact={true} component={HomePage} />
         <Route path="/about" component={AboutPage} />
         <Route path="/user/:userID" component={ProfilePage} />
-
+        <Route path="/techtree/edit" component={TechtreeEditPage} />
         <Route path="/mypage" component={ProfilePage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/question" exact={true} component={QuestionListPage} />

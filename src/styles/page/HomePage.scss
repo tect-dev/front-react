@@ -7,50 +7,57 @@ HomePage 1. techtree svg가 내부적으로 explicit 크기를 갖지 않아서
 */
 
 @media screen and (min-width: 1200px) {
-    .homepage-container {
-        display: grid;
-        place-items: center;
-        grid-template-columns: 700px ($pc-max-width - 700px);
-        // gap: 0 50px;
-    }
+  .homepage-container {
+    display: grid;
+    place-items: center;
+    grid-template-columns: 700px ($pc-max-width - 700px);
+    // gap: 0 50px;
+  }
 
-    .techtree-container {
-        width: 100%;
-    }
+  .techtree-container {
+    width: 100%;
+  }
 
-    .subjects-sidebar {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        height: 500px;
-        width: 500px;
+  .subjects-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 500px;
+    width: 500px;
 
-        .block {
-            display: grid;
-            place-items: center;
-            text-align: center;
-        }
-        
+    .block {
+      display: grid;
+      place-items: center;
+      text-align: center;
     }
+  }
+  .techtreeMarkdownEditor {
+    border: '1px solid #00bebe';
+    display: 'none';
+  }
 }
 
 @media screen and (max-width: 1200px) {
-    .layout-main {
-        width: 100%;    /* HomePage 1. */
-    }
-    .homepage-container{
-        width: inherit;
-        display: grid;
-        justify-items: center;
-    }
-    .techtree-container {
-        width: 100%;
-    }
+  .layout-main {
+    width: 100%; /* HomePage 1. */
+  }
+  .homepage-container {
+    width: inherit;
+    display: grid;
+    justify-items: center;
+  }
+  .techtree-container {
+    width: 100%;
+  }
 
-    .subjects-sidebar {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-        place-items: center;
-        gap: 10px 5px;
-    }
+  .subjects-sidebar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    place-items: center;
+    gap: 10px 5px;
+  }
+  .techtreeMarkdownEditor {
+    border: '1px solid #00bebe';
+    display: 'none';
+  }
 }
