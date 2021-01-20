@@ -14,8 +14,7 @@ export const Pagination = ({ data, total }) => {
   // query 방식 삭제
   const { page } = useParams()
   // const [nowPage, setNowPage] = useState(page)
-  let nowPage = page
-
+  let nowPage = typeof(page) === 'number' ? page : parseInt(page)
 
   // page당 어느 정도의 게시물을 보여줄 것인가
   const [perPage, setPerPage] = useState(4)
@@ -101,9 +100,15 @@ export const Pagination = ({ data, total }) => {
                     key="prev-pageBtn"
                     className="page-btn"
                     onClick={() => {
+                      const arr = pathname.split('/')
+                      arr.pop()
+                      const basePath = arr.join("/")
                       if (nowPage != 1) {
                         nowPage = nowPage - 1
                         // setNowPage(nowPage - 1)
+                        history.push({
+                          pathname: `${basePath}/${nowPage}`
+                        })
                       }
                     }}
                   >
@@ -118,9 +123,17 @@ export const Pagination = ({ data, total }) => {
                     key="next-pageBtn"
                     className="page-btn"
                     onClick={() => {
+                      const arr = pathname.split('/')
+                      arr.pop()
+                      const basePath = arr.join("/")
                       if (nowPage != Math.ceil(total / perPage)) {
+                        
                         nowPage = nowPage + 1
+                        
                         // setNowPage(nowPage + 1)
+                        history.push({
+                          pathname: `${basePath}/${nowPage}`
+                        })
                       }
                     }}
                   >
