@@ -1,7 +1,7 @@
 import TechtreeEditor from '../../components/techtree/TechtreeEditor'
 import MarkdownEditorBlock from '../../components/MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
-import React, { useDebugValue } from 'react'
+import React, { useDebugValue, useEffect } from 'react'
 import MainLayout from '../../components/layout/MainLayout'
 import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
 //import '../../styles/page/HomePage.scss'
@@ -10,8 +10,12 @@ import { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { editDocument, finishEdit } from '../../redux/techtree'
+import { select } from 'd3'
 
 export default function HomePage() {
+  const { selectedNode } = useSelector((state) => {
+    return { selectedNode: state.techtree.selectedNode }
+  })
   const [content, setContent] = useState('')
   const { isEditingDocument, isEditingTechtree } = useSelector((state) => {
     return {
@@ -19,6 +23,9 @@ export default function HomePage() {
       isEditingTechtree: state.techtree.isEditingTechtree,
     }
   })
+  useEffect(() => {
+    setContent(selectedNode.body)
+  }, [selectedNode])
 
   const dispatch = useDispatch()
 
