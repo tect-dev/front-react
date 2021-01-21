@@ -272,7 +272,11 @@ function runForceGraph(
         tempPairingNodes.endX = d.x
         tempPairingNodes.endY = d.y
         // 연결된 노드를 데이터에 반영
-        if (tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID) {
+        if (
+          tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
+          tempPairingNodes.startX !== tempPairingNodes.endX &&
+          tempPairingNodes.startY !== tempPairingNodes.endY
+        ) {
           await linkList.push({ ...tempPairingNodes })
           console.log('노드가 서로 연결됨:', tempPairingNodes)
           console.log('링크 리스트에 새 링크가 추가됨:', linkList)
