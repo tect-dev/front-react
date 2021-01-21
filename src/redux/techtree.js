@@ -16,7 +16,7 @@ const initialState = {
   techtreeData: {
     nodeList: [
       {
-        id: 1,
+        id: '1',
         name: '첫번째 노드',
         x: 150,
         y: 150,
@@ -26,7 +26,7 @@ const initialState = {
         fillColor: 'blue',
       },
       {
-        id: 2,
+        id: '2',
         name: '두번째 노드',
         x: 300,
         y: 300,
