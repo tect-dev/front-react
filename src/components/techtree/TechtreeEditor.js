@@ -84,6 +84,14 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
     .style('border', '1px solid #00bebe')
   //.attr('viewBox', [0, 0, width, height])
 
+  // 마우스 드래그할때 나타나는 임시 라인 만들어두기.
+  svg
+    .append('g')
+    .append('line')
+    .attr('class', 'tempLine')
+    .style('stroke', linkColor)
+    .style('stroke-width', linkWidth)
+    .style('opacity', '0')
   const linkGroup = svg.append('g').attr('class', 'links')
   const nodeGroup = svg.append('g').attr('class', 'nodes')
   const labelGroup = svg.append('g').attr('class', 'labels')
@@ -99,15 +107,6 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
       .attr('y2', (d) => d.endY - navbarHeight)
       .style('stroke', linkColor)
       .style('stroke-width', linkWidth)
-
-    // 마우스 드래그할때 나타나는 임시 라인 만들어두기.
-    linkGroup
-      .append('line')
-      .datum(tempPairingNodes)
-      .attr('class', 'tempLine')
-      .style('stroke', linkColor)
-      .style('stroke-width', linkWidth)
-      .style('opacity', '0')
 
     nodeGroup
       .selectAll('circle')
@@ -133,7 +132,7 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
         d3.select('.techtreeMarkdownSection').style('display', 'block')
       })
       .on('mousedown', (d) => {
-        linkGroup
+        svg
           .select('.tempLine')
           .attr('x1', d.x)
           .attr('y1', d.y - navbarHeight)
@@ -249,7 +248,7 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
         d3.select('.techtreeMarkdownSection').style('display', 'block')
       })
       .on('mousedown', (d) => {
-        linkGroup
+        svg
           .select('.tempLine')
           .attr('x1', d.x)
           .attr('y1', d.y - navbarHeight)
@@ -299,13 +298,13 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
 
   svg
     .on('mousemove', (d) => {
-      linkGroup
+      svg
         .select('.tempLine')
         .attr('x2', d3.event.pageX - marginX)
         .attr('y2', d3.event.pageY - navbarHeight)
     })
     .on('mouseup', (d) => {
-      linkGroup.select('.tempLine').style('opacity', '0')
+      svg.select('.tempLine').style('opacity', '0')
 
       //updateLink()
     })
