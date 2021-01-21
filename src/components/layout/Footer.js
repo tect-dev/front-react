@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import '../../styles/layout/Footer.scss';
+import { Link } from 'react-router-dom'
+import '../../styles/layout/Footer.scss'
 
 export default function Footer() {
   return (
@@ -15,6 +15,7 @@ export default function Footer() {
           <div>SNS 링크</div>
           <div>별도의 Contact us도 필요한가</div> */}
           footer
+          <Link to="/techtree/edit">테크트리 수정으로 가는 임시 링크</Link>
         </div>
       </footer>
       {/* <ul>
@@ -25,5 +26,5 @@ export default function Footer() {
         </li>
       </ul> */}
     </>
-  );
+  )
 }

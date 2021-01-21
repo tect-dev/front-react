@@ -36,15 +36,29 @@ const initialState = {
         fillColor: 'red',
       },
     ],
-    linkList: [],
+    linkList: [
+      {
+        startNodeID: '1',
+        endNodeID: '2',
+        startX: 150,
+        startY: 150,
+        endX: 300,
+        endY: 300,
+        left: false,
+        right: true,
+      },
+    ],
   },
 }
 
 // define ACTION types
 const EDIT_DOCUMENT = 'techtree/EDIT_DOCUMENT'
 const EDIT_TECHTREE = 'techtree/EDIT_TECHTREE'
-const FINISH_EDIT = 'techtree/FINISH_EDIT'
+const FINISH_DOCU_EDIT = 'techtree/FINISH_DOCU_EDIT'
 const SELECT_NODE = 'techtree/SELECT_NODE'
+
+const CREATE_NODE = 'techtree/CREATE_NODE'
+const CREATE_LINK = 'techtree/CREATE_LINK'
 
 // action 생성 함수
 export const editTechtree = () => {
@@ -53,17 +67,37 @@ export const editTechtree = () => {
 export const editDocument = () => {
   return { type: EDIT_DOCUMENT }
 }
-export const finishEdit = (content) => {
-  // 여기서 마크다운 content 에 해당하는걸 서버로 보내 저장.
-  // 노드와 링크 데이터가 전부 합쳐진 객체를 보내야겠네.
-  return { type: FINISH_EDIT }
+export const finishDocuEdit = (nodeID, nodeName, nodeBody) => {
+  return { type: FINISH_DOCU_EDIT, nodeID, nodeName, nodeBody }
 }
 export const selectNode = (node) => {
   return { type: SELECT_NODE, node: node }
 }
+export const createNode = (nodeList) => {
+  return { type: CREATE_NODE, nodeList: nodeList }
+}
+export const createLink = (linkList) => {
+  return { type: CREATE_LINK, linkList: linkList }
+}
 
 export default function techtree(state = initialState, action) {
   switch (action.type) {
+    case CREATE_LINK:
+      return {
+        ...state,
+        techtreeData: {
+          ...state.techtreeData,
+          linkList: action.linkList,
+        },
+      }
+    case CREATE_NODE:
+      return {
+        ...state,
+        techtreeData: {
+          ...state.techtreeData,
+          nodeList: action.nodeList,
+        },
+      }
     case EDIT_TECHTREE:
       return {
         ...state,
@@ -74,9 +108,21 @@ export default function techtree(state = initialState, action) {
         ...state,
         isEditingDocument: true,
       }
-    case FINISH_EDIT:
+    case FINISH_DOCU_EDIT:
+      const changingIndex = state.techtreeData.nodeList.findIndex(
+        (element) => action.nodeID === element.id
+      )
+      const changingNode = state.techtreeData.nodeList[changingIndex]
+      const newNodeList = state.techtreeData.nodeList
+      newNodeList[changingIndex] = {
+        ...changingNode,
+        id: action.nodeID,
+        name: action.NodeName,
+        body: action.nodeBody,
+      }
       return {
         ...state,
+        techtreeData: { ...state.techtreeData, nodeList: newNodeList },
         isEditingDocument: false,
         isEditingTechtree: false,
       }

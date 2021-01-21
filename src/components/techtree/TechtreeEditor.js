@@ -2,15 +2,19 @@ import React from 'react'
 import * as d3 from 'd3'
 import { useSelector } from 'react-redux'
 import { reduxStore } from '../../index.js'
-import { selectNode } from '../../redux/techtree'
+import { selectNode, createNode, createLink } from '../../redux/techtree'
 import { uid } from 'uid'
 import { select, some } from 'd3'
 //import ReactDOM from 'react-dom'
 
 export default React.memo(function TechtreeEditor() {
   const containerRef = React.useRef(null)
-  const { techtreeData } = useSelector((state) => {
-    return { techtreeData: state.techtree.techtreeData }
+  const { techtreeData, nodeList, linkList } = useSelector((state) => {
+    return {
+      techtreeData: state.techtree.techtreeData,
+      nodeList: state.techtree.techtreeData.nodeList,
+      linkList: state.techtree.techtreeData.linkList,
+    }
   })
 
   const nodeHoverTooltip = (node) => {
@@ -27,7 +31,8 @@ export default React.memo(function TechtreeEditor() {
       const { destroy } = runForceGraph(
         containerRef.current,
         techtreeData,
-
+        nodeList,
+        linkList,
         nodeHoverTooltip
       )
       destroyFn = destroy
@@ -39,7 +44,13 @@ export default React.memo(function TechtreeEditor() {
   return <div ref={containerRef} />
 })
 
-function runForceGraph(container, techtreeData, nodeHoverTooltip) {
+function runForceGraph(
+  container,
+  techtreeData,
+  originalNodeList,
+  originalLinkList,
+  nodeHoverTooltip
+) {
   // 데이터 저장 원칙 : navbar 높이때문에 Y좌표는 보정이 필요함.
   // 하지만 보정을 가한 좌표를 저장하지 않는다. 순수한 좌표를 저장해야함.
   // 그 좌표에 대해 렌더링하는 시점에만 보정을 가한다.
@@ -59,19 +70,8 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
     endY: null,
   }
 
-  let nodeList = techtreeData.nodeList
-  let linkList = [
-    {
-      startNodeID: '1',
-      endNodeID: '2',
-      startX: 150,
-      startY: 150,
-      endX: 300,
-      endY: 300,
-      left: false,
-      right: true,
-    },
-  ]
+  let nodeList = originalNodeList
+  let linkList = originalLinkList
 
   const height = 1000 //containerRect.height;
   const width = 600 //containerRect.width;
@@ -91,10 +91,18 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
     .attr('class', 'tempLine')
     .style('stroke', linkColor)
     .style('stroke-width', linkWidth)
+    .attr('marker-end', 'url(#end-arrow)')
     .style('opacity', '0')
+
   const linkGroup = svg.append('g').attr('class', 'links')
   const nodeGroup = svg.append('g').attr('class', 'nodes')
   const labelGroup = svg.append('g').attr('class', 'labels')
+
+  function returnSomeIDObject(someArray, id) {
+    return someArray.find((element) => {
+      return element.id === id
+    })
+  }
 
   function initGraph() {
     linkGroup
@@ -107,16 +115,15 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
       .attr('y2', (d) => d.endY - navbarHeight)
       .style('stroke', linkColor)
       .style('stroke-width', linkWidth)
+      .attr('marker-end', 'url(#end-arrow)')
 
     nodeGroup
       .selectAll('circle')
       .data(nodeList)
       .join('circle')
-      .attr('r', (d) => {
-        return d.radius
-      })
-      .style('stroke', 'red')
-      .style('fill', '#00bebe')
+      .attr('r', (d) => d.radius)
+      //.style('stroke', 'red')
+      .style('fill', (d) => d.fillColor)
       .attr('cx', (d) => {
         return d.x
       })
@@ -149,13 +156,13 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
         // 연결된 노드를 데이터에 반영
 
         linkList.push({ ...tempPairingNodes })
-        console.log('노드가 서로 연결됨:', tempPairingNodes)
-        console.log('링크 리스트에 새 링크가 추가됨:', linkList)
+        //console.log('노드가 서로 연결됨:', tempPairingNodes)
+        //console.log('링크 리스트에 새 링크가 추가됨:', linkList)
 
         // 데이터에 반영됐으면 임시 페어링을 초기화.
         tempPairingNodes = {}
-        console.log('노드 페어링 초기화:', tempPairingNodes)
-        console.log(':', linkList)
+        //console.log('노드 페어링 초기화:', tempPairingNodes)
+        //console.log(':', linkList)
       })
       .style('cursor', 'pointer')
 
@@ -176,16 +183,15 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
       })
       .style('user-select', 'none')
       .style('background-color', '#ffffff')
-    //.style('cursor', 'pointer')
 
     svg
       .append('svg:defs')
       .append('svg:marker')
       .attr('id', 'end-arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 6)
-      .attr('markerWidth', 3)
-      .attr('markerHeight', 3)
+      .attr('refX', nodeRadius * 1.3)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', nodeRadius * 1.5)
       .attr('orient', 'auto')
       .append('svg:path')
       .attr('d', 'M0,-5L10,0L0,5')
@@ -218,6 +224,9 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
       .attr('y2', (d) => d.endY - navbarHeight)
       .style('stroke', linkColor)
       .style('stroke-width', linkWidth)
+      .attr('marker-end', 'url(#end-arrow)')
+
+    reduxStore.dispatch(createLink(linkList))
 
     console.log('링크가 갱신됨')
   }
@@ -230,8 +239,8 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
       .attr('r', (d) => {
         return d.radius
       })
-      .style('stroke', 'red')
-      .style('fill', '#00bebe')
+      //.style('stroke', 'red')
+      .style('fill', (d) => d.fillColor)
       .attr('cx', (d) => {
         return d.x
       })
@@ -263,11 +272,12 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
         tempPairingNodes.endX = d.x
         tempPairingNodes.endY = d.y
         // 연결된 노드를 데이터에 반영
-
-        await linkList.push({ ...tempPairingNodes })
-        console.log('노드가 서로 연결됨:', tempPairingNodes)
-        console.log('링크 리스트에 새 링크가 추가됨:', linkList)
-        updateLink()
+        if (tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID) {
+          await linkList.push({ ...tempPairingNodes })
+          console.log('노드가 서로 연결됨:', tempPairingNodes)
+          console.log('링크 리스트에 새 링크가 추가됨:', linkList)
+          updateLink()
+        }
 
         // 데이터에 반영됐으면 임시 페어링을 초기화.
         tempPairingNodes = {}
@@ -292,7 +302,7 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
         return d.name
       })
       .style('user-select', 'none')
-
+    reduxStore.dispatch(createNode(nodeList))
     console.log('노드가 갱신됨.')
   }
 
@@ -309,21 +319,20 @@ function runForceGraph(container, techtreeData, nodeHoverTooltip) {
       //updateLink()
     })
     .on('dblclick', () => {
-      nodeList = [
-        ...nodeList,
-        {
-          id: uid(24),
-          name: '새로운 노드',
-          x: d3.event.pageX,
-          y: d3.event.pageY,
-          radius: nodeRadius,
-          body: '새로운 노드 body',
-          tag: '프론트엔드',
-          fillColor: 'blue',
-          parentNodeID: ['1'],
-          childNodeID: ['2'],
-        },
-      ]
+      const createdNode = {
+        id: uid(24),
+        name: '새로운 노드',
+        x: d3.event.pageX,
+        y: d3.event.pageY,
+        radius: nodeRadius,
+        body: '새로운 노드 body',
+        tag: '프론트엔드',
+        fillColor: '#00bebe',
+        parentNodeID: ['1'],
+        childNodeID: ['2'],
+      }
+      nodeList = [...nodeList, createdNode]
+
       updateNode()
     })
 
