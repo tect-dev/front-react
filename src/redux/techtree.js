@@ -16,7 +16,7 @@ const initialState = {
   techtreeData: {
     nodeList: [
       {
-        id: '1',
+        id: 'asdfasdfasdfasdfasdfasdf',
         name: '첫번째 노드',
         x: 150,
         y: 150,
@@ -26,7 +26,7 @@ const initialState = {
         fillColor: '#91a7ff',
       },
       {
-        id: '2',
+        id: 'bbdfasdfasdfasdfasdfasdf',
         name: '두번째 노드',
         x: 300,
         y: 300,
@@ -38,12 +38,13 @@ const initialState = {
     ],
     linkList: [
       {
-        startNodeID: '1',
-        endNodeID: '2',
+        startNodeID: 'asdfasdfasdfasdfasdfasdf',
+        endNodeID: 'bbdfasdfasdfasdfasdfasdf',
         startX: 150,
         startY: 150,
         endX: 300,
         endY: 300,
+        id: 'ccdfasdfasdfasdfasdfasdf',
         left: false,
         right: true,
       },

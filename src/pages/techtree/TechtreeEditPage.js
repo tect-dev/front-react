@@ -51,7 +51,7 @@ export default function MyTechtreePage() {
 
   return (
     <MainLayout>
-      <TechtreeEditor techtreeData={techtreeData} />
+      <TechtreeEditor techtreeData={techtreeData} selectedNode={selectedNode} />
 
       <HalfWidthContainer>
         <SideMarkdownSection

@@ -7,7 +7,10 @@ import { uid } from 'uid'
 import { select, some } from 'd3'
 //import ReactDOM from 'react-dom'
 
-export default React.memo(function TechtreeEditor({ techtreeData }) {
+export default React.memo(function TechtreeEditor({
+  techtreeData,
+  selectedNode,
+}) {
   const containerRef = React.useRef(null)
   const { nodeList, linkList } = useSelector((state) => {
     return {
@@ -32,6 +35,7 @@ export default React.memo(function TechtreeEditor({ techtreeData }) {
         techtreeData,
         nodeList,
         linkList,
+        selectedNode,
         nodeHoverTooltip
       )
       destroyFn = destroy
@@ -48,6 +52,7 @@ function runForceGraph(
   techtreeData,
   originalNodeList,
   originalLinkList,
+  selectedNode,
   nodeHoverTooltip
 ) {
   // 데이터 저장 원칙 : navbar 높이때문에 Y좌표는 보정이 필요함.
@@ -65,6 +70,7 @@ function runForceGraph(
     startX: null,
     startY: null,
     endNodeID: null,
+    id: null,
     endX: null,
     endY: null,
   }
@@ -115,6 +121,33 @@ function runForceGraph(
       return element.id === id
     })
   }
+  function fadeExceptSelected(selectedNode) {
+    nodeGroup.selectAll('circle').style('opacity', '0.2')
+    linkGroup.selectAll('line').style('opacity', '0.03')
+    labelGroup.selectAll('text').style('opacity', '0.1')
+
+    linkList.map((linkElement) => {
+      if (selectedNode.id === linkElement.startNodeID) {
+        //nodeList.findIndex((node)=> node.id === linkElement.endNodeID)
+        nodeGroup
+          .select(`circle.${linkElement.endNodeID}`)
+          .style('opacity', '1')
+        labelGroup.select(`text.${linkElement.endNodeID}`).style('opacity', '1')
+        linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
+      } else if (selectedNode.id === linkElement.endNodeID) {
+        nodeGroup
+          .select(`circle.${linkElement.startNodeID}`)
+          .style('opacity', '1')
+        labelGroup
+          .select(`text.${linkElement.startNodeID}`)
+          .style('opacity', '1')
+        linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
+      } else {
+      }
+      nodeGroup.select(`circle.${selectedNode.id}`).style('opacity', '1')
+      labelGroup.select(`text.${selectedNode.id}`).style('opacity', '1')
+    })
+  }
 
   linkGroup
     .selectAll('line')
@@ -124,6 +157,7 @@ function runForceGraph(
     .attr('y1', (d) => d.startY - navbarHeight)
     .attr('x2', (d) => d.endX)
     .attr('y2', (d) => d.endY - navbarHeight)
+    .attr('class', (d) => d.id)
     .style('stroke', linkColor)
     .style('stroke-width', linkWidth)
     .attr('marker-end', 'url(#end-arrow)')
@@ -141,13 +175,14 @@ function runForceGraph(
     .attr('cy', (d) => {
       return d.y - navbarHeight // 80 is upper navbar height
     })
-    .style('class', (d) => {
+    .attr('class', (d) => {
       return d.id
     })
     .on('click', (d) => {
       // 노드가 생성될때 이벤트를 달아줘야지 d 객체를 이용할 수 있다.
       // 클릭하면, 관련 노드들만 보여지게 할까?
       reduxStore.dispatch(selectNode(d))
+      setTimeout(fadeExceptSelected, 0, d)
       d3.select('.techtreeMarkdownSection').style('display', 'block')
     })
     .on('mousedown', (d) => {
@@ -177,7 +212,9 @@ function runForceGraph(
             element.endNodeID === tempPairingNodes.endNodeID
         )
       ) {
+        tempPairingNodes.id = `link${uid(20)}`
         linkList.push({ ...tempPairingNodes })
+        //setTimeout(linkList.push({ ...tempPairingNodes }), 0)
         console.log('노드끼리 연결됨:', tempPairingNodes)
       }
 
@@ -200,6 +237,7 @@ function runForceGraph(
     })
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'central')
+    .attr('class', (d) => d.id)
     .text((d) => {
       return d.name
     })
@@ -217,6 +255,7 @@ function runForceGraph(
       .attr('y1', (d) => d.startY - navbarHeight)
       .attr('x2', (d) => d.endX)
       .attr('y2', (d) => d.endY - navbarHeight)
+      .attr('class', (d) => d.id)
       .style('stroke', linkColor)
       .style('stroke-width', linkWidth)
       .attr('marker-end', 'url(#end-arrow)')
@@ -242,11 +281,12 @@ function runForceGraph(
       .attr('cy', (d) => {
         return d.y - navbarHeight
       })
-      .style('class', (d) => {
+      .attr('class', (d) => {
         return d.id
       })
       .on('click', (d) => {
         reduxStore.dispatch(selectNode(d))
+        setTimeout(fadeExceptSelected, 0, d)
         d3.select('.techtreeMarkdownSection').style('display', 'block')
       })
       .on('mousedown', (d) => {
@@ -275,7 +315,9 @@ function runForceGraph(
               element.endNodeID === tempPairingNodes.endNodeID
           )
         ) {
+          tempPairingNodes.id = `link${uid(20)}`
           await linkList.push({ ...tempPairingNodes })
+          //setTimeout(linkList.push({ ...tempPairingNodes }), 0)
           console.log('노드가 서로 연결됨:', tempPairingNodes)
           console.log('링크 리스트에 새 링크가 추가됨:', linkList)
           updateLink()
@@ -290,8 +332,7 @@ function runForceGraph(
     labelGroup
       .selectAll('text')
       .data(nodeList)
-      .enter()
-      .append('text')
+      .join('text')
       .attr('x', (d) => {
         return d.x
       })
@@ -300,15 +341,22 @@ function runForceGraph(
       })
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
+      .attr('class', (d) => d.id)
       .text((d) => {
         return d.name
       })
       .style('user-select', 'none')
+
     reduxStore.dispatch(createNode(nodeList))
     console.log('노드가 갱신됨.')
   }
 
   svg
+    .on('click', () => {
+      nodeGroup.selectAll('circle').style('opacity', '1')
+      linkGroup.selectAll('line').style('opacity', '1')
+      labelGroup.selectAll('text').style('opacity', '1')
+    })
     .on('mousemove', (d) => {
       svg
         .select('.tempLine')
@@ -317,12 +365,10 @@ function runForceGraph(
     })
     .on('mouseup', (d) => {
       svg.select('.tempLine').style('opacity', '0')
-
-      //updateLink()
     })
     .on('dblclick', () => {
       const createdNode = {
-        id: uid(24),
+        id: `node${uid(20)}`,
         name: '새로운 노드',
         x: d3.event.pageX,
         y: d3.event.pageY,
