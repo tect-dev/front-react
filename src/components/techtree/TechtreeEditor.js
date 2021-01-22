@@ -146,6 +146,7 @@ function runForceGraph(
     })
     .on('click', (d) => {
       // 노드가 생성될때 이벤트를 달아줘야지 d 객체를 이용할 수 있다.
+      // 클릭하면, 관련 노드들만 보여지게 할까?
       reduxStore.dispatch(selectNode(d))
       d3.select('.techtreeMarkdownSection').style('display', 'block')
     })
@@ -166,9 +167,19 @@ function runForceGraph(
       tempPairingNodes.endY = d.y
       // 연결된 노드를 데이터에 반영
 
-      linkList.push({ ...tempPairingNodes })
-      //console.log('노드가 서로 연결됨:', tempPairingNodes)
-      //console.log('링크 리스트에 새 링크가 추가됨:', linkList)
+      if (
+        tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
+        tempPairingNodes.startX !== tempPairingNodes.endX &&
+        tempPairingNodes.startY !== tempPairingNodes.endY &&
+        !linkList.find(
+          (element) =>
+            element.startNodeID === tempPairingNodes.startNodeID &&
+            element.endNodeID === tempPairingNodes.endNodeID
+        )
+      ) {
+        linkList.push({ ...tempPairingNodes })
+        console.log('노드끼리 연결됨:', tempPairingNodes)
+      }
 
       // 데이터에 반영됐으면 임시 페어링을 초기화.
       tempPairingNodes = {}
@@ -235,8 +246,6 @@ function runForceGraph(
         return d.id
       })
       .on('click', (d) => {
-        // 노드가 생성될때 함께 이벤트를 달아줘야지 d 객체를 이용할 수 있다.
-        //console.log('노드가 클릭됨: ', d)
         reduxStore.dispatch(selectNode(d))
         d3.select('.techtreeMarkdownSection').style('display', 'block')
       })
@@ -259,7 +268,12 @@ function runForceGraph(
         if (
           tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
           tempPairingNodes.startX !== tempPairingNodes.endX &&
-          tempPairingNodes.startY !== tempPairingNodes.endY
+          tempPairingNodes.startY !== tempPairingNodes.endY &&
+          !linkList.find(
+            (element) =>
+              element.startNodeID === tempPairingNodes.startNodeID &&
+              element.endNodeID === tempPairingNodes.endNodeID
+          )
         ) {
           await linkList.push({ ...tempPairingNodes })
           console.log('노드가 서로 연결됨:', tempPairingNodes)
