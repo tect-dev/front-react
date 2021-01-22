@@ -4,8 +4,6 @@ import { useSelector } from 'react-redux'
 import { reduxStore } from '../../index.js'
 import { selectNode, createNode, createLink } from '../../redux/techtree'
 import { uid } from 'uid'
-import { select, some } from 'd3'
-//import ReactDOM from 'react-dom'
 
 export default React.memo(function TechtreeEditor({
   techtreeData,
@@ -76,7 +74,10 @@ function runForceGraph(
   }
 
   let nodeList = originalNodeList
+  // let nodeList = reduxStore.getState().techtree.techtreeData.nodeList
   let linkList = originalLinkList
+
+  setInterval(updateNode, 1000)
 
   const height = 600 //containerRect.height;
   const width = 600 //containerRect.width;
