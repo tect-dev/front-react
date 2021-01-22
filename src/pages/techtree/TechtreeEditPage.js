@@ -12,18 +12,21 @@ import { useSelector, useDispatch } from 'react-redux'
 import { editDocument, finishDocuEdit } from '../../redux/techtree'
 import { select } from 'd3'
 
-export default function HomePage() {
+export default function MyTechtreePage() {
   const { selectedNode } = useSelector((state) => {
     return { selectedNode: state.techtree.selectedNode }
   })
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const { isEditingDocument, isEditingTechtree } = useSelector((state) => {
-    return {
-      isEditingDocument: state.techtree.isEditingDocument,
-      isEditingTechtree: state.techtree.isEditingTechtree,
+  const { techtreeData, isEditingDocument, isEditingTechtree } = useSelector(
+    (state) => {
+      return {
+        techtreeData: state.techtree.techtreeData,
+        isEditingDocument: state.techtree.isEditingDocument,
+        isEditingTechtree: state.techtree.isEditingTechtree,
+      }
     }
-  })
+  )
   useEffect(() => {
     setTitle(selectedNode.name)
     setContent(selectedNode.body)
@@ -48,7 +51,7 @@ export default function HomePage() {
 
   return (
     <MainLayout>
-      <TechtreeEditor techtreeData={dummyTechtree.cs} category={'cs'} />
+      <TechtreeEditor techtreeData={techtreeData} />
 
       <HalfWidthContainer>
         <SideMarkdownSection

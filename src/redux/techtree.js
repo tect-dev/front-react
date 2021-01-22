@@ -23,7 +23,7 @@ const initialState = {
         radius: 15,
         body: '## 이것은 마크다운.\n실험용 첫번째 노드',
         tag: '프론트엔드',
-        fillColor: 'blue',
+        fillColor: '#91a7ff',
       },
       {
         id: '2',
@@ -33,7 +33,7 @@ const initialState = {
         radius: 15,
         body: 'x랑 y의 값은 둘다 300임. 두번째 노드임',
         tag: '백엔드',
-        fillColor: 'red',
+        fillColor: '#339af0',
       },
     ],
     linkList: [
@@ -117,7 +117,7 @@ export default function techtree(state = initialState, action) {
       newNodeList[changingIndex] = {
         ...changingNode,
         id: action.nodeID,
-        name: action.NodeName,
+        name: action.nodeName,
         body: action.nodeBody,
       }
       return {
