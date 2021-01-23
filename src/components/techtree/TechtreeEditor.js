@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { reduxStore } from '../../index.js'
 import { selectNode, createNode, createLink } from '../../redux/techtree'
 import { uid } from 'uid'
+import { colorPalette } from '../../lib/constants'
 
 export default React.memo(function TechtreeEditor({
   techtreeData,
@@ -81,6 +82,7 @@ function runForceGraph(
 
   const height = 600 //containerRect.height;
   const width = 600 //containerRect.width;
+  const selectedNodeHighlightColor = colorPalette.red6
 
   const svg = d3
     .select(container)
@@ -123,30 +125,31 @@ function runForceGraph(
     })
   }
   function fadeExceptSelected(selectedNode) {
-    nodeGroup.selectAll('circle').style('opacity', '0.2')
-    linkGroup.selectAll('line').style('opacity', '0.03')
-    labelGroup.selectAll('text').style('opacity', '0.1')
+    nodeGroup.selectAll('circle').style('stroke', 'none')
+    //linkGroup.selectAll('line').style('opacity', '0.03')
+    //labelGroup.selectAll('text').style('opacity', '0.1')
 
     linkList.map((linkElement) => {
       if (selectedNode.id === linkElement.startNodeID) {
-        //nodeList.findIndex((node)=> node.id === linkElement.endNodeID)
         nodeGroup
           .select(`circle.${linkElement.endNodeID}`)
-          .style('opacity', '1')
-        labelGroup.select(`text.${linkElement.endNodeID}`).style('opacity', '1')
-        linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
+          .style('stroke', selectedNodeHighlightColor)
+        //labelGroup.select(`text.${linkElement.endNodeID}`).style('opacity', '1')
+        //linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
       } else if (selectedNode.id === linkElement.endNodeID) {
         nodeGroup
           .select(`circle.${linkElement.startNodeID}`)
-          .style('opacity', '1')
-        labelGroup
-          .select(`text.${linkElement.startNodeID}`)
-          .style('opacity', '1')
-        linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
+          .style('stroke', selectedNodeHighlightColor)
+        //labelGroup
+        //  .select(`text.${linkElement.startNodeID}`)
+        //  .style('opacity', '1')
+        //linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
       } else {
       }
-      nodeGroup.select(`circle.${selectedNode.id}`).style('opacity', '1')
-      labelGroup.select(`text.${selectedNode.id}`).style('opacity', '1')
+      nodeGroup
+        .select(`circle.${selectedNode.id}`)
+        .style('stroke', selectedNodeHighlightColor)
+      //labelGroup.select(`text.${selectedNode.id}`).style('opacity', '1')
     })
   }
 
@@ -168,7 +171,7 @@ function runForceGraph(
     .data(nodeList)
     .join('circle')
     .attr('r', (d) => d.radius)
-    //.style('stroke', 'red')
+    //.style('stroke', selectedNodeHighlightColor)
     .style('fill', (d) => d.fillColor)
     .attr('cx', (d) => {
       return d.x
@@ -274,7 +277,7 @@ function runForceGraph(
       .attr('r', (d) => {
         return d.radius
       })
-      //.style('stroke', 'red')
+      //.style('stroke', selectedNodeHighlightColor)
       .style('fill', (d) => d.fillColor)
       .attr('cx', (d) => {
         return d.x
@@ -354,9 +357,12 @@ function runForceGraph(
 
   svg
     .on('click', () => {
-      nodeGroup.selectAll('circle').style('opacity', '1')
-      linkGroup.selectAll('line').style('opacity', '1')
-      labelGroup.selectAll('text').style('opacity', '1')
+      nodeGroup.selectAll('circle').style('stroke', 'none')
+      //linkGroup.selectAll('line').style('stroke', selectedNodeHighlightColor)
+      //labelGroup.selectAll('text').style('opacity', '1')
+      //nodeGroup.selectAll('circle').style('opacity', '1')
+      //linkGroup.selectAll('line').style('opacity', '1')
+      //labelGroup.selectAll('text').style('opacity', '1')
     })
     .on('mousemove', (d) => {
       svg
