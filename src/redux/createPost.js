@@ -53,8 +53,12 @@ export const createQuestion = (data) => async (
       data: obj,
     })
     await dispatch({ type: CREATE_QUESTION_SUCCESS })
+    setTimeout(() => {
+      history.push(`/question/${data.postID}`)
+      console.log('히스토리가 푸시됨.')
+      console.log('히스토리: ', history)
+    }, 20)
 
-    history.push(`/question/${data.postID}`)
     // obj 는 스트링으로 만든거라서, data 를 써야함.
   } catch (e) {
     alert('error: ', e)

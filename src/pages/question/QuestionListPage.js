@@ -22,6 +22,7 @@ export default function QuestionListPage({ location }) {
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
 
   useEffect(() => {
+    console.log('퀘스쳔 페이지가 렌더링됨')
     dispatch(readQuestionList())
   }, [dispatch])
 

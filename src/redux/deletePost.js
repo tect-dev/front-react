@@ -37,7 +37,7 @@ export const deleteQuestion = (questionID) => async (
       url: `/question/${questionID}`,
     })
     await dispatch({ type: DELETE_QUESTION_SUCCESS })
-    history.push('/question')
+    history.push('/question/list/1')
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: DELETE_QUESTION_FAIL, error: e })
