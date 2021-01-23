@@ -39,6 +39,11 @@ export default React.memo(function QuestionWriteSection() {
     setContent(value)
   }
 
+  function goToBottomScroll(e) {
+    console.log('scroll할때 e.target.scrollHeight:', e.target.scrollHeight)
+    console.log('scroll할때 e.target.scrollTop:', e.target)
+  }
+
   useEffect(() => {
     if (hashtagList.length > 10) {
       setHashtagText(hashtagText.substr(0, hashtagText.length - 1))
@@ -137,7 +142,7 @@ export default React.memo(function QuestionWriteSection() {
         </form>
       </HalfWidthContainer>
       <HalfWidthContainer>
-        <PreviewContainer>
+        <PreviewContainer onScroll={goToBottomScroll}>
           <div>
             <h2>Preview</h2>
             <br />
@@ -153,6 +158,7 @@ const EditorContainer = styled.div``
 
 const PreviewContainer = styled.div`
   display: block;
+  overflow: auto;
 `
 
 const StyledTitleInput = styled.input`

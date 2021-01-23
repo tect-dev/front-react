@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from './Button'
+import axios from 'axios'
 import styled from 'styled-components'
 import {
   FaBold,
@@ -29,6 +30,31 @@ export default React.memo(function MarkdownEditorBlock({
     },
     [onChangeContentProps]
   )
+
+  const onDrop = useCallback(async (e) => {
+    e.preventDefault()
+    // 여러 이미지를 드래그해도 하나만 선택
+    const file = e?.dataTransfer?.files[0]
+    // input attribute로 accept="image/*"를 지정하지
+    // 않았기 때문에 여기서 image만 access 가능하게 처리
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      let formData = new FormData()
+      formData.append('image', file)
+      const res = await axios({
+        url: '/image',
+        method: 'POST',
+        data: formData,
+      })
+      const imageUrl = res.data
+      const result = e.target.value + `![사진](${imageUrl})`
+      setLocalContent(result)
+      onChangeContentProps(result)
+    } else {
+      console.log('no image file')
+    }
+  })
 
   const addCodeBlock = useCallback(
     (e) => {
@@ -129,6 +155,7 @@ export default React.memo(function MarkdownEditorBlock({
             id="content"
             value={contentProps}
             onChange={onChangeContent}
+            onDrop={onDrop}
             style={{ width: width, height: height }}
           ></StyledTextarea>
         </div>
