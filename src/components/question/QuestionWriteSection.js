@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { uid } from 'uid'
 import { useSelector, useDispatch } from 'react-redux'
 import { createQuestion } from '../../redux/createPost'
@@ -6,6 +6,7 @@ import MarkdownEditorBlock from '../MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import { TagBlock } from '../TagBlock'
 import { Button } from '../Button'
+import { Spinner } from '../Spinner'
 import styled from 'styled-components'
 import { textTooLongAlert } from '../../lib/functions'
 import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
@@ -15,13 +16,16 @@ export default React.memo(function QuestionWriteSection() {
   const [content, setContent] = useState('')
   const [hashtagText, setHashtagText] = useState('')
   const [hashtagList, setHashtagList] = useState([])
+  const [isPreviewScrollBottom, setIsPreviewScrollBottom] = useState(false)
+  const previewRef = useRef()
 
   const splitPoint = /\,/g
 
-  const { userID, userNickname } = useSelector((state) => {
+  const { userID, userNickname, isLoading } = useSelector((state) => {
     return {
       userID: state.auth.userID,
       userNickname: state.auth.userNickname,
+      isLoading: state.createPost.question.loading,
     }
   })
 
@@ -37,11 +41,18 @@ export default React.memo(function QuestionWriteSection() {
   function onChangeContent(value) {
     textTooLongAlert(value, 50000)
     setContent(value)
+    if (isPreviewScrollBottom) {
+      console.log('previewRef.current.scrollTop:', previewRef.current.scrollTop)
+      previewRef.current.scrollTop = previewRef.current.scrollHeight
+    }
   }
 
-  function goToBottomScroll(e) {
-    console.log('scroll할때 e.target.scrollHeight:', e.target.scrollHeight)
-    console.log('scroll할때 e.target.scrollTop:', e.target)
+  function onScrollPreview(e) {
+    if (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) {
+      setIsPreviewScrollBottom(true)
+    } else {
+      setIsPreviewScrollBottom(false)
+    }
   }
 
   useEffect(() => {
@@ -134,15 +145,23 @@ export default React.memo(function QuestionWriteSection() {
             })}
           </div>
           <br />
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <Button
+              className="ask-btn"
+              type="submit"
+              buttonStyle="btn--outline"
+            >
+              작성 완료
+            </Button>
+          )}
 
-          <Button className="ask-btn" type="submit" buttonStyle="btn--outline">
-            작성 완료
-          </Button>
           <br />
         </form>
       </HalfWidthContainer>
       <HalfWidthContainer>
-        <PreviewContainer onScroll={goToBottomScroll}>
+        <PreviewContainer ref={previewRef} onScroll={onScrollPreview}>
           <div>
             <h2>Preview</h2>
             <br />
