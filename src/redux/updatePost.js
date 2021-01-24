@@ -36,7 +36,7 @@ export const updateQuestion = (data) => async (
     const obj = JSON.stringify(data)
     await axios({
       method: 'put',
-      url: `/question/${data.postID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/question/${data.postID}`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
@@ -56,7 +56,7 @@ export const updateAnswer = (answerID, data) => async (dispatch) => {
     const obj = JSON.stringify(data)
     await axios({
       method: 'put',
-      url: `/answer/${answerID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/answer/${answerID}`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
@@ -74,7 +74,7 @@ export const updateArticle = (data) => async (dispatch) => {
     const obj = JSON.stringify(Object.fromEntries(data))
     await axios({
       method: 'put',
-      url: `/article`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/article`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })

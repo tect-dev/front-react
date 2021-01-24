@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import '../../styles/layout/Footer.scss';
+import { Link } from 'react-router-dom'
+import '../../styles/layout/Footer.scss'
 
 export default function Footer() {
   return (
@@ -14,7 +14,7 @@ export default function Footer() {
           <div>회사소개, 개인정보보호정책/처리방침, 이용약관, 사이트맵</div>
           <div>SNS 링크</div>
           <div>별도의 Contact us도 필요한가</div> */}
-          footer
+          footer at 20210124
         </div>
       </footer>
       {/* <ul>
@@ -25,5 +25,5 @@ export default function Footer() {
         </li>
       </ul> */}
     </>
-  );
+  )
 }

@@ -23,7 +23,7 @@ export const createComment = (data) => async (dispatch) => {
     //console.log(obj);
     await axios({
       method: 'post',
-      url: `/comment`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/comment`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
