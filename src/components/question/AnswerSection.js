@@ -17,9 +17,10 @@ import styled from 'styled-components'
 import { userDefaultID, mediaSize } from '../../lib/constants'
 
 export default React.memo(function AnswerSection({ data }) {
-  const [answers, setAnswers] = useState(
-    data.answers.sort((a, b) => {
-      sortISOByTimeStamp(a.answerBody.createdAt, b.answerBody.createdAt, -1)
+  const [ question, setQuestion ] = useState(data.questionList[0])
+  const [ answers, setAnswers ] = useState(
+    data?.answerList?.sort((a, b) => {
+      sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
     })
   )
   // 새로운 answer 를 작성할때 사용하는 state: content
@@ -62,30 +63,25 @@ export default React.memo(function AnswerSection({ data }) {
       const uid24 = uid(24)
       const formData = {
         answerID: uid24,
-        postID: data.question._id,
+        postID: question._id,
         contentType: 'answer',
-        content: content,
-        authorID: userID,
-        authorNickname: userNickname,
+        content: content
       }
       const tempAnswer = {
         __v: 0,
         _id: uid24,
-        answerBody: {
-          answerID: uid24,
-          authorID: userID,
-          authorNickname: userNickname,
-          content: content,
-          createdAt: '지금', // Date.now() 가 알수없는 오류를 낸다. 생각해보니 걍 이런식으로 써도 될듯.
-          lastUpdate: '지금',
-          postID: data.question._id,
-        },
+        answerID: uid24,
+        answerAuthor: [{_id: userID, nickname: userNickname}],
+        content: content,
+        createdAt: '지금', // Date.now() 가 알수없는 오류를 낸다. 생각해보니 걍 이런식으로 써도 될듯.
+        lastUpdate: '지금',
+        postID: question._id,
       }
       dispatch(createAnswer(formData))
       setAnswers([...answers, tempAnswer])
       setContent('')
     },
-    [content, answers, data.question._id, dispatch, userID, userNickname]
+    [content, answers, question._id, dispatch, userID, userNickname]
   )
 
   const onUpdateAnswer = useCallback(
@@ -128,11 +124,17 @@ export default React.memo(function AnswerSection({ data }) {
     },
     [answers, dispatch]
   )
-
+  // content
+  // 
   return (
     <AnswerContainer>
       <h3>{answers.length} Answers</h3>
       {answers.map((element, index) => {
+        // console.log(element)
+        const author = ( element?.answerAuthor?.length
+                         ? element.answerAuthor[0]
+                         : null
+        )
         return (
           <AnswerBlock key={index}>
             {isEditingAnswer && editedAnswerIndex === index ? (
@@ -157,9 +159,9 @@ export default React.memo(function AnswerSection({ data }) {
               // answer 가 수정중이 아닐때
               <div key={index}>
                 <div className="content">
-                  {element.answerBody ? (
+                  {element ? (
                     <MarkdownRenderingBlock
-                      content={element.answerBody.content}
+                      content={element.content}
                     />
                   ) : (
                     ''
@@ -168,20 +170,27 @@ export default React.memo(function AnswerSection({ data }) {
                 </div>
 
                 <div>
-                  {isoStringToNaturalLanguage(element.answerBody.lastUpdate)}
+                  {element.updateAt 
+                    ? <>
+                        {element.updatedAt.substr(0, 4)}년{' '}
+                        {element.updatedAt.substr(5, 2)}월{' '}
+                        {element.updatedAt.substr(8, 2)}일
+                      </> 
+                    : element.updateAt}
+                  
                 </div>
                 <div>
-                  {element.answerBody.authorID === userDefaultID ? (
-                    `${element.answerBody.authorNickname}`
-                  ) : (
-                    <Link to={`/user/${element.answerBody.authorID}`}>
-                      {element.answerBody.authorNickname}
+                  {author ? (
+                    <Link to={`/user/${author._id}`}>
+                      {author.nickname}
                     </Link>
+                  ) : (
+                    `익명`
                   )}
                 </div>
 
                 {userID !== '000000000000000000000000' &&
-                userID === element.answerBody.authorID ? (
+                userID === author ? (
                   <>
                     <Button
                       onClick={() => {
