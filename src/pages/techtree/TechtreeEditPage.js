@@ -9,24 +9,30 @@ import { dummyTechtree } from '../../lib/dummyTechtree'
 import { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
-import { editDocument, finishDocuEdit } from '../../redux/techtree'
+import { editDocument, finishDocuEdit, selectNode } from '../../redux/techtree'
 import { select } from 'd3'
+import { returnNextNodeList, returnPreviousNodeList } from '../../lib/functions'
 
 export default function MyTechtreePage() {
-  const { selectedNode } = useSelector((state) => {
-    return { selectedNode: state.techtree.selectedNode }
-  })
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const { techtreeData, isEditingDocument, isEditingTechtree } = useSelector(
-    (state) => {
-      return {
-        techtreeData: state.techtree.techtreeData,
-        isEditingDocument: state.techtree.isEditingDocument,
-        isEditingTechtree: state.techtree.isEditingTechtree,
-      }
+  const {
+    techtreeData,
+    isEditingDocument,
+    isEditingTechtree,
+    selectedNode,
+    previousNodeList,
+    nextNodeList,
+  } = useSelector((state) => {
+    return {
+      techtreeData: state.techtree.techtreeData,
+      isEditingDocument: state.techtree.isEditingDocument,
+      isEditingTechtree: state.techtree.isEditingTechtree,
+      selectedNode: state.techtree.selectedNode,
+      previousNodeList: state.techtree.previousNodeList,
+      nextNodeList: state.techtree.nextNodeList,
     }
-  )
+  })
   useEffect(() => {
     setTitle(selectedNode.name)
     setContent(selectedNode.body)
@@ -79,6 +85,54 @@ export default function MyTechtreePage() {
             <>
               <div>
                 <h3>{title}</h3>
+              </div>
+              <div>prevNode</div>
+              <div>
+                {previousNodeList.map((node) => {
+                  return (
+                    <button
+                      onClick={(e) => {
+                        const previousNodes = returnPreviousNodeList(
+                          techtreeData.linkList,
+                          techtreeData.nodeList,
+                          node
+                        )
+                        const nextNodes = returnNextNodeList(
+                          techtreeData.linkList,
+                          techtreeData.nodeList,
+                          node
+                        )
+                        dispatch(selectNode(previousNodes, nextNodes, node))
+                      }}
+                    >
+                      {node.name}
+                    </button>
+                  )
+                })}
+              </div>
+              <div>nextNode</div>
+              <div>
+                {nextNodeList.map((node) => {
+                  return (
+                    <button
+                      onClick={() => {
+                        const previousNodes = returnPreviousNodeList(
+                          techtreeData.linkList,
+                          techtreeData.nodeList,
+                          node
+                        )
+                        const nextNodes = returnNextNodeList(
+                          techtreeData.linkList,
+                          techtreeData.nodeList,
+                          node
+                        )
+                        dispatch(selectNode(previousNodes, nextNodes, node))
+                      }}
+                    >
+                      {node.name}
+                    </button>
+                  )
+                })}
               </div>
               <MarkdownRenderingBlock content={content} />
             </>

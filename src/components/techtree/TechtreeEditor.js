@@ -5,6 +5,7 @@ import { reduxStore } from '../../index.js'
 import { selectNode, createNode, createLink } from '../../redux/techtree'
 import { uid } from 'uid'
 import { colorPalette } from '../../lib/constants'
+import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 
 export default React.memo(function TechtreeEditor({
   techtreeData,
@@ -78,10 +79,10 @@ function runForceGraph(
   // let nodeList = reduxStore.getState().techtree.techtreeData.nodeList
   let linkList = originalLinkList
 
-  setInterval(updateNode, 1000)
+  setInterval(updateNode, 1000) // 이거 렌더링 안됐을때도 이 함수가 계속 실행되는거 에반데;;
 
   const height = 600 //containerRect.height;
-  const width = 600 //containerRect.width;
+  const width = '50vw' //containerRect.width;
   const selectedNodeHighlightColor = colorPalette.red6
 
   const svg = d3
@@ -124,6 +125,7 @@ function runForceGraph(
       return element.id === id
     })
   }
+
   function fadeExceptSelected(selectedNode) {
     nodeGroup.selectAll('circle').style('stroke', 'none')
     //linkGroup.selectAll('line').style('opacity', '0.03')
@@ -134,12 +136,14 @@ function runForceGraph(
         nodeGroup
           .select(`circle.${linkElement.endNodeID}`)
           .style('stroke', selectedNodeHighlightColor)
+          .style('stroke-width', '2.5px')
         //labelGroup.select(`text.${linkElement.endNodeID}`).style('opacity', '1')
         //linkGroup.select(`line.${linkElement.id}`).style('opacity', '1')
       } else if (selectedNode.id === linkElement.endNodeID) {
         nodeGroup
           .select(`circle.${linkElement.startNodeID}`)
           .style('stroke', selectedNodeHighlightColor)
+          .style('stroke-width', '2.5px')
         //labelGroup
         //  .select(`text.${linkElement.startNodeID}`)
         //  .style('opacity', '1')
@@ -149,6 +153,7 @@ function runForceGraph(
       nodeGroup
         .select(`circle.${selectedNode.id}`)
         .style('stroke', selectedNodeHighlightColor)
+        .style('stroke-width', '2.5px')
       //labelGroup.select(`text.${selectedNode.id}`).style('opacity', '1')
     })
   }
@@ -185,7 +190,9 @@ function runForceGraph(
     .on('click', (d) => {
       // 노드가 생성될때 이벤트를 달아줘야지 d 객체를 이용할 수 있다.
       // 클릭하면, 관련 노드들만 보여지게 할까?
-      reduxStore.dispatch(selectNode(d))
+      const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
+      const nextNodeList = returnNextNodeList(linkList, nodeList, d)
+      reduxStore.dispatch(selectNode(previousNodeList, nextNodeList, d))
       setTimeout(fadeExceptSelected, 0, d)
       d3.select('.techtreeMarkdownSection').style('display', 'block')
     })
@@ -289,7 +296,9 @@ function runForceGraph(
         return d.id
       })
       .on('click', (d) => {
-        reduxStore.dispatch(selectNode(d))
+        const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
+        const nextNodeList = returnNextNodeList(linkList, nodeList, d)
+        reduxStore.dispatch(selectNode(previousNodeList, nextNodeList, d))
         setTimeout(fadeExceptSelected, 0, d)
         d3.select('.techtreeMarkdownSection').style('display', 'block')
       })

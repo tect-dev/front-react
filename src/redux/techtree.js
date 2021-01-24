@@ -10,6 +10,8 @@
 
 // define initial state
 const initialState = {
+  previousNodeList: [],
+  nextNodeList: [],
   selectedNode: {},
   isEditingDocument: false,
   isEditingTechtree: false,
@@ -71,8 +73,8 @@ export const editDocument = () => {
 export const finishDocuEdit = (nodeID, nodeName, nodeBody) => {
   return { type: FINISH_DOCU_EDIT, nodeID, nodeName, nodeBody }
 }
-export const selectNode = (node) => {
-  return { type: SELECT_NODE, node: node }
+export const selectNode = (previousNodeList, nextNodeList, node) => {
+  return { type: SELECT_NODE, node, previousNodeList, nextNodeList }
 }
 export const createNode = (nodeList) => {
   return { type: CREATE_NODE, nodeList: nodeList }
@@ -128,9 +130,13 @@ export default function techtree(state = initialState, action) {
         isEditingTechtree: false,
       }
     case SELECT_NODE:
+      console.log('이전 노드 리스트: ', action.previousNodeList)
+      console.log('이후 노드 리스트: ', action.nextNodeList)
       return {
         ...state,
         selectedNode: action.node,
+        previousNodeList: action.previousNodeList,
+        nextNodeList: action.nextNodeList,
       }
     default:
       return { ...state }
