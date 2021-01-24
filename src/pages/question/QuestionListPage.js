@@ -15,6 +15,7 @@ export default function QuestionListPage({ location }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.questionList
   })
+  console.log(data)
 
   const dispatch = useDispatch()
 

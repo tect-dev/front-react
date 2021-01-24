@@ -115,13 +115,13 @@ export const emailLogin = (email, password) => async (dispatch) => {
   }
 }
 
-export const emailSignUp = (email, password) => async (dispatch) => {
+export const emailSignUp = (email, password, nickname) => async (dispatch) => {
   dispatch({ type: CREATE_USER_TRY })
   try {
     await authService
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        session_signup(email)
+        session_signup(nickname)
       })
 
     dispatch({ type: CREATE_USER_SUCCESS })
