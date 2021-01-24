@@ -48,7 +48,7 @@ export default React.memo(function MarkdownEditorBlock({
         data: formData,
       })
       const imageUrl = res.data
-      const result = `${localContent}![사진](${imageUrl})`
+      const result = `${localContent}![${file.name}](${imageUrl})`
       setLocalContent(result)
       onChangeContentProps(result)
     } else {
