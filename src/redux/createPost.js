@@ -48,7 +48,7 @@ export const createQuestion = (data) => async (
     const obj = JSON.stringify(data)
     await axios({
       method: 'post',
-      url: `/question`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/question`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
@@ -72,7 +72,7 @@ export const createAnswer = (data) => async (dispatch) => {
     const obj = JSON.stringify(data)
     await axios({
       method: 'post',
-      url: `/answer`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/answer`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
@@ -90,7 +90,7 @@ export const createArticle = (data) => async (dispatch) => {
     const obj = JSON.stringify(Object.fromEntries(data))
     await axios({
       method: 'post',
-      url: `/article`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/article`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })

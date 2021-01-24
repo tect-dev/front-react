@@ -46,7 +46,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "api": "npx json-server ./dummy.json --port 4000"
+    "api": "npx json-server ./dummy.json --port 4000",
+    "predeploy": "react-scripts build",
+    "deploy": "aws s3 sync ./build s3://tect-front-dev"
   },
   "eslintConfig": {
     "extends": [

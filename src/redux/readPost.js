@@ -27,8 +27,8 @@ const initialState = {
   searchedResults: {
     loading: false,
     data: null,
-    error: null
-  }
+    error: null,
+  },
 }
 
 // action types
@@ -57,7 +57,7 @@ const READ_SEARCHED_FAIL = 'searched/READ_SEARCHED_FAIL'
 export const readQuestionList = () => async (dispatch) => {
   dispatch({ type: READ_QUESTION_LIST_TRY })
   try {
-    const res = await axios.get('/question')
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/question`)
     dispatch({
       type: READ_QUESTION_LIST_SUCCESS,
       questionList: res.data.sort((a, b) => {
@@ -77,7 +77,7 @@ export const readQuestionList = () => async (dispatch) => {
 export const readArticleList = () => async (dispatch) => {
   dispatch({ type: READ_ARTICLE_LIST_TRY })
   try {
-    const res = await axios.get('/article')
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/article`)
     dispatch({ type: READ_ARTICLE_LIST_SUCCESS, articleList: res.data })
   } catch (e) {
     console.log('error: ', e)
@@ -88,7 +88,9 @@ export const readArticleList = () => async (dispatch) => {
 export const readQuestionByUID = (uid) => async (dispatch) => {
   dispatch({ type: READ_QUESTION_TRY })
   try {
-    const res = await axios.get(`/question/${uid}`)
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/question/${uid}`
+    )
     dispatch({ type: READ_QUESTION_SUCCESS, question: res.data })
   } catch (e) {
     console.log('error: ', e)
@@ -99,7 +101,9 @@ export const readQuestionByUID = (uid) => async (dispatch) => {
 export const readArticleByUID = (uid) => async (dispatch) => {
   dispatch({ type: READ_ARTICLE_TRY })
   try {
-    const res = await axios.get(`/article/${uid}`)
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/article/${uid}`
+    )
     dispatch({ type: READ_ARTICLE_SUCCESS, article: res.data })
   } catch (e) {
     console.log('error: ', e)
@@ -110,10 +114,10 @@ export const readArticleByUID = (uid) => async (dispatch) => {
 export const readSearchedResults = (querystring) => async (dispatch) => {
   dispatch({ type: READ_SEARCHED_TRY })
   try {
-    const obj = JSON.stringify({target: querystring})
+    const obj = JSON.stringify({ target: querystring })
     const res = await axios({
       method: 'post',
-      url: `/question/search`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/question/search`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })

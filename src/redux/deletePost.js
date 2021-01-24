@@ -34,7 +34,7 @@ export const deleteQuestion = (questionID) => async (
   try {
     await axios({
       method: 'delete',
-      url: `/question/${questionID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/question/${questionID}`,
     })
     await dispatch({ type: DELETE_QUESTION_SUCCESS })
     history.push('/question/list/1')
@@ -50,7 +50,7 @@ export const deleteAnswer = (answerID) => async (dispatch) => {
   try {
     await axios({
       method: 'delete',
-      url: `/answer/${answerID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/answer/${answerID}`,
     })
     dispatch({ type: DELETE_ANSWER_SUCCESS })
     console.log('answer deleted')
@@ -66,7 +66,7 @@ export const deleteArticle = (articleID) => async (dispatch) => {
   try {
     await axios({
       method: 'delete',
-      url: `/article/${articleID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/article/${articleID}`,
     })
     setTimeout(() => {
       dispatch({ type: DELETE_ARTICLE_SUCCESS })
@@ -82,7 +82,7 @@ export const deleteComment = (commentID) => async (dispatch) => {
   try {
     await axios({
       method: 'delete',
-      url: `/comment/${commentID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/comment/${commentID}`,
     })
     await dispatch({ type: DELETE_COMMENT_SUCCESS })
   } catch (e) {

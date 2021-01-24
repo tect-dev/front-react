@@ -28,7 +28,7 @@ const session_login = () => {
     .getIdToken(/* forceRefresh */ true)
     .then((idToken) => {
       axios({
-        url: '/login/sessionLogin',
+        url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogin`,
         method: 'POST',
         data: {
           firebaseToken: idToken,
@@ -47,7 +47,7 @@ const session_signup = (userNickname) => {
     .getIdToken(/* forceRefresh */ true)
     .then((idToken) => {
       axios({
-        url: '/login/account',
+        url: `${process.env.REACT_APP_BACKEND_URL}/login/account`,
         method: 'POST',
         data: {
           firebaseToken: idToken,
@@ -135,7 +135,7 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: LOG_OUT_TRY })
 
   try {
-    axios({ url: '/login/sessionLogout', method: 'GET' })
+    axios({ url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogout`, method: 'GET' })
     authService.signOut()
     localStorage.removeItem('user')
     dispatch({ type: LOG_OUT_SUCCESS })
