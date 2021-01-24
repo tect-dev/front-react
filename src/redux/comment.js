@@ -36,7 +36,7 @@ export const createQuestionComment = (data) => async (dispatch) => {
   dispatch({ type: CREATE_QUESTION_COMMENT_TRY })
   try {
     const obj = JSON.stringify(data)
-    //console.log(obj);
+    console.log('댓글달리는 obj: ', obj)
     await axios({
       method: 'post',
       url: `/comment`,

@@ -91,8 +91,6 @@ export default React.memo(function QuestionWriteSection() {
         title: title,
         contentType: 'question',
         content: content,
-        authorID: userID,
-        authorNickname: userNickname,
         hashtags: hashtagList,
       }
 

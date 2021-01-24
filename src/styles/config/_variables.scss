@@ -26,7 +26,7 @@ $pc-max-width: map-get($breakpoints, 'layout', 'pc-1200');
 $mobile-max-width: map-get($breakpoints, 'resolution', 'mobile');
 
 $header-height: 80px;
-$footer-height: 240px;
+$footer-height: 120px;
 
 // theme color
 $primary-color: #00bebe;

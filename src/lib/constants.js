@@ -1,6 +1,12 @@
 export const mediaQuery = (maxWidth) => `
   @media (max-width: ${maxWidth}px)
 `
+
+export const layout = {
+  pc_max_width: '1200px',
+  footer_height: "120px"
+}
+
 export const mediaSize = {
   xxlarge: mediaQuery(1920),
   xlarge: mediaQuery(1440),
