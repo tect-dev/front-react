@@ -7,8 +7,13 @@ import { TagBlock } from '../TagBlock'
 import { Button } from '../Button'
 import { uid } from 'uid'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteQuestion, deleteComment } from '../../redux/deletePost'
+import { deleteQuestion } from '../../redux/deletePost'
 import styled from 'styled-components'
+import {
+  createQuestionComment,
+  deleteQuestionComment,
+  updateQuestionComment,
+} from '../../redux/comment'
 
 export default React.memo(function QuestionSection({ data }) {
   const [content, setContent] = useState('')
@@ -27,23 +32,21 @@ export default React.memo(function QuestionSection({ data }) {
     dispatch(deleteQuestion(data.question._id))
   }, [dispatch])
 
-  function deleteComment() {
-    alert('정말 삭제합니까?')
-  }
-
   const onSubmitComment = useCallback(
     async (e) => {
       e.preventDefault()
       if (!content) {
         return
       }
-      const formData = new FormData()
       const uid24 = uid(24)
-      formData.append('postID', uid24)
-      formData.append('contentType', 'question')
-      formData.append('content', content)
-      formData.append('authorID', '123456789012345678901234')
-      formData.append('authorNickname', '임시닉네임')
+      const formData = {
+        commentID: uid24,
+        postType: 'question',
+        content: content,
+        postID: data.question._id,
+        parentID: '',
+      }
+      dispatch(createQuestionComment(formData))
     },
     [content]
   )
@@ -100,12 +103,12 @@ export default React.memo(function QuestionSection({ data }) {
         ''
       )}
 
-      {/*<CommentListBlock commentList={question.comments} />
+      <CommentListBlock commentList={question.comments} />
       <MarkdownEditorBlock
         initialContent={''}
         onChangeContentProps={onChangeContent}
       />
-      <Button onClick={onSubmitComment}>question 에 댓글달기</Button>*/}
+      <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
     </QuestionContainer>
   )
 })
