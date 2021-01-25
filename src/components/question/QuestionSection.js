@@ -10,6 +10,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { deleteQuestion } from '../../redux/deletePost'
 import styled from 'styled-components'
 import {
+  sortISOByTimeStamp,
+  isoStringToNaturalLanguage,
+} from '../../lib/functions'
+import {
   createQuestionComment,
   deleteQuestionComment,
   updateQuestionComment,
@@ -18,6 +22,19 @@ import {
 export default React.memo(function QuestionSection({ data }) {
   const [question, setQuestion] = useState(data.questionList[0])
   const [content, setContent] = useState('')
+  const [commentContent, setCommentContent] = useState('')
+  const [commentList, setCommentList] = useState(
+    data.questionList
+      .map((element) => {
+        if (element.questionComment) {
+          return element.questionComment
+        }
+      })
+      .sort((a, b) => {
+        sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+      })
+  )
+
   const { userID } = useSelector((state) => {
     return { userID: state.auth.userID }
   })
@@ -27,6 +44,14 @@ export default React.memo(function QuestionSection({ data }) {
   }, [])
 
   const dispatch = useDispatch()
+
+  const onChangeComment = useCallback(
+    (e) => {
+      e.preventDefault()
+      setCommentContent(e.target.value)
+    },
+    [commentContent]
+  )
 
   const onChangeContent = useCallback(
     (value) => {
@@ -43,20 +68,26 @@ export default React.memo(function QuestionSection({ data }) {
   const onSubmitComment = useCallback(
     async (e) => {
       e.preventDefault()
-      if (!content) {
+      if (!commentContent) {
         return
       }
       const uid24 = uid(24)
       const formData = {
         commentID: uid24,
         postType: 'question',
-        content: content,
+        content: commentContent,
         postID: question._id,
-        parentID: '',
+        parentID: uid24,
+      }
+      const tempComment = {
+        ...formData,
+        createdAt: '지금',
       }
       dispatch(createQuestionComment(formData))
+      setCommentList([...commentList, tempComment])
+      setCommentContent('')
     },
-    [content]
+    [commentContent, commentList]
   )
   function deleteComment() {
     alert('정말 삭제합니까?')
@@ -115,11 +146,17 @@ export default React.memo(function QuestionSection({ data }) {
         }
       })}
 
-      {/* <CommentListBlock commentList={question.comments} />*/}
-      <MarkdownEditorBlock
-        initialContent={''}
-        onChangeContentProps={onChangeContent}
-      />
+      {commentList.map((comment) => {
+        if (comment) {
+          return (
+            <>
+              <div>{comment.content}</div>
+              <div>{comment.createdAt}</div>
+            </>
+          )
+        }
+      })}
+      <textarea value={commentContent} onChange={onChangeComment} />
       <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
     </QuestionContainer>
   )
