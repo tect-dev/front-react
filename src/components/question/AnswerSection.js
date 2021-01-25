@@ -30,11 +30,21 @@ function extractComment(someList, listType) {
 }
 function trimAnswerList(someAnswerList) {
   // 중복되는 id를 전부 날린다.
-  return someAnswerList.map((answer) => {
-    return someAnswerList.filter((element) => {
-      return answer._id === element._id
-    })[0]
-  })
+  let filteredList = someAnswerList
+  let i = 0
+
+  while (true) {
+    filteredList = [filteredList[i]].concat(
+      filteredList.filter((ele) => {
+        return filteredList[i]._id !== ele._id
+      })
+    )
+    i++
+    if (filteredList.length === i) {
+      break
+    }
+  }
+  return filteredList
 }
 
 function matchCommentAndAnswer(someAnswerList) {
@@ -56,7 +66,7 @@ export default React.memo(function AnswerSection({ data }) {
   const [question, setQuestion] = useState(data.questionList[0])
   const [answers, setAnswers] = useState(
     matchCommentAndAnswer(data.answerList).sort((a, b) => {
-      sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+      sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
     })
   )
 
