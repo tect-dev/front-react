@@ -51,13 +51,16 @@ function matchCommentAndAnswer(someAnswerList) {
   const extractedCommentList = extractComment(someAnswerList, 'answer')
   const trimedAnswerList = trimAnswerList(someAnswerList)
 
+  console.log('댓글 추출:', extractedCommentList)
+
   return trimedAnswerList.map((answer) => {
     let matchedAnswer = { ...answer, answerComment: [] }
     for (const someComment of extractedCommentList) {
-      if (someComment._id === answer._id) {
+      if (someComment.postID === answer._id) {
         matchedAnswer.answerComment.push(someComment)
       }
     }
+    console.log('매칭된 앤서:', matchedAnswer)
     return matchedAnswer
   })
 }
