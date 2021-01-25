@@ -2,9 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import CommentListBlock from '../CommentListBlock'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
+import AnswerBlock from './AnswerBlock'
 import { createAnswer } from '../../redux/createPost'
 import { updateAnswer } from '../../redux/updatePost'
 import { deleteAnswer } from '../../redux/deletePost'
+import { createAnswerComment } from '../../redux/comment'
 import { useDispatch, useSelector } from 'react-redux'
 import { uid } from 'uid'
 import { Link } from 'react-router-dom'
@@ -16,19 +18,68 @@ import { Button } from '../../components/Button'
 import styled from 'styled-components'
 import { userDefaultID, mediaSize } from '../../lib/constants'
 
+function extractComment(someList, listType) {
+  // 배열내의 원소들을 순회하면서 댓글들만 추출해서, 댓글로 이뤄진 어레이를 리턴.
+  let commentList = []
+  someList.map((element) => {
+    if (element[`${listType}Comment`]) {
+      commentList.push(element[`${listType}Comment`])
+    }
+  })
+  return commentList
+}
+function trimAnswerList(someAnswerList) {
+  // 중복되는 id를 전부 날린다.
+  return someAnswerList.map((answer) => {
+    return someAnswerList.filter((element) => {
+      return answer._id === element._id
+    })[0]
+  })
+}
+
+function matchCommentAndAnswer(someAnswerList) {
+  const extractedCommentList = extractComment(someAnswerList, 'answer')
+  const trimedAnswerList = trimAnswerList(someAnswerList)
+
+  return trimedAnswerList.map((answer) => {
+    let matchedAnswer = { ...answer, answerComment: [] }
+    for (const someComment of extractedCommentList) {
+      if (someComment._id === answer._id) {
+        matchedAnswer.answerComment.push(someComment)
+      }
+    }
+    return matchedAnswer
+  })
+}
+
 export default React.memo(function AnswerSection({ data }) {
-  const [ question, setQuestion ] = useState(data.questionList[0])
-  const [ answers, setAnswers ] = useState(
-    data?.answerList?.sort((a, b) => {
+  const [question, setQuestion] = useState(data.questionList[0])
+  const [answers, setAnswers] = useState(
+    matchCommentAndAnswer(data.answerList).sort((a, b) => {
       sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
     })
   )
+
+  // answers에서 중복되는 id 가 있다면 거기서 comment 만 추출하고, 새로운 배열로 다듬어야된다.
+
   // 새로운 answer 를 작성할때 사용하는 state: content
   const [content, setContent] = useState('')
   const [isEditingAnswer, setEditingAnswer] = useState(false)
   const [editedAnswerIndex, setEditedAnswerIndex] = useState()
   // 기존 answer 를 수정할때 사용하는 state: editedAnswerContent
   const [editedAnswerContent, setEditedAnswerContent] = useState('')
+  const [commentContent, setCommentContent] = useState('')
+  const [commentList, setCommentList] = useState(
+    data.answerList
+      .map((element) => {
+        if (element.answerComment) {
+          return element.answerComment
+        }
+      })
+      .sort((a, b) => {
+        sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+      })
+  )
   const { userID, userNickname } = useSelector((state) => {
     return {
       userID: state.auth.userID,
@@ -37,6 +88,38 @@ export default React.memo(function AnswerSection({ data }) {
   })
 
   const dispatch = useDispatch()
+
+  const onChangeComment = useCallback(
+    (e) => {
+      e.preventDefault()
+      setCommentContent(e.target.value)
+    },
+    [commentContent]
+  )
+
+  const onSubmitComment = useCallback(
+    async (answer) => {
+      if (!commentContent) {
+        return
+      }
+      const uid24 = uid(24)
+      const formData = {
+        commentID: uid24,
+        postType: 'answer',
+        content: commentContent,
+        postID: answer._id,
+        parentID: uid24,
+      }
+      const tempComment = {
+        ...formData,
+        createdAt: '지금',
+      }
+      dispatch(createAnswerComment(formData))
+      setCommentList([...commentList, tempComment])
+      setCommentContent('')
+    },
+    [commentContent, commentList]
+  )
 
   function startEditAnswer(answer, index) {
     setEditingAnswer(true)
@@ -65,13 +148,13 @@ export default React.memo(function AnswerSection({ data }) {
         answerID: uid24,
         postID: question._id,
         contentType: 'answer',
-        content: content
+        content: content,
       }
       const tempAnswer = {
         __v: 0,
         _id: uid24,
         answerID: uid24,
-        answerAuthor: [{_id: userID, nickname: userNickname}],
+        answerAuthor: [{ _id: userID, nickname: userNickname }],
         content: content,
         createdAt: '지금', // Date.now() 가 알수없는 오류를 낸다. 생각해보니 걍 이런식으로 써도 될듯.
         lastUpdate: '지금',
@@ -125,99 +208,12 @@ export default React.memo(function AnswerSection({ data }) {
     [answers, dispatch]
   )
   // content
-  // 
+  //
   return (
     <AnswerContainer>
       <h3>{answers.length} Answers</h3>
-      {answers.map((element, index) => {
-        // console.log(element)
-        const author = ( element?.answerAuthor?.length
-                         ? element.answerAuthor[0]
-                         : null
-        )
-        return (
-          <AnswerBlock key={index}>
-            {isEditingAnswer && editedAnswerIndex === index ? (
-              // answer 가 수정중일때
-              <div key={index}>
-                <MarkdownEditorBlock
-                  contentProps={editedAnswerContent}
-                  onChangeContentProps={onChangeAnswerContent}
-                  height="350px"
-                  width="41vw"
-                />
-                <MarkdownRenderingBlock content={editedAnswerContent} />
-                <Button
-                  onClick={() => {
-                    onUpdateAnswer(element._id, index)
-                  }}
-                >
-                  수정완료
-                </Button>
-              </div>
-            ) : (
-              // answer 가 수정중이 아닐때
-              <div key={index}>
-                <div className="content">
-                  {element ? (
-                    <MarkdownRenderingBlock
-                      content={element.content}
-                    />
-                  ) : (
-                    ''
-                  )}
-                  <br />
-                </div>
-
-                <div>
-                  {element.updateAt 
-                    ? <>
-                        {element.updatedAt.substr(0, 4)}년{' '}
-                        {element.updatedAt.substr(5, 2)}월{' '}
-                        {element.updatedAt.substr(8, 2)}일
-                      </> 
-                    : element.updateAt}
-                  
-                </div>
-                <div>
-                  {author ? (
-                    <Link to={`/user/${author._id}`}>
-                      {author.nickname}
-                    </Link>
-                  ) : (
-                    `익명`
-                  )}
-                </div>
-
-                {userID !== '000000000000000000000000' &&
-                userID === author ? (
-                  <>
-                    <Button
-                      onClick={() => {
-                        startEditAnswer(element, index)
-                      }}
-                    >
-                      답변 수정
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        onDeleteAnswer(element._id, index)
-                      }}
-                    >
-                      답변 삭제
-                    </Button>
-                  </>
-                ) : (
-                  ''
-                )}
-
-                {/* <CommentListBlock commentList={element.answerBody.comments} /> 
-                <MarkdownEditorBlock />
-                <Button>answer에 댓글달기</Button>*/}
-              </div>
-            )}
-          </AnswerBlock>
-        )
+      {answers.map((answer, index) => {
+        return <AnswerBlock answer={answer} key={index} />
       })}
       <MarkdownEditorBlock
         className="answerWrite"
@@ -238,13 +234,4 @@ export default React.memo(function AnswerSection({ data }) {
 
 const AnswerContainer = styled.div`
   padding: 1rem 1.5rem;
-`
-
-const AnswerBlock = styled.div`
-  margin-top: 20px;
-  margin-bottom: 40px;
-  padding: 20px;
-  ${mediaSize.small} {
-  }
-  box-shadow: 4px 2px 6px 0px #d7dbe2, -4px -2px 4px 0px #ffffff;
 `
