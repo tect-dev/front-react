@@ -12,7 +12,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [nickname, setNickname] = useState()
   const [isSignUp, setIsSignUp] = useState(false)
 
-  // 굉장히 fancy한 방법인데 콘솔창이 경고를 띄운다..
+  // fancy한 방법인데
   //const onChange = (e) => {
   //  const {
   //    target: { name, value },
