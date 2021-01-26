@@ -367,11 +367,6 @@ function runForceGraph(
   svg
     .on('click', () => {
       nodeGroup.selectAll('circle').style('stroke', 'none')
-      //linkGroup.selectAll('line').style('stroke', selectedNodeHighlightColor)
-      //labelGroup.selectAll('text').style('opacity', '1')
-      //nodeGroup.selectAll('circle').style('opacity', '1')
-      //linkGroup.selectAll('line').style('opacity', '1')
-      //labelGroup.selectAll('text').style('opacity', '1')
     })
     .on('mousemove', (d) => {
       svg
@@ -389,14 +384,13 @@ function runForceGraph(
         x: d3.event.pageX,
         y: d3.event.pageY,
         radius: nodeRadius,
-        body: '새로운 노드 body',
+        body: '새로운 내용',
         tag: '프론트엔드',
         fillColor: '#00bebe',
-        parentNodeID: ['1'],
-        childNodeID: ['2'],
+        parentNodeID: [],
+        childNodeID: [],
       }
       nodeList = [...nodeList, createdNode]
-
       updateNode()
     })
 
