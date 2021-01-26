@@ -1,7 +1,10 @@
 @use '../../config' as *;
 
+
+
 .profile-container {
   margin: 20px 0 0 0;
+  padding: 0 10px;
 }
 
 .profile-upside {
@@ -26,6 +29,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     align-items: center;
+    gap: 10px 50px;
   }
 }
 

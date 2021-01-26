@@ -10,13 +10,15 @@ import MarkdownEditorBlock from '../../components/MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
 
 import { mediaSize } from '../../lib/constants'
-import { createAnswerComment } from '../../redux/comment'
+import comment, { createAnswerComment } from '../../redux/comment'
 
 export default React.memo(function AnswerBlock({ answer }) {
   const [isEditingAnswer, setIsEditingAnswer] = useState(false)
   const [editingAnswerContent, setEditingAnswerContent] = useState('')
   const [commentContent, setCommentContent] = useState('')
-  const [commentList, setCommentList] = useState(answer.answerComment || [])
+  const [commentList, setCommentList] = useState(
+    answer.answerComment ? answer.answerComment : []
+  )
 
   const dispatch = useDispatch()
 
@@ -83,7 +85,7 @@ export default React.memo(function AnswerBlock({ answer }) {
         <>
           <MarkdownRenderingBlock content={answer.content} />
 
-          {commentList.map((comment) => {
+          {commentList?.map((comment) => {
             return (
               <>
                 <div>{comment.content}</div>

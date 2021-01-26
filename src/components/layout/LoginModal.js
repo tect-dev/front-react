@@ -4,6 +4,7 @@ import { Button } from '../Button'
 import { emailLogin, emailSignUp } from '../../redux/auth'
 import { useDispatch } from 'react-redux'
 import { onClickTag } from '../../lib/functions'
+import { window } from 'd3'
 
 export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
@@ -11,6 +12,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [password, setPassword] = useState()
   const [nickname, setNickname] = useState()
   const [isSignUp, setIsSignUp] = useState(false)
+  const [loginResult, setLoginResult] = useState(null)
 
   // fancy한 방법인데
   //const onChange = (e) => {
@@ -46,9 +48,16 @@ export const LoginModal = React.memo(({ labelFor }) => {
   )
 
   const onEmailLogin = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault()
       dispatch(emailLogin(email, password))
+      
+      // const fuck = document.getElementById("loginSubmitBtn").focus()
+      // console.log(fuck)
+      console.log(document.getElementById("loginSubmitBtn").onchange)
+      // 버튼은 클릭 해제가 안 됨 ㅋㅋ
+      setEmail("")
+      setPassword("")
     },
     [dispatch, email, password]
   )
@@ -75,7 +84,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 className="login-input"
                 type="email"
                 placeholder="Enter Login Email"
-                required
                 name="email"
                 value={email}
                 onChange={onChangeEmail}
@@ -85,7 +93,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 className="login-input"
                 type="password"
                 placeholder="Enter Password"
-                required
                 name="password"
                 value={password}
                 onChange={onChangePassword}
@@ -111,7 +118,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
               ) : (
                 <>
                   {' '}
-                  <Button className="login-submit" onClick={onEmailLogin}>
+                  <Button id="loginSubmitBtn" className="login-submit" onClick={onEmailLogin}>
                     Login
                   </Button>
                   <Button
