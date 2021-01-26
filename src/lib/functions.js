@@ -32,11 +32,12 @@ export function trimAnswerList(someAnswerList) {
 }
 
 export function matchCommentAndAnswer(someAnswerList) {
+  if (someAnswerList.length === 0) {
+    return []
+  }
+
   const extractedCommentList = extractComment(someAnswerList, 'answer')
   const trimedAnswerList = trimAnswerList(someAnswerList)
-
-  console.log('댓글 추출:', extractedCommentList)
-
   return trimedAnswerList.map((answer) => {
     let matchedAnswer = { ...answer, answerComment: [] }
     for (const someComment of extractedCommentList) {
@@ -44,7 +45,7 @@ export function matchCommentAndAnswer(someAnswerList) {
         matchedAnswer.answerComment.push(someComment)
       }
     }
-    console.log('매칭된 앤서:', matchedAnswer)
+
     return matchedAnswer
   })
 }
