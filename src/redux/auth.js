@@ -51,7 +51,7 @@ const session_signup = (userNickname) => {
         method: 'POST',
         data: {
           firebaseToken: idToken,
-          nickname: userNickname,
+          displayName: userNickname,
 
           //crsfToken : crsfToekn
         },
@@ -105,16 +105,17 @@ export const emailLogin = (email, password) => async (dispatch) => {
   }
 }
 
-export const emailSignUp = (email, password, nickname) => async (dispatch) => {
+export const emailSignUp = (email, password, userNickname) => async (
+  dispatch
+) => {
   dispatch({ type: CREATE_USER_TRY })
   try {
     await authService
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        session_signup(nickname)
+        session_signup(userNickname)
       })
-
-    dispatch({ type: CREATE_USER_SUCCESS })
+    dispatch({ type: CREATE_USER_SUCCESS, userNickname: userNickname })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
@@ -149,7 +150,6 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loading: false,
-
         loginState: true,
       }
     case LOG_IN_FAIL:
@@ -168,8 +168,7 @@ export default function auth(state = initialState, action) {
         ...state,
         loading: false,
         loginState: true,
-        userID: 'qwerasdfzxcvnmvclkjh',
-        userNickname: 'testname',
+        userNickname: action.userNickname,
       }
     case CREATE_USER_FAIL:
       return {
