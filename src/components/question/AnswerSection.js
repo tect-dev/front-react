@@ -13,63 +13,18 @@ import { Link } from 'react-router-dom'
 import {
   sortISOByTimeStamp,
   isoStringToNaturalLanguage,
+  matchCommentAndAnswer,
 } from '../../lib/functions'
 import { Button } from '../../components/Button'
 import styled from 'styled-components'
 import { userDefaultID, mediaSize } from '../../lib/constants'
 
-function extractComment(someList, listType) {
-  // 배열내의 원소들을 순회하면서 댓글들만 추출해서, 댓글로 이뤄진 어레이를 리턴.
-  let commentList = []
-  someList.map((element) => {
-    if (element[`${listType}Comment`]) {
-      commentList.push(element[`${listType}Comment`])
-    }
-  })
-  return commentList
-}
-function trimAnswerList(someAnswerList) {
-  // 중복되는 id를 전부 날린다.
-  let filteredList = someAnswerList
-  let i = 0
-
-  while (true) {
-    filteredList = [filteredList[i]].concat(
-      filteredList.filter((ele) => {
-        return filteredList[i]._id !== ele._id
-      })
-    )
-    i++
-    if (filteredList.length === i) {
-      break
-    }
-  }
-  return filteredList
-}
-
-function matchCommentAndAnswer(someAnswerList) {
-  const extractedCommentList = extractComment(someAnswerList, 'answer')
-  const trimedAnswerList = trimAnswerList(someAnswerList)
-
-  console.log('댓글 추출:', extractedCommentList)
-
-  return trimedAnswerList.map((answer) => {
-    let matchedAnswer = { ...answer, answerComment: [] }
-    for (const someComment of extractedCommentList) {
-      if (someComment.postID === answer._id) {
-        matchedAnswer.answerComment.push(someComment)
-      }
-    }
-    console.log('매칭된 앤서:', matchedAnswer)
-    return matchedAnswer
-  })
-}
-
 export default React.memo(function AnswerSection({ data }) {
   const [question, setQuestion] = useState(data.questionList[0])
   const [answers, setAnswers] = useState(
     matchCommentAndAnswer(data.answerList).sort((a, b) => {
-      sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
+      return sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+      // 마지막 인자의 -1은 sorting 순서를 결정. 1이면 큰게 앞으로, -1이면 작은게 앞으로.
     })
   )
 
@@ -90,7 +45,7 @@ export default React.memo(function AnswerSection({ data }) {
         }
       })
       .sort((a, b) => {
-        sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+        return sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
       })
   )
   const { userID, userNickname } = useSelector((state) => {
@@ -101,38 +56,6 @@ export default React.memo(function AnswerSection({ data }) {
   })
 
   const dispatch = useDispatch()
-
-  const onChangeComment = useCallback(
-    (e) => {
-      e.preventDefault()
-      setCommentContent(e.target.value)
-    },
-    [commentContent]
-  )
-
-  const onSubmitComment = useCallback(
-    async (answer) => {
-      if (!commentContent) {
-        return
-      }
-      const uid24 = uid(24)
-      const formData = {
-        commentID: uid24,
-        postType: 'answer',
-        content: commentContent,
-        postID: answer._id,
-        parentID: uid24,
-      }
-      const tempComment = {
-        ...formData,
-        createdAt: '지금',
-      }
-      dispatch(createAnswerComment(formData))
-      setCommentList([...commentList, tempComment])
-      setCommentContent('')
-    },
-    [commentContent, commentList]
-  )
 
   function startEditAnswer(answer, index) {
     setEditingAnswer(true)
@@ -220,8 +143,7 @@ export default React.memo(function AnswerSection({ data }) {
     },
     [answers, dispatch]
   )
-  // content
-  //
+
   return (
     <AnswerContainer>
       <h3>{answers.length} Answers</h3>

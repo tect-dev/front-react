@@ -7,8 +7,8 @@ const DoublesideLayout = ({ children }) => {
   return (
     <div className="layout">
       <Navbar />
-        <div className="layout-main-doubleside">{children}</div>
-      <Footer />
+      <div className="layout-main-doubleside">{children}</div>
+      {/*<Footer />*/}
     </div>
   )
 }
