@@ -14,13 +14,19 @@ const CREATE_USER_TRY = 'auth/CREATE_USER_TRY'
 const CREATE_USER_SUCCESS = 'auth/CREATE_USER_SUCCESS'
 const CREATE_USER_FAIL = 'auth/CREATE_USER_FAIL'
 
+const GET_USER_TRY = 'auth/GET_USER_TRY'
+const GET_USER_SUCCESS = 'auth/GET_USER_SUCCESS'
+const GET_USER_FAIL = 'auth/GET_USER_FAIL'
+
 const CHECK_AUTH = 'auth/CHECK_AUTH'
+
+
 
 const initialState = {
   loginState: false,
   userID: '000000000000000000000000',
-  userNickname: '익명',
-  loading: false,
+  nickname: '익명',
+  loading: false
 }
 
 const session_login = () => {
@@ -42,7 +48,7 @@ const session_login = () => {
     })
 }
 
-const session_signup = (userNickname) => {
+const session_signup = (nickname) => {
   authService.currentUser
     .getIdToken(/* forceRefresh */ true)
     .then((idToken) => {
@@ -51,7 +57,7 @@ const session_signup = (userNickname) => {
         method: 'POST',
         data: {
           firebaseToken: idToken,
-          nickname: userNickname,
+          nickname: nickname,
           point: 1000,
           //crsfToken : crsfToekn
         },
@@ -73,13 +79,13 @@ export const checkAuth = (user) => {
     const userInfo = {
       userID: user.uid,
       userEmail: user.email,
-      userNickname: `${user.displayName}`,
+      nickname: `${user.displayName}`,
     }
     localStorage.setItem('user', JSON.stringify(userInfo))
     return {
       type: CHECK_AUTH,
       loginState: true,
-      userNickname: `${user.displayName}`,
+      nickname: `${user.displayName}`,
       userID: user.uid,
     }
   } else if (localStorage.getItem('user')) {
@@ -89,14 +95,14 @@ export const checkAuth = (user) => {
       type: CHECK_AUTH,
       loginState: true,
       userID: userInfo.userID,
-      userNickname: userInfo.userNickname,
+      nickname: userInfo.nickname,
     }
   } else {
     return {
       type: CHECK_AUTH,
       loginState: false,
       userID: '000000000000000000000000',
-      userNickname: '익명',
+      nickname: '익명',
     }
   }
 }
@@ -112,6 +118,7 @@ export const emailLogin = (email, password) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: LOG_IN_FAIL })
+    alert(e)
   }
 }
 
@@ -128,6 +135,7 @@ export const emailSignUp = (email, password, nickname) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
+    alert(e)
   }
 }
 
@@ -142,6 +150,18 @@ export const logout = () => async (dispatch) => {
   } catch (e) {
     dispatch({ type: LOG_OUT_FAIL })
     console.log('error: ', e)
+  }
+}
+
+export const getUserInfo = () => async (dispatch) => {
+  dispatch({ type: GET_USER_TRY })
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/login/profile`,
+    {withCredentials: true})
+    dispatch({ type: GET_USER_SUCCESS, userData: {...res.data} })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: GET_USER_FAIL, error: e })
   }
 }
 
@@ -176,7 +196,7 @@ export default function auth(state = initialState, action) {
         loading: false,
         loginState: true,
         userID: 'qwerasdfzxcvnmvclkjh',
-        userNickname: 'testname',
+        nickname: 'testname',
       }
     case CREATE_USER_FAIL:
       return {
@@ -194,9 +214,26 @@ export default function auth(state = initialState, action) {
         loading: false,
         loginState: false,
         userID: '000000000000000000000000',
-        userNickname: '익명',
+        nickname: '익명',
       }
     case LOG_OUT_FAIL:
+      return {
+        ...state,
+        loading: false,
+      }
+    case GET_USER_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loginState: true,
+        ...action.userData
+      }
+    case GET_USER_FAIL:
       return {
         ...state,
         loading: false,
@@ -205,7 +242,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loginState: action.loginState,
-        userNickname: action.userNickname,
+        nickname: action.nickname,
         userID: action.userID,
       }
     default:
