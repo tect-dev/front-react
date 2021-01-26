@@ -8,7 +8,7 @@ export default function MainLayout({ children }) {
     <div className="layout">
       <Navbar />
       <div className="layout-main">{children}</div>
-      <Footer />
+      {/*  <Footer />*/}
     </div>
   )
 }

@@ -1,6 +1,54 @@
 import sanitize from 'sanitize-html'
 import { katexWhiteList } from './katexWhiteList'
 
+export function extractComment(someList, listType) {
+  // 배열내의 원소들을 순회하면서 댓글들만 추출해서, 댓글로 이뤄진 어레이를 리턴.
+  let commentList = []
+  someList.map((element) => {
+    if (element[`${listType}Comment`]) {
+      commentList.push(element[`${listType}Comment`])
+    }
+  })
+  return commentList
+}
+
+export function trimAnswerList(someAnswerList) {
+  // 중복되는 id를 전부 날린다.
+  let filteredList = someAnswerList
+  let i = 0
+
+  while (true) {
+    filteredList = [filteredList[i]].concat(
+      filteredList.filter((ele) => {
+        return filteredList[i]._id !== ele._id
+      })
+    )
+    i++
+    if (filteredList.length === i) {
+      break
+    }
+  }
+  return filteredList
+}
+
+export function matchCommentAndAnswer(someAnswerList) {
+  const extractedCommentList = extractComment(someAnswerList, 'answer')
+  const trimedAnswerList = trimAnswerList(someAnswerList)
+
+  console.log('댓글 추출:', extractedCommentList)
+
+  return trimedAnswerList.map((answer) => {
+    let matchedAnswer = { ...answer, answerComment: [] }
+    for (const someComment of extractedCommentList) {
+      if (someComment.postID === answer._id) {
+        matchedAnswer.answerComment.push(someComment)
+      }
+    }
+    console.log('매칭된 앤서:', matchedAnswer)
+    return matchedAnswer
+  })
+}
+
 export function isoStringToNaturalLanguage(isoString) {
   if (isoString.length < 4) {
     return isoString

@@ -16,7 +16,7 @@ export default React.memo(function AnswerBlock({ answer }) {
   const [isEditingAnswer, setIsEditingAnswer] = useState(false)
   const [editingAnswerContent, setEditingAnswerContent] = useState('')
   const [commentContent, setCommentContent] = useState('')
-  const [commentList, setCommentList] = useState(answer.answerComment)
+  const [commentList, setCommentList] = useState(answer.answerComment || [])
 
   const dispatch = useDispatch()
 
