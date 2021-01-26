@@ -36,24 +36,17 @@ export default React.memo(function AnswerSection({ data }) {
   const [editedAnswerIndex, setEditedAnswerIndex] = useState()
   // 기존 answer 를 수정할때 사용하는 state: editedAnswerContent
   const [editedAnswerContent, setEditedAnswerContent] = useState('')
-  const [commentContent, setCommentContent] = useState('')
-  const [commentList, setCommentList] = useState(
-    data.answerList
-      .map((element) => {
-        if (element.answerComment) {
-          return element.answerComment
-        }
-      })
-      .sort((a, b) => {
-        return sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
-      })
-  )
+
   const { userID, userNickname } = useSelector((state) => {
     return {
       userID: state.auth.userID,
       userNickname: state.auth.userNickname,
     }
   })
+
+  useEffect(() => {
+    console.log('앤서즈객체: ', answers)
+  }, [])
 
   const dispatch = useDispatch()
 
