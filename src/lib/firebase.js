@@ -13,8 +13,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
-//client Side에서 Session 저장 X > 서버에서 제어
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
 export const firebaseInstance = firebase
 export const authService = firebase.auth()

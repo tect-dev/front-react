@@ -18,13 +18,13 @@ export default function Navbar() {
     }
   }
   const userInfo = JSON.parse(localStorage.getItem('user'))
-  // useSelector: 리덕스 스토어의 상태를 조회하는 hooks.
-  // state 의 값은 리덕스 스토에다가 getState() 를 호출했을때 나오는 값과 같음.
+
   const { userID, userNickname, loginState } = useSelector((state) => {
     // console.log('useSelector:')
     return {
       userID: state.auth.userID,
       userNickname: state.auth.userNickname,
+      loginState: state.auth.loginState,
     }
   })
 
@@ -87,14 +87,14 @@ export default function Navbar() {
               />
             </div>
             <div className="auth-container">
-              {userInfo ? (
+              {loginState ? (
                 <div className="mypage-container">
                   <NavLink
                     to={`/user/${userID}`}
                     className="navbar-item-link"
                     onChange={() => {}}
                   >
-                    MyPage
+                    Account
                   </NavLink>
                 </div>
               ) : (

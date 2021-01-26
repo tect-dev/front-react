@@ -29,8 +29,6 @@ function App() {
         dispatch(checkAuth(user))
       }
     })
-    const currentUser = authService.currentUser
-    console.log('currentUser: ', currentUser)
   }, [])
 
   return (

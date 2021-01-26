@@ -52,7 +52,7 @@ const session_signup = (userNickname) => {
         data: {
           firebaseToken: idToken,
           nickname: userNickname,
-          point: 1000,
+
           //crsfToken : crsfToekn
         },
         withCredentials: true,
@@ -75,21 +75,12 @@ export const checkAuth = (user) => {
       userEmail: user.email,
       userNickname: `${user.displayName}`,
     }
-    localStorage.setItem('user', JSON.stringify(userInfo))
+
     return {
       type: CHECK_AUTH,
       loginState: true,
       userNickname: `${user.displayName}`,
       userID: user.uid,
-    }
-  } else if (localStorage.getItem('user')) {
-    const userInfo = JSON.parse(localStorage.getItem('user'))
-    console.log('로컬스토리지 이용한 유저정보 갱신:', userInfo)
-    return {
-      type: CHECK_AUTH,
-      loginState: true,
-      userID: userInfo.userID,
-      userNickname: userInfo.userNickname,
     }
   } else {
     return {
@@ -105,10 +96,9 @@ export const emailLogin = (email, password) => async (dispatch) => {
   dispatch({ type: LOG_IN_TRY })
   try {
     await authService.signInWithEmailAndPassword(email, password).then(() => {
-      session_login()
+      dispatch({ type: LOG_IN_SUCCESS })
+      //session_login()
     })
-
-    dispatch({ type: LOG_IN_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: LOG_IN_FAIL })
@@ -135,7 +125,10 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: LOG_OUT_TRY })
 
   try {
-    axios({ url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogout`, method: 'GET' })
+    axios({
+      url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogout`,
+      method: 'GET',
+    })
     authService.signOut()
     localStorage.removeItem('user')
     dispatch({ type: LOG_OUT_SUCCESS })
