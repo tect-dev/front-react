@@ -172,7 +172,11 @@ export default React.memo(function AnswerSection({ data }) {
 
   return (
     <AnswerContainer>
-      <h3>{answers.length} Answers</h3>
+      {answers.length
+        ? <h2>{answers.length} Answers</h2>
+        : <h2>No Answers</h2>
+      }
+
 
       {answers.length !== 0
         ? answers.map((answerData, index) => {
@@ -191,4 +195,9 @@ export default React.memo(function AnswerSection({ data }) {
 
 const AnswerContainer = styled.div`
   padding: 1rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  ${mediaSize.small} {
+    /* padding: 0; */
+  }
 `

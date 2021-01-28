@@ -9,6 +9,7 @@ import { uid } from 'uid'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteQuestion } from '../../redux/deletePost'
 import styled from 'styled-components'
+import { mediaSize } from '../../lib/constants'
 import {
   sortISOByTimeStamp,
   isoStringToNaturalLanguage,
@@ -18,6 +19,11 @@ import {
   deleteQuestionComment,
   updateQuestionComment,
 } from '../../redux/comment'
+
+import { CommentTextarea } from '../CommentTextarea'
+import { CommentBlock } from '../CommentBlock'
+import { refineDatetime } from '../../lib/refineDatetime'
+import { colorPalette } from '../../lib/constants'
 
 export default React.memo(function QuestionSection({ data }) {
   const [question, setQuestion] = useState(data.question)
@@ -86,42 +92,45 @@ export default React.memo(function QuestionSection({ data }) {
   return (
     <QuestionContainer>
       <QuestionBodyContainer>
-        <div className="title">
-          <h2>Q. {question.title}</h2>
-          <br />
-        </div>
+        <QuestionHeader>
+          <QuestionTitle>
+            <h2>Q. {`\u00A0`}</h2>
+            <h2>{question.title}</h2>
+          </QuestionTitle>
+          <QuesstionInfo>
+            <div>
+              질문 작성자: <Link to={`/user/${question.author._id}`}>
+              {question.author.displayName}
+              </Link>
+            </div>
+            <Datetime>
+                {question.createdAt === question.updatedAt
+                  ? <>{refineDatetime(question.createdAt)}</>
+                  : <>{refineDatetime(question.updatedAt)} (수정일)</>
+                }
+            </Datetime>
+          </QuesstionInfo>  
+
         <div className="hashtags">
           {question?.hashtags?.map((tag, index) => {
             return (
               <TagBlock
                 key={index}
                 text={tag}
-                function={() => {
-                  alert('tag clicked!')
-                }}
+                function={() => {alert('tag clicked!')}}
               />
             )
           })}
           <br />
-          <br />
+          {/* <br /> */}
         </div>
+        </QuestionHeader>
+        
+        
         <div className="content">
           <MarkdownRenderingBlock content={question.content} />
           <br />
-          <br />
-        </div>
-
-        <div>
-          {question.updatedAt.substr(0, 4)}년 {question.updatedAt.substr(5, 2)}
-          월 {question.updatedAt.substr(8, 2)}일
-        </div>
-        <div>
-          <>
-            <Link to={`/user/${question.author._id}`}>
-              {question.author.displayName}
-            </Link>
-            <div>작성자: {question.author.displayName}</div>
-          </>
+          {/* <br /> */}
         </div>
 
         {/* 게시글의 id 와 유저의 id 가 일치하고
@@ -139,20 +148,25 @@ export default React.memo(function QuestionSection({ data }) {
           ''
         )}
       </QuestionBodyContainer>
-
+      <br/>
       <QuestionCommentContainer>
+        <h3>댓글 {commentList.length}</h3>
+        <br/>
         {commentList.map((comment) => {
           if (comment) {
             return (
-              <>
-                <div>{comment.content}</div>
-                <div>{comment.createdAt}</div>
-              </>
+              <CommentBlock
+                displayName={comment.author.displayName}
+                content={comment.content}
+                createdAt={comment.author.createdAt}
+              />
             )
           }
         })}
-        <textarea value={commentContent} onChange={onChangeComment} />
-        <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
+        <CommentTextarea value={commentContent} onChange={onChangeComment} />
+        <Button onClick={onSubmitComment}>
+          comment
+        </Button>
       </QuestionCommentContainer>
     </QuestionContainer>
   )
@@ -160,8 +174,34 @@ export default React.memo(function QuestionSection({ data }) {
 
 const QuestionContainer = styled.div`
   padding: 1rem 1.5rem;
+
+  ${mediaSize.small} {
+    width: inherit;
+    box-sizing: border-box;
+  }
 `
 
-const QuestionBodyContainer = styled.div``
+const QuestionHeader = styled.div`
+`
 
-const QuestionCommentContainer = styled.div``
+const QuestionBodyContainer = styled.div`
+  width: inherit;
+`
+
+const QuestionCommentContainer = styled.div`
+  width: inherit;
+`
+const QuestionTitle = styled.div`
+  display: flex;
+  margin-bottom: 20px;
+`
+
+const Datetime = styled.div`
+  color: ${colorPalette.gray5};
+`
+
+const QuesstionInfo = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+`
