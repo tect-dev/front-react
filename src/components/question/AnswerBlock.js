@@ -10,19 +10,22 @@ import MarkdownEditorBlock from '../../components/MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
 
 import { mediaSize } from '../../lib/constants'
-import comment, { createAnswerComment } from '../../redux/comment'
+import { createAnswerComment, deleteAnswerComment } from '../../redux/comment'
 
-export default React.memo(function AnswerBlock({ answer }) {
+export default React.memo(function AnswerBlock({ answerData }) {
+  const [answer, setAnswer] = useState(answerData.eachAnswer)
   const [isEditingAnswer, setIsEditingAnswer] = useState(false)
   const [editingAnswerContent, setEditingAnswerContent] = useState('')
   const [commentContent, setCommentContent] = useState('')
   const [commentList, setCommentList] = useState(
-    answer.answerComment ? answer.answerComment : []
+    answer.answerComments ? answer.answerComments : []
   )
 
   const dispatch = useDispatch()
 
-  const onDeleteAnswer = useCallback(() => {}, [])
+  const onDeleteAnswer = useCallback(() => {
+    dispatch(deleteAnswer(answer._id))
+  }, [])
   const onStartEditAnswer = useCallback(() => {
     // 여기서 setEditingAnswerContent를 설정해준다.
   }, [])
@@ -35,18 +38,20 @@ export default React.memo(function AnswerBlock({ answer }) {
   const onUpdateAnswer = useCallback(() => {
     dispatch(updateAnswer(answer._id))
   }, [])
+
   const onSubmitComment = useCallback(
     (e) => {
       e.preventDefault()
       if (!commentContent) {
         return
       }
+
       const uid24 = uid(24)
       const formData = {
         commentID: uid24,
         postType: 'answer',
         content: commentContent,
-        postID: answer._id,
+        answerID: answer._id,
         parentID: uid24,
       }
       const tempComment = {

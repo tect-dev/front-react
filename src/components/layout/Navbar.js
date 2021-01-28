@@ -94,7 +94,7 @@ export default function Navbar() {
                     className="navbar-item-link"
                     onChange={() => {}}
                   >
-                    Account
+                    MyPage
                   </NavLink>
                 </div>
               ) : (

@@ -61,11 +61,7 @@ export const readQuestionList = () => async (dispatch) => {
     dispatch({
       type: READ_QUESTION_LIST_SUCCESS,
       questionList: res.data.sort((a, b) => {
-        return sortISOByTimeStamp(
-          a.createdAt,
-          b.createdAt,
-          1
-        )
+        return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
       }),
     })
   } catch (e) {

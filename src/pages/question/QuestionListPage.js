@@ -15,6 +15,9 @@ export default function QuestionListPage({ location }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.questionList
   })
+  const { loginState } = useSelector((state) => {
+    return { loginState: state.auth.loginState }
+  })
 
   const dispatch = useDispatch()
 
@@ -22,7 +25,6 @@ export default function QuestionListPage({ location }) {
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
 
   useEffect(() => {
-    console.log('퀘스쳔 페이지가 렌더링됨')
     dispatch(readQuestionList())
   }, [dispatch])
 
@@ -58,11 +60,15 @@ export default function QuestionListPage({ location }) {
                   {/*인기순 정렬은 나중에 추가하자*/}
                   {/*<div className="questionList-popular">인기</div>*/}
                 </div>
-                <Link to={'/question/write'} className="ask-btn-container">
-                  <Button className="ask-btn" buttonStyle="btn--outline">
-                    질문하기
-                  </Button>
-                </Link>
+                {loginState ? (
+                  <Link to={'/question/write'} className="ask-btn-container">
+                    <Button className="ask-btn" buttonStyle="btn--outline">
+                      질문하기
+                    </Button>
+                  </Link>
+                ) : (
+                  ''
+                )}
               </div>
               <div className="questionList">
                 <Pagination data={data} />

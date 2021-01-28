@@ -8,7 +8,7 @@ import DoublesideLayout from '../../components/layout/DoublesideLayout'
 import QuestionSection from '../../components/question/QuestionSection'
 import AnswerSection from '../../components/question/AnswerSection'
 import { Spinner } from '../../components/Spinner'
-
+import ErrorBoundary from '../../ErrorBoundary'
 
 // 상속
 // import Navbar from '../../components/layout/Navbar'
@@ -55,12 +55,16 @@ export default function QuestionDetailPage({ match }) {
   return (
     <>
       <DoublesideLayout>
-          <HalfWidthContainer>
+        <HalfWidthContainer>
+          <ErrorBoundary>
             <QuestionSection data={data} />
-          </HalfWidthContainer>
-          <HalfWidthContainer>
+          </ErrorBoundary>
+        </HalfWidthContainer>
+        <HalfWidthContainer>
+          <ErrorBoundary>
             <AnswerSection data={data} />
-          </HalfWidthContainer>
+          </ErrorBoundary>
+        </HalfWidthContainer>
       </DoublesideLayout>
     </>
   )
