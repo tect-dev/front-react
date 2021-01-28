@@ -71,10 +71,13 @@ body {
   // markdown rendering에서 필요함.
   &-main-doubleside {
     display: inline-flex;
+    width: inherit;
     margin: $header-height + 10px 10px 0 10px; /* layout 3 */
-    flex: 1 0 100%; /* layout 8 */
+    // flex: 1 0 100%; /* layout 8 */
     @media (max-width: 768px) {
-      display: block;
+      // display: block;
+      flex-flow: column wrap;
+      // overflow: hidden;
     }
   }
 }

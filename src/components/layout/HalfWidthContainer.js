@@ -3,17 +3,18 @@ import { mediaSize } from '../../lib/constants'
 
 const HalfWidthContainer = styled.div`
   display: inline-flex;
-  width: 41vw;
-  padding-left: 4vw;
-  padding-right: 4vw;
-  padding-top: 20px;
+  justify-content: center;
+  /* box-sizing: border-box; */
+  margin-top: 20px;
   padding-bottom: 30px;
-  overflow: scroll;
+  overflow: auto;
+  width: 100%; /* 필수 */
   height: 80vh;
   ${mediaSize.small} {
-    overflow: auto;
     display: block;
-    width: 85%;
+    padding: 0;
+    height: initial;
+    max-height: 80vh;
   }
 `
 

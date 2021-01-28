@@ -13,7 +13,8 @@ export const Button = ({
   linkTo,
   htmlHref,
   htmlType,
-  onClick
+  onClick,
+  style
 }) => {
   const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle : STYLES[1]
   const checkButtonSize = SIZES.includes(buttonSize) ? buttonStyle : SIZES[0]
@@ -23,6 +24,7 @@ export const Button = ({
             type={htmlType}
             onClick={onClick}
             id={id}
+            style={style}
             >{children}
     </button>
   )

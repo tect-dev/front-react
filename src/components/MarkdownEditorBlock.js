@@ -149,14 +149,14 @@ export default React.memo(function MarkdownEditorBlock({
             <FaLink />
           </MarkdownButton>
         </MarkdownToolkit>
-        <div>
+        <div style={{width: "100%"}}>
           <label htmlFor="content"></label>
           <StyledTextarea
             id="content"
             value={contentProps}
             onChange={onChangeContent}
             onDrop={onDrop}
-            style={{ width: width, height: height }}
+            // style={{ width: width, height: height }}
           ></StyledTextarea>
         </div>
       </EditorContainer>
@@ -187,7 +187,9 @@ const EditorContainer = styled.div`
 `
 const StyledTextarea = styled.textarea`
   border: none;
-  padding: 10px;
+  box-sizing: border-box;
+  width: inherit;
+  min-height: 130px;
   background-color: ${colorPalette.gray0} !important;
   &:active {
     border: none;

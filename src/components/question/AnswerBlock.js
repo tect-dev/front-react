@@ -12,6 +12,11 @@ import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
 import { mediaSize } from '../../lib/constants'
 import { createAnswerComment, deleteAnswerComment } from '../../redux/comment'
 
+import { CommentTextarea } from '../CommentTextarea'
+import { CommentBlock } from '../CommentBlock'
+import { refineDatetime } from '../../lib/refineDatetime'
+import { colorPalette } from '../../lib/constants'
+
 export default React.memo(function AnswerBlock({ answerData }) {
   const [answer, setAnswer] = useState(answerData.eachAnswer)
   const [isEditingAnswer, setIsEditingAnswer] = useState(false)
@@ -86,22 +91,32 @@ export default React.memo(function AnswerBlock({ answerData }) {
         </>
       ) : (
         <>
+          <AnswerHeader>
+            <div>답변 작성자: {answer.author.displayName}</div>
+            <Datetime>
+              {answer.createdAt === answer.updatedAt
+                ? <>{refineDatetime(answer.createdAt)}</>
+                : <>{refineDatetime(answer.updatedAt)} (수정일)</>
+              }
+            </Datetime>
+          </AnswerHeader>
           <MarkdownRenderingBlock content={answer.content} />
-          <div>답변 작성자: {answer.author.displayName}</div>
-          <div>마지막 수정일: {answer.lastUpdate}</div>
+          <br/><br/>
           <div>
             {commentList?.map((comment) => {
               return (
-                <>
-                  <div>댓글 작성자: {comment.author.displayName}</div>
-                  <div>댓글 내용: {comment.content}</div>
-                  <div>댓글 생성일: {comment.createdAt}</div>
-                </>
+                <CommentBlock
+                  displayName={comment.author.displayName}
+                  content={comment.content}
+                  createdAt={comment.author.createdAt}
+                />
               )
             })}
           </div>
-          <textarea value={commentContent} onChange={onChangeComment} />
-          <Button onClick={onSubmitComment}>comment</Button>
+          <CommentTextarea value={commentContent} onChange={onChangeComment} />
+          <Button onClick={onSubmitComment}>
+            comment
+          </Button>
         </>
       )}
     </AnswerBlockContainer>
@@ -115,4 +130,15 @@ const AnswerBlockContainer = styled.div`
   ${mediaSize.small} {
   }
   box-shadow: 4px 2px 6px 0px #d7dbe2, -4px -2px 4px 0px #ffffff;
+`
+
+const AnswerHeader = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding-bottom: 10px;
+`
+
+const Datetime = styled.div`
+  color: ${colorPalette.gray5};
 `
