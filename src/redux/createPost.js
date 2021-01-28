@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { authService } from '../lib/firebase'
 
 const initialState = {
   question: {
@@ -45,22 +46,21 @@ export const createQuestion = (data) => async (
 ) => {
   dispatch({ type: CREATE_QUESTION_TRY })
   try {
-    const obj = JSON.stringify(data)
-    const res = await axios({
-      method: 'post',
-      url: `${process.env.REACT_APP_BACKEND_URL}/question`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+    //const obj = JSON.stringify(data)
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      const res = await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/question`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { ...data, firebaseToken: idToken },
+      })
+      await dispatch({ type: CREATE_QUESTION_SUCCESS })
+      if (res) {
+        setTimeout(() => {
+          history.push(`/question/${data.questionID}`)
+        }, 20)
+      }
     })
-    await dispatch({ type: CREATE_QUESTION_SUCCESS })
-    if(res){
-      setTimeout(() => {
-        history.push(`/question/${data.postID}`)
-        console.log('히스토리가 푸시됨.')
-        console.log('히스토리: ', history)
-      }, 20)
-    }
-    
 
     // obj 는 스트링으로 만든거라서, data 를 써야함.
   } catch (e) {
@@ -72,14 +72,17 @@ export const createQuestion = (data) => async (
 export const createAnswer = (data) => async (dispatch) => {
   dispatch({ type: CREATE_ANSWER_TRY })
   try {
-    const obj = JSON.stringify(data)
-    await axios({
-      method: 'post',
-      url: `${process.env.REACT_APP_BACKEND_URL}/answer`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      //const obj = JSON.stringify(data)
+      await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/answer`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { ...data, firebaseToken: idToken },
+      })
+      dispatch({ type: CREATE_ANSWER_SUCCESS })
     })
-    dispatch({ type: CREATE_ANSWER_SUCCESS })
+
     console.log('answer added')
   } catch (e) {
     console.log('error: ', e)

@@ -20,12 +20,13 @@ import styled from 'styled-components'
 import { userDefaultID, mediaSize } from '../../lib/constants'
 
 export default React.memo(function AnswerSection({ data }) {
-  const [question, setQuestion] = useState(data.questionList[0])
+  const [question, setQuestion] = useState(data.question)
   const [answers, setAnswers] = useState(
-    matchCommentAndAnswer(data.answerList).sort((a, b) => {
-      return sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
-      // 마지막 인자의 -1은 sorting 순서를 결정. 1이면 큰게 앞으로, -1이면 작은게 앞으로.
-    })
+    data.answerList
+    //.sort((a, b) => {
+    //  return sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+    //  // 마지막 인자의 -1은 sorting 순서를 결정. 1이면 큰게 앞으로, -1이면 작은게 앞으로.
+    //})
   )
 
   // answers에서 중복되는 id 가 있다면 거기서 comment 만 추출하고, 새로운 배열로 다듬어야된다.
@@ -43,10 +44,6 @@ export default React.memo(function AnswerSection({ data }) {
       userNickname: state.auth.userNickname,
     }
   })
-
-  useEffect(() => {
-    console.log('앤서즈객체: ', answers)
-  }, [])
 
   const dispatch = useDispatch()
 
@@ -75,7 +72,7 @@ export default React.memo(function AnswerSection({ data }) {
       const uid24 = uid(24)
       const formData = {
         answerID: uid24,
-        postID: question._id,
+        questionID: question._id,
         contentType: 'answer',
         content: content,
       }
@@ -140,21 +137,17 @@ export default React.memo(function AnswerSection({ data }) {
   return (
     <AnswerContainer>
       <h3>{answers.length} Answers</h3>
-      {answers.map((answer, index) => {
-        return <AnswerBlock answer={answer} key={index} />
-      })}
+
+      {answers.length !== 0
+        ? answers.map((answerData, index) => {
+            return <AnswerBlock answerData={answerData} key={index} />
+          })
+        : ''}
+
       <MarkdownEditorBlock
-        className="answerWrite"
-        onChangeContentProps={onChangeContent}
         contentProps={content}
-        height="250px"
-        width="40vw"
+        onChangeContentProps={onChangeContent}
       />
-      <br />
-      <h3>Answer Preview</h3>
-      <br />
-      <MarkdownRenderingBlock content={content} />
-      <br />
       <Button onClick={addAnswer}>답변 추가하기</Button>
     </AnswerContainer>
   )

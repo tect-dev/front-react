@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { authService } from '../lib/firebase'
+import auth from './auth'
 
 const initialState = {}
 
@@ -35,15 +37,16 @@ const CREATE_ARTICLE_COMMENT_FAIL = 'CREATE_ARTICLE_COMMENT_FAIL'
 export const createQuestionComment = (data) => async (dispatch) => {
   dispatch({ type: CREATE_QUESTION_COMMENT_TRY })
   try {
-    const obj = JSON.stringify(data)
-    console.log('댓글달리는 obj: ', obj)
-    await axios({
-      method: 'post',
-      url: `${process.env.REACT_APP_BACKEND_URL}/comment`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      //const obj = JSON.stringify(data)
+      await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/comment/questionComment`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { ...data, firebaseToken: idToken },
+      })
+      await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
     })
-    await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_QUESTION_COMMENT_FAIL, error: e })
@@ -53,14 +56,16 @@ export const createQuestionComment = (data) => async (dispatch) => {
 export const createAnswerComment = (data) => async (dispatch) => {
   dispatch({ type: CREATE_ANSWER_COMMENT_TRY })
   try {
-    const obj = JSON.stringify(data)
-    await axios({
-      method: 'post',
-      url: `/comment`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      //const obj = JSON.stringify(data)
+      await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/comment/questionComment`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { ...data, firebaseToken: idToken },
+      })
+      await dispatch({ type: CREATE_ANSWER_COMMENT_SUCCESS })
     })
-    await dispatch({ type: CREATE_ANSWER_COMMENT_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_ANSWER_COMMENT_FAIL, error: e })

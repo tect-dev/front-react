@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useDebugValue } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import MarkdownRenderingBlock from '../MarkdownRenderingBlock'
 import CommentListBlock from '../CommentListBlock'
 import MarkdownEditorBlock from '../MarkdownEditorBlock'
@@ -20,28 +20,18 @@ import {
 } from '../../redux/comment'
 
 export default React.memo(function QuestionSection({ data }) {
-  const [question, setQuestion] = useState(data.questionList[0])
+  const [question, setQuestion] = useState(data.question)
   const [content, setContent] = useState('')
   const [commentContent, setCommentContent] = useState('')
   const [commentList, setCommentList] = useState(
-    data.questionList
-      .map((element) => {
-        if (element.questionComment) {
-          return element.questionComment
-        }
-      })
-      .sort((a, b) => {
-        sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
-      })
+    data.questionComments.sort((a, b) => {
+      sortISOByTimeStamp(a.createdAt, b.createdAt, -1)
+    })
   )
 
   const { userID } = useSelector((state) => {
     return { userID: state.auth.userID }
   })
-
-  useEffect(() => {
-    console.log('작성자: ', data.questionList[0])
-  }, [])
 
   const dispatch = useDispatch()
 
@@ -76,7 +66,7 @@ export default React.memo(function QuestionSection({ data }) {
         commentID: uid24,
         postType: 'question',
         content: commentContent,
-        postID: question._id,
+        questionID: question._id,
         parentID: uid24,
       }
       const tempComment = {
@@ -89,75 +79,81 @@ export default React.memo(function QuestionSection({ data }) {
     },
     [commentContent, commentList]
   )
-  function deleteComment() {
+  function onDeleteComment() {
     alert('정말 삭제합니까?')
   }
 
   return (
     <QuestionContainer>
-      <div className="title">
-        <h2>Q. {question.title}</h2>
-        <br />
-      </div>
-      <div className="hashtags">
-        {question?.hashtags?.map((tag, index) => {
-          return (
-            <TagBlock
-              key={index}
-              text={tag}
-              function={() => {
-                alert('tag clicked!')
-              }}
-            />
-          )
-        })}
-        <br />
-        <br />
-      </div>
-      <div className="content">
-        <MarkdownRenderingBlock content={question.content} />
-        <br />
-        <br />
-      </div>
+      <QuestionBodyContainer>
+        <div className="title">
+          <h2>Q. {question.title}</h2>
+          <br />
+        </div>
+        <div className="hashtags">
+          {question?.hashtags?.map((tag, index) => {
+            return (
+              <TagBlock
+                key={index}
+                text={tag}
+                function={() => {
+                  alert('tag clicked!')
+                }}
+              />
+            )
+          })}
+          <br />
+          <br />
+        </div>
+        <div className="content">
+          <MarkdownRenderingBlock content={question.content} />
+          <br />
+          <br />
+        </div>
 
-      <div>
-        {question.updatedAt.substr(0, 4)}년 {question.updatedAt.substr(5, 2)}월{' '}
-        {question.updatedAt.substr(8, 2)}일
-      </div>
-      <div>
-        {question.questionAuthor.map((element) => {
-          return <Link to={`/user/${element._id}`}>{element.nickname}</Link>
-        })}
-      </div>
-      {question.questionAuthor.map((element) => {
-        if (
-          element._id === userID &&
-          data.answerList.length === 0 &&
-          userID !== '000000000000000000000000'
-        ) {
-          return (
-            <>
-              <Button>
-                <Link to={`/question/edit/${question._id}`}>질문 수정하기</Link>
-              </Button>
-              <Button onClick={onDeleteQuestion}>질문 삭제하기</Button>
-            </>
-          )
-        }
-      })}
+        <div>
+          {question.updatedAt.substr(0, 4)}년 {question.updatedAt.substr(5, 2)}
+          월 {question.updatedAt.substr(8, 2)}일
+        </div>
+        <div>
+          <>
+            <Link to={`/user/${question.author._id}`}>
+              {question.author.displayName}
+            </Link>
+            <div>작성자: {question.author.displayName}</div>
+          </>
+        </div>
 
-      {commentList.map((comment) => {
-        if (comment) {
-          return (
-            <>
-              <div>{comment.content}</div>
-              <div>{comment.createdAt}</div>
-            </>
-          )
-        }
-      })}
-      <textarea value={commentContent} onChange={onChangeComment} />
-      <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
+        {/* 게시글의 id 와 유저의 id 가 일치하고
+            질문에 답변 및 코멘트가 달리지 않는 경우에만 수정과 삭제가 가능*/}
+        {userID === question.author._id &&
+        data.answerList.lenghth !== 0 &&
+        data.questionComments.length !== 0 ? (
+          <>
+            <Link to={`/question/edit/${question._id}`}>
+              <Button>글 수정</Button>
+            </Link>
+            <Button onClick={onDeleteQuestion}>글 삭제</Button>
+          </>
+        ) : (
+          ''
+        )}
+      </QuestionBodyContainer>
+
+      <QuestionCommentContainer>
+        {commentList.map((comment) => {
+          if (comment) {
+            return (
+              <>
+                <div>{comment.content}</div>
+                <div>{comment.createdAt}</div>
+              </>
+            )
+          }
+        })}
+        <textarea value={commentContent} onChange={onChangeComment} />
+        <Button onClick={onSubmitComment}>question 에 댓글달기</Button>
+      </QuestionCommentContainer>
     </QuestionContainer>
   )
 })
@@ -165,3 +161,7 @@ export default React.memo(function QuestionSection({ data }) {
 const QuestionContainer = styled.div`
   padding: 1rem 1.5rem;
 `
+
+const QuestionBodyContainer = styled.div``
+
+const QuestionCommentContainer = styled.div``

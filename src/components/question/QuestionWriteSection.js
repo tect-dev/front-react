@@ -10,6 +10,8 @@ import { Spinner } from '../Spinner'
 import styled from 'styled-components'
 import { textTooLongAlert } from '../../lib/functions'
 import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
+import { authService } from '../../lib/firebase'
+import { useHistory } from 'react-router-dom'
 
 export default React.memo(function QuestionWriteSection() {
   const [title, setTitle] = useState('')
@@ -21,13 +23,18 @@ export default React.memo(function QuestionWriteSection() {
 
   const splitPoint = /\,/g
 
-  const { userID, userNickname, isLoading } = useSelector((state) => {
-    return {
-      userID: state.auth.userID,
-      userNickname: state.auth.userNickname,
-      isLoading: state.createPost.question.loading,
+  const history = useHistory()
+
+  const { userID, userNickname, isLoading, loginState } = useSelector(
+    (state) => {
+      return {
+        userID: state.auth.userID,
+        userNickname: state.auth.userNickname,
+        isLoading: state.createPost.question.loading,
+        loginState: state.auth.loginState,
+      }
     }
-  })
+  )
 
   const dispatch = useDispatch()
 
@@ -56,6 +63,9 @@ export default React.memo(function QuestionWriteSection() {
   }
 
   useEffect(() => {
+    if (!loginState) {
+      history.push('/')
+    }
     if (hashtagList.length > 10) {
       setHashtagText(hashtagText.substr(0, hashtagText.length - 1))
       hashtagList.pop()
@@ -87,13 +97,11 @@ export default React.memo(function QuestionWriteSection() {
 
       const uid24 = uid(24)
       const formData = {
-        postID: uid24,
+        questionID: uid24,
         title: title,
-        contentType: 'question',
         content: content,
         hashtags: hashtagList,
       }
-
       dispatch(createQuestion(formData))
     },
     [title, content, hashtagList]
