@@ -17,9 +17,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
   const [isEditingAnswer, setIsEditingAnswer] = useState(false)
   const [editingAnswerContent, setEditingAnswerContent] = useState('')
   const [commentContent, setCommentContent] = useState('')
-  const [commentList, setCommentList] = useState(
-    answer.answerComments ? answer.answerComments : []
-  )
+  const [commentList, setCommentList] = useState(answerData.answerComments)
 
   const dispatch = useDispatch()
 
@@ -89,16 +87,19 @@ export default React.memo(function AnswerBlock({ answerData }) {
       ) : (
         <>
           <MarkdownRenderingBlock content={answer.content} />
-
-          {commentList?.map((comment) => {
-            return (
-              <>
-                <div>{comment.content}</div>
-                <div>{comment.createdAt}</div>
-              </>
-            )
-          })}
-
+          <div>답변 작성자: {answer.author.displayName}</div>
+          <div>마지막 수정일: {answer.lastUpdate}</div>
+          <div>
+            {commentList?.map((comment) => {
+              return (
+                <>
+                  <div>댓글 작성자: {comment.author.displayName}</div>
+                  <div>댓글 내용: {comment.content}</div>
+                  <div>댓글 생성일: {comment.createdAt}</div>
+                </>
+              )
+            })}
+          </div>
           <textarea value={commentContent} onChange={onChangeComment} />
           <Button onClick={onSubmitComment}>comment</Button>
         </>
