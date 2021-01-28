@@ -60,7 +60,7 @@ export const createAnswerComment = (data) => async (dispatch) => {
       //const obj = JSON.stringify(data)
       await axios({
         method: 'post',
-        url: `${process.env.REACT_APP_BACKEND_URL}/comment/questionComment`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/comment/answerComment`,
         headers: { 'Content-Type': 'application/json' },
         data: { ...data, firebaseToken: idToken },
       })

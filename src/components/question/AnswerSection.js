@@ -77,14 +77,31 @@ export default React.memo(function AnswerSection({ data }) {
         content: content,
       }
       const tempAnswer = {
-        __v: 0,
-        _id: uid24,
-        answerID: uid24,
-        answerAuthor: [{ _id: userID, nickname: userNickname }],
-        content: content,
-        createdAt: '지금', // Date.now() 가 알수없는 오류를 낸다. 생각해보니 걍 이런식으로 써도 될듯.
-        lastUpdate: '지금',
-        postID: question._id,
+        eachAnswer: {
+          type: 'answer',
+          like: 0,
+          unlike: 0,
+          selected: false,
+          _id: '임시',
+          author: {
+            deleted: false,
+            points: 0,
+            posts: ['임시'],
+            _id: '임시',
+            email: '임시',
+            firebaseUid: '임시',
+            displayName: userNickname,
+            createdAt: '임시',
+            updatedAt: '임시',
+            __v: 1,
+          },
+          questionID: question._id,
+          content: content,
+          createdAt: '지금',
+          updatedAt: '지금',
+          __v: 0,
+        },
+        answerComments: [],
       }
       dispatch(createAnswer(formData))
       setAnswers([...answers, tempAnswer])
@@ -104,12 +121,31 @@ export default React.memo(function AnswerSection({ data }) {
       setEditingAnswer(false)
       // immer 를 쓰는것보단 이게 나을지도.
       const tempAnswer = {
-        ...answers[index],
-        answerBody: {
-          ...answers[index].answerBody,
-          content: editedAnswerContent,
-          lastUpdate: '지금',
+        eachAnswer: {
+          type: 'answer',
+          like: 0,
+          unlike: 0,
+          selected: false,
+          _id: '임시',
+          author: {
+            deleted: false,
+            points: 0,
+            posts: ['임시'],
+            _id: '임시',
+            email: '임시',
+            firebaseUid: '임시',
+            displayName: userNickname,
+            createdAt: '임시',
+            updatedAt: '임시',
+            __v: 1,
+          },
+          questionID: question._id,
+          content: content,
+          createdAt: '지금',
+          updatedAt: '지금',
+          __v: 0,
         },
+        answerComments: [],
       }
 
       setAnswers(
