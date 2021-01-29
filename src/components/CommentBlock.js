@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { colorPalette } from '../lib/constants'
 import { refineDatetime } from '../lib/refineDatetime'
 
+import { Button } from './Button'
+
 import {
   updateQuestionComment,
   deleteQuestionComment,
@@ -82,31 +84,31 @@ export const CommentBlock = ({
       )}
       {isEditingComment ? (
         <>
-          <button
+          <Button
             onClick={() => {
               finishEditingComment(commentContent, comment._id)
             }}
           >
             수정 완료
-          </button>
+          </Button>
         </>
       ) : (
         <>
-          <button
+          <Button
             onClick={() => {
               setIsEditingComment(true)
               //  setCommentContent(comment.commentContent)
             }}
           >
             댓글 수정
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               onDeleteComment(comment._id)
             }}
           >
             댓글 삭제
-          </button>
+          </Button>
         </>
       )}
     </CommentBox>
