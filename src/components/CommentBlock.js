@@ -19,19 +19,14 @@ const Datetime = styled.div`
   color: ${colorPalette.gray5};
 `
 
-export const CommentBlock = ({
-  displayName,
-  content,
-  createdAt
-}) => {
+export const CommentBlock = ({ displayName, content, createdAt }) => {
   return (
     <CommentBox>
       <CommentInfo>
         <div>작성자: {displayName}</div>
-        <Datetime>{refineDatetime(createdAt)}</Datetime>
+        <Datetime>{createdAt}</Datetime>
       </CommentInfo>
       <div>{content}</div>
-      
     </CommentBox>
   )
 }

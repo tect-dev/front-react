@@ -94,14 +94,16 @@ export default React.memo(function AnswerBlock({ answerData }) {
           <AnswerHeader>
             <div>답변 작성자: {answer.author.displayName}</div>
             <Datetime>
-              {answer.createdAt === answer.updatedAt
-                ? <>{refineDatetime(answer.createdAt)}</>
-                : <>{refineDatetime(answer.updatedAt)} (수정일)</>
-              }
+              {answer.createdAt === answer.updatedAt ? (
+                <>{answer.createdAt}</>
+              ) : (
+                <>{answer.updatedAt} (수정일)</>
+              )}
             </Datetime>
           </AnswerHeader>
           <MarkdownRenderingBlock content={answer.content} />
-          <br/><br/>
+          <br />
+          <br />
           <div>
             {commentList?.map((comment) => {
               return (
@@ -114,9 +116,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
             })}
           </div>
           <CommentTextarea value={commentContent} onChange={onChangeComment} />
-          <Button onClick={onSubmitComment}>
-            comment
-          </Button>
+          <Button onClick={onSubmitComment}>comment</Button>
         </>
       )}
     </AnswerBlockContainer>
