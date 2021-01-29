@@ -63,7 +63,7 @@ export default React.memo(function QuestionSection({ data }) {
 
   const onSubmitComment = useCallback(
     async (e) => {
-      e.preventDefault()
+      //e.preventDefault()
       if (!commentContent) {
         return
       }
@@ -99,34 +99,37 @@ export default React.memo(function QuestionSection({ data }) {
           </QuestionTitle>
           <QuesstionInfo>
             <div>
-              질문 작성자: <Link to={`/user/${question.author._id}`}>
-              {question.author.displayName}
+              질문 작성자:{' '}
+              <Link to={`/user/${question.author._id}`}>
+                {question.author.displayName}
               </Link>
             </div>
             <Datetime>
-                {question.createdAt === question.updatedAt
-                  ? <>{refineDatetime(question.createdAt)}</>
-                  : <>{refineDatetime(question.updatedAt)} (수정일)</>
-                }
+              {question.createdAt === question.updatedAt ? (
+                <>{refineDatetime(question.createdAt)}</>
+              ) : (
+                <>{refineDatetime(question.updatedAt)} (수정일)</>
+              )}
             </Datetime>
-          </QuesstionInfo>  
+          </QuesstionInfo>
 
-        <div className="hashtags">
-          {question?.hashtags?.map((tag, index) => {
-            return (
-              <TagBlock
-                key={index}
-                text={tag}
-                function={() => {alert('tag clicked!')}}
-              />
-            )
-          })}
-          <br />
-          {/* <br /> */}
-        </div>
+          <div className="hashtags">
+            {question?.hashtags?.map((tag, index) => {
+              return (
+                <TagBlock
+                  key={index}
+                  text={tag}
+                  function={() => {
+                    alert('tag clicked!')
+                  }}
+                />
+              )
+            })}
+            <br />
+            {/* <br /> */}
+          </div>
         </QuestionHeader>
-        
-        
+
         <div className="content">
           <MarkdownRenderingBlock content={question.content} />
           <br />
@@ -135,9 +138,10 @@ export default React.memo(function QuestionSection({ data }) {
 
         {/* 게시글의 id 와 유저의 id 가 일치하고
             질문에 답변 및 코멘트가 달리지 않는 경우에만 수정과 삭제가 가능*/}
-        {userID === question.author._id &&
+        {/*userID === question.author._id &&
         data.answerList.lenghth !== 0 &&
-        data.questionComments.length !== 0 ? (
+        data.questionComments.length !== 0*/}
+        {true ? (
           <>
             <Link to={`/question/edit/${question._id}`}>
               <Button>글 수정</Button>
@@ -148,10 +152,10 @@ export default React.memo(function QuestionSection({ data }) {
           ''
         )}
       </QuestionBodyContainer>
-      <br/>
+      <br />
       <QuestionCommentContainer>
         <h3>댓글 {commentList.length}</h3>
-        <br/>
+        <br />
         {commentList.map((comment) => {
           if (comment) {
             return (
@@ -164,9 +168,7 @@ export default React.memo(function QuestionSection({ data }) {
           }
         })}
         <CommentTextarea value={commentContent} onChange={onChangeComment} />
-        <Button onClick={onSubmitComment}>
-          comment
-        </Button>
+        <Button onClick={onSubmitComment}>comment</Button>
       </QuestionCommentContainer>
     </QuestionContainer>
   )
@@ -181,11 +183,11 @@ const QuestionContainer = styled.div`
   }
 `
 
-const QuestionHeader = styled.div`
-`
+const QuestionHeader = styled.div``
 
 const QuestionBodyContainer = styled.div`
   width: inherit;
+  margin-bottom: 10px;
 `
 
 const QuestionCommentContainer = styled.div`

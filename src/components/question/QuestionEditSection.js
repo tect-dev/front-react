@@ -12,18 +12,12 @@ import { textTooLongAlert } from '../../lib/functions'
 import HalfWidthContainer from '../../components/layout/HalfWidthContainer'
 
 export default React.memo(function QuestionEditSection({ initialData }) {
-  const [title, onChangeTitle] = useInput(
-    initialData.question.questionBody.title
-  )
-  const [content, setContent] = useState(
-    initialData.question.questionBody.content
-  )
+  const [title, onChangeTitle] = useInput(initialData.question.title)
+  const [content, setContent] = useState(initialData.question.content)
   const [hashtagText, setHashtagText] = useState(
-    mergeArray(initialData.question.questionBody.hashtags, `\,`)
+    mergeArray(initialData.question.hashtags, `\,`)
   )
-  const [hashtagList, setHashtagList] = useState(
-    initialData.question.questionBody.hashtags
-  )
+  const [hashtagList, setHashtagList] = useState(initialData.question.hashtags)
   const questionID = initialData.question._id || 'error'
   const splitPoint = /\,/g
 

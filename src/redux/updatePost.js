@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { authService } from '../lib/firebase'
+import auth from './auth'
 
 const initialState = {
   loading: false,
@@ -33,16 +35,17 @@ export const updateQuestion = (data) => async (
 ) => {
   dispatch({ type: UPDATE_QUESTION_TRY })
   try {
-    const obj = JSON.stringify(data)
-    await axios({
-      method: 'put',
-      url: `${process.env.REACT_APP_BACKEND_URL}/question/${data.postID}`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+    //const obj = JSON.stringify(data)
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/question/${data.postID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { ...data, firebaseToken: idToken },
+      })
+      await dispatch({ type: UPDATE_QUESTION_SUCCESS })
+      history.push(`/question/${data.postID}`)
     })
-    await dispatch({ type: UPDATE_QUESTION_SUCCESS })
-
-    history.push(`/question/${data.postID}`)
     // obj 는 스트링으로 만든거라서, data 를 써야함.
   } catch (e) {
     alert('error: ', e)
