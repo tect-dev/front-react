@@ -4,15 +4,14 @@ import { deleteAnswer } from '../../redux/deletePost'
 
 import styled from 'styled-components'
 import { uid } from 'uid'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '../../components/Button'
 import MarkdownEditorBlock from '../../components/MarkdownEditorBlock'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
 
 import { mediaSize } from '../../lib/constants'
-import { createAnswerComment, deleteAnswerComment } from '../../redux/comment'
+import { createAnswerComment } from '../../redux/comment'
 
-import { CommentTextarea } from '../CommentTextarea'
 import { CommentBlock } from '../CommentBlock'
 import { refineDatetime } from '../../lib/refineDatetime'
 import { colorPalette } from '../../lib/constants'
@@ -24,6 +23,9 @@ export default React.memo(function AnswerBlock({ answerData }) {
   const [commentContent, setCommentContent] = useState('')
   const [commentList, setCommentList] = useState(answerData.answerComments)
 
+  const { userNickname } = useSelector((state) => {
+    return { userNickname: state.auth.userNickname }
+  })
   const dispatch = useDispatch()
 
   const onDeleteAnswer = useCallback(() => {
@@ -59,6 +61,10 @@ export default React.memo(function AnswerBlock({ answerData }) {
       }
       const tempComment = {
         ...formData,
+        author: {
+          displayName: userNickname,
+        },
+
         createdAt: '지금',
       }
       dispatch(createAnswerComment(formData))
@@ -108,15 +114,27 @@ export default React.memo(function AnswerBlock({ answerData }) {
             {commentList?.map((comment) => {
               return (
                 <CommentBlock
+                  comment={comment}
+                  deleted={comment.deleted}
                   displayName={comment.author.displayName}
                   content={comment.content}
-                  createdAt={comment.author.createdAt}
+                  createdAt={comment.createdAt}
+                  contentType="answer"
                 />
               )
             })}
           </div>
-          <CommentTextarea value={commentContent} onChange={onChangeComment} />
-          <Button onClick={onSubmitComment}>comment</Button>
+          {answer._id !== '임시' ? (
+            <>
+              <CommentTextarea
+                value={commentContent}
+                onChange={onChangeComment}
+              />
+              <Button onClick={onSubmitComment}>comment</Button>
+            </>
+          ) : (
+            ''
+          )}
         </>
       )}
     </AnswerBlockContainer>
@@ -141,4 +159,19 @@ const AnswerHeader = styled.div`
 
 const Datetime = styled.div`
   color: ${colorPalette.gray5};
+`
+const CommentTextarea = styled.textarea`
+  display: -moz-box;
+  width: 100%;
+  border-radius: 5px;
+  transition: all ease 0.2s;
+  min-height: 50px;
+  /* resize: none; */
+  &:focus {
+    border: 1px solid rgba(0, 190, 190, 0.2);
+    outline: none;
+    box-shadow: 0px 0px 3px 0px rgba(0, 190, 190, 0.5);
+
+    transition: all ease 0.2s;
+  }
 `

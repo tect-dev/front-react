@@ -77,7 +77,7 @@ export const deleteQuestionComment = (commentID) => async (dispatch) => {
   try {
     await axios({
       method: 'delete',
-      url: `/comment/${commentID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/comment/questionComment/${commentID}`,
       headers: { 'Content-Type': 'application/json' },
     })
     await dispatch({ type: DELETE_QUESTION_COMMENT_SUCCESS })
@@ -92,13 +92,55 @@ export const deleteAnswerComment = (commentID) => async (dispatch) => {
   try {
     await axios({
       method: 'delete',
-      url: `/comment/${commentID}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/comment/answerComment/${commentID}`,
       headers: { 'Content-Type': 'application/json' },
     })
     await dispatch({ type: DELETE_ANSWER_COMMENT_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: DELETE_ANSWER_COMMENT_FAIL, error: e })
+  }
+}
+
+export const updateQuestionComment = (commentContent, commentID) => async (
+  dispatch
+) => {
+  dispatch({ type: CREATE_QUESTION_COMMENT_TRY })
+  try {
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      //const obj = JSON.stringify(data)
+      await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/comment/questionComment/${commentID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { content: commentContent, firebaseToken: idToken },
+      })
+      await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
+    })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: CREATE_QUESTION_COMMENT_FAIL, error: e })
+  }
+}
+
+export const updateAnswerComment = (commentContent, commentID) => async (
+  dispatch
+) => {
+  dispatch({ type: CREATE_QUESTION_COMMENT_TRY })
+  try {
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      //const obj = JSON.stringify(data)
+      await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/comment/answerComment/${commentID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { content: commentContent, firebaseToken: idToken },
+      })
+      await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
+    })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: CREATE_QUESTION_COMMENT_FAIL, error: e })
   }
 }
 
