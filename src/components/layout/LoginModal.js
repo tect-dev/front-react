@@ -10,7 +10,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
-  const [nickname, setNickname] = useState()
+  const [displayName, setDisplayName] = useState()
   const [isSignUp, setIsSignUp] = useState(false)
   const [loginResult, setLoginResult] = useState(null)
 
@@ -40,11 +40,11 @@ export const LoginModal = React.memo(({ labelFor }) => {
     [password]
   )
 
-  const onChangeNickname = useCallback(
+  const onChangedisplayName = useCallback(
     (e) => {
-      setNickname(e.target.value)
+      setDisplayName(e.target.value)
     },
-    [nickname]
+    [displayName]
   )
 
   const onEmailLogin = useCallback(
@@ -65,9 +65,9 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onEmailSignUp = useCallback(
     (e) => {
       e.preventDefault()
-      dispatch(emailSignUp(email, password, nickname))
+      dispatch(emailSignUp(email, password, displayName))
     },
-    [dispatch, email, password, nickname]
+    [dispatch, email, password, displayName]
   )
 
   return (
@@ -101,11 +101,11 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 <input
                   className="login-input"
                   type="text"
-                  placeholder="Enter Nickname"
+                  placeholder="Enter displayName"
                   required
-                  name="nickname"
-                  value={nickname}
-                  onChange={onChangeNickname}
+                  name="displayName"
+                  value={displayName}
+                  onChange={onChangedisplayName}
                 />
               ) : (
                 ''

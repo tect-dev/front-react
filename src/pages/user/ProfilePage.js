@@ -17,11 +17,11 @@ const InfoCell = styled.div`
 export default function ProfilePage({ match }) {
   const history = useHistory()
   const { userID } = match.params
-  const { myID, myNickname, myCreatedAt, myPoints, myEmail, myPosts, loading } = useSelector((state) => {
+  const { myID, myDisplayName, myCreatedAt, myPoints, myEmail, myPosts, loading } = useSelector((state) => {
     console.log(state.auth)
     return { 
       myID: state.auth.userID, 
-      myNickname: state.auth.nickname,
+      myDisplayName: state.auth.displayName,
       myCreatedAt: state.auth.createdAt,
       myPoints: state.auth.points,
       myEmail: state.auth.email,
@@ -74,7 +74,7 @@ export default function ProfilePage({ match }) {
           </div>
           <div className="intro-container">
             <InfoCell>
-              <div>닉네임</div><div>{myNickname}</div>
+              <div>닉네임</div><div>{myDisplayName}</div>
             </InfoCell>
             <InfoCell>
               <div>이메일</div><div>{myEmail}</div>

@@ -19,11 +19,11 @@ export default function Navbar() {
   }
   const userInfo = JSON.parse(localStorage.getItem('user'))
 
-  const { userID, userNickname, loginState } = useSelector((state) => {
+  const { userID, displayName, loginState } = useSelector((state) => {
     // console.log('useSelector:')
     return {
       userID: state.auth.userID,
-      userNickname: state.auth.userNickname,
+      displayName: state.auth.displayName,
       loginState: state.auth.loginState,
     }
   })

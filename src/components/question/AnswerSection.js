@@ -38,10 +38,10 @@ export default React.memo(function AnswerSection({ data }) {
   // 기존 answer 를 수정할때 사용하는 state: editedAnswerContent
   const [editedAnswerContent, setEditedAnswerContent] = useState('')
 
-  const { userID, userNickname } = useSelector((state) => {
+  const { userID, displayName } = useSelector((state) => {
     return {
       userID: state.auth.userID,
-      userNickname: state.auth.userNickname,
+      displayName: state.auth.displayName,
     }
   })
 
@@ -90,7 +90,7 @@ export default React.memo(function AnswerSection({ data }) {
             _id: '임시',
             email: '임시',
             firebaseUid: '임시',
-            displayName: userNickname,
+            displayName: displayName,
             createdAt: '임시',
             updatedAt: '임시',
             __v: 1,
@@ -107,7 +107,7 @@ export default React.memo(function AnswerSection({ data }) {
       setAnswers([...answers, tempAnswer])
       setContent('')
     },
-    [content, answers, question._id, dispatch, userID, userNickname]
+    [content, answers, question._id, dispatch, userID, displayName]
   )
 
   const onUpdateAnswer = useCallback(
@@ -134,7 +134,7 @@ export default React.memo(function AnswerSection({ data }) {
             _id: '임시',
             email: '임시',
             firebaseUid: '임시',
-            displayName: userNickname,
+            displayName: displayName,
             createdAt: '임시',
             updatedAt: '임시',
             __v: 1,

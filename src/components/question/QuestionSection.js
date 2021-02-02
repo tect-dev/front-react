@@ -35,8 +35,8 @@ export default React.memo(function QuestionSection({ data }) {
   )
   const [isEditingComment, setIsEditingComment] = useState(false)
 
-  const { userID, userNickname } = useSelector((state) => {
-    return { userID: state.auth.userID, userNickname: state.auth.displayName }
+  const { userID, displayName } = useSelector((state) => {
+    return { userID: state.auth.userID, displayName: state.auth.displayName }
   })
 
   const dispatch = useDispatch()
@@ -78,7 +78,7 @@ export default React.memo(function QuestionSection({ data }) {
       const tempComment = {
         ...formData,
         author: {
-          displayName: userNickname,
+          displayName: displayName,
         },
 
         createdAt: '지금',
