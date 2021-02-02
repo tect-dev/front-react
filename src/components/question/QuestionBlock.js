@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom'
 import '../../styles/question/QuestionBlock.scss'
 
 export default function QuestionBlock({ question }) {
-  const summaryContent = question.contentSubstring.substr(0, 200)
+  console.log(question)
+  const summaryContent = question.contentSubstring
+    ? question.contentSubstring
+    : question.content.substr(0, 200)
   //console.log(summaryContent);
   return (
     <Link className="questionBlock" to={`/question/${question._id}`}>

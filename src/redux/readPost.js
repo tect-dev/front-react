@@ -115,7 +115,7 @@ export const readSearchedResults = (querystring) => async (dispatch) => {
     const obj = JSON.stringify({ target: querystring })
     const res = await axios({
       method: 'post',
-      url: `${process.env.REACT_APP_BACKEND_URL}/question/search`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/search`,
       headers: { 'Content-Type': 'application/json' },
       data: obj,
     })
