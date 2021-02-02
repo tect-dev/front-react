@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { colorPalette } from '../lib/constants'
-import { refineDatetime } from '../lib/refineDatetime'
 
 import { Button } from './Button'
 
@@ -33,6 +32,7 @@ export const CommentBlock = ({
   comment,
   deleted,
   displayName,
+  commentHost,
   content,
   createdAt,
   contentType,
@@ -82,35 +82,40 @@ export const CommentBlock = ({
       ) : (
         ''
       )}
-      {isEditingComment ? (
-        <>
-          <Button
-            onClick={() => {
-              finishEditingComment(commentContent, comment._id)
-            }}
-          >
-            수정 완료
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button
-            onClick={() => {
-              setIsEditingComment(true)
-              //  setCommentContent(comment.commentContent)
-            }}
-          >
-            댓글 수정
-          </Button>
-          <Button
-            onClick={() => {
-              onDeleteComment(comment._id)
-            }}
-          >
-            댓글 삭제
-          </Button>
-        </>
-      )}
+      {commentHost
+        ? <>
+            {isEditingComment ? (
+              <>
+                <Button
+                  onClick={() => {
+                    finishEditingComment(commentContent, comment._id)
+                  }}
+                >
+                  수정 완료
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    setIsEditingComment(true)
+                    //  setCommentContent(comment.commentContent)
+                  }}
+                >
+                  댓글 수정
+                </Button>
+                <Button
+                  onClick={() => {
+                    onDeleteComment(comment._id)
+                  }}
+                >
+                  댓글 삭제
+                </Button>
+              </>
+            )}
+          </>
+        : null
+      }
     </CommentBox>
   )
 }

@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     data: null,
     error: null,
+    num: null
   },
   question: {
     loading: false,
@@ -57,12 +58,13 @@ const READ_SEARCHED_FAIL = 'searched/READ_SEARCHED_FAIL'
 export const readQuestionList = () => async (dispatch) => {
   dispatch({ type: READ_QUESTION_LIST_TRY })
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/question`)
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/question/page/1`)
     dispatch({
       type: READ_QUESTION_LIST_SUCCESS,
-      questionList: res.data.sort((a, b) => {
+      questionList: res.data.question.sort((a, b) => {
         return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
       }),
+      num: res.data.questionSum
     })
   } catch (e) {
     console.log('error: ', e)
@@ -141,6 +143,7 @@ export default function readPost(state = initialState, action) {
         questionList: {
           loading: false,
           data: action.questionList,
+          num: action.num,
           error: null,
         },
       }
