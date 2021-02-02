@@ -20,6 +20,8 @@ export default function QuestionDetailPage({ match }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.question
   })
+  console.log(data)
+  
 
   const dispatch = useDispatch()
 

@@ -13,7 +13,6 @@ import { mediaSize } from '../../lib/constants'
 import { createAnswerComment } from '../../redux/comment'
 
 import { CommentBlock } from '../CommentBlock'
-import { refineDatetime } from '../../lib/refineDatetime'
 import { colorPalette } from '../../lib/constants'
 
 export default React.memo(function AnswerBlock({ answerData }) {

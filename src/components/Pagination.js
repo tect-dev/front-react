@@ -17,7 +17,7 @@ export const Pagination = ({ data, total }) => {
   let nowPage = typeof(page) === 'number' ? page : parseInt(page)
 
   // page당 어느 정도의 게시물을 보여줄 것인가
-  const [perPage, setPerPage] = useState(4)
+  const [perPage, setPerPage] = useState(5)
 
   // pagination에서 최초와 끝을 제외한 나머지 pageBtn을
   // 얼마나 보여줄 것인가.

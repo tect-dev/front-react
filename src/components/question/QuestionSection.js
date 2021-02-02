@@ -13,6 +13,7 @@ import { mediaSize } from '../../lib/constants'
 import {
   sortISOByTimeStamp,
   isoStringToNaturalLanguage,
+  refineDatetime
 } from '../../lib/functions'
 import {
   createQuestionComment,
@@ -21,7 +22,6 @@ import {
 } from '../../redux/comment'
 
 import { CommentBlock } from '../CommentBlock'
-import { refineDatetime } from '../../lib/refineDatetime'
 import { colorPalette } from '../../lib/constants'
 
 export default React.memo(function QuestionSection({ data }) {
@@ -36,7 +36,7 @@ export default React.memo(function QuestionSection({ data }) {
   const [isEditingComment, setIsEditingComment] = useState(false)
 
   const { userID, userNickname } = useSelector((state) => {
-    return { userID: state.auth.userID, userNickname: state.auth.userNickname }
+    return { userID: state.auth.userID, userNickname: state.auth.displayName }
   })
 
   const dispatch = useDispatch()
@@ -44,7 +44,6 @@ export default React.memo(function QuestionSection({ data }) {
   const onChangeComment = useCallback(
     (e) => {
       e.preventDefault()
-      console.log('e.target.value:', e.target.value)
       setCommentContent(e.target.value)
     },
     [commentContent]
@@ -151,7 +150,7 @@ export default React.memo(function QuestionSection({ data }) {
         {/*userID === question.author._id &&
         data.answerList.lenghth !== 0 &&
         data.questionComments.length !== 0*/}
-        {true ? (
+        {userID === question.author.firebaseUid ? (
           <>
             <Link to={`/question/edit/${question._id}`}>
               <Button>글 수정</Button>
@@ -174,6 +173,7 @@ export default React.memo(function QuestionSection({ data }) {
                   comment={comment}
                   deleted={comment.deleted}
                   displayName={comment.author.displayName}
+                  commentHost={comment.author.firebaseUid === userID}
                   content={comment.content}
                   createdAt={comment.createdAt}
                   contentType="question"
