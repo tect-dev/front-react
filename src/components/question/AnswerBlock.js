@@ -22,8 +22,8 @@ export default React.memo(function AnswerBlock({ answerData }) {
   const [commentContent, setCommentContent] = useState('')
   const [commentList, setCommentList] = useState(answerData.answerComments)
 
-  const { userNickname } = useSelector((state) => {
-    return { userNickname: state.auth.userNickname }
+  const { displayName } = useSelector((state) => {
+    return { displayName: state.auth.displayName }
   })
   const dispatch = useDispatch()
 
@@ -61,7 +61,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
       const tempComment = {
         ...formData,
         author: {
-          displayName: userNickname,
+          displayName: displayName,
         },
 
         createdAt: '지금',
@@ -115,7 +115,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
                 <CommentBlock
                   comment={comment}
                   deleted={comment.deleted}
-                  displayName={comment.author.displayName}
+                  displayName={comment?.author?.displayName}
                   content={comment.content}
                   createdAt={comment.createdAt}
                   contentType="answer"

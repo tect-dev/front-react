@@ -6,7 +6,7 @@ export default function CommentListBlock({ commentList }) {
       {commentList.map((comment, index) => {
         return (
           <div key={index}>
-            <div>{comment.authorNickname}</div>
+            <div>{comment.author.displayName}</div>
             <MarkdownRenderingBlock content={comment.content} />
           </div>
         );

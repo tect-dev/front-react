@@ -29,14 +29,14 @@ export default React.memo(function QuestionEditSection({ initialData }) {
     return mergedOne
   }
 
-  const { userID, userNickname } = useSelector((state) => {
+  const { userID, displayName } = useSelector((state) => {
     return {
       userID: state.auth.userID,
-      userNickname: state.auth.userNickname,
+      displayName: state.auth.displayName,
     }
   }) || {
     userID: '123456789012345678901234',
-    userNickname: '익명',
+    displayName: '익명',
   }
 
   const dispatch = useDispatch()
@@ -82,13 +82,13 @@ export default React.memo(function QuestionEditSection({ initialData }) {
         contentType: 'question',
         content: content,
         authorID: userID,
-        authorNickname: userNickname,
+        authorNickname: displayName,
         hashtags: hashtagList,
       }
 
       dispatch(updateQuestion(formData))
     },
-    [title, content, hashtagList, dispatch, questionID, userID, userNickname]
+    [title, content, hashtagList, dispatch, questionID, userID, displayName]
   )
 
   return (
