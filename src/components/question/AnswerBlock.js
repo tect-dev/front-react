@@ -14,6 +14,7 @@ import { createAnswerComment } from '../../redux/comment'
 
 import { CommentBlock } from '../CommentBlock'
 import { colorPalette } from '../../lib/constants'
+import { refineDatetime } from '../../lib/functions'
 
 export default React.memo(function AnswerBlock({ answerData }) {
   const [answer, setAnswer] = useState(answerData.eachAnswer)
@@ -22,8 +23,8 @@ export default React.memo(function AnswerBlock({ answerData }) {
   const [commentContent, setCommentContent] = useState('')
   const [commentList, setCommentList] = useState(answerData.answerComments)
 
-  const { displayName } = useSelector((state) => {
-    return { displayName: state.auth.displayName }
+  const { userID, displayName } = useSelector((state) => {
+    return { userID: state.auth.userID, displayName: state.auth.displayName }
   })
   const dispatch = useDispatch()
 
@@ -100,9 +101,9 @@ export default React.memo(function AnswerBlock({ answerData }) {
             <div>답변 작성자: {answer.author.displayName}</div>
             <Datetime>
               {answer.createdAt === answer.updatedAt ? (
-                <>{answer.createdAt}</>
+                <>{refineDatetime(answer.createdAt)}</>
               ) : (
-                <>{answer.updatedAt} (수정일)</>
+                <>{refineDatetime(answer.updatedAt)} (수정일)</>
               )}
             </Datetime>
           </AnswerHeader>
@@ -111,6 +112,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
           <br />
           <div>
             {commentList?.map((comment) => {
+              // console.log(comment)
               return (
                 <CommentBlock
                   comment={comment}
@@ -118,6 +120,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
                   displayName={comment?.author?.displayName}
                   content={comment.content}
                   createdAt={comment.createdAt}
+                  // commentHost={comment.author.firebaseUid === userID}
                   contentType="answer"
                 />
               )
