@@ -12,6 +12,8 @@ import {
   deleteAnswerComment,
 } from '../redux/comment'
 
+import { refineDatetime } from '../lib/functions'
+
 const CommentBox = styled.div`
   border-top: 1px solid ${colorPalette.gray5};
   padding-top: 5px;
@@ -67,7 +69,7 @@ export const CommentBlock = ({
     <CommentBox>
       <CommentInfo>
         <div>작성자: {displayName}</div>
-        <Datetime>{createdAt}</Datetime>
+        <Datetime>{refineDatetime(createdAt)}</Datetime>
       </CommentInfo>
       {deleted && !isEditingComment ? (
         <div>삭제된 댓글입니다.</div>
