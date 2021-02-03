@@ -156,6 +156,7 @@ export const htmlFilter = (html) => {
 }
 
 export const refineDatetime = (raw) => {
+  if(raw === "지금"){return raw}
   let datetime = new Date(raw)
   const [ yyyy, MM, dd ] = datetime.toLocaleDateString().split('.')
   const [ hh, mm, ss ] = datetime.toLocaleTimeString().split(':')

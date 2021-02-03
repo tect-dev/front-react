@@ -10,6 +10,7 @@ import { Button } from '../../components/Button'
 import { Pagination } from '../../components/Pagination'
 
 import '../../styles/page/question/QuestionListPage.scss'
+import styled from 'styled-components'
 
 export default function QuestionListPage({ location }) {
   const { loading, data, error } = useSelector((state) => {
@@ -18,6 +19,8 @@ export default function QuestionListPage({ location }) {
   const { loginState } = useSelector((state) => {
     return { loginState: state.auth.loginState }
   })
+
+  const [ title, setTitle ] = useState('최신')
   
 
   const dispatch = useDispatch()
@@ -56,11 +59,10 @@ export default function QuestionListPage({ location }) {
           <section>
             <div className="questionList-left">
               <div className="questionList-left-top">
-                <div className="questionList-title-container">
-                  <div className="questionList-Latest">최신</div>
-                  {/*인기순 정렬은 나중에 추가하자*/}
-                  {/*<div className="questionList-popular">인기</div>*/}
-                </div>
+                <TitleContainer>
+                  <Title>최신</Title>
+                  <Title>해시태그</Title>
+                </TitleContainer>
                 {loginState ? (
                   <Link to={'/question/write'} className="ask-btn-container">
                     <Button className="ask-btn" buttonStyle="btn--outline">
@@ -86,3 +88,15 @@ export default function QuestionListPage({ location }) {
     </>
   )
 }
+
+export const TitleContainer = styled.div`
+  display: flex;
+  font-size: 24px;
+  font-weight: 700;
+`
+
+export const Title = styled.div`
+  color: #00bebe;
+  margin-right: 0.5vw;
+  border-bottom: 2px solid #00bebe;
+`
