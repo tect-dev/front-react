@@ -110,9 +110,10 @@ export default React.memo(function AnswerBlock({ answerData }) {
           <MarkdownRenderingBlock content={answer.content} />
           <br />
           <br />
+          <h3>댓글 {commentList.length}</h3>
+          <br />
           <div>
             {commentList?.map((comment) => {
-              // console.log(comment)
               return (
                 <CommentBlock
                   comment={comment}
@@ -120,7 +121,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
                   displayName={comment?.author?.displayName}
                   content={comment.content}
                   createdAt={comment.createdAt}
-                  // commentHost={comment.author.firebaseUid === userID}
+                  commentHost={comment?.author?.firebaseUid === userID}
                   contentType="answer"
                 />
               )

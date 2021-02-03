@@ -126,6 +126,10 @@ export const readSearchedResults = (querystring) => async (dispatch) => {
   }
 }
 
+export const readHashtagResults = (hashtag) => async (dispatch) => {
+  dispatch({ type: READ_SEARCHED_TRY })
+}
+
 export default function readPost(state = initialState, action) {
   switch (action.type) {
     case READ_QUESTION_LIST_TRY:

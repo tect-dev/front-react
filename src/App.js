@@ -27,7 +27,6 @@ function App() {
     console.log('로그인상태:', loginState)
     authService.onAuthStateChanged((user) => {
       console.log('호출됨: onAuthStateChanged')
-
       if (user) {
         console.log('유저:', user)
         dispatch(checkAuth(user))
