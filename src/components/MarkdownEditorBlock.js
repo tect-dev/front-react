@@ -12,6 +12,8 @@ import {
 } from 'react-icons/fa'
 import { mediaQuery, colorPalette, mediaSize } from '../lib/constants'
 
+// deprecated. MarkdownEditor 를 사용하는걸 권장.
+
 export default React.memo(function MarkdownEditorBlock({
   onChangeContentProps,
   contentProps,
@@ -43,7 +45,7 @@ export default React.memo(function MarkdownEditorBlock({
       let formData = new FormData()
       formData.append('image', file)
       const res = await axios({
-        url: '/image',
+        url: `${process.env.REACT_APP_BACKEND_URL}/image`,
         method: 'POST',
         data: formData,
       })
@@ -149,7 +151,7 @@ export default React.memo(function MarkdownEditorBlock({
             <FaLink />
           </MarkdownButton>
         </MarkdownToolkit>
-        <div style={{width: "100%"}}>
+        <div style={{ width: '100%' }}>
           <label htmlFor="content"></label>
           <StyledTextarea
             id="content"

@@ -1,6 +1,32 @@
 import sanitize from 'sanitize-html'
 import { katexWhiteList } from './katexWhiteList'
 
+export function returnPreviousNodeList(someLinkList, someNodeList, someNode) {
+  let previousNodeList = []
+  someLinkList.map((linkElement) => {
+    if (someNode.id === linkElement.endNodeID) {
+      const previousNode = someNodeList.find((node) => {
+        return node.id === linkElement.startNodeID
+      })
+      previousNodeList.push(previousNode)
+    }
+  })
+  return previousNodeList
+}
+
+export function returnNextNodeList(someLinkList, someNodeList, someNode) {
+  let nextNodeList = []
+  someLinkList.map((linkElement) => {
+    if (someNode.id === linkElement.startNodeID) {
+      const nextNode = someNodeList.find((node) => {
+        return node.id === linkElement.endNodeID
+      })
+      nextNodeList.push(nextNode)
+    }
+  })
+  return nextNodeList
+}
+
 export function extractComment(someList, listType) {
   // 배열내의 원소들을 순회하면서 댓글들만 추출해서, 댓글로 이뤄진 어레이를 리턴.
   let commentList = []
