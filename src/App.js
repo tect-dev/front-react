@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
+import TechtreeDetailPage from './pages/techtree/TechtreeDetailPage'
+import TechtreeListPage from './pages/techtree/TechtreeListPage'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import QuestionListPage from './pages/question/QuestionListPage'
@@ -52,7 +54,8 @@ function App() {
       {/* 라우트를 Switch 로 감싸면, 매칭되는 첫번째 페이지만 렌더를 해준다. */}
       <ErrorBoundary>
         <Switch>
-          <Route path="/" exact={true} component={HomePage} />
+          <Route path="/" exact={true} component={TechtreeListPage} />
+          <Route path="/techtree/:techtreeID" component={TechtreeDetailPage} />
           <Route path="/about" exact={true} component={AboutPage} />
           <Route path="/user/:userID" component={ProfilePage} />
 

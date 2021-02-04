@@ -15,7 +15,7 @@ import { createBrowserHistory } from 'history'
 const customHistory = createBrowserHistory()
 
 // logger 미들웨어는 마지막 순서에 와야함.
-const reduxStore = createStore(
+export const reduxStore = createStore(
   rootReducer,
   applyMiddleware(
     ReduxThunk.withExtraArgument({ history: customHistory }),

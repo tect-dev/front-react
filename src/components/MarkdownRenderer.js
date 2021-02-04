@@ -2,42 +2,26 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import remark from 'remark'
 import remarkParse from 'remark-parse'
-import breaks from 'remark-breaks'
 import math from 'remark-math'
 import remark2rehype from 'remark-rehype'
 import katex from 'rehype-katex'
 import stringify from 'rehype-stringify'
 import raw from 'rehype-raw'
+import breaks from 'remark-breaks'
 import slug from 'remark-slug'
 import { htmlFilter } from '../lib/functions'
 import { prismPlugin } from '../lib/prismPlugin'
 import { prismThemes } from '../lib/prismThemes'
-import { colorPalette, mediaQuery, mediaSize } from '../lib/constants'
-
-// deprecated. MarkdownRenderer 사용을 권장.
+import { colorPalette, mediaSize } from '../lib/constants'
 
 const MarkdownStyledBlock = styled.div`
-  &.atom-one-dark {
-    ${prismThemes['atom-one-dark']}
-  }
-  &.atom-one-light {
-    ${prismThemes['atom-one-light']}
-  }
-  &.vscDark {
-    ${prismThemes['vscDark']}
-  }
-  &.github {
-    ${prismThemes['github']}
-  }
   &.monokai {
     ${prismThemes['monokai']}
   }
   &.dracula {
     ${prismThemes['dracula']}
   }
-  &.tomorrow-night {
-    ${prismThemes['tomorrow-night']}
-  }
+  word-break: break-all;
   pre {
     font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas,
       'Courier New', monospace;
@@ -113,8 +97,8 @@ const MarkdownStyledBlock = styled.div`
   }
 `
 
-export default React.memo(function MarkdownRenderingBlock({ content }) {
-  const [html, setHtml] = useState(content)
+export default React.memo(function MarkdownRenderingBlock({ text }) {
+  const [html, setHtml] = useState(text)
 
   useEffect(() => {
     setHtml(
@@ -132,16 +116,18 @@ export default React.memo(function MarkdownRenderingBlock({ content }) {
           .use(math)
           .use(katex)
           .use(stringify)
-          .processSync(content)
+          .processSync(text)
           .toString()
       )
     )
-  }, [content])
+  }, [text])
 
   return (
-    <MarkdownStyledBlock
-      className={'dracula'}
-      dangerouslySetInnerHTML={{ __html: html }}
-    ></MarkdownStyledBlock>
+    <>
+      <MarkdownStyledBlock
+        className={'dracula'}
+        dangerouslySetInnerHTML={{ __html: html }}
+      ></MarkdownStyledBlock>
+    </>
   )
 })
