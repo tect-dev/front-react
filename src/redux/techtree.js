@@ -1,8 +1,11 @@
 import axios from 'axios'
 import { authService } from '../lib/firebase'
 import { uid } from 'uid'
+import { sortISOByTimeStamp } from '../lib/functions'
 
 const initialState = {
+  loading: false,
+  techtreeList: [],
   previousNodeList: [{ name: '' }],
   nextNodeList: [{ name: '' }],
   selectedNode: {
@@ -12,41 +15,8 @@ const initialState = {
   },
   isEditingDocument: false,
   isEditingTechtree: false,
-  nodeList: [
-    {
-      id: 'asdfasdfasdfasdfasdfasdf',
-      name: 'html',
-      x: 150,
-      y: 150,
-      radius: 15,
-      body: '## 이것은 마크다운.\n실험용 첫번째 노드',
-      tag: '프론트엔드',
-      fillColor: '#91a7ff',
-    },
-    {
-      id: 'bbdfasdfasdfasdfasdfasdf',
-      name: 'css',
-      x: 300,
-      y: 200,
-      radius: 15,
-      body: 'x랑 y의 값은 둘다 300임. 두번째 노드임',
-      tag: '백엔드',
-      fillColor: '#339af0',
-    },
-  ],
-  linkList: [
-    {
-      startNodeID: 'asdfasdfasdfasdfasdfasdf',
-      endNodeID: 'bbdfasdfasdfasdfasdfasdf',
-      startX: 150,
-      startY: 150,
-      endX: 300,
-      endY: 200,
-      id: 'ccdfasdfasdfasdfasdfasdf',
-      left: false,
-      right: true,
-    },
-  ],
+  nodeList: [{}],
+  linkList: [{}],
   techtreeTitle: '',
   techtreeData: {
     title: 'empty',
@@ -70,8 +40,13 @@ const DELETE_NODE = 'techtree/DELETE_NODE'
 const CREATE_LINK = 'techtree/CREATE_LINK'
 const DELETE_LINK = 'techtree/DELETE_LINK'
 
+const READ_TECHTREE_LIST_TRY = 'techtree/READ_TECHTREE_LIST_TRY'
+const READ_TECHTREE_LIST_SUCCESS = 'techtree/READ_TECHTREE_LIST_SUCCESS'
+const READ_TECHTREE_LIST_FAIL = 'techtree/READ_TECHTREE_LIST_FAIL'
+
 const READ_TECHTREE_DATA_TRY = 'techtree/READ_TECHTREE_DATA_TRY'
 const READ_TECHTREE_DATA_SUCCESS = 'techtree/READ_TECHTREE_DATA_SUCCESS'
+const READ_TECHTREE_DATA_FAIL = 'techtree/READ_TECHTREE_DATA_FAIL'
 
 // action 생성 함수
 export const editTechtree = () => {
@@ -119,7 +94,6 @@ export const deleteNode = (nodeList, linkList, node) => {
     alert('error: ', e)
     //dispatch({ type: CREATE_QUESTION_FAIL, error: e })
   }
-
   const deletionBinaryList = linkList.map((link) => {
     if (link.startNodeID === node.id) {
       return 0
@@ -152,9 +126,60 @@ export const deleteLink = (linkList, link) => {
   return { type: DELETE_LINK, newLinkList }
 }
 
-// 원래는 thunk 이용해서 중간에 하나 더 있어야 하지만, 로컬 테스트용으로
-export const readTechtree = (techtreeDummyData) => {
-  return { type: READ_TECHTREE_DATA_SUCCESS, techtreeData: techtreeDummyData }
+export const readTechtreeList = () => async (dispatch) => {
+  dispatch({ type: READ_TECHTREE_LIST_TRY })
+  try {
+    const res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/`,
+    })
+    // 여기서 모든 배열내의 테크트리들 바꿔서 정리해줘야하네.
+    const parsedTechtreeList = res.data.map((techtreeData) => {
+      const parsedNodeList = JSON.parse(techtreeData.nodeList)
+      const parsedLinkList = JSON.parse(techtreeData.linkList)
+      return {
+        ...techtreeData,
+        nodeList: parsedNodeList,
+        linkList: parsedLinkList,
+      }
+    })
+
+    console.log('파싱된 테크트리 데이터: ', parsedTechtreeList)
+    dispatch({
+      type: READ_TECHTREE_LIST_SUCCESS,
+      techtreeList: parsedTechtreeList.sort((a, b) => {
+        return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
+      }),
+    })
+  } catch (e) {
+    console.log(e)
+    dispatch({ type: READ_TECHTREE_LIST_FAIL })
+  }
+}
+
+export const readTechtree = (techtreeID) => async (dispatch) => {
+  dispatch({ type: READ_TECHTREE_DATA_TRY })
+  try {
+    const res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+    })
+    const parsedNodeList = JSON.parse(res.data.nodeList)
+    const parsedLinkList = JSON.parse(res.data.linkList)
+    const parsedTechtreeData = {
+      ...res.data,
+      nodeList: parsedNodeList,
+      linkList: parsedLinkList,
+    }
+    console.log('파싱된 테크트리 데이터: ', parsedTechtreeData)
+    dispatch({
+      type: READ_TECHTREE_DATA_SUCCESS,
+      techtreeData: parsedTechtreeData,
+    })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: READ_TECHTREE_DATA_FAIL })
+  }
 }
 
 export default function techtree(state = initialState, action) {
@@ -238,10 +263,44 @@ export default function techtree(state = initialState, action) {
         previousNodeList: action.previousNodeList,
         nextNodeList: action.nextNodeList,
       }
+    case READ_TECHTREE_LIST_TRY:
+      return {
+        ...state,
+        loading: true,
+        techtreeList: [],
+      }
+    case READ_TECHTREE_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        techtreeList: action.techtreeList,
+      }
+    case READ_TECHTREE_LIST_FAIL:
+      return {
+        ...state,
+        loading: false,
+        techtreeList: [],
+      }
+    case READ_TECHTREE_DATA_TRY:
+      return {
+        ...state,
+        loading: true,
+        techtreeData: {},
+        nodeList: [],
+        linkList: [],
+      }
     case READ_TECHTREE_DATA_SUCCESS:
       return {
         ...state,
-        techtreeData: action.techtreeDummyData,
+        loading: false,
+        techtreeData: action.techtreeData,
+        nodeList: action.techtreeData.nodeList,
+        linkList: action.techtreeData.linkList,
+      }
+    case READ_TECHTREE_DATA_FAIL:
+      return {
+        ...state,
+        loading: false,
       }
     default:
       return { ...state }

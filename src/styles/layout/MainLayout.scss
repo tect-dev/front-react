@@ -62,8 +62,6 @@ body {
       display: block;
     }
 
-    display: flex;
-    flex-flow: column wrap;
     max-width: $pc-max-width; /* layout 1 */
     background: $layout-main-background; /* layout 8 */
   }

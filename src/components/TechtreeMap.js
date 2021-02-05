@@ -178,25 +178,30 @@ function updateGraph(container, testingSetter, dispatch) {
     .attr('fill', '#000')
 
   // 그래프 수정 토글
-  svg
-    .append('g')
-    .append('rect')
-    .attr('width', 10)
-    .attr('height', 10)
-    .attr('x', width - 10)
-    .attr('y', height / 2 - 10)
-    .style('fill', 'red')
-    .attr('display', 'inline')
-    .on('click', () => {
-      if (reduxStore.getState().techtree.isEditingTechtree) {
-        reduxStore.dispatch(finishTechtreeEdit())
-      } else {
-        reduxStore.dispatch(editTechtree())
-      }
-      initNode()
-      initLink()
-      initLabel()
-    })
+  if (
+    reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+    reduxStore.getState().auth.userID
+  ) {
+    svg
+      .append('g')
+      .append('rect')
+      .attr('width', 10)
+      .attr('height', 10)
+      .attr('x', width - 10)
+      .attr('y', height / 2 - 10)
+      .style('fill', 'red')
+      .attr('display', 'inline')
+      .on('click', () => {
+        if (reduxStore.getState().techtree.isEditingTechtree) {
+          reduxStore.dispatch(finishTechtreeEdit())
+        } else {
+          reduxStore.dispatch(editTechtree())
+        }
+        initNode()
+        initLink()
+        initLabel()
+      })
+  }
 
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')
@@ -285,41 +290,51 @@ function updateGraph(container, testingSetter, dispatch) {
       })
       .style('cursor', 'pointer')
       .on('mousedown', (d) => {
-        svg
-          .select('g')
-          .select('.tempLine')
-          .attr('x1', d.x)
-          .attr('y1', d.y)
-          .style('opacity', '1')
-          .attr('display', 'inline')
-        tempPairingNodes.startNodeID = d.id
-        tempPairingNodes.startX = d.x
-        tempPairingNodes.startY = d.y
+        if (
+          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+          reduxStore.getState().auth.userID
+        ) {
+          svg
+            .select('g')
+            .select('.tempLine')
+            .attr('x1', d.x)
+            .attr('y1', d.y)
+            .style('opacity', '1')
+            .attr('display', 'inline')
+          tempPairingNodes.startNodeID = d.id
+          tempPairingNodes.startX = d.x
+          tempPairingNodes.startY = d.y
+        }
       })
       .on('mouseup', (d) => {
-        tempPairingNodes.endNodeID = d.id
-        tempPairingNodes.endX = d.x
-        tempPairingNodes.endY = d.y
-        // 연결된 노드를 데이터에 반영
         if (
-          tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-          tempPairingNodes.startX !== tempPairingNodes.endX &&
-          tempPairingNodes.startY !== tempPairingNodes.endY &&
-          !linkList.find(
-            (element) =>
-              element.startNodeID === tempPairingNodes.startNodeID &&
-              element.endNodeID === tempPairingNodes.endNodeID
-          ) &&
-          d3.select('.tempLine').attr('x1') > 0 &&
-          d3.select('.tempLine').attr('y1') > 0
+          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+          reduxStore.getState().auth.userID
         ) {
-          tempPairingNodes.id = `link${uid(20)}`
-          linkList.push({ ...tempPairingNodes })
-          updateLink()
-          console.log('노드끼리 연결됨:', tempPairingNodes)
+          tempPairingNodes.endNodeID = d.id
+          tempPairingNodes.endX = d.x
+          tempPairingNodes.endY = d.y
+          // 연결된 노드를 데이터에 반영
+          if (
+            tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
+            tempPairingNodes.startX !== tempPairingNodes.endX &&
+            tempPairingNodes.startY !== tempPairingNodes.endY &&
+            !linkList.find(
+              (element) =>
+                element.startNodeID === tempPairingNodes.startNodeID &&
+                element.endNodeID === tempPairingNodes.endNodeID
+            ) &&
+            d3.select('.tempLine').attr('x1') > 0 &&
+            d3.select('.tempLine').attr('y1') > 0
+          ) {
+            tempPairingNodes.id = `link${uid(20)}`
+            linkList.push({ ...tempPairingNodes })
+            updateLink()
+            console.log('노드끼리 연결됨:', tempPairingNodes)
+          }
+          svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
+          tempPairingNodes = {}
         }
-        svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-        tempPairingNodes = {}
       })
 
     /*
@@ -418,21 +433,26 @@ function updateGraph(container, testingSetter, dispatch) {
 
   svg
     .on('dblclick', () => {
-      const createdNode = {
-        id: `node${uid(20)}`,
-        name: '새로운 노드',
-        x: d3.event.pageX - absoluteXPosition,
-        y: d3.event.pageY - absoluteYPosition,
-        radius: nodeRadius,
-        body: '새로운 내용',
-        hashtags: [],
-        fillColor: '#00bebe',
-        parentNodeID: [],
-        childNodeID: [],
+      if (
+        reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+        reduxStore.getState().auth.userID
+      ) {
+        const createdNode = {
+          id: `node${uid(20)}`,
+          name: '새로운 노드',
+          x: d3.event.pageX - absoluteXPosition,
+          y: d3.event.pageY - absoluteYPosition,
+          radius: nodeRadius,
+          body: '새로운 내용',
+          hashtags: [],
+          fillColor: '#00bebe',
+          parentNodeID: [],
+          childNodeID: [],
+        }
+        nodeList = [...nodeList, createdNode]
+        reduxStore.dispatch(createNode(nodeList))
+        updateNode()
       }
-      nodeList = [...nodeList, createdNode]
-      reduxStore.dispatch(createNode(nodeList))
-      updateNode()
     })
     .on('mousemove', (d) => {
       svg

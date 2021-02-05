@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 import styled from 'styled-components'
-import { dummyTechtreeDataList } from '../../lib/dummyData'
+
+import { readTechtreeList } from '../../redux/techtree'
+import { sortISOByTimeStamp } from '../../lib/functions'
+//import { dummyTechtreeDataList } from '../../lib/dummyData'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function TechtreeListPage() {
-  const [techtreeDataList, setTechtreeDataList] = useState([])
+  const dispatch = useDispatch()
+  const { techtreeList } = useSelector((state) => {
+    return { techtreeList: state.techtree.techtreeList }
+  })
 
   useEffect(() => {
-    setTechtreeDataList(dummyTechtreeDataList)
-  }, [techtreeDataList])
+    dispatch(readTechtreeList())
+  }, [dispatch])
 
   return (
     <MainWrapper>
       <GridContainer>
-        <div>새로운 테크트리 심기</div>
-        {techtreeDataList.map((techtreeData, index) => {
+        <Link to={`/techtree/write`}>
+          <div>새로운 테크트리 심기</div>
+        </Link>
+        {techtreeList.map((techtreeData, index) => {
           return (
             <TechtreeThumbnail
               nodeList={techtreeData.nodeList}
               linkList={techtreeData.linkList}
               techtreeTitle={techtreeData.title}
-              techtreeID={techtreeData.id}
+              techtreeID={techtreeData._id}
               key={index}
             />
           )
