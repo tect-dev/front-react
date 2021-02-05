@@ -6,16 +6,16 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 import TechtreeMap from '../../components/TechtreeMap'
 
 import styled from 'styled-components'
-import { dummyTechtreeDataList } from '../../lib/dummyData'
 
 import { finishDocuEdit, selectNode, readTechtree } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 
-// 테스팅을 위해 임의 할당
-const techtreeDummyData = dummyTechtreeDataList[0]
-
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
+
+  const { loginState, userID } = useSelector((state) => {
+    return { loginState: state.auth.loginState, userID: state.auth.userID }
+  })
 
   const { selectedNode, previousNodeList, nextNodeList } = useSelector(
     (state) => {
@@ -48,8 +48,8 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     // 맨 첫 로딩때 서버에서 테크트리 데이터 가져오는 용도.
     // dispatch 를 통해 redux 상태에 해당 테크트리 데이터를 셋팅한다.
-    dispatch(readTechtree(techtreeDummyData))
-  }, [])
+    dispatch(readTechtree(techtreeID))
+  }, [dispatch])
 
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
@@ -145,6 +145,9 @@ export default function TechtreeDetailPage({ match }) {
           {isEditingDocument ? (
             <button onClick={onFinishEdit}>수정완료</button>
           ) : (
+            ''
+          )}
+          {!isEditingDocument && userID === techtreeData.author?.firebaseUid ? (
             <button
               onClick={() => {
                 setIsEditingDocument(true)
@@ -152,6 +155,8 @@ export default function TechtreeDetailPage({ match }) {
             >
               문서 수정
             </button>
+          ) : (
+            ''
           )}
         </div>
       </DoubleSideLayout>
