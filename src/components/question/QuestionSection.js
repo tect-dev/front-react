@@ -109,15 +109,15 @@ export default React.memo(function QuestionSection({ data }) {
           <QuesstionInfo>
             <div>
               질문 작성자:{' '}
-              <Link to={`/user/${question.author._id}`}>
-                {question.author.displayName}
+              <Link to={`/user/${question?.author?._id}`}>
+                {question?.author?.displayName}
               </Link>
             </div>
             <Datetime>
-              {question.createdAt === question.updatedAt ? (
-                <>{refineDatetime(question.createdAt)}</>
+              {question?.createdAt === question?.updatedAt ? (
+                <>{refineDatetime(question?.createdAt)}</>
               ) : (
-                <>{refineDatetime(question.updatedAt)} (수정일)</>
+                <>{refineDatetime(question?.updatedAt)} (수정일)</>
               )}
             </Datetime>
           </QuesstionInfo>
@@ -140,7 +140,7 @@ export default React.memo(function QuestionSection({ data }) {
         </QuestionHeader>
 
         <div className="content">
-          <MarkdownRenderingBlock content={question.content} />
+          <MarkdownRenderingBlock content={question?.content} />
           <br />
           {/* <br /> */}
         </div>
@@ -150,9 +150,9 @@ export default React.memo(function QuestionSection({ data }) {
         {/*userID === question.author._id &&
         data.answerList.lenghth !== 0 &&
         data.questionComments.length !== 0*/}
-        {userID === question.author.firebaseUid ? (
+        {userID === question?.author?.firebaseUid ? (
           <>
-            <Link to={`/question/edit/${question._id}`}>
+            <Link to={`/question/edit/${question?._id}`}>
               <Button>글 수정</Button>
             </Link>
             <Button onClick={onDeleteQuestion}>글 삭제</Button>
