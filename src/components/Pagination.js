@@ -7,7 +7,7 @@ import QuestionBlock from './question/QuestionBlock'
 export const Pagination = ({ data, total }) => {
   const history = useHistory()
   // total 인자를 백엔드에서 받기 전까지 임시로 사용
-  !total ? (total = data.length) : console.log('')
+  !total ? (total = data.length) : (()=>{})()
 
   const pathname = useLocation().pathname
 

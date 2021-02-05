@@ -84,7 +84,6 @@ export const CommentBlock = ({
       ) : (
         ''
       )}
-      {console.log(commentHost)}
       {commentHost
         ? <>
             {isEditingComment ? (
