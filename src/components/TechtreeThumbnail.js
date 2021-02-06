@@ -35,12 +35,10 @@ export default React.memo(function ({
 
   return (
     <TechtreeThumbnailCard>
-      <div>
-        <Link to={`/techtree/${techtreeID}`}>
-          <TechtreeThumbnailBlock ref={containerRef} className={techtreeID} />
-          <div>{techtreeTitle}</div>
-        </Link>
-      </div>
+      <Link to={`/techtree/${techtreeID}`}>
+        <TechtreeThumbnailBlock ref={containerRef} className={techtreeID} />
+        <div>{techtreeTitle}</div>
+      </Link>
     </TechtreeThumbnailCard>
   )
 })

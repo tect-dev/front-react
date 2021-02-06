@@ -21,4 +21,5 @@ const MainLayout = styled.div`
 
 const ContentWrapper = styled.main`
   margin-top: 100px;
+  margin-bottom: 50px;
 `

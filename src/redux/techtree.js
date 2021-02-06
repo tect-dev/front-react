@@ -101,7 +101,7 @@ export const deleteTechtree = (techtreeID) => async (
   { history }
 ) => {
   try {
-    axios({
+    await axios({
       method: 'delete',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
     })
