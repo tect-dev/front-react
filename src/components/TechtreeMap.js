@@ -34,24 +34,18 @@ export default React.memo(function TechtreeMap({
   const selectedNode = useSelector((state) => state.techtree.selectedNode)
   const nodeList = useSelector((state) => state.techtree.nodeList)
   const linkList = useSelector((state) => state.techtree.linkList)
+  const loginState = useSelector((state) => state.auth.loginState)
 
   React.useEffect(() => {
     if (containerRef.current) {
-      console.log('컨테이너레프:', containerRef)
-
       initGraph(containerRef.current, nodeList, linkList, testingSetter)
       console.log('그래프 생성')
     }
   }, [])
   React.useEffect(() => {
-    updateGraph(
-      containerRef.current,
-
-      testingSetter,
-      dispatch
-    )
+    updateGraph(containerRef.current, dispatch)
     console.log('useEffect를 통한 updateGraph 가 호출됨.')
-  }, [containerRef, nodeList, linkList, dispatch])
+  }, [containerRef, nodeList, linkList, dispatch, loginState])
 
   return (
     <>
@@ -125,8 +119,10 @@ function initGraph(
   console.log('절대 y좌표: ', absoluteYPosition)
 }
 
+// reduxStore 이용해서 id 랑 매칭시키는거 제대로 작동 안할때가 많음.
+
 // 그래프가 갱신될때 호출되는 함수
-function updateGraph(container, testingSetter, dispatch) {
+function updateGraph(container, dispatch) {
   const nodeRadius = 15
   const navbarHeight = 0
   const linkWidth = '2.5px'
@@ -154,8 +150,6 @@ function updateGraph(container, testingSetter, dispatch) {
     endX: null,
     endY: null,
   }
-
-  let editMode = false
 
   reduxStore.subscribe(updateNode)
   //reduxStore.subscribe(updateLink)
@@ -207,6 +201,7 @@ function updateGraph(container, testingSetter, dispatch) {
   const nodeGroup = svg.select('.nodes')
   const labelGroup = svg.select('.labels')
   const deleteButtonLength = 10
+  const techtreeID = reduxStore.getState().techtree.techtreeData._id
 
   function initLink() {
     linkGroup
@@ -249,7 +244,7 @@ function updateGraph(container, testingSetter, dispatch) {
       .on('click', (link) => {
         const deleteOK = window.confirm('정말 연결을 삭제하시나요?')
         if (deleteOK) {
-          dispatch(deleteLink(linkList, link))
+          dispatch(deleteLink(nodeList, linkList, techtreeID, link))
         } else {
           return
         }
@@ -399,7 +394,7 @@ function updateGraph(container, testingSetter, dispatch) {
       .on('click', (d) => {
         const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
         if (deleteOK) {
-          dispatch(deleteNode(nodeList, linkList, d))
+          dispatch(deleteNode(nodeList, linkList, techtreeID, d))
         } else {
           return
         }
@@ -437,6 +432,7 @@ function updateGraph(container, testingSetter, dispatch) {
         reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
         reduxStore.getState().auth.userID
       ) {
+        console.log('svg가 더블클릭됨:')
         const createdNode = {
           id: `node${uid(20)}`,
           name: '새로운 노드',
@@ -450,9 +446,16 @@ function updateGraph(container, testingSetter, dispatch) {
           childNodeID: [],
         }
         nodeList = [...nodeList, createdNode]
-        reduxStore.dispatch(createNode(nodeList))
+        reduxStore.dispatch(
+          createNode(
+            nodeList,
+            linkList,
+            reduxStore.getState().techtree.techtreeData._id
+          )
+        )
         updateNode()
       }
+      console.log('svg가 if문 바깥에서 더블클릭됨:')
     })
     .on('mousemove', (d) => {
       svg
@@ -479,7 +482,13 @@ function updateGraph(container, testingSetter, dispatch) {
 
   function updateLink() {
     initLink()
-    reduxStore.dispatch(createLink(linkList))
+    reduxStore.dispatch(
+      createLink(
+        nodeList,
+        linkList,
+        reduxStore.getState().techtree.techtreeData._id
+      )
+    )
     tempPairingNodes = {}
     console.log('링크가 갱신됨')
   }

@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
+import { Spinner } from '../../components/Spinner'
+import TreeIcon from '../../assets/tree.svg'
+
 import styled from 'styled-components'
 
 import { authService } from '../../lib/firebase'
 import axios from 'axios'
 import { uid } from 'uid'
-import { readTechtreeList } from '../../redux/techtree'
+import { CreateTechtree, readTechtreeList } from '../../redux/techtree'
 import { useDispatch, useSelector } from 'react-redux'
-import { colorPalette } from '../../lib/constants'
-
-const CreateNewTechtree = styled.div`
-  border-radius: 1px;
-  border: 1px solid ${colorPalette.cyan5};
-`
+import { colorPalette, boxShadow } from '../../lib/constants'
 
 export default function TechtreeListPage() {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { techtreeList } = useSelector((state) => {
     return { techtreeList: state.techtree.techtreeList }
+  })
+  const { loading } = useSelector((state) => {
+    return { loading: state.techtree.loading }
   })
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
@@ -29,6 +31,14 @@ export default function TechtreeListPage() {
     dispatch(readTechtreeList())
   }, [dispatch])
 
+  if (loading) {
+    return (
+      <MainWrapper>
+        <Spinner />
+      </MainWrapper>
+    )
+  }
+
   return (
     <MainWrapper>
       <GridContainer>
@@ -37,29 +47,14 @@ export default function TechtreeListPage() {
         <CreateNewTechtree
           onClick={() => {
             if (loginState) {
-              authService.currentUser.getIdToken(true).then(async (idToken) => {
-                const techtreeID = uid(24)
-                axios({
-                  method: 'post',
-                  url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
-                  headers: { 'Content-Type': 'application/json' },
-                  data: {
-                    title: '새로운 테크트리',
-                    _id: techtreeID,
-                    hashtags: [],
-                    nodeList: [],
-                    linkList: [],
-                    firebaseToken: idToken,
-                  },
-                })
-              })
+              dispatch(CreateTechtree())
             } else {
               alert('로그인이 필요해요')
             }
-            // uid24 에 해당하는 테크트리 생성. 그 다음에
           }}
         >
-          새로운 테크트리 심기
+          <img src={TreeIcon} alt="treeIcon" width="250px" height="250px" />
+          <div style={{ margin: 'auto' }}> 새로운 테크트리 심기</div>
         </CreateNewTechtree>
 
         {techtreeList.map((techtreeData, index) => {
@@ -80,10 +75,12 @@ export default function TechtreeListPage() {
 
 const GridContainer = styled.div`
   display: grid;
+
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 25px;
   align-items: center; // 세로축에서 중앙정렬
   justify-items: center; // 가로축에서 중앙정렬
-  width: 'auto';
+
   @media (max-width: 1440px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -93,4 +90,13 @@ const GridContainer = styled.div`
   @media (max-width: 650px) {
     grid-template-columns: 1fr;
   }
+`
+const CreateNewTechtree = styled.div`
+  border-radius: 5px;
+  width: 300px;
+  height: 300px;
+  cursor: pointer;
+  box-shadow: ${boxShadow.default};
+  text-align: center;
+  margin: auto;
 `

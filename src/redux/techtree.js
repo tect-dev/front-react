@@ -6,12 +6,12 @@ import { sortISOByTimeStamp } from '../lib/functions'
 const initialState = {
   loading: false,
   techtreeList: [],
-  previousNodeList: [{ name: '' }],
-  nextNodeList: [{ name: '' }],
+  previousNodeList: [],
+  nextNodeList: [],
   selectedNode: {
-    name: '지식트리를 꾸며보세요',
+    name: '자신의 테크트리 꾸며보세요',
     body:
-      '노드를 클릭하고, \n노드와 연결된 문서를 수정하고,\n노드끼리의 연결관계를 표현할 수 있어요.\n마크다운과 코드블럭, 사진첨부도 가능합니다',
+      '더블 클릭 -> 노드 생성.\n노드 클릭 -> 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
   },
   isEditingDocument: false,
   isEditingTechtree: false,
@@ -48,7 +48,68 @@ const READ_TECHTREE_DATA_TRY = 'techtree/READ_TECHTREE_DATA_TRY'
 const READ_TECHTREE_DATA_SUCCESS = 'techtree/READ_TECHTREE_DATA_SUCCESS'
 const READ_TECHTREE_DATA_FAIL = 'techtree/READ_TECHTREE_DATA_FAIL'
 
-// action 생성 함수
+const UPDATE_TECHTREE_DATA_TRY = 'techtree/UPDATE_TECHTREE_DATA_TRY'
+const UPDATE_TECHTREE_DATA_SUCCESS = 'techtree/UPDATE_TECHTREE_DATA_SUCCESS'
+const UPDATE_TECHTREE_DATA_FAIL = 'techtree/UPDATE_TECHTREE_DATA_FAIL'
+
+const DELETE_TECHTREE_DATA_TRY = 'techtree/DELETE_TECHTREE_DATA_TRY'
+const DELETE_TECHTREE_DATA_SUCCESS = 'techtree/DELETE_TECHTREE_DATA_SUCCESS'
+const DELETE_TECHTREE_DATA_FAIL = 'techtree/DELETE_TECHTREE_DATA_FAIL'
+
+const CREATE_TECHTREE_DATA_TRY = 'techtree/CREATE_TECHTREE_DATA_TRY'
+const CREATE_TECHTREE_DATA_SUCCESS = 'techtree/CREATE_TECHTREE_DATA_SUCCESS'
+// updateTechtree: 백엔드에 업데이트를 갱신함.
+// editTechtree: 클라이언트상에서의 변화.
+// 둘로 나눌 필요가 있나?
+
+export const CreateTechtree = () => async (dispatch, getState, { history }) => {
+  dispatch({ type: CREATE_TECHTREE_DATA_TRY })
+  const techtreeID = uid(24)
+
+  authService.currentUser
+    .getIdToken(true)
+    .then(async (idToken) => {
+      await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          title: '새로운 테크트리',
+          _id: techtreeID,
+          hashtags: [],
+          nodeList: `[{}]`,
+          linkList: `[{}]`,
+          firebaseToken: idToken,
+        },
+      })
+    })
+    .then(() => {
+      dispatch({ type: CREATE_TECHTREE_DATA_SUCCESS })
+      history.push(`/techtree/${techtreeID}`)
+    })
+    .catch((e) => {
+      console.log('error: ', e)
+    })
+}
+
+export const deleteTechtree = (techtreeID) => async (
+  dispatch,
+  getState,
+  { history }
+) => {
+  try {
+    axios({
+      method: 'delete',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+    })
+    history.push(`/`)
+  } catch (e) {
+    console.log('error: ', e)
+  }
+}
+export const updateTechtree = () => {
+  return
+}
 export const editTechtree = () => {
   return { type: EDIT_TECHTREE }
 }
@@ -58,19 +119,72 @@ export const editDocument = () => {
 export const finishTechtreeEdit = () => {
   return { type: FINISH_TECHTREE_EDIT }
 }
-export const finishDocuEdit = (nodeID, nodeName, nodeBody) => {
-  return { type: FINISH_DOCU_EDIT, nodeID, nodeName, nodeBody }
+export const finishDocuEdit = (
+  nodeID,
+  nodeName,
+  nodeBody,
+  nodeList,
+  linkList,
+  techtreeID
+) => {
+  const changingIndex = nodeList.findIndex((element) => nodeID === element.id)
+  const changingNode = nodeList[changingIndex]
+  const newNodeList = nodeList
+  newNodeList[changingIndex] = {
+    ...changingNode,
+    id: nodeID,
+    name: nodeName,
+    body: nodeBody,
+  }
+  authService.currentUser.getIdToken(true).then(async (idToken) => {
+    axios({
+      method: 'put',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+      data: {
+        nodeList: JSON.stringify(nodeList),
+        linkList: JSON.stringify(linkList),
+        _id: techtreeID,
+        firebaseToken: idToken,
+      },
+    })
+  })
+
+  return { type: FINISH_DOCU_EDIT, newNodeList }
 }
 export const selectNode = (previousNodeList, nextNodeList, node) => {
   return { type: SELECT_NODE, previousNodeList, nextNodeList, node }
 }
-export const createNode = (nodeList) => {
+export const createNode = (nodeList, linkList, techtreeID) => {
+  authService.currentUser.getIdToken(true).then(async (idToken) => {
+    axios({
+      method: 'put',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+      data: {
+        nodeList: JSON.stringify(nodeList),
+        linkList: JSON.stringify(linkList),
+        _id: techtreeID,
+        firebaseToken: idToken,
+      },
+    })
+  })
   return { type: CREATE_NODE, nodeList: nodeList }
 }
-export const createLink = (linkList) => {
+export const createLink = (nodeList, linkList, techtreeID) => {
+  authService.currentUser.getIdToken(true).then(async (idToken) => {
+    axios({
+      method: 'put',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+      data: {
+        nodeList: JSON.stringify(nodeList),
+        linkList: JSON.stringify(linkList),
+        _id: techtreeID,
+        firebaseToken: idToken,
+      },
+    })
+  })
   return { type: CREATE_LINK, linkList: linkList }
 }
-export const deleteNode = (nodeList, linkList, node) => {
+export const deleteNode = (nodeList, linkList, techtreeID, node) => {
   const deletionBinaryList = linkList.map((link) => {
     if (link.startNodeID === node.id) {
       return 0
@@ -95,8 +209,8 @@ export const deleteNode = (nodeList, linkList, node) => {
     const stringifiedLinkList = JSON.stringify(newLinkList)
     authService.currentUser.getIdToken(true).then(async (idToken) => {
       const res = await axios({
-        method: 'post',
-        url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
         headers: { 'Content-Type': 'application/json' },
         data: {
           title: '테스트용 테크트리',
@@ -107,24 +221,33 @@ export const deleteNode = (nodeList, linkList, node) => {
           firebaseToken: idToken,
         },
       })
-      //await dispatch({ type: CREATE_QUESTION_SUCCESS })
     })
+    return { type: DELETE_NODE, newNodeList, newLinkList }
   } catch (e) {
     alert('error: ', e)
     //dispatch({ type: CREATE_QUESTION_FAIL, error: e })
   }
-
   // .splice 는 원본배열을 조작하는것. 반환값은 원본배열에서 잘라낸것만 반환한다.
   //nodeList.splice(deleteNodeIndex, 1)
-  return { type: DELETE_NODE, newNodeList, newLinkList }
 }
 
-export const deleteLink = (linkList, link) => {
+export const deleteLink = (nodeList, linkList, techtreeID, link) => {
   const newLinkList = linkList.filter((ele) => {
     return ele.id !== link.id
   })
-
-  return { type: DELETE_LINK, newLinkList }
+  try {
+    axios({
+      method: 'put',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+      data: {
+        nodeList: JSON.stringify(nodeList),
+        linkList: JSON.stringify(newLinkList),
+      },
+    })
+    return { type: DELETE_LINK, newLinkList }
+  } catch (e) {
+    console.log('error: ', e)
+  }
 }
 
 export const readTechtreeList = () => async (dispatch) => {
@@ -136,16 +259,22 @@ export const readTechtreeList = () => async (dispatch) => {
     })
     // 여기서 모든 배열내의 테크트리들 바꿔서 정리해줘야하네.
     const parsedTechtreeList = res.data.map((techtreeData) => {
-      const parsedNodeList = JSON.parse(techtreeData.nodeList)
-      const parsedLinkList = JSON.parse(techtreeData.linkList)
-      return {
-        ...techtreeData,
-        nodeList: parsedNodeList,
-        linkList: parsedLinkList,
+      try {
+        const parsedNodeList = JSON.parse(techtreeData.nodeList)
+        const parsedLinkList = JSON.parse(techtreeData.linkList)
+        return {
+          ...techtreeData,
+          nodeList: parsedNodeList,
+          linkList: parsedLinkList,
+        }
+      } catch (e) {
+        return {
+          ...techtreeData,
+          nodeList: [],
+          linkList: [],
+        }
       }
     })
-
-    console.log('파싱된 테크트리 데이터: ', parsedTechtreeList)
     dispatch({
       type: READ_TECHTREE_LIST_SUCCESS,
       techtreeList: parsedTechtreeList.sort((a, b) => {
@@ -165,20 +294,36 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
       method: 'get',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
     })
-    const parsedNodeList = JSON.parse(res.data.nodeList)
-    const parsedLinkList = JSON.parse(res.data.linkList)
-    const parsedTechtreeData = {
-      ...res.data,
-      nodeList: parsedNodeList,
-      linkList: parsedLinkList,
+    try {
+      console.log('res.data: ', res.data)
+      const parsedNodeList = JSON.parse(res.data.nodeList)
+      const parsedLinkList = JSON.parse(res.data.linkList)
+      const parsedTechtreeData = {
+        ...res.data,
+        nodeList: parsedNodeList,
+        linkList: parsedLinkList,
+      }
+      dispatch({
+        type: READ_TECHTREE_DATA_SUCCESS,
+        techtreeData: parsedTechtreeData,
+      })
+    } catch (e) {
+      console.log('error: ', e)
+      console.log('res.data: ', res.data)
+      const parsedNodeList = []
+      const parsedLinkList = []
+      const parsedTechtreeData = {
+        ...res.data,
+        nodeList: parsedNodeList,
+        linkList: parsedLinkList,
+      }
+      dispatch({
+        type: READ_TECHTREE_DATA_SUCCESS,
+        techtreeData: parsedTechtreeData,
+      })
     }
-    console.log('파싱된 테크트리 데이터: ', parsedTechtreeData)
-    dispatch({
-      type: READ_TECHTREE_DATA_SUCCESS,
-      techtreeData: parsedTechtreeData,
-    })
   } catch (e) {
-    console.log('error: ', e)
+    console.log('READ_TECHTREE_DATA_FAIL: ', e)
     dispatch({ type: READ_TECHTREE_DATA_FAIL })
   }
 }
@@ -239,21 +384,10 @@ export default function techtree(state = initialState, action) {
         isEditingDocument: true,
       }
     case FINISH_DOCU_EDIT:
-      const changingIndex = state.nodeList.findIndex(
-        (element) => action.nodeID === element.id
-      )
-      const changingNode = state.nodeList[changingIndex]
-      const newNodeList = state.nodeList
-      newNodeList[changingIndex] = {
-        ...changingNode,
-        id: action.nodeID,
-        name: action.nodeName,
-        body: action.nodeBody,
-      }
       return {
         ...state,
-        techtreeData: { ...state.techtreeData, nodeList: newNodeList },
-        nodeList: newNodeList,
+        techtreeData: { ...state.techtreeData, nodeList: action.newNodeList },
+        nodeList: action.newNodeList,
         isEditingDocument: false,
         isEditingTechtree: false,
       }
@@ -290,6 +424,11 @@ export default function techtree(state = initialState, action) {
         techtreeData: {},
         nodeList: [],
         linkList: [],
+        selectedNode: {
+          name: '자신의 테크트리 꾸며보세요',
+          body:
+            '더블 클릭 -> 노드 생성.\n노드 클릭 -> 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
+        },
       }
     case READ_TECHTREE_DATA_SUCCESS:
       return {
@@ -304,6 +443,17 @@ export default function techtree(state = initialState, action) {
         ...state,
         loading: false,
       }
+    case CREATE_TECHTREE_DATA_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case CREATE_TECHTREE_DATA_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      }
+
     default:
       return { ...state }
   }
