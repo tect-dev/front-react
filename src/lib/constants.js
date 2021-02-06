@@ -4,7 +4,7 @@ export const mediaQuery = (maxWidth) => `
 
 export const layout = {
   pc_max_width: '1200px',
-  footer_height: "120px"
+  footer_height: '120px',
 }
 
 export const mediaSize = {
@@ -18,6 +18,10 @@ export const mediaSize = {
 }
 
 export const userDefaultID = '000000000000000000000000'
+
+export const boxShadow = {
+  default: '1px 1px 2px 1px #ccc',
+}
 
 export const colorPalette = {
   // Indigo

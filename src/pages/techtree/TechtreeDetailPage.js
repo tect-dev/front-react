@@ -4,10 +4,17 @@ import MainWrapper from '../../wrappers/MainWrapper'
 import MarkdownEditor from '../../components/MarkdownEditor'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
 import TechtreeMap from '../../components/TechtreeMap'
+import { Spinner } from '../../components/Spinner'
 
 import styled from 'styled-components'
 
-import { finishDocuEdit, selectNode, readTechtree } from '../../redux/techtree'
+import {
+  finishDocuEdit,
+  selectNode,
+  readTechtree,
+  updateTechtree,
+  deleteTechtree,
+} from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 
 export default function TechtreeDetailPage({ match }) {
@@ -15,6 +22,9 @@ export default function TechtreeDetailPage({ match }) {
 
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
+  })
+  const { loading } = useSelector((state) => {
+    return { loading: state.techtree.loading }
   })
 
   const { selectedNode, previousNodeList, nextNodeList } = useSelector(
@@ -69,99 +79,144 @@ export default function TechtreeDetailPage({ match }) {
     // 서버에다가 수정사항을 보내고, 클라이언트 쪽 상태에 저장된
     // techtree 정보를 업데이트 하자.
     // 결국은 selectedNode 랑 그런걸 전부 리덕스 스테이트로 해야하네..
-    dispatch(finishDocuEdit(selectedNode.id, documentTitle, documentText))
+    dispatch(
+      finishDocuEdit(
+        selectedNode.id,
+        documentTitle,
+        documentText,
+        nodeList,
+        linkList,
+        techtreeData._id
+      )
+    )
     setIsEditingDocument(false)
-  }, [isEditingDocument, selectedNode, documentTitle, documentText])
+  }, [
+    isEditingDocument,
+    selectedNode,
+    documentTitle,
+    documentText,
+    nodeList,
+    linkList,
+    techtreeData,
+  ])
 
-  return (
-    <MainWrapper>
-      <DoubleSideLayout>
-        <div>
-          <TechtreeMap techtreeTitle={techtreeTitle} techtreeID={techtreeID} />
-        </div>
-        <div>
-          {isEditingDocument ? (
-            <>
-              <input value={documentTitle} onChange={onChangeDocumentTitle} />
-              <MarkdownEditor
-                bindingText={documentText}
-                bindingSetter={setDocumentText}
-              />
-            </>
-          ) : (
-            <>
-              <div>{documentTitle}</div>
-              <MarkdownRenderer text={documentText} />
-              {previousNodeList.length !== 0 ? <div>앞선 노드</div> : ''}
-              {previousNodeList.map((node) => {
-                return (
-                  <button
-                    onClick={() => {
-                      const newPreviousNodeList = returnPreviousNodeList(
-                        linkList,
-                        nodeList,
-                        node
-                      )
-                      const newNextNodeList = returnNextNodeList(
-                        linkList,
-                        nodeList,
-                        node
-                      )
-                      dispatch(
-                        selectNode(newPreviousNodeList, newNextNodeList, node)
-                      )
-                    }}
-                  >
-                    {node?.name}
-                  </button>
-                )
-              })}
-              {nextNodeList.length !== 0 ? <div>다음 노드</div> : ''}
-              {nextNodeList.map((node) => {
-                return (
-                  <button
-                    onClick={() => {
-                      const newPreviousNodeList = returnPreviousNodeList(
-                        linkList,
-                        nodeList,
-                        node
-                      )
-                      const newNextNodeList = returnNextNodeList(
-                        linkList,
-                        nodeList,
-                        node
-                      )
-                      dispatch(
-                        selectNode(newPreviousNodeList, newNextNodeList, node)
-                      )
-                    }}
-                  >
-                    {node?.name}
-                  </button>
-                )
-              })}
-            </>
-          )}
-          {isEditingDocument ? (
-            <button onClick={onFinishEdit}>수정완료</button>
-          ) : (
-            ''
-          )}
-          {!isEditingDocument && userID === techtreeData.author?.firebaseUid ? (
-            <button
-              onClick={() => {
-                setIsEditingDocument(true)
-              }}
-            >
-              문서 수정
-            </button>
-          ) : (
-            ''
-          )}
-        </div>
-      </DoubleSideLayout>
-    </MainWrapper>
-  )
+  if (loading) {
+    return (
+      <MainWrapper>
+        <Spinner />
+      </MainWrapper>
+    )
+  } else if (!loading) {
+    return (
+      <MainWrapper>
+        <DoubleSideLayout>
+          <div>
+            <TechtreeMap
+              techtreeTitle={techtreeTitle}
+              techtreeID={techtreeID}
+            />
+            {!isEditingDocument &&
+            userID === techtreeData.author?.firebaseUid ? (
+              <button
+                onClick={() => {
+                  dispatch(deleteTechtree(techtreeData._id))
+                }}
+              >
+                테크트리 삭제
+              </button>
+            ) : (
+              ''
+            )}
+          </div>
+          <div>
+            {isEditingDocument ? (
+              <>
+                <StyledTitleInput
+                  value={documentTitle}
+                  onChange={onChangeDocumentTitle}
+                />
+                <MarkdownEditor
+                  bindingText={documentText}
+                  bindingSetter={setDocumentText}
+                />
+              </>
+            ) : (
+              <>
+                <h2>{documentTitle}</h2>
+                <MarkdownRenderer text={documentText} />
+                {previousNodeList.length > 0 ? <div>앞선 노드</div> : ''}
+                {previousNodeList.map((node) => {
+                  return (
+                    <button
+                      onClick={() => {
+                        const newPreviousNodeList = returnPreviousNodeList(
+                          linkList,
+                          nodeList,
+                          node
+                        )
+                        const newNextNodeList = returnNextNodeList(
+                          linkList,
+                          nodeList,
+                          node
+                        )
+                        dispatch(
+                          selectNode(newPreviousNodeList, newNextNodeList, node)
+                        )
+                      }}
+                    >
+                      {node?.name}
+                    </button>
+                  )
+                })}
+                {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
+                {nextNodeList.map((node) => {
+                  return (
+                    <button
+                      onClick={() => {
+                        const newPreviousNodeList = returnPreviousNodeList(
+                          linkList,
+                          nodeList,
+                          node
+                        )
+                        const newNextNodeList = returnNextNodeList(
+                          linkList,
+                          nodeList,
+                          node
+                        )
+                        dispatch(
+                          selectNode(newPreviousNodeList, newNextNodeList, node)
+                        )
+                      }}
+                    >
+                      {node?.name}
+                    </button>
+                  )
+                })}
+              </>
+            )}
+            {isEditingDocument ? (
+              <button onClick={onFinishEdit}>수정완료</button>
+            ) : (
+              ''
+            )}
+            {typeof selectedNode.id !== 'undefined' &&
+            !isEditingDocument &&
+            userID === techtreeData.author?.firebaseUid ? (
+              <button
+                onClick={() => {
+                  setIsEditingDocument(true)
+                }}
+              >
+                문서 수정
+              </button>
+            ) : (
+              ''
+            )}
+          </div>
+        </DoubleSideLayout>
+      </MainWrapper>
+    )
+  }
 }
 
 function PreviousNodeButtonList({ linkList, nodeList, previousNodeList }) {
@@ -216,4 +271,15 @@ const DoubleSideLayout = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
+`
+
+const StyledTitleInput = styled.input`
+  height: 60px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: text;
+  border: none;
+  outline: none;
+  padding: 0.2rem;
+  width: 42vw;
 `

@@ -1,20 +1,25 @@
 import React from 'react'
 import * as d3 from 'd3'
 import { Link } from 'react-router-dom'
-import { colorPalette } from '../lib/constants'
+import { colorPalette, boxShadow } from '../lib/constants'
 import styled from 'styled-components'
 
 const TechtreeThumbnailBlock = styled.div`
-  //border-radius: 1px;
-  //border: 1px solid ${colorPalette.cyan5};
+  width: auto;
+  height: auto;
 `
 const TechtreeThumbnailCard = styled.div`
-  border-radius: 1px;
-  border: 1px solid ${colorPalette.cyan5};
-  width: '100%';
+  border-radius: 5px;
+  width: '300px';
+  height: '300px';
+  overflow: clip;
+  box-shadow: ${boxShadow.default};
+  place-items: center;
+  text-align: center;
+  padding: 10px;
 `
 
-export default React.memo(function TechtreeThumbnail({
+export default React.memo(function ({
   nodeList,
   linkList,
   techtreeTitle,
@@ -30,10 +35,12 @@ export default React.memo(function TechtreeThumbnail({
 
   return (
     <TechtreeThumbnailCard>
-      <Link to={`/techtree/${techtreeID}`}>
-        <TechtreeThumbnailBlock ref={containerRef} className={techtreeID} />
-        <div>{techtreeTitle}</div>
-      </Link>
+      <div>
+        <Link to={`/techtree/${techtreeID}`}>
+          <TechtreeThumbnailBlock ref={containerRef} className={techtreeID} />
+          <div>{techtreeTitle}</div>
+        </Link>
+      </div>
     </TechtreeThumbnailCard>
   )
 })
