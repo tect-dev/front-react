@@ -51,13 +51,13 @@ export const LoginModal = React.memo(({ labelFor }) => {
     async (e) => {
       e.preventDefault()
       dispatch(emailLogin(email, password))
-      
+
       // const fuck = document.getElementById("loginSubmitBtn").focus()
       // console.log(fuck)
-      console.log(document.getElementById("loginSubmitBtn").onchange)
+      console.log(document.getElementById('loginSubmitBtn').onchange)
       // 버튼은 클릭 해제가 안 됨 ㅋㅋ
-      setEmail("")
-      setPassword("")
+      setEmail('')
+      setPassword('')
     },
     [dispatch, email, password]
   )
@@ -118,7 +118,11 @@ export const LoginModal = React.memo(({ labelFor }) => {
               ) : (
                 <>
                   {' '}
-                  <Button id="loginSubmitBtn" className="login-submit" onClick={onEmailLogin}>
+                  <Button
+                    id="loginSubmitBtn"
+                    className="login-submit"
+                    onClick={onEmailLogin}
+                  >
                     Login
                   </Button>
                   <Button
@@ -131,19 +135,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
                   </Button>
                 </>
               )}
-
-              <div className="auth-help">
-                <div className="auth-help-element">
-                  <input id="rememberUser" type="radio" name="Remember Me" />
-                  <label htmlFor="rememberUser"> Remember Me</label>
-                </div>
-                <div className="auth-help-element">Forgot ID/PW?</div>
-              </div>
-              <div className="authProviders">
-                <div>Google</div>
-                <div>Facebook</div>
-                <div>Github</div>
-              </div>
             </form>
           </div>
         </div>

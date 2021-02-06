@@ -110,6 +110,20 @@ export default function TechtreeDetailPage({ match }) {
     return (
       <MainWrapper>
         <DoubleSideLayout>
+          {techtreeData.author.firebaseUid === userID ? (
+            <div>
+              <StyledTitleInput
+                value={techtreeData.title}
+                placeholder="테크트리의 주제를 적어주세요"
+              ></StyledTitleInput>
+            </div>
+          ) : (
+            <div>
+              <h2>{techtreeData.title}</h2>
+            </div>
+          )}
+
+          <div></div>
           <div>
             <TechtreeMap
               techtreeTitle={techtreeTitle}
