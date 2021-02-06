@@ -5,8 +5,8 @@ import { colorPalette } from '../lib/constants'
 import styled from 'styled-components'
 
 const TechtreeThumbnailBlock = styled.div`
-  border-radius: 1px;
-  border: 1px solid ${colorPalette.cyan5};
+  //border-radius: 1px;
+  //border: 1px solid ${colorPalette.cyan5};
 `
 const TechtreeThumbnailCard = styled.div`
   border-radius: 1px;

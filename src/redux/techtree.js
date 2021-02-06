@@ -71,9 +71,28 @@ export const createLink = (linkList) => {
   return { type: CREATE_LINK, linkList: linkList }
 }
 export const deleteNode = (nodeList, linkList, node) => {
+  const deletionBinaryList = linkList.map((link) => {
+    if (link.startNodeID === node.id) {
+      return 0
+    } else if (link.endNodeID === node.id) {
+      return 0
+    } else {
+      return 1
+    }
+  })
+  // 이러면 linkList 랑 원소의 갯수가 같은 0101010 배열이 나올것.
+  const newLinkList = linkList.filter((link, index) => {
+    return deletionBinaryList[index] === 1
+  })
+  const deleteNodeIndex = nodeList.findIndex((ele) => {
+    return ele.id === node.id
+  })
+  const newNodeList = nodeList.filter((ele, index) => {
+    return ele.id !== node.id
+  })
   try {
-    const stringifiedNodeList = JSON.stringify(nodeList)
-    const stringifiedLinkList = JSON.stringify(linkList)
+    const stringifiedNodeList = JSON.stringify(newNodeList)
+    const stringifiedLinkList = JSON.stringify(newLinkList)
     authService.currentUser.getIdToken(true).then(async (idToken) => {
       const res = await axios({
         method: 'post',
@@ -94,25 +113,7 @@ export const deleteNode = (nodeList, linkList, node) => {
     alert('error: ', e)
     //dispatch({ type: CREATE_QUESTION_FAIL, error: e })
   }
-  const deletionBinaryList = linkList.map((link) => {
-    if (link.startNodeID === node.id) {
-      return 0
-    } else if (link.endNodeID === node.id) {
-      return 0
-    } else {
-      return 1
-    }
-  })
-  // 이러면 linkList 랑 원소의 갯수가 같은 0101010 배열이 나올것.
-  const newLinkList = linkList.filter((link, index) => {
-    return deletionBinaryList[index] === 1
-  })
-  const deleteNodeIndex = nodeList.findIndex((ele) => {
-    return ele.id === node.id
-  })
-  const newNodeList = nodeList.filter((ele, index) => {
-    return ele.id !== node.id
-  })
+
   // .splice 는 원본배열을 조작하는것. 반환값은 원본배열에서 잘라낸것만 반환한다.
   //nodeList.splice(deleteNodeIndex, 1)
   return { type: DELETE_NODE, newNodeList, newLinkList }
@@ -152,7 +153,7 @@ export const readTechtreeList = () => async (dispatch) => {
       }),
     })
   } catch (e) {
-    console.log(e)
+    console.log('테크트리 리스트 GET 에러: ', e)
     dispatch({ type: READ_TECHTREE_LIST_FAIL })
   }
 }
@@ -285,6 +286,7 @@ export default function techtree(state = initialState, action) {
       return {
         ...state,
         loading: true,
+        isEditingTechtree: false,
         techtreeData: {},
         nodeList: [],
         linkList: [],
