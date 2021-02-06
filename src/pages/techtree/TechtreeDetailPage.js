@@ -5,6 +5,7 @@ import MarkdownEditor from '../../components/MarkdownEditor'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
+import { Button } from '../../components/Button'
 
 import styled from 'styled-components'
 
@@ -131,13 +132,18 @@ export default function TechtreeDetailPage({ match }) {
             />
             {!isEditingDocument &&
             userID === techtreeData.author?.firebaseUid ? (
-              <button
+              <Button
                 onClick={() => {
-                  dispatch(deleteTechtree(techtreeData._id))
+                  const deleteOK = window.confirm(`정말 삭제하시나요?`)
+                  if (deleteOK) {
+                    dispatch(deleteTechtree(techtreeData._id))
+                  } else {
+                    return
+                  }
                 }}
               >
-                테크트리 삭제
-              </button>
+                테크트리 전체 삭제
+              </Button>
             ) : (
               ''
             )}
@@ -161,7 +167,7 @@ export default function TechtreeDetailPage({ match }) {
                 {previousNodeList.length > 0 ? <div>앞선 노드</div> : ''}
                 {previousNodeList.map((node) => {
                   return (
-                    <button
+                    <Button
                       onClick={() => {
                         const newPreviousNodeList = returnPreviousNodeList(
                           linkList,
@@ -179,13 +185,13 @@ export default function TechtreeDetailPage({ match }) {
                       }}
                     >
                       {node?.name}
-                    </button>
+                    </Button>
                   )
                 })}
                 {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
                 {nextNodeList.map((node) => {
                   return (
-                    <button
+                    <Button
                       onClick={() => {
                         const newPreviousNodeList = returnPreviousNodeList(
                           linkList,
@@ -203,26 +209,26 @@ export default function TechtreeDetailPage({ match }) {
                       }}
                     >
                       {node?.name}
-                    </button>
+                    </Button>
                   )
                 })}
               </>
             )}
             {isEditingDocument ? (
-              <button onClick={onFinishEdit}>수정완료</button>
+              <Button onClick={onFinishEdit}>수정완료</Button>
             ) : (
               ''
             )}
             {typeof selectedNode.id !== 'undefined' &&
             !isEditingDocument &&
             userID === techtreeData.author?.firebaseUid ? (
-              <button
+              <Button
                 onClick={() => {
                   setIsEditingDocument(true)
                 }}
               >
                 문서 수정
-              </button>
+              </Button>
             ) : (
               ''
             )}

@@ -53,8 +53,10 @@ export default function TechtreeListPage() {
             }
           }}
         >
-          <img src={TreeIcon} alt="treeIcon" width="250px" height="250px" />
-          <div style={{ margin: 'auto' }}> 새로운 테크트리 심기</div>
+          <div style={{ alignSelf: 'center' }}>
+            <img src={TreeIcon} alt="treeIcon" width="250px" height="250px" />
+            <div style={{ margin: 'auto' }}> 새로운 테크트리 심기</div>
+          </div>
         </CreateNewTechtree>
 
         {techtreeList.map((techtreeData, index) => {
@@ -75,7 +77,6 @@ export default function TechtreeListPage() {
 
 const GridContainer = styled.div`
   display: grid;
-
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 25px;
   align-items: center; // 세로축에서 중앙정렬
@@ -92,11 +93,12 @@ const GridContainer = styled.div`
   }
 `
 const CreateNewTechtree = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
   border-radius: 5px;
   width: 300px;
   height: 300px;
   cursor: pointer;
   box-shadow: ${boxShadow.default};
   text-align: center;
-  margin: auto;
 `
