@@ -63,16 +63,7 @@ export default function Navbar() {
                 Q {`\&`} A
               </NavLink>
             </li>
-            <li className="navbar-item">
-              <NavLink to="/article" className="navbar-item-link">
-                Article
-              </NavLink>
-            </li>
-            <li className="navbar-item">
-              <NavLink to="/freeboard" className="navbar-item-link">
-                Freeboard
-              </NavLink>
-            </li>
+
             <div className="header-search">
               <input
                 className="header-search-input"

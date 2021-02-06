@@ -22,6 +22,9 @@ const initialState = {
     title: 'empty',
     nodeList: [{}],
     linkList: [{}],
+    author: {
+      firebaseUid: '',
+    },
   },
 }
 

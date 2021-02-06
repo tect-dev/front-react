@@ -94,6 +94,10 @@ function runForceGraph(
     .attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', '#000')
 
+  if (nodeList.length === 0) {
+    return
+  }
+
   const linkGroup = svg.append('g').attr('class', 'links')
   const nodeGroup = svg.append('g').attr('class', 'nodes')
   const labelGroup = svg.append('g').attr('class', 'labels')

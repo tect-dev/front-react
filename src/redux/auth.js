@@ -1,6 +1,14 @@
 import { authService, firebaseInstance } from '../lib/firebase'
 import axios from 'axios'
 
+const initialState = {
+  loginState: false,
+  userID: '000000000000000000000000',
+  userNickname: '익명',
+  loading: false,
+  userData: { treeData: [] },
+}
+
 // define ACTION type
 const LOG_IN_TRY = 'auth/LOG_IN_TRY'
 const LOG_IN_SUCCESS = 'auth/LOG_IN_SUCCESS'
@@ -19,13 +27,6 @@ const GET_USER_SUCCESS = 'auth/GET_USER_SUCCESS'
 const GET_USER_FAIL = 'auth/GET_USER_FAIL'
 
 const CHECK_AUTH = 'auth/CHECK_AUTH'
-
-const initialState = {
-  loginState: false,
-  userID: '000000000000000000000000',
-  userNickname: '익명',
-  loading: false,
-}
 
 const session_login = () => {
   authService.currentUser
@@ -138,11 +139,11 @@ export const logout = () => async (dispatch) => {
   }
 }
 
-export const getUserInfo = () => async (dispatch) => {
+export const getUserInfo = (userID) => async (dispatch) => {
   dispatch({ type: GET_USER_TRY })
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/login/profile`,
+      `${process.env.REACT_APP_BACKEND_URL}/user/${userID}`,
       { withCredentials: true }
     )
     dispatch({ type: GET_USER_SUCCESS, userData: { ...res.data } })
@@ -215,7 +216,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        ...action.userData,
+        userData: action.userData,
       }
     case GET_USER_FAIL:
       return {

@@ -3,7 +3,7 @@ import Navbar from '../components/layout/Navbar'
 
 import { colorPalette } from '../lib/constants'
 
-export default function ({ children }) {
+export default function MainWrapperExport({ children }) {
   return (
     <MainLayout>
       <Navbar />

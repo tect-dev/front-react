@@ -2,7 +2,7 @@ import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import TechtreeDetailPage from './pages/techtree/TechtreeDetailPage'
 import TechtreeListPage from './pages/techtree/TechtreeListPage'
-import HomePage from './pages/HomePage'
+
 import AboutPage from './pages/AboutPage'
 import QuestionListPage from './pages/question/QuestionListPage'
 import QuestionWritePage from './pages/question/QuestionWritePage'
@@ -10,7 +10,6 @@ import QuestionEditPage from './pages/question/QuestionEditPage'
 import QuestionDetailPage from './pages/question/QuestionDetailPage'
 import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
 import ProfilePage from './pages/user/ProfilePage'
-import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './ErrorBoundary'
 import './App.css'
@@ -60,7 +59,7 @@ function App() {
           <Route path="/user/:userID" component={ProfilePage} />
 
           <Route path="/mypage" component={ProfilePage} />
-          <Route path="/login" component={LoginPage} />
+
           <Route path="/question/list/:page" component={QuestionListPage} />
           <Route
             path="/question/write"
