@@ -12,6 +12,8 @@ import '../../styles/page/question/QuestionListPage.scss'
 import { Pagination } from '../../components/Pagination'
 import { TitleContainer, Title } from '../question/QuestionListPage'
 
+import ErrorPage from '../../components/layout/ErrorPage'
+
 const QuestionSearchResultPage = () => {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.searchedResults
@@ -43,11 +45,10 @@ const QuestionSearchResultPage = () => {
     )
 
   if (error) {
-    console.log(error)
     return (
-      <MainLayout>
-        <div>error...</div>
-      </MainLayout>
+      <ErrorPage>
+        {error.toString()}
+      </ErrorPage>
     )
   }
   // if (!data | data.length === 0){
