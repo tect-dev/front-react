@@ -4,6 +4,7 @@ import { uid } from 'uid'
 
 import { colorPalette } from '../lib/constants'
 import styled from 'styled-components'
+import xCircle from '../assets/xCircle.svg'
 
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
 import {
@@ -154,6 +155,8 @@ function updateGraph(container, dispatch) {
   //reduxStore.subscribe(updateLink)
   // 리덕스 스토어가 갱신될때마다 node랑 link 둘다 업데이트하면 무한호출로 에러발생.
 
+  const techtreeData = reduxStore.getState().techtree.techtreeData
+
   const svg = d3.select(container).select('svg')
 
   // 화살표 마커
@@ -218,16 +221,14 @@ function updateGraph(container, dispatch) {
 
     // 링크 삭제버튼
     linkGroup
-      .selectAll('path')
+      //.selectAll('image')
+      .selectAll('rect')
       .data(linkList)
-      .join('path')
+      //.join('image')
+      .join('rect')
       .attr('width', deleteButtonLength)
       .attr('height', deleteButtonLength)
-      .attr(
-        'd',
-        'M500,990C229.8,990,10,770.2,10,500C10,229.8,229.8,10,500,10c270.2,0,490,219.8,490,490C990,770.2,770.2,990,500,990z M500,91.7C274.8,91.7,91.7,274.8,91.7,500c0,225.2,183.2,408.3,408.3,408.3c225.2,0,408.3-183.2,408.3-408.3C908.3,274.8,725.2,91.7,500,91.7z M694.2,694.2c-6.7,6.7-15.4,10-24.1,10s-17.5-3.3-24.2-10L499.3,547.6L352.7,694.2c-6.7,6.7-15.4,10-24.2,10c-8.7,0-17.5-3.3-24.1-10c-13.4-13.4-13.4-35,0-48.3L451,499.3L304.4,352.7c-13.4-13.4-13.4-35,0-48.3c13.4-13.4,35-13.4,48.3,0L499.3,451l146.6-146.6c13.4-13.4,35-13.4,48.3,0c13.4,13.4,13.4,35,0,48.3L547.6,499.3l146.6,146.6C707.5,659.2,707.5,680.8,694.2,694.2z'
-      )
-      .attr('transform', 'scale(0.03)')
+      .attr('src', xCircle)
       .style('fill', 'black')
       .attr('x', (link) => {
         return (link.startX + link.endX) / 2
@@ -248,7 +249,7 @@ function updateGraph(container, dispatch) {
       .on('click', (link) => {
         const deleteOK = window.confirm('정말 연결을 삭제하시나요?')
         if (deleteOK) {
-          dispatch(deleteLink(nodeList, linkList, techtreeID, link))
+          dispatch(deleteLink(nodeList, linkList, techtreeData, link))
         } else {
           return
         }
@@ -398,7 +399,15 @@ function updateGraph(container, dispatch) {
       .on('click', (d) => {
         const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
         if (deleteOK) {
-          dispatch(deleteNode(nodeList, linkList, techtreeID, d))
+          dispatch(
+            deleteNode(
+              nodeList,
+              linkList,
+              techtreeID,
+              d,
+              reduxStore.getState().techtree.techtreeData
+            )
+          )
         } else {
           return
         }
@@ -450,13 +459,7 @@ function updateGraph(container, dispatch) {
           childNodeID: [],
         }
         nodeList = [...nodeList, createdNode]
-        reduxStore.dispatch(
-          createNode(
-            nodeList,
-            linkList,
-            reduxStore.getState().techtree.techtreeData._id
-          )
-        )
+        reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
         updateNode()
       }
       console.log('svg가 if문 바깥에서 더블클릭됨:')
@@ -490,7 +493,7 @@ function updateGraph(container, dispatch) {
       createLink(
         nodeList,
         linkList,
-        reduxStore.getState().techtree.techtreeData._id
+        reduxStore.getState().techtree.techtreeData
       )
     )
     tempPairingNodes = {}

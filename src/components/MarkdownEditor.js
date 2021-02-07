@@ -10,6 +10,8 @@ import {
   FaHeading,
 } from 'react-icons/fa'
 
+import axios from 'axios'
+
 MarkdownEditor.defaultProps = {
   width: '600px',
   height: '400px',
@@ -27,6 +29,31 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
     },
     [bindingSetter]
   )
+
+  const onDrop = useCallback(async (e) => {
+    e.preventDefault()
+    // 여러 이미지를 드래그해도 하나만 선택
+    const file = e?.dataTransfer?.files[0]
+    // input attribute로 accept="image/*"를 지정하지
+    // 않았기 때문에 여기서 image만 access 가능하게 처리
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      let formData = new FormData()
+      formData.append('image', file)
+      const res = await axios({
+        url: `${process.env.REACT_APP_BACKEND_URL}/image`,
+        method: 'POST',
+        data: formData,
+      })
+      const imageUrl = res.data
+      const result = `${localText}![${file.name}](${imageUrl})`
+      setLocalText(result)
+      bindingSetter(result)
+    } else {
+      console.log('no image file')
+    }
+  })
 
   const addCodeBlock = useCallback(
     (e) => {
@@ -116,6 +143,7 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
           value={bindingText}
           onChange={onChangeText}
           maxLength={10000}
+          onDrop={onDrop}
           style={{ width: width, height: height }}
         ></StyledTextarea>
       </div>
