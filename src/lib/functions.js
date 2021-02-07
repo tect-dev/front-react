@@ -180,3 +180,13 @@ export const htmlFilter = (html) => {
     //allowedIframeHostnames: ['www.youtube.com', 'codesandbox.io', 'codepen.io'],
   })
 }
+
+export const refineDatetime = (raw) => {
+  if(raw === "지금"){return raw}
+  if(typeof(raw)!=='string'){return "잘못된 매개변수"}
+  let datetime = new Date(raw)
+  const [ yyyy, MM, dd ] = datetime.toLocaleDateString().split('.')
+  const [ hh, mm, ss ] = datetime.toLocaleTimeString().split(':')
+
+  return `${yyyy}년 ${MM}월 ${dd}일 ${hh}시 ${mm}분 ${ss}초`
+}

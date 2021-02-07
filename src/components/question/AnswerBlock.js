@@ -13,8 +13,8 @@ import { mediaSize } from '../../lib/constants'
 import { createAnswerComment } from '../../redux/comment'
 
 import { CommentBlock } from '../CommentBlock'
-import { refineDatetime } from '../../lib/refineDatetime'
 import { colorPalette } from '../../lib/constants'
+import { refineDatetime } from '../../lib/functions'
 
 export default React.memo(function AnswerBlock({ answerData }) {
   const [answer, setAnswer] = useState(answerData.eachAnswer)
@@ -23,8 +23,8 @@ export default React.memo(function AnswerBlock({ answerData }) {
   const [commentContent, setCommentContent] = useState('')
   const [commentList, setCommentList] = useState(answerData.answerComments)
 
-  const { userNickname } = useSelector((state) => {
-    return { userNickname: state.auth.userNickname }
+  const { userID, displayName } = useSelector((state) => {
+    return { userID: state.auth.userID, displayName: state.auth.displayName }
   })
   const dispatch = useDispatch()
 
@@ -62,7 +62,7 @@ export default React.memo(function AnswerBlock({ answerData }) {
       const tempComment = {
         ...formData,
         author: {
-          displayName: userNickname,
+          displayName: displayName,
         },
 
         createdAt: '지금',
@@ -101,14 +101,16 @@ export default React.memo(function AnswerBlock({ answerData }) {
             <div>답변 작성자: {answer.author.displayName}</div>
             <Datetime>
               {answer.createdAt === answer.updatedAt ? (
-                <>{answer.createdAt}</>
+                <>{refineDatetime(answer.createdAt)}</>
               ) : (
-                <>{answer.updatedAt} (수정일)</>
+                <>{refineDatetime(answer.updatedAt)} (수정일)</>
               )}
             </Datetime>
           </AnswerHeader>
           <MarkdownRenderingBlock content={answer.content} />
           <br />
+          <br />
+          <h3>댓글 {commentList.length}</h3>
           <br />
           <div>
             {commentList?.map((comment) => {
@@ -116,9 +118,10 @@ export default React.memo(function AnswerBlock({ answerData }) {
                 <CommentBlock
                   comment={comment}
                   deleted={comment.deleted}
-                  displayName={comment.author.displayName}
+                  displayName={comment?.author?.displayName}
                   content={comment.content}
                   createdAt={comment.createdAt}
+                  commentHost={comment?.author?.firebaseUid === userID}
                   contentType="answer"
                 />
               )

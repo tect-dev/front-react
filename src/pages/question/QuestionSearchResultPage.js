@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../components/Button'
 import '../../styles/page/question/QuestionListPage.scss'
 import { Pagination } from '../../components/Pagination'
+import { TitleContainer, Title } from '../question/QuestionListPage'
 
 const QuestionSearchResultPage = () => {
   const { loading, data, error } = useSelector((state) => {
@@ -65,11 +66,9 @@ const QuestionSearchResultPage = () => {
           <section>
             <div className="questionList-left">
               <div className="questionList-left-top">
-                <div className="questionList-title-container">
-                  <div className="questionList-Latest">검색결과</div>
-                  {/*인기순 정렬은 나중에 추가하자*/}
-                  {/*<div className="questionList-popular">인기</div>*/}
-                </div>
+                <TitleContainer>
+                  <Title>검색결과</Title>
+                </TitleContainer>
                 <Link to={'/question/write'} className="ask-btn-container">
                   <Button className="ask-btn" buttonStyle="btn--outline">
                     질문하기

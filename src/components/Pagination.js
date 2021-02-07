@@ -7,7 +7,7 @@ import QuestionBlock from './question/QuestionBlock'
 export const Pagination = ({ data, total }) => {
   const history = useHistory()
   // total 인자를 백엔드에서 받기 전까지 임시로 사용
-  !total ? (total = data.length) : console.log('')
+  !total ? (total = data.length) : (()=>{})()
 
   const pathname = useLocation().pathname
 
@@ -17,7 +17,7 @@ export const Pagination = ({ data, total }) => {
   let nowPage = typeof(page) === 'number' ? page : parseInt(page)
 
   // page당 어느 정도의 게시물을 보여줄 것인가
-  const [perPage, setPerPage] = useState(4)
+  const [perPage, setPerPage] = useState(5)
 
   // pagination에서 최초와 끝을 제외한 나머지 pageBtn을
   // 얼마나 보여줄 것인가.
