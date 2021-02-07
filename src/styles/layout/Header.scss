@@ -46,12 +46,12 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
   .navbar {
     display: flex;
     height: 100%;
-    width: 60%;
+    width: 50%;
     // padding: 0 0 0 50px;
 
     &-container {
       @include header-button-wrapper;
-      justify-content: space-between;
+      justify-content:space-around;
       width: 100%;
     }
 
@@ -74,6 +74,7 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
   &-search {
     @include header-button-wrapper;
     align-items: center;
+    color: #666;
 
     &-input {
       padding: 8px 0 8px 4px;
@@ -126,84 +127,97 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     }
   }
 
+  .visibleOnMobile {
+    display: none;
+  }
+
+
   @media screen and (max-width : 768px) {
+    
+    .visibleOnPc {
+      display: none
+    }
+
+    .visibleOnMobile {
+      display: block;
+    }
+
+    .navbar-container {
+      justify-content: space-around;
+    }
+
     &-container {
       justify-content: space-between;
     }
-
-    &-search {
-      display: none;
-    }
-
   }
 }
 
 
-@media screen and (max-width: 768px) {
-  .navbar-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 90vh;
-    position: absolute;
-    top: $header-height;
-    right: -150%;
-    opacity: 1;
-    transition: all 0.5s ease;
-  }
+// @media screen and (max-width: 768px) {
+//   .navbar-container {
+//     display: flex;
+//     flex-direction: column;
+//     width: 100%;
+//     height: 90vh;
+//     position: absolute;
+//     top: $header-height;
+//     right: -150%;
+//     opacity: 1;
+//     transition: all 0.5s ease;
+//   }
 
-  .navbar-container.clicked {
-    right: 0;
-    opacity: 1;
-    transition: all 0.5s ease;
-    margin: 0;
-    z-index: 1;
-    background: #fff;
-    height: 100vh;
+//   .navbar-container.clicked {
+//     right: 0;
+//     opacity: 1;
+//     transition: all 0.5s ease;
+//     margin: 0;
+//     z-index: 1;
+//     background: #fff;
+//     height: 100vh;
 
-    .active:hover {
-      color: #fff;
-    }
-  }
+//     .active:hover {
+//       color: #fff;
+//     }
+//   }
 
-  .navbar-item, .auth-container {
-    display: flex;
-    padding: 2rem 1rem;
-    width: 100%;
-    display: table;
-  }
+//   .navbar-item, .auth-container {
+//     display: flex;
+//     padding: 2rem 1rem;
+//     width: 100%;
+//     display: table;
+//   }
 
-  .header-search {
-    display: none;
-  }
+//   .header-search {
+//     display: none;
+//   }
 
-  .navbar-item:hover {
-    border-radius: 0;
-    background: #00bebe;
-    border : none;
-    color: #fff;
-    transition: 250ms;
-    }
+//   .navbar-item:hover {
+//     border-radius: 0;
+//     background: #00bebe;
+//     border : none;
+//     color: #fff;
+//     transition: 250ms;
+//     }
   
-  .logo {
-      width: 150px;
-  }
+//   .logo {
+//       width: 150px;
+//   }
   
-  .menu-icon {
-      position: absolute;
-      display: flex;
-      top: -5px;
-      align-items: center;
-      width:40px;
-      height: calc(100% + 5px);
-      right: 0;
-      font-size: 1.8rem;
-      cursor: pointer;
-  }
-}
+//   .menu-icon {
+//       position: absolute;
+//       display: flex;
+//       top: -5px;
+//       align-items: center;
+//       width:40px;
+//       height: calc(100% + 5px);
+//       right: 0;
+//       font-size: 1.8rem;
+//       cursor: pointer;
+//   }
+// }
 
-@media screen and (min-width: 768px) {
-  .menu-icon {
-    display: none;
-  }
-}
+// @media screen and (min-width: 768px) {
+//   .menu-icon {
+//     display: none;
+//   }
+// }
