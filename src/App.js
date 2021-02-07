@@ -25,16 +25,11 @@ function App() {
   })
 
   useEffect(() => {
-    console.log('로그인상태:', loginState)
     authService.onAuthStateChanged((user) => {
-      console.log('호출됨: onAuthStateChanged')
       if (user) {
-        console.log('유저:', user)
         dispatch(checkAuth(user))
       } else {
-        console.log('user가 null임')
         dispatch(checkAuth(user))
-        console.log('로그인상태:', loginState)
       }
     })
   }, [])

@@ -64,7 +64,6 @@ export const updateAnswer = (answerID, data) => async (dispatch) => {
       data: obj,
     })
     dispatch({ type: UPDATE_ANSWER_SUCCESS })
-    console.log('answer updated')
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: UPDATE_ANSWER_FAIL, error: e })

@@ -82,8 +82,6 @@ export const createAnswer = (data) => async (dispatch) => {
       })
       dispatch({ type: CREATE_ANSWER_SUCCESS })
     })
-
-    console.log('answer added')
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_ANSWER_FAIL, error: e })

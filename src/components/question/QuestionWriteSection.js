@@ -49,7 +49,6 @@ export default React.memo(function QuestionWriteSection() {
     textTooLongAlert(value, 50000)
     setContent(value)
     if (isPreviewScrollBottom) {
-      console.log('previewRef.current.scrollTop:', previewRef.current.scrollTop)
       previewRef.current.scrollTop = previewRef.current.scrollHeight
     }
   }
