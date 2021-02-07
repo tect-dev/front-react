@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     data: null,
     error: null,
+    num: null
   },
   question: {
     loading: false,
@@ -29,6 +30,8 @@ const initialState = {
     data: null,
     error: null,
   },
+
+  hashtag: null
 }
 
 // action types
@@ -52,17 +55,24 @@ const READ_SEARCHED_TRY = 'searched/READ_SEARCHED_TRY'
 const READ_SEARCHED_SUCCESS = 'searched/READ_SEARCHED_SUCCESS'
 const READ_SEARCHED_FAIL = 'searched/READ_SEARCHED_FAIL'
 
+const READ_SEARCHED_BY_HASHTAG_TRY = 'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_TRY'
+const READ_SEARCHED_BY_HASHTAG_SUCCESS = 'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_SUCCESS'
+const READ_SEARCHED_BY_HASHTAG_FAIL = 'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_FAIL'
+
+const REFRESH_HASHTAG = 'refresh/REFRESH_HASHTAG'
+
 // thunk를 사용할때는 thunk 함수를 dispatch 하므로, 굳이 액션생성함수를 만들어서 export 해줄 필요가 없다.
 
-export const readQuestionList = () => async (dispatch) => {
-  dispatch({ type: READ_QUESTION_LIST_TRY })
+export const readQuestionList = (spa) => async (dispatch) => {
+  dispatch({ type: READ_QUESTION_LIST_TRY, spa: spa })
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/question`)
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/question/page/1`)
     dispatch({
       type: READ_QUESTION_LIST_SUCCESS,
-      questionList: res.data.sort((a, b) => {
+      questionList: res.data.question.sort((a, b) => {
         return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
       }),
+      num: res.data.questionSum
     })
   } catch (e) {
     console.log('error: ', e)
@@ -124,16 +134,42 @@ export const readSearchedResults = (querystring) => async (dispatch) => {
   }
 }
 
+export const readHashtagResults = (hashtag) => async (dispatch) => {
+  dispatch({ type: READ_SEARCHED_BY_HASHTAG_TRY })
+  try {
+    const obj = JSON.stringify({ target: hashtag })
+    const res = await axios({
+      method: 'post',
+      url: `${process.env.REACT_APP_BACKEND_URL}/search/hash`,
+      headers: { 'Content-Type': 'application/json' },
+      data: obj,
+    })
+    dispatch({ type: READ_SEARCHED_BY_HASHTAG_SUCCESS, searchedResults: res.data, hashtag: hashtag })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: READ_SEARCHED_BY_HASHTAG_FAIL, error: e })
+  }
+}
+
+export const refreshHashtag = () => async (dispatch) => {
+  dispatch({type: REFRESH_HASHTAG })
+}
+
 export default function readPost(state = initialState, action) {
   switch (action.type) {
     case READ_QUESTION_LIST_TRY:
-      return {
-        ...state,
-        questionList: {
-          loading: true,
-          data: null,
-          error: null,
-        },
+      if(action.spa){
+        return state
+      } else {
+        return {
+          ...state,
+          questionList: {
+            loading: true,
+            data: null,
+            error: null,
+          },
+          hashtag: null
+        }
       }
     case READ_QUESTION_LIST_SUCCESS:
       return {
@@ -141,7 +177,8 @@ export default function readPost(state = initialState, action) {
         questionList: {
           loading: false,
           data: action.questionList,
-          error: null,
+          num: action.num,
+          error: null
         },
       }
     case READ_QUESTION_LIST_FAIL:
@@ -263,6 +300,32 @@ export default function readPost(state = initialState, action) {
           data: null,
           error: action.error,
         },
+      }
+    case READ_SEARCHED_BY_HASHTAG_TRY:
+      return state
+    case READ_SEARCHED_BY_HASHTAG_SUCCESS:
+      return {
+        ...state,
+        questionList: {
+          loading: false,
+          data: action.searchedResults,
+          error: null,
+        },
+        hashtag: action.hashtag
+      }
+    case READ_SEARCHED_BY_HASHTAG_FAIL:
+      return {
+        ...state,
+        questionList: {
+          loading: false,
+          data: null,
+          error: action.error,
+        },
+      }
+    case REFRESH_HASHTAG:
+      return {
+        ...state,
+        hashtag: null
       }
     default:
       return state

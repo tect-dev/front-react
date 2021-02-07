@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { colorPalette } from '../lib/constants'
-import { refineDatetime } from '../lib/refineDatetime'
 
 import { Button } from './Button'
 
@@ -12,6 +11,8 @@ import {
   updateAnswerComment,
   deleteAnswerComment,
 } from '../redux/comment'
+
+import { refineDatetime } from '../lib/functions'
 
 const CommentBox = styled.div`
   border-top: 1px solid ${colorPalette.gray5};
@@ -33,6 +34,7 @@ export const CommentBlock = ({
   comment,
   deleted,
   displayName,
+  commentHost,
   content,
   createdAt,
   contentType,
@@ -67,7 +69,7 @@ export const CommentBlock = ({
     <CommentBox>
       <CommentInfo>
         <div>작성자: {displayName}</div>
-        <Datetime>{createdAt}</Datetime>
+        <Datetime>{refineDatetime(createdAt)}</Datetime>
       </CommentInfo>
       {deleted && !isEditingComment ? (
         <div>삭제된 댓글입니다.</div>
@@ -82,35 +84,40 @@ export const CommentBlock = ({
       ) : (
         ''
       )}
-      {isEditingComment ? (
-        <>
-          <Button
-            onClick={() => {
-              finishEditingComment(commentContent, comment._id)
-            }}
-          >
-            수정 완료
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button
-            onClick={() => {
-              setIsEditingComment(true)
-              //  setCommentContent(comment.commentContent)
-            }}
-          >
-            댓글 수정
-          </Button>
-          <Button
-            onClick={() => {
-              onDeleteComment(comment._id)
-            }}
-          >
-            댓글 삭제
-          </Button>
-        </>
-      )}
+      {commentHost
+        ? <>
+            {isEditingComment ? (
+              <>
+                <Button
+                  onClick={() => {
+                    finishEditingComment(commentContent, comment._id)
+                  }}
+                >
+                  수정 완료
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    setIsEditingComment(true)
+                    //  setCommentContent(comment.commentContent)
+                  }}
+                >
+                  댓글 수정
+                </Button>
+                <Button
+                  onClick={() => {
+                    onDeleteComment(comment._id)
+                  }}
+                >
+                  댓글 삭제
+                </Button>
+              </>
+            )}
+          </>
+        : null
+      }
     </CommentBox>
   )
 }

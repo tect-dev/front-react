@@ -25,11 +25,11 @@ export default React.memo(function QuestionWriteSection() {
 
   const history = useHistory()
 
-  const { userID, userNickname, isLoading, loginState } = useSelector(
+  const { userID, displayName, isLoading, loginState } = useSelector(
     (state) => {
       return {
         userID: state.auth.userID,
-        userNickname: state.auth.userNickname,
+        displayName: state.auth.displayName,
         isLoading: state.createPost.question.loading,
         loginState: state.auth.loginState,
       }

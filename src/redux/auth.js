@@ -47,7 +47,7 @@ const session_login = () => {
     })
 }
 
-const session_signup = (userNickname) => {
+const session_signup = (displayName) => {
   authService.currentUser
     .getIdToken(true)
     .then((idToken) => {
@@ -56,11 +56,11 @@ const session_signup = (userNickname) => {
         method: 'POST',
         data: {
           firebaseToken: idToken,
-          displayName: userNickname,
+          displayName: displayName,
         },
         withCredentials: true,
       })
-      console.log('사용자가 전송한 닉네임:', userNickname)
+      console.log('사용자가 전송한 닉네임:', displayName)
     })
     .catch((e) => {
       console.log('getIdToken 오류', e)
@@ -103,7 +103,7 @@ export const emailLogin = (email, password) => async (dispatch) => {
   }
 }
 
-export const emailSignUp = (email, password, userNickname) => async (
+export const emailSignUp = (email, password, displayName) => async (
   dispatch
 ) => {
   dispatch({ type: CREATE_USER_TRY })
@@ -111,10 +111,10 @@ export const emailSignUp = (email, password, userNickname) => async (
     await authService
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        session_signup(userNickname)
-        console.log('사용자가 전송한 닉네임:', userNickname)
+        session_signup(displayName)
+        console.log('사용자가 전송한 닉네임:', displayName)
       })
-    dispatch({ type: CREATE_USER_SUCCESS, userNickname: userNickname })
+    dispatch({ type: CREATE_USER_SUCCESS, displayName: displayName })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
@@ -182,7 +182,7 @@ export default function auth(state = initialState, action) {
         ...state,
         loading: false,
         loginState: true,
-        userNickname: action.userNickname,
+        displayName: action.displayName,
       }
     case CREATE_USER_FAIL:
       return {
@@ -200,7 +200,7 @@ export default function auth(state = initialState, action) {
         loading: false,
         loginState: false,
         userID: '000000000000000000000000',
-        userNickname: '익명',
+        displayName: '익명',
       }
     case LOG_OUT_FAIL:
       return {
@@ -227,7 +227,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loginState: action.loginState,
-        userNickname: action.userNickname,
+        displayName: action.displayName,
         userID: action.userID,
       }
     default:
