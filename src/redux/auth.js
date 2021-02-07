@@ -71,21 +71,18 @@ const session_signup = (displayName) => {
 // 액션 생성함수를 정의하고, 생성함수를 export 할 것이다.
 // thunk 사용시에는 액션생성함수 따로 안만듬.
 
-export const checkAuth = (user) => {
+export const checkAuth = (user) => async (dispatch) => {
   if (user) {
-    return {
+    console.log(
+      'redux auth 에서 호출됨. checkAuth. user.displayName: ',
+      user.displayName
+    )
+    dispatch({
       type: CHECK_AUTH,
       loginState: true,
-      nickname: `${user.displayName}`,
+      userNickname: user.displayName,
       userID: user.uid,
-    }
-  } else {
-    return {
-      type: CHECK_AUTH,
-      loginState: false,
-      userID: '000000000000000000000000',
-      nickname: '익명',
-    }
+    })
   }
 }
 
@@ -114,7 +111,7 @@ export const emailSignUp = (email, password, displayName) => async (
         session_signup(displayName)
         console.log('사용자가 전송한 닉네임:', displayName)
       })
-    dispatch({ type: CREATE_USER_SUCCESS, displayName: displayName })
+    dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
@@ -227,7 +224,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loginState: action.loginState,
-        displayName: action.displayName,
+        userNickname: action.userNickname,
         userID: action.userID,
       }
     default:

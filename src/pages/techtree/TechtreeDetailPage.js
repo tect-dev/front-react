@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import MainWrapper from '../../wrappers/MainWrapper'
 import MarkdownEditor from '../../components/MarkdownEditor'
@@ -132,7 +133,12 @@ export default function TechtreeDetailPage({ match }) {
             </div>
           ) : (
             <div>
-              <h2>{techtreeTitle}</h2>
+              <h2>
+                {techtreeTitle} by{' '}
+                <Link to={`/user/${techtreeData.author.displayName}`}>
+                  {techtreeData.author.displayName}
+                </Link>
+              </h2>
             </div>
           )}
 
