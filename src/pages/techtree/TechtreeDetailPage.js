@@ -135,7 +135,7 @@ export default function TechtreeDetailPage({ match }) {
             <div>
               <h2>
                 {techtreeTitle} by{' '}
-                <Link to={`/user/${techtreeData.author.displayName}`}>
+                <Link to={`/user/${techtreeData.author.firebaseUid}`}>
                   {techtreeData.author.displayName}
                 </Link>
               </h2>
