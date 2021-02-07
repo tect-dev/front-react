@@ -19,11 +19,11 @@ export default function Navbar() {
   }
   const userInfo = JSON.parse(localStorage.getItem('user'))
 
-  const { userID, displayName, loginState } = useSelector((state) => {
+  const { userID, userNickname, loginState } = useSelector((state) => {
     // console.log('useSelector:')
     return {
       userID: state.auth.userID,
-      displayName: state.auth.displayName,
+      userNickname: state.auth.userNickname,
       loginState: state.auth.loginState,
     }
   })
@@ -81,9 +81,8 @@ export default function Navbar() {
               {loginState ? (
                 <div className="mypage-container">
                   <NavLink
-                    to={`/user/${userID}`}
+                    to={`/user/${userNickname}`}
                     className="navbar-item-link"
-                    onChange={() => {}}
                   >
                     MyPage
                   </NavLink>

@@ -50,7 +50,7 @@ export default function ProfilePage({ match }) {
   return (
     <MainWrapper>
       <GridContainer>
-        {treeData.map((techtreeData, index) => {
+        {treeData?.map((techtreeData, index) => {
           return (
             <TechtreeThumbnail
               nodeList={techtreeData.nodeList}
