@@ -10,6 +10,9 @@ import AnswerSection from '../../components/question/AnswerSection'
 import { Spinner } from '../../components/Spinner'
 import ErrorBoundary from '../../ErrorBoundary'
 
+import ErrorPage from "../../components/layout/ErrorPage"
+import NoDataPage from "../../components/layout/NoDataPage"
+
 // 상속
 // import Navbar from '../../components/layout/Navbar'
 // import Footer from '../../components/layout/Footer'
@@ -43,15 +46,15 @@ export default function QuestionDetailPage({ match }) {
   if (error) {
     console.log(error)
     return (
-      <MainLayout>
-        <div>error...</div>
-      </MainLayout>
+      <ErrorPage>
+        {error.toString()}
+      </ErrorPage>
     )
   }
   if (!data)
     return (
       <>
-        <MainLayout>no data</MainLayout>
+        <NoDataPage />
       </>
     )
   return (

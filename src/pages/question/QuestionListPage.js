@@ -13,6 +13,9 @@ import '../../styles/page/question/QuestionListPage.scss'
 import styled from 'styled-components'
 import { colorPalette } from '../../lib/constants'
 
+import ErrorPage from "../../components/layout/ErrorPage"
+import NoDataPage from "../../components/layout/NoDataPage"
+
 export default function QuestionListPage({ location }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.questionList
@@ -54,16 +57,14 @@ export default function QuestionListPage({ location }) {
     )
   if (error)
     return (
-      <MainLayout>
-        <div>error...</div>
-      </MainLayout>
+      <ErrorPage>
+        {error.toString()}
+      </ErrorPage>
     )
 
   if (!data)
     return (
-      <MainLayout>
-        <div>no data</div>
-      </MainLayout>
+      <NoDataPage/>
     )
 
   const selectTitleLatest = (e) => {
