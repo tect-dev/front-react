@@ -20,7 +20,6 @@ export default function ProfilePage({ match }) {
   const history = useHistory()
   const { userID } = match.params
   const { myID, loading } = useSelector((state) => {
-    console.log(state.auth)
     return {
       myID: state.auth.userID,
       loading: state.auth.loading,

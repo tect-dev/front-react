@@ -60,7 +60,6 @@ const session_signup = (displayName) => {
         },
         withCredentials: true,
       })
-      console.log('사용자가 전송한 닉네임:', displayName)
     })
     .catch((e) => {
       console.log('getIdToken 오류', e)
@@ -73,10 +72,6 @@ const session_signup = (displayName) => {
 
 export const checkAuth = (user) => async (dispatch) => {
   if (user) {
-    console.log(
-      'redux auth 에서 호출됨. checkAuth. user.displayName: ',
-      user.displayName
-    )
     dispatch({
       type: CHECK_AUTH,
       loginState: true,
@@ -109,7 +104,6 @@ export const emailSignUp = (email, password, displayName) => async (
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         session_signup(displayName)
-        console.log('사용자가 전송한 닉네임:', displayName)
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {

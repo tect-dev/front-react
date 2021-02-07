@@ -10,8 +10,8 @@ import AnswerSection from '../../components/question/AnswerSection'
 import { Spinner } from '../../components/Spinner'
 import ErrorBoundary from '../../ErrorBoundary'
 
-import ErrorPage from "../../components/layout/ErrorPage"
-import NoDataPage from "../../components/layout/NoDataPage"
+import ErrorPage from '../../components/layout/ErrorPage'
+import NoDataPage from '../../components/layout/NoDataPage'
 
 // 상속
 // import Navbar from '../../components/layout/Navbar'
@@ -23,8 +23,6 @@ export default function QuestionDetailPage({ match }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.question
   })
-  console.log(data)
-  
 
   const dispatch = useDispatch()
 
@@ -44,12 +42,7 @@ export default function QuestionDetailPage({ match }) {
     )
 
   if (error) {
-    console.log(error)
-    return (
-      <ErrorPage>
-        {error.toString()}
-      </ErrorPage>
-    )
+    return <ErrorPage>{error.toString()}</ErrorPage>
   }
   if (!data)
     return (

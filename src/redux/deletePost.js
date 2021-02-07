@@ -53,7 +53,6 @@ export const deleteAnswer = (answerID) => async (dispatch) => {
       url: `${process.env.REACT_APP_BACKEND_URL}/answer/${answerID}`,
     })
     dispatch({ type: DELETE_ANSWER_SUCCESS })
-    console.log('answer deleted')
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: DELETE_ANSWER_FAIL, error: e })

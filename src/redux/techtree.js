@@ -336,7 +336,6 @@ export const readTechtreeList = () => async (dispatch) => {
       }),
     })
   } catch (e) {
-    console.log('테크트리 리스트 GET 에러: ', e)
     dispatch({ type: READ_TECHTREE_LIST_FAIL })
   }
 }
@@ -349,7 +348,6 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
     })
     try {
-      console.log('res.data: ', res.data)
       const parsedNodeList = JSON.parse(res.data.nodeList)
       const parsedLinkList = JSON.parse(res.data.linkList)
       const parsedTechtreeData = {
@@ -362,8 +360,6 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
         techtreeData: parsedTechtreeData,
       })
     } catch (e) {
-      console.log('error: ', e)
-      console.log('res.data: ', res.data)
       const parsedNodeList = []
       const parsedLinkList = []
       const parsedTechtreeData = {
