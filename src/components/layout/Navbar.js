@@ -80,10 +80,7 @@ export default function Navbar() {
             <div className="auth-container">
               {loginState ? (
                 <div className="mypage-container">
-                  <NavLink
-                    to={`/user/${userNickname}`}
-                    className="navbar-item-link"
-                  >
+                  <NavLink to={`/user/${userID}`} className="navbar-item-link">
                     MyPage
                   </NavLink>
                 </div>
