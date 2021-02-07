@@ -38,21 +38,18 @@ export default function TechtreeDetailPage({ match }) {
     }
   )
 
-  const { techtreeData, nodeList, linkList, techtreeTitle } = useSelector(
-    (state) => {
-      return {
-        techtreeData: state.techtree.techtreeData,
-        nodeList: state.techtree.nodeList,
-        linkList: state.techtree.linkList,
-        techtreeTitle: state.techtree.techtreeTitle,
-      }
+  const { techtreeData, nodeList, linkList } = useSelector((state) => {
+    return {
+      techtreeData: state.techtree.techtreeData,
+      nodeList: state.techtree.nodeList,
+      linkList: state.techtree.linkList,
     }
-  )
+  })
 
   const { techtreeID } = match.params
 
   const [isEditingDocument, setIsEditingDocument] = useState(false)
-
+  const [techtreeTitle, setTechtreeTitle] = useState('')
   const [documentTitle, setDocumentTitle] = useState('')
   const [documentText, setDocumentText] = useState('')
 
@@ -63,9 +60,10 @@ export default function TechtreeDetailPage({ match }) {
   }, [dispatch])
 
   useEffect(() => {
+    setTechtreeTitle(techtreeData.title)
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
-  }, [selectedNode])
+  }, [selectedNode, techtreeData])
 
   const onChangeDocumentTitle = useCallback(
     (e) => {
@@ -74,6 +72,11 @@ export default function TechtreeDetailPage({ match }) {
     },
     [documentTitle]
   )
+
+  const onChangeTechtreeTitle = useCallback((e) => {
+    e.preventDefault()
+    setTechtreeTitle(e.target.value)
+  }, [])
 
   const onFinishEdit = useCallback(() => {
     // 여기서 dispatch 로 리덕스에서 api 통신하자.
@@ -101,6 +104,14 @@ export default function TechtreeDetailPage({ match }) {
     techtreeData,
   ])
 
+  const onClickTechtreeCommit = useCallback(
+    (e) => {
+      e.preventDefault()
+      dispatch(updateTechtree(nodeList, linkList, techtreeID, techtreeTitle))
+    },
+    [dispatch, nodeList, linkList, techtreeID, techtreeTitle]
+  )
+
   if (loading) {
     return (
       <MainWrapper>
@@ -114,13 +125,14 @@ export default function TechtreeDetailPage({ match }) {
           {techtreeData.author.firebaseUid === userID ? (
             <div>
               <StyledTitleInput
-                value={techtreeData.title}
+                value={techtreeTitle}
                 placeholder="테크트리의 주제를 적어주세요"
+                onChange={onChangeTechtreeTitle}
               ></StyledTitleInput>
             </div>
           ) : (
             <div>
-              <h2>{techtreeData.title}</h2>
+              <h2>{techtreeTitle}</h2>
             </div>
           )}
 
@@ -144,6 +156,12 @@ export default function TechtreeDetailPage({ match }) {
               >
                 테크트리 전체 삭제
               </Button>
+            ) : (
+              ''
+            )}
+            {!isEditingDocument &&
+            userID === techtreeData.author?.firebaseUid ? (
+              <Button onClick={onClickTechtreeCommit}>테크트리 commit</Button>
             ) : (
               ''
             )}
