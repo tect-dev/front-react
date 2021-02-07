@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logout, getUserInfo } from '../../redux/auth'
 import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
+import { Button } from '../../components/Button'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 
@@ -26,7 +27,9 @@ export default function ProfilePage({ match }) {
     }
   })
   const { treeData } = useSelector((state) => {
-    return { treeData: state.auth.userData.treeData }
+    return {
+      treeData: state.auth.userData.treeData,
+    }
   })
 
   const dispatch = useDispatch()
@@ -51,28 +54,30 @@ export default function ProfilePage({ match }) {
     <MainWrapper>
       <GridContainer>
         {treeData?.map((techtreeData, index) => {
+          const parsedNodeList = JSON.parse(techtreeData.nodeList)
+          const parsedLinkList = JSON.parse(techtreeData.linkList)
           return (
             <TechtreeThumbnail
-              nodeList={techtreeData.nodeList}
-              linkList={techtreeData.linkList}
+              nodeList={parsedNodeList}
+              linkList={parsedLinkList}
               techtreeTitle={techtreeData.title}
               techtreeID={techtreeData._id}
               key={index}
             />
           )
         })}
+        {myID === userID ? (
+          <Button
+            onClick={() => {
+              dispatch(logout())
+            }}
+          >
+            로그아웃
+          </Button>
+        ) : (
+          ''
+        )}
       </GridContainer>
-      {myID === userID ? (
-        <button
-          onClick={() => {
-            dispatch(logout())
-          }}
-        >
-          로그아웃
-        </button>
-      ) : (
-        ''
-      )}
     </MainWrapper>
   )
 }

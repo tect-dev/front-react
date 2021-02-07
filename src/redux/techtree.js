@@ -62,9 +62,20 @@ const DELETE_TECHTREE_DATA_FAIL = 'techtree/DELETE_TECHTREE_DATA_FAIL'
 
 const CREATE_TECHTREE_DATA_TRY = 'techtree/CREATE_TECHTREE_DATA_TRY'
 const CREATE_TECHTREE_DATA_SUCCESS = 'techtree/CREATE_TECHTREE_DATA_SUCCESS'
+
+const CHANGE_TECHTREE_TITLE = 'techtree/CHANGE_TECHTREE_TITLE'
+const CHANGE_DOCUMENT = 'tectree/CHANGE_DOCUMENT'
+
 // updateTechtree: 백엔드에 업데이트를 갱신함.
-// editTechtree: 클라이언트상에서의 변화.
-// 둘로 나눌 필요가 있나?
+// changeTechtree: 클라이언트상에서의 변화.
+
+export const changeDocument = (documentTitle, documentText) => {
+  return { type: CHANGE_DOCUMENT, documentTitle, documentText }
+}
+
+export const changeTechtreeTitle = (techtreeTitle) => {
+  return { type: CHANGE_TECHTREE_TITLE, techtreeTitle }
+}
 
 export const CreateTechtree = () => async (dispatch, getState, { history }) => {
   dispatch({ type: CREATE_TECHTREE_DATA_TRY })
@@ -148,8 +159,10 @@ export const finishDocuEdit = (
   nodeBody,
   nodeList,
   linkList,
-  techtreeID
+  techtreeData
 ) => {
+  const techtreeID = techtreeData._id
+  const techtreeTitle = techtreeData.title
   const changingIndex = nodeList.findIndex((element) => nodeID === element.id)
   const changingNode = nodeList[changingIndex]
   const newNodeList = nodeList
@@ -164,6 +177,7 @@ export const finishDocuEdit = (
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -172,17 +186,22 @@ export const finishDocuEdit = (
     })
   })
 
-  return { type: FINISH_DOCU_EDIT, newNodeList }
+  return { type: FINISH_DOCU_EDIT, newNodeList, nodeName, nodeBody }
 }
+
 export const selectNode = (previousNodeList, nextNodeList, node) => {
   return { type: SELECT_NODE, previousNodeList, nextNodeList, node }
 }
-export const createNode = (nodeList, linkList, techtreeID) => {
+
+export const createNode = (nodeList, linkList, techtreeData) => {
+  const techtreeID = techtreeData._id
+  const techtreeTitle = techtreeData.title
   authService.currentUser.getIdToken(true).then(async (idToken) => {
     axios({
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -192,12 +211,15 @@ export const createNode = (nodeList, linkList, techtreeID) => {
   })
   return { type: CREATE_NODE, nodeList: nodeList }
 }
-export const createLink = (nodeList, linkList, techtreeID) => {
+export const createLink = (nodeList, linkList, techtreeData) => {
+  const techtreeID = techtreeData._id
+  const techtreeTitle = techtreeData.title
   authService.currentUser.getIdToken(true).then(async (idToken) => {
     axios({
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -207,7 +229,13 @@ export const createLink = (nodeList, linkList, techtreeID) => {
   })
   return { type: CREATE_LINK, linkList: linkList }
 }
-export const deleteNode = (nodeList, linkList, techtreeID, node) => {
+export const deleteNode = (
+  nodeList,
+  linkList,
+  techtreeID,
+  node,
+  techtreeData
+) => {
   const deletionBinaryList = linkList.map((link) => {
     if (link.startNodeID === node.id) {
       return 0
@@ -236,7 +264,7 @@ export const deleteNode = (nodeList, linkList, techtreeID, node) => {
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-          title: '테스트용 테크트리',
+          title: techtreeData.title,
           _id: uid(24),
           hashtags: [],
           nodeList: stringifiedNodeList,
@@ -254,7 +282,9 @@ export const deleteNode = (nodeList, linkList, techtreeID, node) => {
   //nodeList.splice(deleteNodeIndex, 1)
 }
 
-export const deleteLink = (nodeList, linkList, techtreeID, link) => {
+export const deleteLink = (nodeList, linkList, techtreeData, link) => {
+  const techtreeID = techtreeData._id
+  const techtreeTitle = techtreeData.title
   const newLinkList = linkList.filter((ele) => {
     return ele.id !== link.id
   })
@@ -263,6 +293,7 @@ export const deleteLink = (nodeList, linkList, techtreeID, link) => {
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(newLinkList),
       },
@@ -412,7 +443,12 @@ export default function techtree(state = initialState, action) {
         techtreeData: { ...state.techtreeData, nodeList: action.newNodeList },
         nodeList: action.newNodeList,
         isEditingDocument: false,
-        isEditingTechtree: false,
+        //isEditingTechtree: false,
+        selectedNode: {
+          ...state.selectedNode,
+          name: action.nodeName,
+          body: action.nodeBody,
+        },
       }
     case SELECT_NODE:
       return {
@@ -444,11 +480,13 @@ export default function techtree(state = initialState, action) {
         ...state,
         loading: true,
         isEditingTechtree: false,
+        isEditingDocument: false,
         techtreeData: {},
         nodeList: [],
         linkList: [],
         previousNodeList: [],
         nextNodeList: [],
+        techtreeTitle: '',
         selectedNode: {
           name: '자신의 테크트리 꾸며보세요',
           body:
@@ -460,6 +498,7 @@ export default function techtree(state = initialState, action) {
         ...state,
         loading: false,
         techtreeData: action.techtreeData,
+        techtreeTitle: action.techtreeData.title,
         nodeList: action.techtreeData.nodeList,
         linkList: action.techtreeData.linkList,
       }
@@ -478,7 +517,24 @@ export default function techtree(state = initialState, action) {
         ...state,
         loading: false,
       }
-
+    case CHANGE_TECHTREE_TITLE:
+      return {
+        ...state,
+        techtreeTitle: action.techtreeTitle,
+        techtreeData: {
+          ...state.techtreeData,
+          techtreeTitle: action.techtreeTitle,
+        },
+      }
+    case CHANGE_DOCUMENT:
+      return {
+        ...state,
+        selectedNode: {
+          ...state.selectedNode,
+          nodeName: action.documentTitle,
+          nodeBody: action.documentText,
+        },
+      }
     default:
       return { ...state }
   }

@@ -16,6 +16,8 @@ import {
   readTechtree,
   updateTechtree,
   deleteTechtree,
+  changeTechtreeTitle,
+  changeDocument,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 
@@ -39,32 +41,32 @@ export default function TechtreeDetailPage({ match }) {
     }
   )
 
-  const { techtreeData, nodeList, linkList } = useSelector((state) => {
-    return {
-      techtreeData: state.techtree.techtreeData,
-      nodeList: state.techtree.nodeList,
-      linkList: state.techtree.linkList,
+  const { techtreeData, nodeList, linkList, techtreeTitle } = useSelector(
+    (state) => {
+      return {
+        techtreeData: state.techtree.techtreeData,
+        nodeList: state.techtree.nodeList,
+        linkList: state.techtree.linkList,
+        techtreeTitle: state.techtree.techtreeTitle,
+      }
     }
-  })
+  )
+
+  const [documentTitle, setDocumentTitle] = useState('')
+  const [documentText, setDocumentText] = useState('')
 
   const { techtreeID } = match.params
 
   const [isEditingDocument, setIsEditingDocument] = useState(false)
-  const [techtreeTitle, setTechtreeTitle] = useState('')
-  const [documentTitle, setDocumentTitle] = useState('')
-  const [documentText, setDocumentText] = useState('')
 
   useEffect(() => {
-    // 맨 첫 로딩때 서버에서 테크트리 데이터 가져오는 용도.
-    // dispatch 를 통해 redux 상태에 해당 테크트리 데이터를 셋팅한다.
     dispatch(readTechtree(techtreeID))
   }, [dispatch])
 
   useEffect(() => {
-    setTechtreeTitle(techtreeData.title)
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
-  }, [selectedNode, techtreeData])
+  }, [selectedNode, dispatch])
 
   const onChangeDocumentTitle = useCallback(
     (e) => {
@@ -76,7 +78,7 @@ export default function TechtreeDetailPage({ match }) {
 
   const onChangeTechtreeTitle = useCallback((e) => {
     e.preventDefault()
-    setTechtreeTitle(e.target.value)
+    dispatch(changeTechtreeTitle(e.target.value))
   }, [])
 
   const onFinishEdit = useCallback(() => {
@@ -91,7 +93,7 @@ export default function TechtreeDetailPage({ match }) {
         documentText,
         nodeList,
         linkList,
-        techtreeData._id
+        techtreeData
       )
     )
     setIsEditingDocument(false)
@@ -186,8 +188,8 @@ export default function TechtreeDetailPage({ match }) {
               </>
             ) : (
               <>
-                <h2>{documentTitle}</h2>
-                <MarkdownRenderer text={documentText} />
+                <h2>{selectedNode.name}</h2>
+                <MarkdownRenderer text={selectedNode.body} />
                 <br />
                 <div>
                   {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
