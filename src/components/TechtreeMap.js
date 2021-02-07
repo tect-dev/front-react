@@ -49,7 +49,6 @@ export default React.memo(function TechtreeMap({
 
   return (
     <>
-      <div>{techtreeTitle}</div>
       <TechtreeThumbnailBlock ref={containerRef} />
     </>
   )

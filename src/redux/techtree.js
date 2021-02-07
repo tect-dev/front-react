@@ -2,6 +2,7 @@ import axios from 'axios'
 import { authService } from '../lib/firebase'
 import { uid } from 'uid'
 import { sortISOByTimeStamp } from '../lib/functions'
+import { dispatch } from 'd3'
 
 const initialState = {
   loading: false,
@@ -110,8 +111,27 @@ export const deleteTechtree = (techtreeID) => async (
     console.log('error: ', e)
   }
 }
-export const updateTechtree = () => {
-  return
+export const updateTechtree = (
+  nodeList,
+  linkList,
+  techtreeID,
+  techtreeTitle
+) => async (dispatch) => {
+  dispatch({ type: UPDATE_TECHTREE_DATA_TRY })
+  try {
+    axios({
+      method: 'put',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+      data: {
+        title: techtreeTitle,
+        nodeList: JSON.stringify(nodeList),
+        linkList: JSON.stringify(linkList),
+      },
+    })
+    dispatch({ type: UPDATE_TECHTREE_DATA_SUCCESS, techtreeTitle })
+  } catch (e) {
+    console.log('error: ', e)
+  }
 }
 export const editTechtree = () => {
   return { type: EDIT_TECHTREE }
@@ -427,6 +447,8 @@ export default function techtree(state = initialState, action) {
         techtreeData: {},
         nodeList: [],
         linkList: [],
+        previousNodeList: [],
+        nextNodeList: [],
         selectedNode: {
           name: '자신의 테크트리 꾸며보세요',
           body:
