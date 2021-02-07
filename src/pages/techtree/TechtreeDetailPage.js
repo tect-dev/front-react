@@ -164,54 +164,68 @@ export default function TechtreeDetailPage({ match }) {
               <>
                 <h2>{documentTitle}</h2>
                 <MarkdownRenderer text={documentText} />
-                {previousNodeList.length > 0 ? <div>앞선 노드</div> : ''}
-                {previousNodeList.map((node) => {
-                  return (
-                    <Button
-                      onClick={() => {
-                        const newPreviousNodeList = returnPreviousNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        const newNextNodeList = returnNextNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        dispatch(
-                          selectNode(newPreviousNodeList, newNextNodeList, node)
-                        )
-                      }}
-                    >
-                      {node?.name}
-                    </Button>
-                  )
-                })}
-                {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
-                {nextNodeList.map((node) => {
-                  return (
-                    <Button
-                      onClick={() => {
-                        const newPreviousNodeList = returnPreviousNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        const newNextNodeList = returnNextNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        dispatch(
-                          selectNode(newPreviousNodeList, newNextNodeList, node)
-                        )
-                      }}
-                    >
-                      {node?.name}
-                    </Button>
-                  )
-                })}
+                <br />
+                <div>
+                  {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
+                  {previousNodeList.map((node) => {
+                    return (
+                      <Button
+                        onClick={() => {
+                          const newPreviousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          const newNextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          dispatch(
+                            selectNode(
+                              newPreviousNodeList,
+                              newNextNodeList,
+                              node
+                            )
+                          )
+                        }}
+                      >
+                        {node?.name}
+                      </Button>
+                    )
+                  })}
+                </div>
+                <br />
+                <div>
+                  {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
+                  {nextNodeList.map((node) => {
+                    return (
+                      <Button
+                        onClick={() => {
+                          const newPreviousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          const newNextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          dispatch(
+                            selectNode(
+                              newPreviousNodeList,
+                              newNextNodeList,
+                              node
+                            )
+                          )
+                        }}
+                      >
+                        {node?.name}
+                      </Button>
+                    )
+                  })}
+                </div>
               </>
             )}
             {isEditingDocument ? (
