@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import MainWrapper from '../../wrappers/MainWrapper'
-import TechtreeThumbnail from '../../components/TechtreeThumbnail'
+import TechtreeThumbnail, {
+  TechtreeInfo,
+  TechtreeThumbnailBlock,
+} from '../../components/TechtreeThumbnail'
+import { TechtreeThumbnailCard } from '../../components/TechtreeThumbnail'
 import { Spinner } from '../../components/Spinner'
 import TreeIcon from '../../assets/tree.svg'
 
@@ -44,7 +48,7 @@ export default function TechtreeListPage() {
       <GridContainer>
         {/* 링크를 누른순간, 서버에 테크트리가 생성되고, 생성되고 나서 그 테크트리를 불러오는 식으로 하는게 나을듯.*/}
 
-        <CreateNewTechtree
+        <TechtreeThumbnailCard
           onClick={() => {
             if (loginState) {
               dispatch(CreateTechtree())
@@ -52,12 +56,15 @@ export default function TechtreeListPage() {
               alert('로그인이 필요해요')
             }
           }}
+          style={{ cursor: 'pointer' }}
         >
-          <div style={{ alignSelf: 'center' }}>
+          <TechtreeThumbnailBlock>
             <img src={TreeIcon} alt="treeIcon" width="250px" height="250px" />
+          </TechtreeThumbnailBlock>
+          <TechtreeInfo>
             <div style={{ margin: 'auto' }}> 새로운 테크트리 심기</div>
-          </div>
-        </CreateNewTechtree>
+          </TechtreeInfo>
+        </TechtreeThumbnailCard>
 
         {techtreeList.map((techtreeData, index) => {
           return (
@@ -66,6 +73,7 @@ export default function TechtreeListPage() {
               linkList={techtreeData.linkList}
               techtreeTitle={techtreeData.title}
               techtreeID={techtreeData._id}
+              techtreeData={techtreeData}
               key={index}
             />
           )
@@ -95,10 +103,11 @@ const GridContainer = styled.div`
 const CreateNewTechtree = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  border-radius: 5px;
+  border-radius: 2px;
   width: 300px;
   height: 300px;
   cursor: pointer;
   box-shadow: ${boxShadow.default};
   text-align: center;
+  background-color: #ffffff;
 `

@@ -26,7 +26,6 @@ export default function QuestionBlock({ question }) {
   const summaryContent = question?.contentSubstring
     ? question?.contentSubstring
     : question?.content?.substr(0, 200)
-  //console.log(summaryContent);
 
   const searchHashtag = (e) => {
     e.preventDefault()
@@ -45,9 +44,7 @@ export default function QuestionBlock({ question }) {
       </div>
       <div className="questionBlock-main">
         <div className="questionBlock-main-upside">
-          <div className="questionBlock-title">
-            {question?.title}
-          </div>
+          <div className="questionBlock-title">{question?.title}</div>
           <div className="questionBlock-content">{summaryContent}...</div>
         </div>
         <div className="questionBlock-main-downside">

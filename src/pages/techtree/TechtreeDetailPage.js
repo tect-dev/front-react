@@ -7,6 +7,11 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
 import { Button } from '../../components/Button'
+import {
+  TechtreeThumbnailCard,
+  TechtreeThumbnailBlock,
+  TechtreeInfo,
+} from '../../components/Block'
 
 import styled from 'styled-components'
 
@@ -125,55 +130,64 @@ export default function TechtreeDetailPage({ match }) {
     return (
       <MainWrapper>
         <DoubleSideLayout>
-          {techtreeData.author.firebaseUid === userID ? (
-            <div>
-              <StyledTitleInput
-                value={techtreeTitle}
-                placeholder="테크트리의 주제를 적어주세요"
-                onChange={onChangeTechtreeTitle}
-              ></StyledTitleInput>
-            </div>
-          ) : (
-            <div>
-              <h2>
-                {techtreeTitle} by{' '}
-                <Link to={`/user/${techtreeData.author.firebaseUid}`}>
-                  {techtreeData.author.displayName}
-                </Link>
-              </h2>
-            </div>
-          )}
+          <TechtreeThumbnailCard>
+            <TechtreeInfo>
+              {techtreeData.author.firebaseUid === userID ? (
+                <div>
+                  <StyledTitleInput
+                    value={techtreeTitle}
+                    placeholder="트리의 주제를 적어주세요!"
+                    onChange={onChangeTechtreeTitle}
+                  ></StyledTitleInput>
+                </div>
+              ) : (
+                <>
+                  <div>{techtreeTitle}</div>
 
-          <div></div>
-          <div>
-            <TechtreeMap
-              techtreeTitle={techtreeTitle}
-              techtreeID={techtreeID}
-            />
-            {!isEditingDocument &&
-            userID === techtreeData.author?.firebaseUid ? (
-              <Button
-                onClick={() => {
-                  const deleteOK = window.confirm(`정말 삭제하시나요?`)
-                  if (deleteOK) {
-                    dispatch(deleteTechtree(techtreeData._id))
-                  } else {
-                    return
-                  }
-                }}
-              >
-                테크트리 전체 삭제
-              </Button>
-            ) : (
-              ''
-            )}
-            {!isEditingDocument &&
-            userID === techtreeData.author?.firebaseUid ? (
-              <Button onClick={onClickTechtreeCommit}>테크트리 commit</Button>
-            ) : (
-              ''
-            )}
-          </div>
+                  <div>
+                    <Link to={`/user/${techtreeData.author.firebaseUid}`}>
+                      {techtreeData.author.displayName}
+                    </Link>
+                  </div>
+                </>
+              )}
+            </TechtreeInfo>
+            <TechtreeThumbnailBlock>
+              <TechtreeMap
+                techtreeTitle={techtreeTitle}
+                techtreeID={techtreeID}
+              />
+            </TechtreeThumbnailBlock>
+
+            <div>
+              {!isEditingDocument &&
+              userID === techtreeData.author?.firebaseUid ? (
+                <Button
+                  onClick={() => {
+                    const deleteOK = window.confirm(`정말 삭제하시나요?`)
+                    if (deleteOK) {
+                      dispatch(deleteTechtree(techtreeData._id))
+                    } else {
+                      return
+                    }
+                  }}
+                >
+                  테크트리 전체 삭제
+                </Button>
+              ) : (
+                ''
+              )}
+              {!isEditingDocument &&
+              userID === techtreeData.author?.firebaseUid ? (
+                <Button onClick={onClickTechtreeCommit}>
+                  테크트리 제목수정
+                </Button>
+              ) : (
+                ''
+              )}
+            </div>
+          </TechtreeThumbnailCard>
+
           <div>
             {isEditingDocument ? (
               <>

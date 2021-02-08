@@ -20,7 +20,12 @@ export const mediaSize = {
 export const userDefaultID = '000000000000000000000000'
 
 export const boxShadow = {
-  default: '1px 1px 2px 1px #ccc',
+  default: '0 4px 16px 0 rgba(0, 0, 0, 0.04)',
+}
+
+export const hoverAction = {
+  transform: 'translateY(-8px)',
+  'box-shadow': '0 12px 20px 0 rgba(0, 0, 0, 0.08)',
 }
 
 export const colorPalette = {
@@ -46,6 +51,18 @@ export const colorPalette = {
   blue7: '#1c7ed6',
   blue8: '#1971c2',
   blue9: '#1864ab',
+  /* cyan */
+  cyan0: '#e3fafc',
+  cyan1: '#c5f6fa',
+  cyan2: '#99e9f2',
+  cyan3: '#66d9e8',
+  cyan4: '#3bc9db',
+  cyan5: '#22b8cf',
+  cyan6: '#15aabf',
+  cyan7: '#1098ad',
+  cyan8: '#0c8599',
+  cyan9: '#0b7285',
+
   /* teal */
   teal0: '#F3FFFB',
   teal1: '#C3FAE8',

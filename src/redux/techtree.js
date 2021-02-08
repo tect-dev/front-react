@@ -89,7 +89,7 @@ export const CreateTechtree = () => async (dispatch, getState, { history }) => {
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-          title: '새로운 테크트리',
+          title: '트리의 주제를 입력해주세요!',
           _id: techtreeID,
           hashtags: [],
           nodeList: `[{}]`,
