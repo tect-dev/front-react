@@ -1,0 +1,113 @@
+@use '../config' as *;
+
+/*
+LoginModal 1. form의 submit 버튼을 클릭하면 form data가 전송되면서 화면이
+              refresh된다. 이 때 모달창도 같이 사라진다. 이 부분은 비동기
+              api를 사용하여 refresh되지 않도록 조정해야 한다.
+LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcbox 해제 
+              이후 place-items 속성이 사라진다. 따라서 소멸 애니메이션이 끝날 
+              때까지 모달창 디스플레이(.logo-modal-display)가 좌상단 구석에 
+              고정되어 있다.
+              따라서 모달창 디스플레이 중앙 정렬은 absolute 방식으로 작성
+              하였다.
+
+*/
+
+.login-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0; visibility: hidden; transition: all 0.4s;
+
+  @media screen and (max-width: 768px) {
+    .login-modal-display {
+      box-sizing: border-box;
+      width: 100vw; height: 100vh;
+      display: flex;
+      flex-flow: column nowrap;
+      padding: 30px;
+    }
+  }
+
+  &-display{
+    width: 400px;
+    height: 350px;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    padding: 30px 100px;
+    /* below properties are for LoginModal 2 */
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+
+    &-logo {
+      font-size: 48px;
+      margin: 0 0 20px 0;
+      color: $primary-color;
+      font-family: Heebo, sans-serif;
+    }
+
+    &-body {
+      width: 100%; height: 100%;
+
+      .login-form {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+
+        .login-input {
+          width: 100%;
+          height: 40px;
+          border-radius: 10px;
+          border: 0.5px solid rgba($color: #000000, $alpha: 0.5);
+          margin: 0 0 20px 0;
+          padding: 0 0 0 10px;
+
+          &:focus {
+            outline: none;
+            border: 0.5px solid rgba(0, 190, 190, 0.25);
+            box-shadow: 0px 0px 20px -10px $primary-color;
+            transition: border ease-out 0.3s;
+
+            &::placeholder {
+              color: $primary-color
+            }
+          }
+        }
+
+        .login-submit {
+          height: 40px;
+          margin: 0 0 20px 0;
+        }
+
+        .auth-help {
+          display: flex;
+          justify-content: space-evenly;
+          margin: 0 0 40px 0;
+
+          &-element {
+            width: 100%;
+          }
+        }
+
+        .authProviders {
+          display: flex;
+          flex-flow: wrap;
+          justify-content: space-evenly;
+        }
+      }
+    }
+  }
+
+  &-close-btn {
+    @include pseudo-close-btn;
+  }
+
+  &-close-area {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 100%; height: 100%;
+    z-index : 1;
+  }
+}

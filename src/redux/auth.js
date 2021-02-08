@@ -1,0 +1,227 @@
+import { authService, firebaseInstance } from '../lib/firebase'
+import axios from 'axios'
+
+const initialState = {
+  loginState: false,
+  userID: '000000000000000000000000',
+  userNickname: '익명',
+  loading: false,
+  userData: { treeData: [] },
+}
+
+// define ACTION type
+const LOG_IN_TRY = 'auth/LOG_IN_TRY'
+const LOG_IN_SUCCESS = 'auth/LOG_IN_SUCCESS'
+const LOG_IN_FAIL = 'auth/LOG_IN_FAIL'
+
+const LOG_OUT_TRY = 'auth/LOG_OUT_TRY'
+const LOG_OUT_SUCCESS = 'auth/LOG_OUT_SUCCESS'
+const LOG_OUT_FAIL = 'auth/LOG_OUT_FAIL'
+
+const CREATE_USER_TRY = 'auth/CREATE_USER_TRY'
+const CREATE_USER_SUCCESS = 'auth/CREATE_USER_SUCCESS'
+const CREATE_USER_FAIL = 'auth/CREATE_USER_FAIL'
+
+const GET_USER_TRY = 'auth/GET_USER_TRY'
+const GET_USER_SUCCESS = 'auth/GET_USER_SUCCESS'
+const GET_USER_FAIL = 'auth/GET_USER_FAIL'
+
+const CHECK_AUTH = 'auth/CHECK_AUTH'
+
+const session_login = () => {
+  authService.currentUser
+    .getIdToken(/* forceRefresh */ true)
+    .then((idToken) => {
+      axios({
+        url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogin`,
+        method: 'POST',
+        data: {
+          firebaseToken: idToken,
+          //crsfToken : crsfToekn
+        },
+        withCredentials: true,
+      })
+    })
+    .catch((e) => {
+      console.log('getIdToken 오류', e)
+    })
+}
+
+const session_signup = (displayName) => {
+  authService.currentUser
+    .getIdToken(true)
+    .then((idToken) => {
+      axios({
+        url: `${process.env.REACT_APP_BACKEND_URL}/login/account`,
+        method: 'POST',
+        data: {
+          firebaseToken: idToken,
+          displayName: displayName,
+        },
+        withCredentials: true,
+      })
+    })
+    .catch((e) => {
+      console.log('getIdToken 오류', e)
+    })
+}
+
+// 액션타입을 redux 파일 안에 정의하고, 정의한 액션타입을 다른 파일에서 사용하기 위해
+// 액션 생성함수를 정의하고, 생성함수를 export 할 것이다.
+// thunk 사용시에는 액션생성함수 따로 안만듬.
+
+export const checkAuth = (user) => async (dispatch) => {
+  if (user) {
+    dispatch({
+      type: CHECK_AUTH,
+      loginState: true,
+      userNickname: user.displayName,
+      userID: user.uid,
+    })
+  }
+}
+
+export const emailLogin = (email, password) => async (dispatch) => {
+  dispatch({ type: LOG_IN_TRY })
+  try {
+    await authService.signInWithEmailAndPassword(email, password).then(() => {
+      dispatch({ type: LOG_IN_SUCCESS })
+      //session_login()
+    })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: LOG_IN_FAIL })
+    alert(e)
+  }
+}
+
+export const emailSignUp = (email, password, displayName) => async (
+  dispatch
+) => {
+  dispatch({ type: CREATE_USER_TRY })
+  try {
+    await authService
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        session_signup(displayName)
+      })
+    dispatch({ type: CREATE_USER_SUCCESS, displayName })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: CREATE_USER_FAIL })
+    alert(e)
+  }
+}
+
+export const logout = () => async (dispatch) => {
+  dispatch({ type: LOG_OUT_TRY })
+
+  try {
+    axios({
+      url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogout`,
+      method: 'GET',
+    })
+    authService.signOut()
+    localStorage.removeItem('user')
+    dispatch({ type: LOG_OUT_SUCCESS })
+  } catch (e) {
+    dispatch({ type: LOG_OUT_FAIL })
+    console.log('error: ', e)
+  }
+}
+
+export const getUserInfo = (userID) => async (dispatch) => {
+  dispatch({ type: GET_USER_TRY })
+  try {
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/user/${userID}`,
+      { withCredentials: true }
+    )
+    dispatch({ type: GET_USER_SUCCESS, userData: { ...res.data } })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: GET_USER_FAIL, error: e })
+  }
+}
+
+export default function auth(state = initialState, action) {
+  switch (action.type) {
+    case LOG_IN_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case LOG_IN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loginState: true,
+      }
+    case LOG_IN_FAIL:
+      return {
+        ...state,
+        loading: false,
+        loginState: false,
+      }
+    case CREATE_USER_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case CREATE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loginState: true,
+        displayName: action.displayName,
+      }
+    case CREATE_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
+      }
+    case LOG_OUT_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case LOG_OUT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loginState: false,
+        userID: '000000000000000000000000',
+        displayName: '익명',
+      }
+    case LOG_OUT_FAIL:
+      return {
+        ...state,
+        loading: false,
+      }
+    case GET_USER_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userData: action.userData,
+      }
+    case GET_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
+      }
+    case CHECK_AUTH:
+      return {
+        ...state,
+        loginState: action.loginState,
+        userNickname: action.userNickname,
+        userID: action.userID,
+      }
+    default:
+      return state
+  }
+}
