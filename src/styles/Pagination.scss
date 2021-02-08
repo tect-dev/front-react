@@ -1,0 +1,31 @@
+@use './config' as *;
+
+.pagination-nav {
+    display: grid;
+    place-items: center;
+    margin: 30px 0 0 0;
+}
+
+.page-list {
+    list-style-type: none;
+
+    .present {
+        background: $primary-color;
+        color: white;
+    }
+}
+
+.page-btn {
+    display: inline;
+    margin: 0 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid $primary-color;
+    border-radius: 5px;
+
+    &:hover {
+    background: $primary-color;
+    color: white;
+    transition: all ease 0.2s;
+    }
+}

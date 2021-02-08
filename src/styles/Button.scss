@@ -1,0 +1,62 @@
+@use './config' as *;
+
+/*
+Button 1. 가상클래스로 hover만 사용하여 버튼의 반응을 구현하면, 모바일에서는
+          클릭 이후에도 계속 hover의 효과가 적용됨.
+          따라서 pc에서는 
+Button 2. 
+          Issue with 
+*/
+
+.btn--outline {
+  @include btn;
+  font-family: Arial,sans-serif;
+  color: $primary-color;
+
+  &:hover{
+    transition: all ease-in 0.2s
+  }
+}
+
+
+
+
+
+
+
+.login-submit {
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+  
+    &:focus {
+      background: $primary-color;
+      color: #fff;
+    }
+  }
+  
+  /* below property is for Button 1.*/
+  @media screen and (min-width: 768px) {
+    .login-submit{
+      transition: ease-in 0.1s;
+  
+      &:hover {
+        background: $primary-color;
+        color: #fff;
+      }
+    }
+  }
+  
+  
+@media screen and (max-width: 768px){
+  .login-submit{
+    transition: ease-out 0.1s;
+    
+    &:active {
+      background: $primary-color;
+      color: #fff;
+    }
+  }
+}
