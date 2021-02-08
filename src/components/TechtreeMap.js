@@ -20,8 +20,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { reduxStore } from '../index'
 
 const TechtreeThumbnailBlock = styled.div`
-  border-radius: 10px;
-  border: 1px solid ${colorPalette.cyan4};
+  border-radius: 1px;
+  border: 2px solid ${colorPalette.gray0};
 `
 
 export default React.memo(function TechtreeMap({
@@ -40,12 +40,12 @@ export default React.memo(function TechtreeMap({
   React.useEffect(() => {
     if (containerRef.current) {
       initGraph(containerRef.current, nodeList, linkList, testingSetter)
-      console.log('그래프 생성')
+      //console.log('그래프 생성')
     }
   }, [])
   React.useEffect(() => {
     updateGraph(containerRef.current, dispatch)
-    console.log('useEffect를 통한 updateGraph 가 호출됨.')
+    //console.log('useEffect를 통한 updateGraph 가 호출됨.')
   }, [containerRef, nodeList, linkList, dispatch, loginState])
 
   return (
@@ -111,12 +111,11 @@ function initGraph(
   const labelGroup = svg.append('g').attr('class', 'labels')
 
   const offsetElement = document.getElementById('techtreeContainer')
-  console.log(':', offsetElement)
+
   const clientRect = offsetElement.getBoundingClientRect()
   const relativeTop = clientRect.top
   const scrolledTopLength = window.pageYOffset
   const absoluteYPosition = scrolledTopLength + relativeTop
-  console.log('절대 y좌표: ', absoluteYPosition)
 }
 
 // reduxStore 이용해서 id 랑 매칭시키는거 제대로 작동 안할때가 많음.
@@ -330,7 +329,6 @@ function updateGraph(container, dispatch) {
             tempPairingNodes.id = `link${uid(20)}`
             linkList.push({ ...tempPairingNodes })
             updateLink()
-            console.log('노드끼리 연결됨:', tempPairingNodes)
           }
           svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
           tempPairingNodes = {}
@@ -445,7 +443,6 @@ function updateGraph(container, dispatch) {
         reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
         reduxStore.getState().auth.userID
       ) {
-        console.log('svg가 더블클릭됨:')
         const createdNode = {
           id: `node${uid(20)}`,
           name: '새로운 노드',
@@ -462,7 +459,6 @@ function updateGraph(container, dispatch) {
         reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
         updateNode()
       }
-      console.log('svg가 if문 바깥에서 더블클릭됨:')
     })
     .on('mousemove', (d) => {
       svg
@@ -475,8 +471,6 @@ function updateGraph(container, dispatch) {
       svg.select('.tempLine').style('opacity', '0')
     })
 
-  console.log('그래프가 업데이트됨.')
-
   initLink()
   initNode()
   initLabel()
@@ -484,7 +478,7 @@ function updateGraph(container, dispatch) {
   function updateNode() {
     initNode()
     initLabel()
-    console.log('노드가 갱신됨.')
+    //console.log('노드가 갱신됨.')
   }
 
   function updateLink() {
@@ -497,6 +491,6 @@ function updateGraph(container, dispatch) {
       )
     )
     tempPairingNodes = {}
-    console.log('링크가 갱신됨')
+    //console.log('링크가 갱신됨')
   }
 }

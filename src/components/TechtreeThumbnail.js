@@ -1,22 +1,55 @@
 import React from 'react'
 import * as d3 from 'd3'
 import { Link } from 'react-router-dom'
-import { colorPalette, boxShadow } from '../lib/constants'
+import { colorPalette, boxShadow, hoverAction } from '../lib/constants'
 import styled from 'styled-components'
 
-const TechtreeThumbnailBlock = styled.div`
-  width: auto;
-  height: auto;
+export const TechtreeThumbnailBlock = styled.div`
+  padding: 1rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  h4 {
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
+    word-break: break-word;
+    color: ${colorPalette.gray9};
+  }
+  .description-wrapper {
+    flex: 1;
+  }
+  svg {
+    object-fit: cover;
+  }
 `
-const TechtreeThumbnailCard = styled.div`
-  border-radius: 5px;
-  width: '300px';
-  height: '300px';
-  overflow: clip;
+
+export const TechtreeInfo = styled.div`
+  padding: 0.625rem 1rem;
+  border-top: 1px solid ${colorPalette.gray0};
+  border-bottom: 1px solid ${colorPalette.gray0};
+  display: flex;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  justify-content: space-between;
+`
+
+export const TechtreeThumbnailCard = styled.div`
+  border-radius: 2px;
+  //width: 20rem;
+  //height: '300px';
+  transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
   box-shadow: ${boxShadow.default};
   place-items: center;
-  text-align: center;
-  padding: 10px;
+  background-color: #ffffff;
+  &:hover {
+    ${hoverAction}
+  }
+  margin: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 `
 
 export default React.memo(function ({
@@ -24,6 +57,7 @@ export default React.memo(function ({
   linkList,
   techtreeTitle,
   techtreeID,
+  techtreeData,
 }) {
   const containerRef = React.useRef(null)
 
@@ -37,7 +71,10 @@ export default React.memo(function ({
     <TechtreeThumbnailCard>
       <Link to={`/techtree/${techtreeID}`}>
         <TechtreeThumbnailBlock ref={containerRef} className={techtreeID} />
-        <div>{techtreeTitle}</div>
+        <TechtreeInfo>
+          <div>{techtreeTitle}</div>
+          <div>{techtreeData.author.displayName}</div>
+        </TechtreeInfo>
       </Link>
     </TechtreeThumbnailCard>
   )
@@ -69,7 +106,7 @@ function runForceGraph(
     .append('svg')
     .attr('height', height)
     .attr('width', width)
-    .attr('viewbox', `${width / 3} ${height / 3} ${width} ${height}`)
+    .attr('viewbox', `${width} ${height} ${width} ${height}`)
 
   const clientRect = container.getBoundingClientRect()
   const relativeTop = clientRect.top

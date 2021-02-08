@@ -61,6 +61,7 @@ export default function ProfilePage({ match }) {
               linkList={parsedLinkList}
               techtreeTitle={techtreeData.title}
               techtreeID={techtreeData._id}
+              techtreeData={techtreeData}
               key={index}
             />
           )
