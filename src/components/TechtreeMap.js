@@ -32,21 +32,39 @@ export default React.memo(function TechtreeMap({
   const dispatch = useDispatch()
   const containerRef = React.useRef(null)
 
-  const selectedNode = useSelector((state) => state.techtree.selectedNode)
-  const nodeList = useSelector((state) => state.techtree.nodeList)
-  const linkList = useSelector((state) => state.techtree.linkList)
-  const loginState = useSelector((state) => state.auth.loginState)
+  const {
+    selectedNode,
+    nodeList,
+    linkList,
+    loginState,
+    isEditingTechtree,
+  } = useSelector((state) => {
+    return {
+      selectedNode: state.techtree.selectedNode,
+      nodeList: state.techtree.nodeList,
+      linkList: state.techtree.linkList,
+      loginState: state.auth.loginState,
+      isEditingTechtree: state.techtree.isEditingTechtree,
+    }
+  })
 
   React.useEffect(() => {
     if (containerRef.current) {
-      initGraph(containerRef.current, nodeList, linkList, testingSetter)
+      initGraph(containerRef.current, nodeList, linkList)
       //console.log('그래프 생성')
     }
   }, [])
   React.useEffect(() => {
-    updateGraph(containerRef.current, dispatch)
+    updateGraph(containerRef.current, dispatch, isEditingTechtree)
     //console.log('useEffect를 통한 updateGraph 가 호출됨.')
-  }, [containerRef, nodeList, linkList, dispatch, loginState])
+  }, [
+    containerRef,
+    nodeList,
+    linkList,
+    dispatch,
+    loginState,
+    isEditingTechtree,
+  ])
 
   return (
     <>
@@ -55,12 +73,7 @@ export default React.memo(function TechtreeMap({
   )
 })
 
-function initGraph(
-  container,
-  originalNodeList,
-  originalLinkList,
-  testingSetter
-) {
+function initGraph(container, originalNodeList, originalLinkList) {
   // 데이터 저장 원칙 : navbar 높이때문에 Y좌표는 보정이 필요함.
   // 하지만 보정을 가한 좌표를 저장하지 않는다. 순수한 좌표를 저장해야함.
   // 그 좌표에 대해 렌더링하는 시점에만 보정을 가한다.
@@ -121,9 +134,9 @@ function initGraph(
 // reduxStore 이용해서 id 랑 매칭시키는거 제대로 작동 안할때가 많음.
 
 // 그래프가 갱신될때 호출되는 함수
-function updateGraph(container, dispatch) {
+function updateGraph(container, dispatch, isEditingTechtree) {
   const nodeRadius = 15
-  const navbarHeight = 0
+
   const linkWidth = '2.5px'
   const linkColor = '#000000'
 
@@ -172,6 +185,8 @@ function updateGraph(container, dispatch) {
     .attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', '#000')
 
+  // 그래프 위치변경시엔 템프라인 비활성화
+
   // 그래프 수정 토글
   if (
     reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
@@ -187,7 +202,7 @@ function updateGraph(container, dispatch) {
       .style('fill', 'red')
       .attr('display', 'inline')
       .on('click', () => {
-        if (reduxStore.getState().techtree.isEditingTechtree) {
+        if (isEditingTechtree) {
           reduxStore.dispatch(finishTechtreeEdit())
         } else {
           reduxStore.dispatch(editTechtree())
@@ -205,6 +220,7 @@ function updateGraph(container, dispatch) {
   const techtreeID = reduxStore.getState().techtree.techtreeData._id
 
   function initLink() {
+    linkGroup.selectAll('*').remove()
     linkGroup
       .selectAll('line')
       .data(linkList)
@@ -258,82 +274,144 @@ function updateGraph(container, dispatch) {
 
   // 노드 생성
   function initNode() {
-    const nodes = nodeGroup.selectAll('circle').data(nodeList).join('circle')
-
-    nodeGroup
-      .selectAll('circle')
-      .data(nodeList)
-      .join('circle')
-      .attr('r', (d) => d.radius)
-      .style('fill', (d) => d.fillColor)
-      .style('stroke', (d) => {
-        if (d.id === reduxStore.getState().techtree.selectedNode.id) {
-          return 'red'
-        } else {
-          return
-        }
-      })
-      .attr('cx', (d) => {
-        return d.x
-      })
-      .attr('cy', (d) => {
-        return d.y
-      })
-      .attr('class', (d) => {
-        return d.id
-      })
-      .on('click', (d) => {
-        const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
-        const nextNodeList = returnNextNodeList(linkList, nodeList, d)
-        dispatch(selectNode(previousNodeList, nextNodeList, d))
-      })
-      .style('cursor', 'pointer')
-      .on('mousedown', (d) => {
-        if (
-          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-          reduxStore.getState().auth.userID
-        ) {
-          svg
-            .select('g')
-            .select('.tempLine')
-            .attr('x1', d.x)
-            .attr('y1', d.y)
-            .style('opacity', '1')
-            .attr('display', 'inline')
-          tempPairingNodes.startNodeID = d.id
-          tempPairingNodes.startX = d.x
-          tempPairingNodes.startY = d.y
-        }
-      })
-      .on('mouseup', (d) => {
-        if (
-          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-          reduxStore.getState().auth.userID
-        ) {
-          tempPairingNodes.endNodeID = d.id
-          tempPairingNodes.endX = d.x
-          tempPairingNodes.endY = d.y
-          // 연결된 노드를 데이터에 반영
-          if (
-            tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-            tempPairingNodes.startX !== tempPairingNodes.endX &&
-            tempPairingNodes.startY !== tempPairingNodes.endY &&
-            !linkList.find(
-              (element) =>
-                element.startNodeID === tempPairingNodes.startNodeID &&
-                element.endNodeID === tempPairingNodes.endNodeID
-            ) &&
-            d3.select('.tempLine').attr('x1') > 0 &&
-            d3.select('.tempLine').attr('y1') > 0
-          ) {
-            tempPairingNodes.id = `link${uid(20)}`
-            linkList.push({ ...tempPairingNodes })
-            updateLink()
+    nodeGroup.selectAll('*').remove()
+    if (isEditingTechtree) {
+      nodeGroup
+        .selectAll('circle')
+        .data(nodeList)
+        .join('circle')
+        .attr('r', (d) => d.radius)
+        .style('fill', (d) => d.fillColor)
+        .style('stroke', (d) => {
+          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
+            return 'red'
+          } else {
+            return
           }
-          svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-          tempPairingNodes = {}
-        }
-      })
+        })
+        .attr('cx', (d) => {
+          return d.x
+        })
+        .attr('cy', (d) => {
+          return d.y
+        })
+        .attr('class', (d) => {
+          return d.id
+        })
+        .on('click', (d) => {
+          const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
+          const nextNodeList = returnNextNodeList(linkList, nodeList, d)
+          dispatch(selectNode(previousNodeList, nextNodeList, d))
+        })
+        .style('cursor', 'pointer')
+        .call(
+          d3
+            .drag()
+            .on('start', (d) => {
+              d3.select(this).raise().classed('active', true)
+            })
+            .on('drag', (node) => {
+              const newLinkList = linkList.map((link) => {
+                if (link.startNodeID === node.id) {
+                  return { ...link, startX: d3.event.x, startY: d3.event.y }
+                } else if (link.endNodeID === node.id) {
+                  return { ...link, endX: d3.event.x, endY: d3.event.y }
+                } else {
+                  return link
+                }
+              })
+              linkList = newLinkList
+              initLink()
+              d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y)
+              node.x = d3.event.x
+              node.y = d3.event.y
+              initNode()
+              initLabel()
+            })
+            .on('end', function (node) {
+              d3.select(this).classed('active', false)
+              node.x = d3.event.x
+              node.y = d3.event.y
+              updateNode()
+              updateLink()
+            })
+        )
+    } else {
+      nodeGroup
+        .selectAll('circle')
+        .data(nodeList)
+        .join('circle')
+        .attr('r', (d) => d.radius)
+        .style('fill', (d) => d.fillColor)
+        .style('stroke', (d) => {
+          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
+            return 'red'
+          } else {
+            return
+          }
+        })
+        .attr('cx', (d) => {
+          return d.x
+        })
+        .attr('cy', (d) => {
+          return d.y
+        })
+        .attr('class', (d) => {
+          return d.id
+        })
+        .on('click', (d) => {
+          const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
+          const nextNodeList = returnNextNodeList(linkList, nodeList, d)
+          dispatch(selectNode(previousNodeList, nextNodeList, d))
+        })
+        .style('cursor', 'pointer')
+        .on('mousedown', (d) => {
+          if (
+            reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+            reduxStore.getState().auth.userID
+          ) {
+            svg
+              .select('g')
+              .select('.tempLine')
+              .attr('x1', d.x)
+              .attr('y1', d.y)
+              .style('opacity', '1')
+              .attr('display', 'inline')
+            tempPairingNodes.startNodeID = d.id
+            tempPairingNodes.startX = d.x
+            tempPairingNodes.startY = d.y
+          }
+        })
+        .on('mouseup', (d) => {
+          if (
+            reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+            reduxStore.getState().auth.userID
+          ) {
+            tempPairingNodes.endNodeID = d.id
+            tempPairingNodes.endX = d.x
+            tempPairingNodes.endY = d.y
+            // 연결된 노드를 데이터에 반영
+            if (
+              tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
+              tempPairingNodes.startX !== tempPairingNodes.endX &&
+              tempPairingNodes.startY !== tempPairingNodes.endY &&
+              !linkList.find(
+                (element) =>
+                  element.startNodeID === tempPairingNodes.startNodeID &&
+                  element.endNodeID === tempPairingNodes.endNodeID
+              ) &&
+              d3.select('.tempLine').attr('x1') > 0 &&
+              d3.select('.tempLine').attr('y1') > 0
+            ) {
+              tempPairingNodes.id = `link${uid(20)}`
+              linkList.push({ ...tempPairingNodes })
+              updateLink()
+            }
+            svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
+            tempPairingNodes = {}
+          }
+        })
+    }
 
     /*
       .call(
@@ -414,6 +492,7 @@ function updateGraph(container, dispatch) {
   }
 
   function initLabel() {
+    labelGroup.selectAll('*').remove()
     labelGroup
       .selectAll('text')
       .data(nodeList)
@@ -437,8 +516,8 @@ function updateGraph(container, dispatch) {
       )
   }
 
-  svg
-    .on('dblclick', () => {
+  if (isEditingTechtree) {
+    svg.on('dblclick', () => {
       if (
         reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
         reduxStore.getState().auth.userID
@@ -460,16 +539,41 @@ function updateGraph(container, dispatch) {
         updateNode()
       }
     })
-    .on('mousemove', (d) => {
-      svg
-        .select('g')
-        .select('.tempLine')
-        .attr('x2', d3.event.pageX - absoluteXPosition)
-        .attr('y2', d3.event.pageY - absoluteYPosition)
-    })
-    .on('mouseup', (d) => {
-      svg.select('.tempLine').style('opacity', '0')
-    })
+  } else {
+    svg
+      .on('dblclick', () => {
+        if (
+          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+          reduxStore.getState().auth.userID
+        ) {
+          const createdNode = {
+            id: `node${uid(20)}`,
+            name: '새로운 노드',
+            x: d3.event.pageX - absoluteXPosition,
+            y: d3.event.pageY - absoluteYPosition,
+            radius: nodeRadius,
+            body: '새로운 내용',
+            hashtags: [],
+            fillColor: '#00bebe',
+            parentNodeID: [],
+            childNodeID: [],
+          }
+          nodeList = [...nodeList, createdNode]
+          reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
+          updateNode()
+        }
+      })
+      .on('mousemove', (d) => {
+        svg
+          .select('g')
+          .select('.tempLine')
+          .attr('x2', d3.event.pageX - absoluteXPosition)
+          .attr('y2', d3.event.pageY - absoluteYPosition)
+      })
+      .on('mouseup', (d) => {
+        svg.select('.tempLine').style('opacity', '0')
+      })
+  }
 
   initLink()
   initNode()
