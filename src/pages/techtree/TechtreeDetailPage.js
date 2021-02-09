@@ -142,7 +142,7 @@ export default function TechtreeDetailPage({ match }) {
                 </div>
               ) : (
                 <>
-                  <div>{techtreeTitle}</div>
+                  <div>{techtreeTitle} - </div>
 
                   <div>
                     <Link to={`/user/${techtreeData.author.firebaseUid}`}>
@@ -179,9 +179,7 @@ export default function TechtreeDetailPage({ match }) {
               )}
               {!isEditingDocument &&
               userID === techtreeData.author?.firebaseUid ? (
-                <Button onClick={onClickTechtreeCommit}>
-                  테크트리 제목수정
-                </Button>
+                <Button onClick={onClickTechtreeCommit}>변경사항 저장</Button>
               ) : (
                 ''
               )}
