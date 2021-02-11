@@ -107,7 +107,9 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
 
   const codeBlockPattern = /(```[a-z]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
   // /(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
-  const latexBlockPattern = /($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
+  const latexBlockPattern = /($$[a-z]*\n[\s\S]*?\n$$)/g
+
+  // /($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
   const exceptionCodeBlockPattern = /^(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
   const exceptionLatexBlockPattern = /^($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
 
@@ -128,9 +130,11 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
           .use(ryhype2string)
           .processSync(
             text
-              .split(codeBlockPattern)
+              .split(codeBlockPattern) // 코드 블럭 뿐만 아니라 레이텍 블럭 기준으로도 자를수있게해야함.
               .map((ele) => {
-                if (/^```/.test(ele)) {
+                if (codeBlockPattern.test(ele)) {
+                  return ele
+                } else if (latexBlockPattern.test(ele)) {
                   return ele
                 } else {
                   return ele.replaceAll(`\n`, '\n\n<br />\n\n')
