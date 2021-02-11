@@ -27,7 +27,6 @@ export default function Navbar() {
   const userInfo = JSON.parse(localStorage.getItem('user'))
 
   const { userID, userNickname, loginState } = useSelector((state) => {
-    // console.log('useSelector:')
     return {
       userID: state.auth.userID,
       userNickname: state.auth.userNickname,
@@ -132,7 +131,9 @@ export default function Navbar() {
               {loginState ? (
                 <div className="mypage-container">
                   <NavLink to={`/user/${userID}`} className="navbar-item-link">
-                    <div className="visibleOnPc">MyPage</div>
+                    <div className="visibleOnPc">
+                      <FaUserAlt />
+                    </div>
                     <div className="visibleOnMobile">
                       <FaUserAlt />
                     </div>
@@ -145,8 +146,8 @@ export default function Navbar() {
                     type="checkbox"
                     id="login-popup"
                   />
-                  <label htmlFor="login-popup" className="login-modal-btn">
-                    Login
+                  <label htmlFor="login-popup">
+                    <FaUserAlt />
                   </label>
                   <LoginModal labelFor="login-popup" />
                 </div>

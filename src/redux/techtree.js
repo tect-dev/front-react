@@ -16,6 +16,7 @@ const initialState = {
   },
   isEditingDocument: false,
   isEditingTechtree: false,
+  isSavingTechtree: false,
   nodeList: [{}],
   linkList: [{}],
   techtreeTitle: '',
@@ -130,7 +131,7 @@ export const updateTechtree = (
 ) => async (dispatch) => {
   dispatch({ type: UPDATE_TECHTREE_DATA_TRY })
   try {
-    axios({
+    await axios({
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
@@ -141,6 +142,7 @@ export const updateTechtree = (
     })
     dispatch({ type: UPDATE_TECHTREE_DATA_SUCCESS, techtreeTitle })
   } catch (e) {
+    dispatch({ type: UPDATE_TECHTREE_DATA_FAIL })
     console.log('error: ', e)
   }
 }
@@ -530,6 +532,21 @@ export default function techtree(state = initialState, action) {
           nodeName: action.documentTitle,
           nodeBody: action.documentText,
         },
+      }
+    case UPDATE_TECHTREE_DATA_TRY:
+      return {
+        ...state,
+        isSavingTechtree: true,
+      }
+    case UPDATE_TECHTREE_DATA_SUCCESS:
+      return {
+        ...state,
+        isSavingTechtree: false,
+      }
+    case UPDATE_TECHTREE_DATA_FAIL:
+      return {
+        ...state,
+        isSavingTechtree: false,
       }
     default:
       return { ...state }

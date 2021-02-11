@@ -5,6 +5,7 @@ import { uid } from 'uid'
 import { colorPalette } from '../lib/constants'
 import styled from 'styled-components'
 import xCircle from '../assets/xCircle.svg'
+import grayX from '../assets/xCircle.svg'
 
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
 import {
@@ -82,7 +83,7 @@ function initGraph(container, originalNodeList, originalLinkList) {
   const nodeRadius = 15
   const navbarHeight = 85
   const linkWidth = '2.5px'
-  const linkColor = '#000000'
+  const linkColor = `${colorPalette.gray5}`
 
   const width = 600
   const height = 600
@@ -138,7 +139,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   const nodeRadius = 15
 
   const linkWidth = '2.5px'
-  const linkColor = '#000000'
+  const linkColor = `${colorPalette.gray5}`
 
   const width = 600
   const height = 600
@@ -183,7 +184,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#000')
+    .attr('fill', linkColor)
 
   // 그래프 위치변경시엔 템프라인 비활성화
 
@@ -234,13 +235,14 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .style('stroke-width', linkWidth)
       .attr('marker-end', 'url(#end-arrow)')
 
-    // 링크 삭제버튼
+    // 링크 삭제용 버튼
     linkGroup
-      //.selectAll('image')
-      .selectAll('rect')
+      .selectAll('image')
+      //.selectAll('rect')
       .data(linkList)
-      //.join('image')
-      .join('rect')
+      .join('image')
+      //.join('rect')
+      .attr('href', grayX)
       .attr('width', deleteButtonLength)
       .attr('height', deleteButtonLength)
       .attr('src', xCircle)
@@ -450,9 +452,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
 
     // 노드 삭제용 버튼 만들기
     nodeGroup
-      .selectAll('rect')
+      .selectAll('image')
       .data(nodeList)
-      .join('rect')
+      .join('image')
+      .attr('href', grayX)
       .attr('width', deleteButtonLength)
       .attr('height', deleteButtonLength)
       .style('fill', (d) => d.fillColor)
