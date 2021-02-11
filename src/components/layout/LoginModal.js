@@ -51,11 +51,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
     async (e) => {
       e.preventDefault()
       dispatch(emailLogin(email, password))
-
-      // const fuck = document.getElementById("loginSubmitBtn").focus()
-      // console.log(fuck)
-      console.log(document.getElementById('loginSubmitBtn').onchange)
-      // 버튼은 클릭 해제가 안 됨 ㅋㅋ
       setEmail('')
       setPassword('')
     },

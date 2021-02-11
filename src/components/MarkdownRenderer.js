@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import remark from 'remark'
 import remarkParse from 'remark-parse'
+import remarkHTML from 'remark-html'
 import math from 'remark-math'
 import remark2rehype from 'remark-rehype'
 import katex from 'rehype-katex'
-import stringify from 'rehype-stringify'
+import ryhype2string from 'rehype-stringify'
 import raw from 'rehype-raw'
 import breaks from 'remark-breaks'
 import slug from 'remark-slug'
+import unified from 'unified'
+import { throttle } from 'throttle-debounce'
 import { htmlFilter } from '../lib/functions'
 import { prismPlugin } from '../lib/prismPlugin'
+import { embedPlugin } from '../lib/embedPlugin'
 import { prismThemes } from '../lib/prismThemes'
 import { colorPalette, mediaSize } from '../lib/constants'
+import { TypographyBlock } from '../wrappers/Typography'
 
 const MarkdownStyledBlock = styled.div`
   &.monokai {
@@ -98,36 +103,111 @@ const MarkdownStyledBlock = styled.div`
 `
 
 export default React.memo(function MarkdownRenderingBlock({ text }) {
-  const [html, setHtml] = useState(text)
+  const [html, setHtml] = useState('')
+
+  const codeBlockPattern = /(```[a-z]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
+  // /(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
+  const latexBlockPattern = /($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
+  const exceptionCodeBlockPattern = /^(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
+  const exceptionLatexBlockPattern = /^($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
 
   useEffect(() => {
     setHtml(
-      // html 필터를 쓰면 latex 렌더링이 이상하게 된다!
-      // 그래서 html 필터랑 katex whitelist 를 함께 쓰는듯.
       htmlFilter(
-        //unified()
+        // unified()
         remark()
-          .use(breaks)
           .use(remarkParse)
-          .use(slug)
+          .use(breaks)
+          //.use(slug)
           .use(prismPlugin)
+          //.use(remarkHTML)
           .use(remark2rehype, { allowDangerousHTML: true })
           .use(raw)
           .use(math)
           .use(katex)
-          .use(stringify)
-          .processSync(text)
+          .use(ryhype2string)
+          .processSync(
+            text
+              .split(codeBlockPattern)
+              .map((ele) => {
+                if (/^```/.test(ele)) {
+                  return ele
+                } else {
+                  return ele.replaceAll(`\n`, '\n\n<br />\n\n')
+                }
+              })
+              .join('')
+          )
           .toString()
       )
     )
+
+    console.log(
+      '잘랐다가 다시 붙인 스트링: ',
+      text
+        .split(codeBlockPattern)
+        .map((ele) => {
+          if (/^```/.test(ele)) {
+            return ele
+          } else {
+            return ele.replaceAll(`\n`, '<br />')
+          }
+        })
+        .join('')
+    )
   }, [text])
+
+  const [delay, setDelay] = useState(25)
+
+  const throttledUpdate = React.useMemo(() => {
+    return throttle(delay, (text) => {
+      unified()
+        //remark()
+        .use(remarkParse)
+        .use(breaks)
+        .use(slug)
+        .use(prismPlugin)
+        .use(embedPlugin)
+        .use(remarkHTML)
+        .use(remark2rehype, { allowDangerousHTML: true })
+        .use(raw)
+        .use(math)
+        .use(katex)
+        // .use(toHTML)
+        .process(
+          text,
+          (err, file) => {
+            const lines = text.split(/\r\n|\r|\n/).length
+            const nextDelay = Math.max(
+              Math.min(Math.floor(lines * 0.5), 1500),
+              22
+            )
+            if (nextDelay !== delay) {
+              setDelay(nextDelay)
+            }
+
+            const html = String(text.replace('\n', '<br />'))
+
+            setHtml(htmlFilter(text.replace('\n', `<br />`)))
+            return
+          },
+          1
+        )
+    })
+  }, [delay])
+
+  //useEffect(() => {
+  //  throttledUpdate(text)
+  //}, [text, throttledUpdate])
 
   return (
     <>
-      <MarkdownStyledBlock
-        className={'dracula'}
-        dangerouslySetInnerHTML={{ __html: html }}
-      ></MarkdownStyledBlock>
+      <TypographyBlock>
+        <MarkdownStyledBlock
+          className={'dracula'}
+          dangerouslySetInnerHTML={{ __html: html }}
+        ></MarkdownStyledBlock>
+      </TypographyBlock>
     </>
   )
 })

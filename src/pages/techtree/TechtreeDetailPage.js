@@ -12,8 +12,14 @@ import {
   TechtreeThumbnailBlock,
   TechtreeInfo,
 } from '../../components/Block'
+import Loader from 'react-loader-spinner'
 
 import styled from 'styled-components'
+
+import * as d3 from 'd3'
+import axios from 'axios'
+import { saveAs } from 'file-saver'
+import Canvg, { presets } from 'canvg'
 
 import {
   finishDocuEdit,
@@ -25,6 +31,14 @@ import {
   changeDocument,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
+import { colorPalette, mediaSize } from '../../lib/constants'
+
+const documentWrapper = styled.div`
+  width: 39vw;
+  ${mediaSize.small} {
+    width: 95vw;
+  }
+`
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
@@ -32,8 +46,11 @@ export default function TechtreeDetailPage({ match }) {
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
-  const { loading } = useSelector((state) => {
-    return { loading: state.techtree.loading }
+  const { loading, isSavingTechtree } = useSelector((state) => {
+    return {
+      loading: state.techtree.loading,
+      isSavingTechtree: state.techtree.isSavingTechtree,
+    }
   })
 
   const { selectedNode, previousNodeList, nextNodeList } = useSelector(
@@ -113,8 +130,83 @@ export default function TechtreeDetailPage({ match }) {
   ])
 
   const onClickTechtreeCommit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault()
+      /*
+      const doctype =
+        '<?xml version="1.0" standalone="no"?>' +
+        '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+
+      const svgDOM = d3.select('#techtreeContainer')
+      console.log('svgDOM: ', svgDOM)
+      const source = new XMLSerializer().serializeToString(svgDOM.node())
+      const blob = new Blob([doctype + source], {
+        type: 'image/svg+xml;charset=utf-8',
+      })
+      const url = window.URL.createObjectURL(blob)
+
+      console.log('블롭: ', blob)
+      console.log('유알엘: ', url)
+
+      d3.select('body').append('canvas').attr('id', 'pngdataurl')
+      //.style('opacity', 0)
+
+      var img1 = d3
+        .select('#pngdataurl')
+        .append('img')
+        .attr('width', 300)
+        .attr('height', 300)
+        .node()
+      img1.src = url
+
+      var canvas = document.querySelector('canvas')
+      var context = canvas.getContext('2d')
+
+      var image = new Image()
+      image.src = url
+      image.onload = function () {
+        context.drawImage(image, 0, 0)
+        var canvasdata = canvas.toDataURL('image/png')
+
+        var pngimg = '<img src="' + canvasdata + '">'
+        d3.select('#pngdataurl').html(pngimg)
+
+        var a = document.createElement('a')
+        //a.download = 'sample.png'
+        //a.href = canvasdata
+        //a.click()
+      }
+*/
+
+      //   var blobBin = atob(canvasData.split(',')[1])
+      //   //console.log('블롭 바이너리: ', canvasData.split(',')[1])
+      //   var array = []
+      //   for (var i = 0; i < blobBin.length; i++) {
+      //     array.push(blobBin.charCodeAt(i))
+      //   }
+      //   var file = new Blob([new Uint8Array(array)], { type: 'image/png' })
+      //   // Initialize Canvas
+      //   context.clearRect(0, 0, canvas.width, canvas.height)
+      //   function blobToFile(theBlob, fileName) {
+      //     //A Blob() is almost a File() - it's just missing the two properties below which we will add
+      //     theBlob.lastModifiedDate = new Date()
+      //     theBlob.name = fileName
+      //
+      //     return theBlob
+      //   }
+
+      //let formData = new FormData()
+      // formData.append('image', file)
+      //const res = await axios({
+      //  url: `${process.env.REACT_APP_BACKEND_URL}/image`,
+      //  method: 'POST',
+      //  data: formData,
+      //  processData: false, // data 파라미터 강제 string 변환 방지!!
+      //  contentType: false, // application/x-www-form-urlencoded; 방지!!
+      //})
+      //const imageUrl = res.data
+      //console.log('이미지 유알엘: ', imageUrl)
+
       dispatch(updateTechtree(nodeList, linkList, techtreeID, techtreeTitle))
     },
     [dispatch, nodeList, linkList, techtreeID, techtreeTitle]
@@ -180,6 +272,16 @@ export default function TechtreeDetailPage({ match }) {
               {!isEditingDocument &&
               userID === techtreeData.author?.firebaseUid ? (
                 <Button onClick={onClickTechtreeCommit}>변경사항 저장</Button>
+              ) : (
+                ''
+              )}
+              {isSavingTechtree ? (
+                <Loader
+                  type="Grid"
+                  color={colorPalette.teal5}
+                  height={20}
+                  width={20}
+                />
               ) : (
                 ''
               )}

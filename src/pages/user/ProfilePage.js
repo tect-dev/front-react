@@ -16,6 +16,8 @@ import { Button } from '../../components/Button'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 
+import { sortISOByTimeStamp } from '../../lib/functions'
+
 export default function ProfilePage({ match }) {
   const history = useHistory()
   const { userID } = match.params
@@ -27,7 +29,9 @@ export default function ProfilePage({ match }) {
   })
   const { treeData } = useSelector((state) => {
     return {
-      treeData: state.auth.userData.treeData,
+      treeData: state.auth.userData.treeData.sort((a, b) => {
+        return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
+      }),
     }
   })
 
