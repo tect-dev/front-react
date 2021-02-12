@@ -105,11 +105,11 @@ const MarkdownStyledBlock = styled.div`
 export default React.memo(function MarkdownRenderingBlock({ text }) {
   const [html, setHtml] = useState('')
 
-  const codeBlockPattern = /(```[a-z]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
+  const codeBlockPattern = /(```[\s\S]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
   //const codeBlockPattern = /(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
-  const latexBlockPattern = /(\$\$[a-z]*[\s\S]*?\$\$)/g
+  const latexBlockPattern = /(\$\$[\s\S]*[\s\S]*?\$\$)/g
 
-  const exceptionPattern = /(\$\$[a-z]*[\s\S]*?\$\$)|(```[a-z]*\n[\s\S]*?\n```)/g
+  const exceptionPattern = /(\$\$[\s\S]*[\s\S]*?\$\$)|(```[\s\S]*\n[\s\S]*?\n```)/g
 
   // /($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
   const exceptionCodeBlockPattern = /^(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
@@ -122,7 +122,7 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
         remark()
           .use(remarkParse)
           .use(breaks)
-          //.use(slug)
+          .use(slug)
           .use(prismPlugin)
           //.use(remarkHTML)
           .use(remark2rehype, { allowDangerousHTML: true })
@@ -136,9 +136,9 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
               .map((ele) => {
                 if (codeBlockPattern.test(ele)) {
                   return `\n${ele}\n`
-                } //else if (latexBlockPattern.test(ele)) {
-                //return ele}
-                else {
+                } else if (latexBlockPattern.test(ele)) {
+                  return `\n${ele}\n`
+                } else {
                   return ele.replaceAll(`\n`, '\n<br />\n')
                 }
               })
@@ -147,66 +147,7 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
           .toString()
       )
     )
-
-    console.log('잘린 스트링: ', text.split(codeBlockPattern))
-
-    console.log(
-      '잘랐다가 다시 붙인 스트링: ',
-      text
-        .split(codeBlockPattern)
-        .map((ele) => {
-          if (codeBlockPattern.test(ele)) {
-            return `\n${ele}\n`
-          } else {
-            return ele.replaceAll(`\n`, '\n<br />\n')
-          }
-        })
-        .join('')
-    )
   }, [text])
-
-  const [delay, setDelay] = useState(25)
-
-  const throttledUpdate = React.useMemo(() => {
-    return throttle(delay, (text) => {
-      unified()
-        //remark()
-        .use(remarkParse)
-        .use(breaks)
-        .use(slug)
-        .use(prismPlugin)
-        .use(embedPlugin)
-        .use(remarkHTML)
-        .use(remark2rehype, { allowDangerousHTML: true })
-        .use(raw)
-        .use(math)
-        .use(katex)
-        // .use(toHTML)
-        .process(
-          text,
-          (err, file) => {
-            const lines = text.split(/\r\n|\r|\n/).length
-            const nextDelay = Math.max(
-              Math.min(Math.floor(lines * 0.5), 1500),
-              22
-            )
-            if (nextDelay !== delay) {
-              setDelay(nextDelay)
-            }
-
-            const html = String(text.replace('\n', '<br />'))
-
-            setHtml(htmlFilter(text.replace('\n', `<br />`)))
-            return
-          },
-          1
-        )
-    })
-  }, [delay])
-
-  //useEffect(() => {
-  //  throttledUpdate(text)
-  //}, [text, throttledUpdate])
 
   return (
     <>
