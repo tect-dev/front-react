@@ -106,8 +106,10 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
   const [html, setHtml] = useState('')
 
   const codeBlockPattern = /(```[a-z]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
-  // /(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
-  const latexBlockPattern = /($$[a-z]*\n[\s\S]*?\n$$)/g
+  //const codeBlockPattern = /(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
+  const latexBlockPattern = /(\$\$[a-z]*[\s\S]*?\$\$)/g
+
+  const exceptionPattern = /(\$\$[a-z]*[\s\S]*?\$\$)|(```[a-z]*\n[\s\S]*?\n```)/g
 
   // /($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
   const exceptionCodeBlockPattern = /^(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
@@ -133,11 +135,11 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
               .split(codeBlockPattern) // 코드 블럭 뿐만 아니라 레이텍 블럭 기준으로도 자를수있게해야함.
               .map((ele) => {
                 if (codeBlockPattern.test(ele)) {
-                  return ele
-                } else if (latexBlockPattern.test(ele)) {
-                  return ele
-                } else {
-                  return ele.replaceAll(`\n`, '\n\n<br />\n\n')
+                  return `\n${ele}\n`
+                } //else if (latexBlockPattern.test(ele)) {
+                //return ele}
+                else {
+                  return ele.replaceAll(`\n`, '\n<br />\n')
                 }
               })
               .join('')
@@ -146,15 +148,17 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
       )
     )
 
+    console.log('잘린 스트링: ', text.split(codeBlockPattern))
+
     console.log(
       '잘랐다가 다시 붙인 스트링: ',
       text
         .split(codeBlockPattern)
         .map((ele) => {
-          if (/^```/.test(ele)) {
-            return ele
+          if (codeBlockPattern.test(ele)) {
+            return `\n${ele}\n`
           } else {
-            return ele.replaceAll(`\n`, '<br />')
+            return ele.replaceAll(`\n`, '\n<br />\n')
           }
         })
         .join('')

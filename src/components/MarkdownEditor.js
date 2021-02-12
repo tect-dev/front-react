@@ -73,7 +73,7 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
   const addMathBlock = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText}\n$-\\frac{\\hbar^{2}}{2m} \\nabla^{2} \\psi + V \\psi = E \\psi$`
+      const addedContent = `${localText}\n$$-\\frac{\\hbar^{2}}{2m} \\nabla^{2} \\psi + V \\psi = E \\psi$$`
       setLocalText(addedContent)
       bindingSetter(addedContent)
     },
