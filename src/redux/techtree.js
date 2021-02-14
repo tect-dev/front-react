@@ -2,7 +2,6 @@ import axios from 'axios'
 import { authService } from '../lib/firebase'
 import { uid } from 'uid'
 import { sortISOByTimeStamp } from '../lib/functions'
-import { dispatch } from 'd3'
 
 const initialState = {
   loading: false,
@@ -93,8 +92,8 @@ export const CreateTechtree = () => async (dispatch, getState, { history }) => {
           title: '트리의 주제를 입력해주세요!',
           _id: techtreeID,
           hashtags: [],
-          nodeList: `[{}]`,
-          linkList: `[{}]`,
+          nodeList: `[]`,
+          linkList: `[]`,
           firebaseToken: idToken,
         },
       })
