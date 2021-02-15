@@ -189,3 +189,129 @@ const MobileSearch = styled.input`
   border-radius: 5px;
   outline: none;
 `
+
+export const NavbarInTheHomePage = () => {
+  const router = useHistory()
+  const searchQuestions = (e) => {
+    if (e.code === 'Enter' && searchValue !== '') {
+      // 시큐어 코딩 필요
+      router.push({
+        pathname: `/searched/${searchValue}/1`,
+        // 기존 쿼리 방식 삭제
+        // search: `?query=${searchValue}`,
+      })
+    }
+  }
+  const userInfo = JSON.parse(localStorage.getItem('user'))
+
+  const { userID, userNickname, loginState, userPlace } = useSelector(
+    (state) => {
+      return {
+        userID: state.auth.userID,
+        userNickname: state.auth.userNickname,
+        loginState: state.auth.loginState,
+        userPlace: state.auth.userPlace,
+      }
+    }
+  )
+  const [menuClick, setMenuClick] = useState(false)
+  const [searchClick, setSearchClick] = useState(false)
+
+  const handleMenuClick = () => setMenuClick(!menuClick)
+  const closeMobileMenu = () => setMenuClick(false)
+
+  const [searchValue, setSearchValue] = useState('')
+
+  const popupMobileSearch = (e) => {
+    setSearchClick(!searchClick)
+  }
+
+  return (
+    <header className="header">
+      <MobileSearchContainer style={searchClick ? null : { display: 'none' }}>
+        <MobileSearch />
+        <FaTimes
+          onClick={popupMobileSearch}
+          style={{ width: '20%', fontSize: '36px' }}
+        />
+      </MobileSearchContainer>
+      <div
+        className="header-container"
+        style={searchClick ? { display: 'none' } : null}
+      >
+        <div className="logo-container">
+          <NavLink to="/" className="logo">
+            Tect.dev
+          </NavLink>
+        </div>
+
+        <nav className="navbar">
+          <ul
+            className={
+              menuClick ? 'navbar-container clicked' : 'navbar-container'
+            }
+          >
+            <li className="navbar-item">
+              <NavLink
+                to={{ pathname: '/forest' }}
+                className="navbar-item-link"
+                style={{ paddingBottom: '5px' }}
+              >
+                숲
+              </NavLink>
+            </li>
+
+            <SearchContainer popup={false}>
+              <div
+                className="visibleOnPc"
+                style={searchClick ? { display: 'block' } : null}
+              >
+                <input
+                  className="header-search-input"
+                  placeholder="Search..."
+                  value={searchValue}
+                  onKeyPress={(e) => {
+                    searchQuestions(e)
+                  }}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value)
+                  }}
+                  style={{ display: 'block' }}
+                />
+              </div>
+              <div className="visibleOnMobile" onClick={popupMobileSearch}>
+                <FaSearch />
+              </div>
+            </SearchContainer>
+            <div className="auth-container">
+              {loginState ? (
+                <div className="mypage-container">
+                  <NavLink to={`/user/${userID}`} className="navbar-item-link">
+                    <div className="visibleOnPc">
+                      <FaUserAlt />
+                    </div>
+                    <div className="visibleOnMobile">
+                      <FaUserAlt />
+                    </div>
+                  </NavLink>
+                </div>
+              ) : (
+                <div className="login-container">
+                  <input
+                    className="login-modal-input"
+                    type="checkbox"
+                    id="login-popup"
+                  />
+                  <label htmlFor="login-popup">
+                    <FaUserAlt />
+                  </label>
+                  <LoginModal labelFor="login-popup" />
+                </div>
+              )}
+            </div>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  )
+}
