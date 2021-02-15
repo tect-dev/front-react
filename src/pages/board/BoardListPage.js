@@ -77,7 +77,7 @@ export default function QuestionListPage({ match }) {
           })}
         </BoardListWrapper>
         <BoardSideBarWrapper>
-          <CategoryCard>테스트페이지 카테고리카드</CategoryCard>
+          <CategoryCard>{category}</CategoryCard>
           <TrendingListCard>
             <div>다른게시판 링크</div>
             <div>또는 트렌딩 게시글 링크</div>

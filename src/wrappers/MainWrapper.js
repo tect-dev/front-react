@@ -1,12 +1,11 @@
 import styled from 'styled-components'
-import Navbar from '../components/layout/Navbar'
-import Fab from '@material-ui/core/Fab'
+import Navbar, { NavbarInTheHomePage } from '../components/layout/Navbar'
 import { Container, Button, Link } from 'react-floating-action-button'
 
 import { colorPalette } from '../lib/constants'
 import { useSelector } from 'react-redux'
 
-export default function MainWrapperExport({ children }) {
+export default function MainWrapperDefault({ children }) {
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
@@ -71,6 +70,36 @@ export const MainWrapperWithoutFAB = ({ children }) => {
     <MainLayout>
       <Navbar />
       <ContentWrapper>{children}</ContentWrapper>
+    </MainLayout>
+  )
+}
+
+export const MainWrapperInTheHomePage = ({ children }) => {
+  const { loginState, userID } = useSelector((state) => {
+    return { loginState: state.auth.loginState, userID: state.auth.userID }
+  })
+  return (
+    <MainLayout>
+      <NavbarInTheHomePage />
+      <ContentWrapper>{children}</ContentWrapper>
+      <Container>
+        <Link href="/" tooltip="나무 심기" icon="fa fa-sticky-note" />
+        <Link
+          href="/"
+          tooltip="뭘 넣는게 좋을까 여기엔"
+          icon="fa fa-user-plus"
+        />
+        {loginState ? (
+          <Link
+            tooltip="내 숲으로 가기"
+            icon="fa fa-plus"
+            rotate={true}
+            href={`/forest/${userID}`}
+          />
+        ) : (
+          <Button tooltip="로그인이 필요해요!"></Button>
+        )}
+      </Container>
     </MainLayout>
   )
 }
