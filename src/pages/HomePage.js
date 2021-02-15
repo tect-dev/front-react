@@ -44,11 +44,12 @@ export default function HomePage() {
 function DesktopBlocks() {
   return (
     <>
-      <Link to={`/board/test2`}>
-        <WidthOneBlock></WidthOneBlock>
+      <Link to={`/board/test1`}>
+        <WidthOneBlock>test1</WidthOneBlock>
       </Link>
-
-      <WidthOneBlock>2</WidthOneBlock>
+      <Link to={`/board/test2`}>
+        <WidthOneBlock>test2</WidthOneBlock>
+      </Link>
       <WidthOneBlock>3</WidthOneBlock>
       <WidthOneBlock>4</WidthOneBlock>
       <WidthOneBlock>5</WidthOneBlock>
