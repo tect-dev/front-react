@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
+
+import HomePage from './pages/HomePage'
 import TechtreeDetailPage from './pages/techtree/TechtreeDetailPage'
 import TechtreeListPage from './pages/techtree/TechtreeListPage'
+
+import BoardListPage from './pages/board/BoardListPage'
+import PostDetailPage from './pages/board/PostDetailPage'
+import WritePage from './pages/board/WritePage'
 
 import AboutPage from './pages/AboutPage'
 import QuestionListPage from './pages/question/QuestionListPage'
@@ -10,6 +16,7 @@ import QuestionEditPage from './pages/question/QuestionEditPage'
 import QuestionDetailPage from './pages/question/QuestionDetailPage'
 import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
 import ProfilePage from './pages/user/ProfilePage'
+import MyTreePage from './pages/user/MyTreePage'
 import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './ErrorBoundary'
 import './App.css'
@@ -41,12 +48,17 @@ function App() {
       {/* 라우트를 Switch 로 감싸면, 매칭되는 첫번째 페이지만 렌더를 해준다. */}
       <ErrorBoundary>
         <Switch>
-          <Route path="/" exact={true} component={TechtreeListPage} />
-          <Route path="/techtree/:techtreeID" component={TechtreeDetailPage} />
+          <Route path="/" exact={true} component={HomePage} />
+          <Route path="/forest" exact={true} component={TechtreeListPage} />
+          <Route path="/tree/:techtreeID" component={TechtreeDetailPage} />
+
+          <Route path="/board/:category" component={BoardListPage} />
+          <Route path="/post/:postID" component={PostDetailPage} />
+          <Route path="/write/:category" component={WritePage} />
+
           <Route path="/about" exact={true} component={AboutPage} />
           <Route path="/user/:userID" component={ProfilePage} />
-
-          <Route path="/mypage" component={ProfilePage} />
+          <Route path="/forest/:userID" component={MyTreePage} />
 
           <Route path="/question/list/:page" component={QuestionListPage} />
           <Route

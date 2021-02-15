@@ -7,9 +7,13 @@ const initialState = {
   userNickname: '익명',
   loading: false,
   userData: { treeData: [] },
+  userPlace: '',
 }
 
 // define ACTION type
+
+const SET_USER_PLACE = 'auth/SET_USER_PLACE'
+
 const LOG_IN_TRY = 'auth/LOG_IN_TRY'
 const LOG_IN_SUCCESS = 'auth/LOG_IN_SUCCESS'
 const LOG_IN_FAIL = 'auth/LOG_IN_FAIL'
@@ -69,6 +73,10 @@ const session_signup = (displayName) => {
 // 액션타입을 redux 파일 안에 정의하고, 정의한 액션타입을 다른 파일에서 사용하기 위해
 // 액션 생성함수를 정의하고, 생성함수를 export 할 것이다.
 // thunk 사용시에는 액션생성함수 따로 안만듬.
+
+export const setUserPlace = (userPlace) => {
+  return { type: SET_USER_PLACE, userPlace: userPlace }
+}
 
 export const checkAuth = (user) => async (dispatch) => {
   if (user) {
@@ -220,6 +228,11 @@ export default function auth(state = initialState, action) {
         loginState: action.loginState,
         userNickname: action.userNickname,
         userID: action.userID,
+      }
+    case SET_USER_PLACE:
+      return {
+        ...state,
+        userPlace: action.userPlace,
       }
     default:
       return state
