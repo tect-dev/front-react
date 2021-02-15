@@ -3,9 +3,11 @@ import Navbar, { NavbarInTheHomePage } from '../components/layout/Navbar'
 import { Container, Button, Link } from 'react-floating-action-button'
 
 import { colorPalette } from '../lib/constants'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { createTechtree } from '../redux/techtree'
 
 export default function MainWrapperDefault({ children }) {
+  const dispatch = useDispatch()
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
@@ -14,12 +16,20 @@ export default function MainWrapperDefault({ children }) {
       <Navbar />
       <ContentWrapper>{children}</ContentWrapper>
       <Container>
-        <Link href="/" tooltip="나무 심기" icon="fa fa-sticky-note" />
-        <Link
-          href="/"
-          tooltip="뭘 넣는게 좋을까 여기엔"
-          icon="fa fa-user-plus"
-        />
+        {loginState ? (
+          <Button
+            href="/"
+            tooltip="나무 심기"
+            icon="fa fa-sticky-note"
+            style={{ curosr: 'pointer' }}
+            onClick={() => {
+              dispatch(createTechtree())
+            }}
+          />
+        ) : (
+          <Button tooltip="나무를 심으려면 로그인이 필요해요!"></Button>
+        )}
+
         {loginState ? (
           <Link
             tooltip="내 숲으로 가기"
@@ -75,6 +85,7 @@ export const MainWrapperWithoutFAB = ({ children }) => {
 }
 
 export const MainWrapperInTheHomePage = ({ children }) => {
+  const dispatch = useDispatch()
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
@@ -83,12 +94,14 @@ export const MainWrapperInTheHomePage = ({ children }) => {
       <NavbarInTheHomePage />
       <ContentWrapper>{children}</ContentWrapper>
       <Container>
-        <Link href="/" tooltip="나무 심기" icon="fa fa-sticky-note" />
-        <Link
-          href="/"
-          tooltip="뭘 넣는게 좋을까 여기엔"
-          icon="fa fa-user-plus"
+        <Button
+          tooltip="나무 심기"
+          icon="fa fa-sticky-note"
+          onClick={() => {
+            dispatch(createTechtree())
+          }}
         />
+
         {loginState ? (
           <Link
             tooltip="내 숲으로 가기"

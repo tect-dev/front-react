@@ -22,25 +22,31 @@ import { setUserPlace } from '../../redux/auth'
 
 export default function QuestionListPage({ match }) {
   const { category } = match.params
-
-  const { postList, loading, error } = useSelector((state) => {
+  const dispatch = useDispatch()
+  const { postList, loading, error, postSum } = useSelector((state) => {
     return {
       postList: state.board.postList,
       loading: state.board.loading,
       error: state.board.error,
+      postSum: state.board.postSum,
     }
   })
-
   const { loginState } = useSelector((state) => {
     return { loginState: state.auth.loginState }
   })
+  const postPerPage = 10
+  const pageMaxNumber = Math.floor(postSum / postPerPage) + 1
+  const pageArray = []
+  for (let i = 0; i < pageMaxNumber; i++) {
+    pageArray.push(i + 1)
+  }
 
-  const dispatch = useDispatch()
+  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     dispatch(setUserPlace(category))
-    dispatch(readPostList(category))
-  }, [])
+    dispatch(readPostList(category, pageNumber))
+  }, [pageNumber])
 
   if (loading)
     return (
@@ -61,9 +67,9 @@ export default function QuestionListPage({ match }) {
           )}
 
           <div>최신순 정렬 또는 트렌딩 정렬 버튼</div>
-          {postList.map((postData) => {
+          {postList.map((postData, idx) => {
             return (
-              <Link to={`/post/${postData._id}`}>
+              <Link to={`/post/${postData._id}`} key={idx}>
                 <PostCard>
                   <div>{postData.title}</div>
                   <div>{postData.contentSubstring}</div>
@@ -71,6 +77,7 @@ export default function QuestionListPage({ match }) {
                   <div>좋아요: {postData.like}</div>
                   <div>답변갯수: {postData.answerSum}</div>
                   <div>{postData.author[0]?.displayName}</div>
+                  <div>{postData.hashtags[0]}</div>
                 </PostCard>
               </Link>
             )
@@ -84,6 +91,31 @@ export default function QuestionListPage({ match }) {
           </TrendingListCard>
         </BoardSideBarWrapper>
       </TwoOneMainWapper>
+      {pageArray.map((ele, idx) => {
+        if (ele === pageNumber) {
+          return (
+            <button
+              key={idx}
+              onClick={() => {
+                setPageNumber(ele)
+              }}
+            >
+              현재페이지 {ele}
+            </button>
+          )
+        } else {
+          return (
+            <button
+              key={idx}
+              onClick={() => {
+                setPageNumber(ele)
+              }}
+            >
+              {ele}
+            </button>
+          )
+        }
+      })}
     </MainWrapper>
   )
 }
@@ -105,13 +137,11 @@ export const BoardListWrapper = styled.div`
   display: grid;
   grid-row-gap: 25px;
   border: 1px solid 'black';
-  color: 'red'; // 디버깅을 위한 임시
 `
 
 export const BoardSideBarWrapper = styled.div`
   display: grid;
   grid-row-gap: 25px;
-  color: 'red'; // 디버깅을 위한 임시
 `
 
 export const PostCard = styled.div`

@@ -15,7 +15,7 @@ import styled from 'styled-components'
 import { authService } from '../../lib/firebase'
 import axios from 'axios'
 import { uid } from 'uid'
-import { CreateTechtree, readTechtreeList } from '../../redux/techtree'
+import { createTechtree, readTechtreeList } from '../../redux/techtree'
 import { useDispatch, useSelector } from 'react-redux'
 import { colorPalette, boxShadow } from '../../lib/constants'
 
@@ -52,7 +52,7 @@ export default function TechtreeListPage() {
         <TechtreeThumbnailCard
           onClick={() => {
             if (loginState) {
-              dispatch(CreateTechtree())
+              dispatch(createTechtree())
             } else {
               alert('로그인이 필요해요')
             }

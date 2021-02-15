@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import MainWrapper from '../../wrappers/MainWrapper'
+import DoubleSideLayout from '../../wrappers/DoubleSideLayout'
 import MarkdownEditor from '../../components/MarkdownEditor'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
@@ -17,12 +18,6 @@ import {
 import Loader from 'react-loader-spinner'
 
 import styled from 'styled-components'
-
-import * as d3 from 'd3'
-import axios from 'axios'
-import { saveAs } from 'file-saver'
-import Canvg, { presets } from 'canvg'
-import html2canvas from 'html2canvas'
 
 import {
   finishDocuEdit,
@@ -174,8 +169,8 @@ export default function TechtreeDetailPage({ match }) {
     return (
       <MainWrapper>
         <DoubleSideLayout>
-          <TechtreeThumbnailCard>
-            <TechtreeInfo>
+          <HalfWidthContainer>
+            <div>
               {techtreeData.author.firebaseUid === userID ? (
                 <div>
                   <StyledTitleInput
@@ -195,13 +190,13 @@ export default function TechtreeDetailPage({ match }) {
                   </div>
                 </>
               )}
-            </TechtreeInfo>
-            <TechtreeThumbnailBlock>
+            </div>
+            <div>
               <TechtreeMap
                 techtreeTitle={techtreeTitle}
                 techtreeID={techtreeID}
               />
-            </TechtreeThumbnailBlock>
+            </div>
 
             <div>
               {!isEditingDocument &&
@@ -238,9 +233,9 @@ export default function TechtreeDetailPage({ match }) {
                 ''
               )}
             </div>
-          </TechtreeThumbnailCard>
+          </HalfWidthContainer>
 
-          <HalfWidthWrapper>
+          <HalfWidthContainer>
             {isEditingDocument ? (
               <>
                 <StyledTitleInput
@@ -340,65 +335,16 @@ export default function TechtreeDetailPage({ match }) {
             ) : (
               ''
             )}
-          </HalfWidthWrapper>
+          </HalfWidthContainer>
         </DoubleSideLayout>
       </MainWrapper>
     )
   }
 }
 
-function PreviousNodeButtonList({ linkList, nodeList, previousNodeList }) {
-  const dispatch = useDispatch()
-  const PreviousNodeButtonList = previousNodeList.map((node) => {
-    return (
-      <button
-        onClick={() => {
-          const newPreviousNodeList = returnPreviousNodeList(
-            linkList,
-            nodeList,
-            node
-          )
-          const newNextNodeList = returnNextNodeList(linkList, nodeList, node)
-          dispatch(selectNode(newPreviousNodeList, newNextNodeList, node))
-        }}
-      >
-        {node?.name}
-      </button>
-    )
-  })
-  return <PreviousNodeButtonList></PreviousNodeButtonList>
-}
-
-function NextNodeButtonList({ linkList, nodeList, nextNodeList }) {
-  const dispatch = useDispatch()
-  {
-    nextNodeList.forEach((node) => {
-      return (
-        <button
-          onClick={() => {
-            const newPreviousNodeList = returnPreviousNodeList(
-              linkList,
-              nodeList,
-              node
-            )
-            const newNextNodeList = returnNextNodeList(linkList, nodeList, node)
-            dispatch(selectNode(newPreviousNodeList, newNextNodeList, node))
-          }}
-        >
-          {node?.name}
-        </button>
-      )
-    })
-  }
-}
-
-const DoubleSideLayout = styled.div`
-  display: grid;
-  justify-items: center; // 가로축에서 중앙정렬
-  grid-template-columns: 1fr 1fr;
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+const HalfWidthContainer = styled(HalfWidthWrapper)`
+  overflow: visible;
+  // overflow: hidden;
 `
 
 const StyledTitleInput = styled.input`

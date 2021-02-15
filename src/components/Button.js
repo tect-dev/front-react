@@ -1,6 +1,10 @@
 import React from 'react'
 import '../styles/Button.scss'
 
+import styled from 'styled-components'
+
+export const DefaultButton = styled.button``
+
 const STYLES = ['btn--primary', 'btn--outline']
 const SIZES = ['btn--medium', 'btn--large']
 

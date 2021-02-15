@@ -7,7 +7,7 @@ const initialState = {
   userNickname: '익명',
   loading: false,
   userData: { treeData: [] },
-  userPlace: '',
+  userPlace: 'main',
 }
 
 // define ACTION type

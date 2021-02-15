@@ -96,10 +96,6 @@ const MarkdownStyledBlock = styled.div`
   .katex-mathml {
     display: none;
   }
-  width: 39vw;
-  ${mediaSize.small} {
-    width: 95vw;
-  }
 `
 
 export default React.memo(function MarkdownRenderingBlock({ text }) {
