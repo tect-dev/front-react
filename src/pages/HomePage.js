@@ -1,10 +1,15 @@
-import { MainWrapperInTheHomePage } from '../wrappers/MainWrapper'
+import MainWrapperDefault, {
+  MainWrapperInTheHomePage,
+} from '../wrappers/MainWrapper'
 
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setUserPlace } from '../redux/auth'
 
 export default function HomePage() {
+  const dispatch = useDispatch()
   const isClient = typeof window === 'object'
   function getSize() {
     return {
@@ -15,6 +20,7 @@ export default function HomePage() {
   const [windowSize, setWindowSize] = useState(getSize)
 
   useEffect(() => {
+    dispatch(setUserPlace('main'))
     if (!isClient) {
       return false
     }
@@ -22,13 +28,13 @@ export default function HomePage() {
     function handleResize() {
       setWindowSize(getSize())
     }
-    console.log('windowSize:', windowSize)
+
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   return (
-    <MainWrapperInTheHomePage>
+    <MainWrapperDefault>
       <BlockWrapper>
         {windowSize.width > 1024 ? <DesktopBlocks></DesktopBlocks> : ''}
         {1024 > windowSize.width && windowSize.width > 650 ? (
@@ -38,7 +44,7 @@ export default function HomePage() {
         )}
         {650 > windowSize.width ? <MobileBlocks></MobileBlocks> : ''}
       </BlockWrapper>
-    </MainWrapperInTheHomePage>
+    </MainWrapperDefault>
   )
 }
 function DesktopBlocks() {

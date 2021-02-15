@@ -77,7 +77,7 @@ export const changeTechtreeTitle = (techtreeTitle) => {
   return { type: CHANGE_TECHTREE_TITLE, techtreeTitle }
 }
 
-export const CreateTechtree = () => async (dispatch, getState, { history }) => {
+export const createTechtree = () => async (dispatch, getState, { history }) => {
   dispatch({ type: CREATE_TECHTREE_DATA_TRY })
   const techtreeID = uid(24)
 
@@ -100,7 +100,7 @@ export const CreateTechtree = () => async (dispatch, getState, { history }) => {
     })
     .then(() => {
       dispatch({ type: CREATE_TECHTREE_DATA_SUCCESS })
-      history.push(`/techtree/${techtreeID}`)
+      history.push(`/tree/${techtreeID}`)
     })
     .catch((e) => {
       console.log('error: ', e)

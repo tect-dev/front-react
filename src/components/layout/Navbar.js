@@ -79,29 +79,21 @@ export default function Navbar() {
           >
             <li className="navbar-item">
               <NavLink
-                to={{ pathname: `/board/${userPlace}` }}
-                className="navbar-item-link"
-                style={{ paddingBottom: '5px' }}
-              >
-                게시판
-              </NavLink>
-            </li>
-            <li className="navbar-item">
-              <NavLink
-                to={{ pathname: '/question/list/1' }}
-                className="navbar-item-link"
-                style={{ paddingBottom: '5px' }}
-              >
-                Q {`\&`} A
-              </NavLink>
-            </li>
-            <li className="navbar-item">
-              <NavLink
                 to={{ pathname: '/forest' }}
                 className="navbar-item-link"
                 style={{ paddingBottom: '5px' }}
               >
                 숲
+              </NavLink>
+            </li>
+
+            <li className="navbar-item">
+              <NavLink
+                to={{ pathname: `/board/${userPlace}` }}
+                className="navbar-item-link"
+                style={{ paddingBottom: '5px' }}
+              >
+                게시판
               </NavLink>
             </li>
 

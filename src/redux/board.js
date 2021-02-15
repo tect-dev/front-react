@@ -6,6 +6,7 @@ import { sortISOByTimeStamp } from '../lib/functions'
 
 const initialState = {
   postList: [],
+  postSum: 1,
   loading: false,
   error: null,
   postTitle: '',
@@ -33,15 +34,34 @@ const CREATE_ANSWER_TRY = 'board/CREATE_ANSWER_TRY'
 const CREATE_ANSWER_SUCCESS = 'board/CREATE_ANSWER_SUCCESS'
 const CREATE_ANSWER_FAIL = 'board/CREATE_ANSWER_FAIL'
 
-export const readPostList = (querystring) => async (dispatch) => {
+export const readPostList = (querystring, pageNumber) => async (dispatch) => {
   dispatch({ type: READ_POST_LIST_TRY })
   try {
-    const obj = JSON.stringify({ target: querystring })
-    const res = await axios({
-      method: 'get',
-      url: `${process.env.REACT_APP_BACKEND_URL}/search/hash?target=${querystring}&page=1`,
-    })
-    dispatch({ type: READ_POST_LIST_SUCCESS, postList: res.data.question })
+    if (querystring === 'main') {
+      const res = await axios({
+        method: 'get',
+        url: `${process.env.REACT_APP_BACKEND_URL}/question/page/${pageNumber}`,
+      })
+      dispatch({
+        type: READ_POST_LIST_SUCCESS,
+        postList: res.data.question,
+        postSum: res.data.questionSum,
+      })
+    } else {
+      const res = await axios({
+        method: 'get',
+        url: `${process.env.REACT_APP_BACKEND_URL}/search/hash?target=${querystring}&page=${pageNumber}`,
+      })
+      const res2 = await axios({
+        mathod: 'get',
+        url: `${process.env.REACT_APP_BACKEND_URL}/search/hashnum/${querystring}`,
+      })
+      dispatch({
+        type: READ_POST_LIST_SUCCESS,
+        postList: res.data.question,
+        postSum: res2.data.count,
+      })
+    }
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: READ_POST_LIST_FAIL, error: e })
@@ -112,7 +132,12 @@ export default function board(state = initialState, action) {
     case READ_POST_LIST_TRY:
       return { ...state, loading: true, postList: [] }
     case READ_POST_LIST_SUCCESS:
-      return { ...state, loading: false, postList: action.postList }
+      return {
+        ...state,
+        loading: false,
+        postList: action.postList,
+        postSum: action.postSum,
+      }
     case READ_POST_LIST_FAIL:
       return { ...state, loading: false, error: action.error }
 

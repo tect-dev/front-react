@@ -10,7 +10,8 @@ const DoubleSideLayout = styled.div`
   grid-gap: 15px;
 
   grid-template-columns: 1fr 1fr;
-  @media (max-width: 650px) {
+
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 `
