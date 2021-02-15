@@ -126,7 +126,8 @@ export const updateTechtree = (
   nodeList,
   linkList,
   techtreeID,
-  techtreeTitle
+  techtreeTitle,
+  thumbnailURL
 ) => async (dispatch) => {
   dispatch({ type: UPDATE_TECHTREE_DATA_TRY })
   try {
@@ -137,6 +138,7 @@ export const updateTechtree = (
         title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
+        // thumbnailURL,
       },
     })
     dispatch({ type: UPDATE_TECHTREE_DATA_SUCCESS, techtreeTitle })

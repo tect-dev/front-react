@@ -45,6 +45,7 @@ const documentWrapper = styled.div`
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
+  const { techtreeID } = match.params
 
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
@@ -79,8 +80,6 @@ export default function TechtreeDetailPage({ match }) {
 
   const [documentTitle, setDocumentTitle] = useState('')
   const [documentText, setDocumentText] = useState('')
-
-  const { techtreeID } = match.params
 
   const [isEditingDocument, setIsEditingDocument] = useState(false)
 
@@ -140,8 +139,8 @@ export default function TechtreeDetailPage({ match }) {
       const source = new XMLSerializer().serializeToString(svgDOM)
       var decoded = unescape(encodeURIComponent(source))
       // Now we can use btoa to convert the svg to base64
-      var base64 = btoa(decoded)
-      var imgSource = `data:image/svg+xml;base64,${base64}`
+      const base64 = btoa(decoded)
+      const thumbnailURL = `data:image/svg+xml;base64,${base64}`
       //d3.select('body')
       //  .append('img')
       //  .attr('src', imgSource)
@@ -152,7 +151,15 @@ export default function TechtreeDetailPage({ match }) {
       // 이제 put 메소드 이용해서 imgSource를 첨부해 보내면 됨.
       // 나중에 이걸 썸네일로 렌더링 하면 되는거고.
 
-      dispatch(updateTechtree(nodeList, linkList, techtreeID, techtreeTitle))
+      dispatch(
+        updateTechtree(
+          nodeList,
+          linkList,
+          techtreeID,
+          techtreeTitle,
+          thumbnailURL
+        )
+      )
     },
     [dispatch, nodeList, linkList, techtreeID, techtreeTitle]
   )

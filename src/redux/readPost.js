@@ -8,7 +8,7 @@ const initialState = {
     loading: false,
     data: null,
     error: null,
-    num: null
+    num: null,
   },
   question: {
     loading: false,
@@ -31,7 +31,7 @@ const initialState = {
     error: null,
   },
 
-  hashtag: null
+  hashtag: null,
 }
 
 // action types
@@ -55,9 +55,12 @@ const READ_SEARCHED_TRY = 'searched/READ_SEARCHED_TRY'
 const READ_SEARCHED_SUCCESS = 'searched/READ_SEARCHED_SUCCESS'
 const READ_SEARCHED_FAIL = 'searched/READ_SEARCHED_FAIL'
 
-const READ_SEARCHED_BY_HASHTAG_TRY = 'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_TRY'
-const READ_SEARCHED_BY_HASHTAG_SUCCESS = 'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_SUCCESS'
-const READ_SEARCHED_BY_HASHTAG_FAIL = 'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_FAIL'
+const READ_SEARCHED_BY_HASHTAG_TRY =
+  'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_TRY'
+const READ_SEARCHED_BY_HASHTAG_SUCCESS =
+  'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_SUCCESS'
+const READ_SEARCHED_BY_HASHTAG_FAIL =
+  'searchedByHashtag/READ_SEARCHED_BY_HASHTAG_FAIL'
 
 const REFRESH_HASHTAG = 'refresh/REFRESH_HASHTAG'
 
@@ -66,13 +69,15 @@ const REFRESH_HASHTAG = 'refresh/REFRESH_HASHTAG'
 export const readQuestionList = (spa) => async (dispatch) => {
   dispatch({ type: READ_QUESTION_LIST_TRY, spa: spa })
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/question/page/1`)
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/question/page/1`
+    )
     dispatch({
       type: READ_QUESTION_LIST_SUCCESS,
       questionList: res.data.question.sort((a, b) => {
         return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
       }),
-      num: res.data.questionSum
+      num: res.data.questionSum,
     })
   } catch (e) {
     console.log('error: ', e)
@@ -122,10 +127,10 @@ export const readSearchedResults = (querystring) => async (dispatch) => {
   try {
     const obj = JSON.stringify({ target: querystring })
     const res = await axios({
-      method: 'post',
-      url: `${process.env.REACT_APP_BACKEND_URL}/search`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+      method: 'get',
+
+      url: `${process.env.REACT_APP_BACKEND_URL}/search?target=${querystring}&page=1`,
+      //headers: { 'Content-Type': 'application/json' },
     })
     dispatch({ type: READ_SEARCHED_SUCCESS, searchedResults: res.data })
   } catch (e) {
@@ -139,12 +144,14 @@ export const readHashtagResults = (hashtag) => async (dispatch) => {
   try {
     const obj = JSON.stringify({ target: hashtag })
     const res = await axios({
-      method: 'post',
-      url: `${process.env.REACT_APP_BACKEND_URL}/search/hash`,
-      headers: { 'Content-Type': 'application/json' },
-      data: obj,
+      method: 'get',
+      url: `${process.env.REACT_APP_BACKEND_URL}/search/hash?target=${hashtag}&page=1`,
     })
-    dispatch({ type: READ_SEARCHED_BY_HASHTAG_SUCCESS, searchedResults: res.data, hashtag: hashtag })
+    dispatch({
+      type: READ_SEARCHED_BY_HASHTAG_SUCCESS,
+      searchedResults: res.data,
+      hashtag: hashtag,
+    })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: READ_SEARCHED_BY_HASHTAG_FAIL, error: e })
@@ -152,13 +159,13 @@ export const readHashtagResults = (hashtag) => async (dispatch) => {
 }
 
 export const refreshHashtag = () => async (dispatch) => {
-  dispatch({type: REFRESH_HASHTAG })
+  dispatch({ type: REFRESH_HASHTAG })
 }
 
 export default function readPost(state = initialState, action) {
   switch (action.type) {
     case READ_QUESTION_LIST_TRY:
-      if(action.spa){
+      if (action.spa) {
         return state
       } else {
         return {
@@ -168,7 +175,7 @@ export default function readPost(state = initialState, action) {
             data: null,
             error: null,
           },
-          hashtag: null
+          hashtag: null,
         }
       }
     case READ_QUESTION_LIST_SUCCESS:
@@ -178,7 +185,7 @@ export default function readPost(state = initialState, action) {
           loading: false,
           data: action.questionList,
           num: action.num,
-          error: null
+          error: null,
         },
       }
     case READ_QUESTION_LIST_FAIL:
@@ -311,7 +318,7 @@ export default function readPost(state = initialState, action) {
           data: action.searchedResults,
           error: null,
         },
-        hashtag: action.hashtag
+        hashtag: action.hashtag,
       }
     case READ_SEARCHED_BY_HASHTAG_FAIL:
       return {
@@ -325,7 +332,7 @@ export default function readPost(state = initialState, action) {
     case REFRESH_HASHTAG:
       return {
         ...state,
-        hashtag: null
+        hashtag: null,
       }
     default:
       return state

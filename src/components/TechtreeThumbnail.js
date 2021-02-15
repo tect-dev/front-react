@@ -3,7 +3,6 @@ import * as d3 from 'd3'
 import { Link } from 'react-router-dom'
 import { colorPalette, boxShadow, hoverAction } from '../lib/constants'
 import styled from 'styled-components'
-import { color } from 'd3'
 
 export const TechtreeThumbnailBlock = styled.div`
   padding: 1rem;
@@ -67,64 +66,11 @@ export default React.memo(function ({
     if (containerRef.current) {
       runForceGraph(containerRef.current, nodeList, linkList, techtreeID)
     }
-    /*
-    setTimeout(() => {
-      const doctype =
-        '<?xml version="1.0" standalone="no"?>' +
-        '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
-
-      const svgDOM = d3
-        .select(containerRef.current)
-        .select('#techtreeContainer')
-      console.log('svgDOM: ', svgDOM)
-      const source = new XMLSerializer().serializeToString(svgDOM.node())
-      const blob = new Blob([doctype + source], {
-        type: 'image/svg+xml;charset=utf-8',
-      })
-      const url = window.URL.createObjectURL(blob)
-
-      console.log('블롭: ', blob)
-      console.log('유알엘: ', url)
-
-      d3.select('body').append('canvas').attr('id', `pngdataurl${techtreeID}`)
-      //.style('opacity', 0)
-
-      var img1 = d3
-        .select(`#pngdataur${techtreeID}`)
-        .append('img')
-        .attr('width', 300)
-        .attr('height', 300)
-        .node()
-
-      //img1.src = url
-
-      var canvas = document.querySelector('canvas')
-      var context = canvas.getContext('2d')
-
-      var image = new Image()
-      image.src = url
-      image.onload = function () {
-        context.drawImage(image, 0, 0)
-        var canvasdata = canvas.toDataURL('image/png')
-
-        var pngimg =
-          '<img style={{ object-fit: fill }} width="300" height="300" src="' +
-          canvasdata +
-          '">'
-        d3.select(`#pngdataurl${techtreeID}`).html(pngimg)
-        d3.select(imgRef.current).html(pngimg)
-
-        var a = document.createElement('a')
-        //a.download = 'sample.png'
-        //a.href = canvasdata
-        //a.click()
-      }
-    }, 0)*/
   }, [])
 
   return (
     <TechtreeThumbnailCard>
-      <Link to={`/techtree/${techtreeID}`}>
+      <Link to={`/tree/${techtreeID}`}>
         <TechtreeThumbnailBlock
           ref={containerRef}
           className={techtreeID}

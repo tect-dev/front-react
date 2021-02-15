@@ -7,9 +7,10 @@ export default function ({ children }) {
 const DoubleSideLayout = styled.div`
   display: grid;
   justify-items: center; // 가로축에서 중앙정렬
+  grid-gap: 15px;
 
   grid-template-columns: 1fr 1fr;
-  @media (max-width: 768px) {
+  @media (max-width: 650px) {
     grid-template-columns: 1fr;
   }
 `

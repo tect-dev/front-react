@@ -24,7 +24,7 @@ export const boxShadow = {
 }
 
 export const hoverAction = {
-  transform: 'translateY(-8px)',
+  transform: 'translateY(-4px)',
   'box-shadow': '0 12px 20px 0 rgba(0, 0, 0, 0.08)',
 }
 

@@ -8,7 +8,7 @@ import TechtreeThumbnail, {
 import { TechtreeThumbnailCard } from '../../components/TechtreeThumbnail'
 import { Spinner } from '../../components/Spinner'
 import TreeIcon from '../../assets/tree.svg'
-import { GridContainer } from '../../wrappers/GridWrapper'
+import { GridWrapper } from '../../wrappers/GridWrapper'
 
 import styled from 'styled-components'
 
@@ -46,7 +46,7 @@ export default function TechtreeListPage() {
 
   return (
     <MainWrapper>
-      <GridContainer>
+      <GridWrapper>
         {/* 링크를 누른순간, 서버에 테크트리가 생성되고, 생성되고 나서 그 테크트리를 불러오는 식으로 하는게 나을듯.*/}
 
         <TechtreeThumbnailCard
@@ -79,7 +79,7 @@ export default function TechtreeListPage() {
             />
           )
         })}
-      </GridContainer>
+      </GridWrapper>
     </MainWrapper>
   )
 }

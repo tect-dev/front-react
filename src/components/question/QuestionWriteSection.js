@@ -63,6 +63,7 @@ export default React.memo(function QuestionWriteSection() {
 
   useEffect(() => {
     if (!loginState) {
+      alert('로그인이 필요합니다')
       history.push('/')
     }
     if (hashtagList.length > 10) {

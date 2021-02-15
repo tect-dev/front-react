@@ -145,6 +145,7 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
       <div>
         <StyledTextarea
           id="content"
+          placeholder="본문을 적어주세요."
           value={bindingText}
           onChange={onChangeText}
           maxLength={10000}
@@ -176,7 +177,7 @@ const MarkdownButton = styled.button`
 const StyledTextarea = styled.textarea`
   border: none;
   padding: 10px;
-  background-color: #f8f9fa !important;
+  //background-color: #f8f9fa !important;
   &:active {
     border: none;
   }

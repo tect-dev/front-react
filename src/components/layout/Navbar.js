@@ -26,13 +26,16 @@ export default function Navbar() {
   }
   const userInfo = JSON.parse(localStorage.getItem('user'))
 
-  const { userID, userNickname, loginState } = useSelector((state) => {
-    return {
-      userID: state.auth.userID,
-      userNickname: state.auth.userNickname,
-      loginState: state.auth.loginState,
+  const { userID, userNickname, loginState, userPlace } = useSelector(
+    (state) => {
+      return {
+        userID: state.auth.userID,
+        userNickname: state.auth.userNickname,
+        loginState: state.auth.loginState,
+        userPlace: state.auth.userPlace,
+      }
     }
-  })
+  )
 
   // useCallback : 함수의 불필요한 리렌더링을 막기 위한 hooks.
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
@@ -67,16 +70,22 @@ export default function Navbar() {
             Tect.dev
           </NavLink>
         </div>
-        {/* 일단 햄버거 메뉴 버튼 기능은 삭제함. */}
-        {/* <div className="menu-icon" onClick={handleMenuClick}>
-          {menuClick ? <FaTimes /> : <FaBars />}
-        </div> */}
+
         <nav className="navbar">
           <ul
             className={
               menuClick ? 'navbar-container clicked' : 'navbar-container'
             }
           >
+            <li className="navbar-item">
+              <NavLink
+                to={{ pathname: `/board/${userPlace}` }}
+                className="navbar-item-link"
+                style={{ paddingBottom: '5px' }}
+              >
+                게시판
+              </NavLink>
+            </li>
             <li className="navbar-item">
               <NavLink
                 to={{ pathname: '/question/list/1' }}
@@ -86,25 +95,16 @@ export default function Navbar() {
                 Q {`\&`} A
               </NavLink>
             </li>
+            <li className="navbar-item">
+              <NavLink
+                to={{ pathname: '/forest' }}
+                className="navbar-item-link"
+                style={{ paddingBottom: '5px' }}
+              >
+                숲
+              </NavLink>
+            </li>
 
-            {/* <div className="header-search">
-              <div className="visibleOnPc">
-                <input
-                  className="header-search-input"
-                  placeholder="Search..."
-                  value={searchValue}
-                  onKeyPress={(e) => {
-                    searchQuestions(e)
-                  }}
-                  onChange={(e) => {
-                    setSearchValue(e.target.value)
-                  }}
-                />
-              </div>
-              <div className="visibleOnMobile">
-                <FaSearch/>
-              </div>
-            </div> */}
             <SearchContainer popup={false}>
               <div
                 className="visibleOnPc"
