@@ -33,7 +33,7 @@ const MarkdownStyledBlock = styled.div`
     font-size: 0.875rem;
     padding: 1rem;
     border-radius: 4px;
-    line-height: 1.5;
+    line-height: 1.1;
     overflow-x: auto;
     letter-spacing: 0px;
     ${mediaSize.small} {
@@ -135,7 +135,9 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
                 } else if (latexBlockPattern.test(ele)) {
                   return `\n${ele}\n`
                 } else {
-                  return ele.replaceAll(`\n`, '\n<br />\n')
+                  return ele
+                    .replaceAll(`\n`, '<br />')
+                    .replaceAll(`\`\`\``, '\n```\n')
                 }
               })
               .join('')

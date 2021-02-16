@@ -7,19 +7,28 @@ import { logout, getUserInfo } from '../../redux/auth'
 import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
 import { Button } from '../../components/Button'
+import TreeIcon from '../../assets/tree.svg'
 import MainWrapper from '../../wrappers/MainWrapper'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
+import {
+  TechtreeThumbnailCard,
+  TechtreeInfo,
+  TechtreeThumbnailBlock,
+  TechtreeThumbnailImage,
+} from '../../components/TechtreeThumbnail'
 
+import { createTechtree, readTechtreeList } from '../../redux/techtree'
 import { sortISOByTimeStamp } from '../../lib/functions'
 
 export default function MyTreePage({ match }) {
   const history = useHistory()
   const { userID } = match.params
-  const { myID, loading } = useSelector((state) => {
+  const { myID, loading, loginState } = useSelector((state) => {
     return {
       myID: state.auth.userID,
       loading: state.auth.loading,
+      loginState: state.auth.loginState,
     }
   })
   const { treeData } = useSelector((state) => {
@@ -51,6 +60,28 @@ export default function MyTreePage({ match }) {
   return (
     <MainWrapper>
       <GridWrapper>
+        {loginState ? (
+          <TechtreeThumbnailCard
+            onClick={() => {
+              if (loginState) {
+                dispatch(createTechtree())
+              } else {
+                alert('로그인이 필요해요')
+              }
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <TechtreeThumbnailBlock>
+              <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
+            </TechtreeThumbnailBlock>
+            <TechtreeInfo>
+              <div style={{ margin: 'auto' }}> 새로운 트리 심기</div>
+            </TechtreeInfo>
+          </TechtreeThumbnailCard>
+        ) : (
+          ''
+        )}
+
         {treeData?.map((techtreeData, index) => {
           const parsedNodeList = JSON.parse(techtreeData.nodeList)
           const parsedLinkList = JSON.parse(techtreeData.linkList)

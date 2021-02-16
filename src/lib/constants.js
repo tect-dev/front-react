@@ -104,6 +104,8 @@ export const colorPalette = {
   red7: '#f03e3e',
   red8: '#e03131',
   red9: '#c92a2a',
+
+  mainGreen: '#6D9B7B',
 }
 
 export const testURL =

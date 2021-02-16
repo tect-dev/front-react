@@ -8,7 +8,7 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
-import { Button } from '../../components/Button'
+import { Button, DefaultButton } from '../../components/Button'
 
 import {
   TechtreeThumbnailCard,
@@ -31,14 +31,7 @@ import {
   finishTechtreeEdit,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
-import { colorPalette, mediaSize } from '../../lib/constants'
-
-const documentWrapper = styled.div`
-  width: 39vw;
-  ${mediaSize.small} {
-    width: 95vw;
-  }
-`
+import { colorPalette, mediaSize, fontSize } from '../../lib/constants'
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
@@ -145,12 +138,6 @@ export default function TechtreeDetailPage({ match }) {
       // Now we can use btoa to convert the svg to base64
       const base64 = btoa(decoded)
       const thumbnailURL = `data:image/svg+xml;base64,${base64}`
-      //d3.select('body')
-      //  .append('img')
-      //  .attr('src', imgSource)
-      //  .attr('width', 300)
-      //  .attr('height', 300)
-      //  .attr('alt', 'thumbnail')
 
       // 이제 put 메소드 이용해서 imgSource를 첨부해 보내면 됨.
       // 나중에 이걸 썸네일로 렌더링 하면 되는거고.
@@ -180,28 +167,16 @@ export default function TechtreeDetailPage({ match }) {
         <TreePageHeader>
           여기에 툴팁같은걸 띄우는것도 괜찮겠네. 변경사항 저장중 인디케이터도
           띄우고.
-          {isSavingTechtree ? (
-            <Loader
-              type="Grid"
-              color={colorPalette.teal5}
-              height={20}
-              width={20}
-            />
-          ) : (
-            ''
-          )}
         </TreePageHeader>
         <DoubleSideLayout>
           <HalfWidthContainer>
             <TreeTitleArea>
               {techtreeData.author.firebaseUid === userID ? (
-                
-                  <StyledTitleInput
-                    value={techtreeTitle}
-                    placeholder="트리의 주제를 적어주세요!"
-                    onChange={onChangeTechtreeTitle}
-                  />
-                
+                <StyledTitleInput
+                  value={techtreeTitle}
+                  placeholder="트리의 주제를 적어주세요!"
+                  onChange={onChangeTechtreeTitle}
+                />
               ) : (
                 <div>
                   {techtreeTitle} -
@@ -221,7 +196,7 @@ export default function TechtreeDetailPage({ match }) {
             <TreeEditButtonArea>
               {!isEditingDocument &&
               userID === techtreeData.author?.firebaseUid ? (
-                <Button
+                <DefaultButton
                   onClick={() => {
                     const deleteOK = window.confirm(`정말 삭제하시나요?`)
                     if (deleteOK) {
@@ -231,78 +206,96 @@ export default function TechtreeDetailPage({ match }) {
                     }
                   }}
                 >
-                  테크트리 전체 삭제
-                </Button>
+                  트리 전체 삭제
+                </DefaultButton>
               ) : (
                 ''
               )}
               {!isEditingDocument &&
               userID === techtreeData.author?.firebaseUid ? (
-                <Button onClick={onClickTechtreeEdit}>수정모드</Button>
+                <DefaultButton onClick={onClickTechtreeEdit}>
+                  수정모드
+                </DefaultButton>
               ) : (
                 ''
               )}
               {!isEditingDocument &&
+              !isSavingTechtree &&
               userID === techtreeData.author?.firebaseUid ? (
-                <Button onClick={onClickTechtreeCommit}>변경사항 저장</Button>
+                <DefaultButton onClick={onClickTechtreeCommit}>
+                  변경사항 저장
+                </DefaultButton>
+              ) : (
+                ''
+              )}
+              {isSavingTechtree ? (
+                <Loader
+                  type="Grid"
+                  color={colorPalette.teal5}
+                  height={20}
+                  width={20}
+                />
               ) : (
                 ''
               )}
             </TreeEditButtonArea>
           </HalfWidthContainer>
 
-          <HalfWidthContainer>
-            <DocuHeaderArea>
-              <div className="docuTitle">
+          <HalfWidthDocumentContainer>
+            <DocuWrapper>
+              <DocuHeaderArea>
+                <div className="docuTitle">
+                  {isEditingDocument ? (
+                    <StyledTitleInput
+                      value={documentTitle}
+                      onChange={onChangeDocumentTitle}
+                    />
+                  ) : (
+                    <h2>{selectedNode.name}</h2>
+                  )}
+                </div>
+
+                <div className="editDocu">
+                  {isEditingDocument ? (
+                    <DefaultButton onClick={onFinishEdit}>
+                      수정완료
+                    </DefaultButton>
+                  ) : (
+                    ''
+                  )}
+                  {typeof selectedNode.id !== 'undefined' &&
+                  !isEditingDocument &&
+                  userID === techtreeData.author?.firebaseUid ? (
+                    <DefaultButton
+                      onClick={() => {
+                        setIsEditingDocument(true)
+                      }}
+                    >
+                      문서 수정
+                    </DefaultButton>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              </DocuHeaderArea>
+
+              <DocuBodyArea>
                 {isEditingDocument ? (
-                  <StyledTitleInput
-                    value={documentTitle}
-                    onChange={onChangeDocumentTitle}
+                  <MarkdownEditor
+                    bindingText={documentText}
+                    bindingSetter={setDocumentText}
                   />
                 ) : (
-                  <h2>{selectedNode.name}</h2>
+                  <MarkdownRenderer text={selectedNode.body} />
                 )}
-              </div>
-
-              <div className="editDocu">
-                {isEditingDocument ? (
-                  <Button onClick={onFinishEdit}>수정완료</Button>
-                ) : (
-                  ''
-                )}
-                {typeof selectedNode.id !== 'undefined' &&
-                !isEditingDocument &&
-                userID === techtreeData.author?.firebaseUid ? (
-                  <Button
-                    onClick={() => {
-                      setIsEditingDocument(true)
-                    }}
-                  >
-                    문서 수정
-                  </Button>
-                ) : (
-                  ''
-                )}
-              </div>
-            </DocuHeaderArea>
-
-            <DocuBodyArea>
-              {isEditingDocument ? (
-                <MarkdownEditor
-                  bindingText={documentText}
-                  bindingSetter={setDocumentText}
-                />
-              ) : (
-                <MarkdownRenderer text={selectedNode.body} />
-              )}
-            </DocuBodyArea>
-
-            <div className="nodeRelation">
+              </DocuBodyArea>
+            </DocuWrapper>
+            <NodeButtonArea>
               <PrevNodeArea>
                 {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
                 {previousNodeList.map((node) => {
                   return (
-                    <Button
+                    <DefaultButton
                       onClick={() => {
                         const newPreviousNodeList = returnPreviousNodeList(
                           linkList,
@@ -321,7 +314,7 @@ export default function TechtreeDetailPage({ match }) {
                       }}
                     >
                       {node?.name}
-                    </Button>
+                    </DefaultButton>
                   )
                 })}
               </PrevNodeArea>
@@ -329,7 +322,7 @@ export default function TechtreeDetailPage({ match }) {
                 {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
                 {nextNodeList.map((node) => {
                   return (
-                    <Button
+                    <DefaultButton
                       onClick={() => {
                         const newPreviousNodeList = returnPreviousNodeList(
                           linkList,
@@ -348,12 +341,12 @@ export default function TechtreeDetailPage({ match }) {
                       }}
                     >
                       {node?.name}
-                    </Button>
+                    </DefaultButton>
                   )
                 })}
               </NextNodeArea>
-            </div>
-          </HalfWidthContainer>
+            </NodeButtonArea>
+          </HalfWidthDocumentContainer>
         </DoubleSideLayout>
       </MainWrapper>
     )
@@ -362,17 +355,39 @@ export default function TechtreeDetailPage({ match }) {
 
 const TreePageHeader = styled.div``
 
-const TreeTitleArea = styled.div``
+const TreeTitleArea = styled.div`
+  font-size: ${fontSize.large};
+`
 
 const TreeEditorArea = styled.div``
 
 const TreeEditButtonArea = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-around;
+  padding: 20px;
+`
+
+const DocuWrapper = styled.div`
+  padding: 30px;
+  border-radius: 22px;
+  border: 1px solid ${colorPalette.mainGreen};
 `
 
 const DocuHeaderArea = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-around;
 `
 
-const DocuBodyArea = styled.div`
+const DocuBodyArea = styled.div``
+
+const NodeButtonArea = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-around;
+  padding: 20px;
+  font-size: ${fontSize.small};
 `
 
 const PrevNodeArea = styled.div``
@@ -381,16 +396,21 @@ const NextNodeArea = styled.div``
 
 const HalfWidthContainer = styled(HalfWidthWrapper)`
   overflow: visible;
-  // overflow: hidden;
+  //overflow: hidden;
+`
+const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
+  width: 80%;
 `
 
 const StyledTitleInput = styled.input`
-  height: 60px;
-  font-size: 30px;
-  font-weight: bold;
+  height: 30px;
+  font-size: 24px;
+  //font-weight: bold;
   cursor: text;
-  border: none;
+  border: 1px solid ${colorPalette.mainGreen};
+  border-radius: 22px;
   outline: none;
-  padding: 0.2rem;
-  width: 42vw;
+  padding: 1rem;
+  margin: 1rem;
+  width: 80%;
 `

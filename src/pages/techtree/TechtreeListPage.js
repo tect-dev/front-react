@@ -61,10 +61,10 @@ export default function TechtreeListPage() {
           style={{ cursor: 'pointer' }}
         >
           <TechtreeThumbnailBlock>
-            <imgTechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
+            <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
           </TechtreeThumbnailBlock>
           <TechtreeInfo>
-            <div style={{ margin: 'auto' }}> 새로운 테크트리 심기</div>
+            <div style={{ margin: 'auto' }}> 새로운 트리 심기</div>
           </TechtreeInfo>
         </TechtreeThumbnailCard>
 

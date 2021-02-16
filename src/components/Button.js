@@ -1,9 +1,12 @@
 import React from 'react'
 import '../styles/Button.scss'
 
+import { fontSize } from '../lib/constants'
 import styled from 'styled-components'
 
-export const DefaultButton = styled.button``
+export const DefaultButton = styled.button`
+  font-size: ${fontSize.small};
+`
 
 const STYLES = ['btn--primary', 'btn--outline']
 const SIZES = ['btn--medium', 'btn--large']

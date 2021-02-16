@@ -39,7 +39,10 @@ export default React.memo(function ({
         </TreeThumbnailHeader>
 
         <TechtreeThumbnailBlock>
-          <TechtreeThumbnailImage src={testURL} alt="treeThumbnail" />
+          <TechtreeThumbnailImage
+            src={techtreeData.thumbnail}
+            alt="treeThumbnail"
+          />
         </TechtreeThumbnailBlock>
         <TreeThumbnailFooter>
           여기엔 트리 좋아요 갯수가 들어가야겠군
@@ -51,20 +54,22 @@ export default React.memo(function ({
 
 export const TechtreeThumbnailBlock = styled.div`
   padding: 20px;
-
-  img {
-    object-fit: fill;
-  }
 `
 
 export const TechtreeThumbnailImage = styled.img`
-  width: 100%;
-  object-fit: hidden;
+  width: 250px; //100%;
+  height: 250px;
+  object-fit: fill;
 `
 
-const TreeThumbnailHeader = styled.div``
+const TreeThumbnailHeader = styled.div`
+  padding-left: 1rem;
+  padding-right: 1rem;
+`
 
 const TreeThumbnailFooter = styled.div`
+  padding-left: 1rem;
+  padding-right: 1rem;
   font-size: ${fontSize.small};
 `
 
