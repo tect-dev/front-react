@@ -32,6 +32,7 @@ import {
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import { colorPalette, mediaSize, fontSize } from '../../lib/constants'
+import MainWrapperDefault from '../../wrappers/MainWrapper'
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
@@ -165,8 +166,7 @@ export default function TechtreeDetailPage({ match }) {
     return (
       <MainWrapper>
         <TreePageHeader>
-          여기에 툴팁같은걸 띄우는것도 괜찮겠네. 변경사항 저장중 인디케이터도
-          띄우고.
+          <div>나만의 나무를 심어보세요</div>
         </TreePageHeader>
         <DoubleSideLayout>
           <HalfWidthContainer>
@@ -353,7 +353,16 @@ export default function TechtreeDetailPage({ match }) {
   }
 }
 
-const TreePageHeader = styled.div``
+const TreeDetailPageMainWrapper = styled(MainWrapper)``
+
+const TreePageHeader = styled.div`
+  width: 90%;
+  display: grid;
+  border: 1px solid ${colorPalette.mainGreen};
+  margin: 1rem;
+  padding: 1rem;
+  color: ${colorPalette.gray7};
+`
 
 const TreeTitleArea = styled.div`
   font-size: ${fontSize.large};
@@ -385,6 +394,7 @@ const DocuBodyArea = styled.div``
 const NodeButtonArea = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
   justify-content: space-around;
   padding: 20px;
   font-size: ${fontSize.small};
@@ -406,6 +416,7 @@ const StyledTitleInput = styled.input`
   height: 30px;
   font-size: 24px;
   //font-weight: bold;
+  background-color: transparent;
   cursor: text;
   border: 1px solid ${colorPalette.mainGreen};
   border-radius: 22px;

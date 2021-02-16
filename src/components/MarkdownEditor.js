@@ -113,7 +113,7 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
   const addLink = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText} [오른쪽 괄호안에는 링크 주소를 적습니다](https://tect.dev)`
+      const addedContent = `${localText} [오른쪽 괄호안에는 링크 주소를 적습니다](https://www.foresty.net)`
       setLocalText(addedContent)
       bindingSetter(addedContent)
     },
@@ -177,6 +177,7 @@ const MarkdownButton = styled.button`
 const StyledTextarea = styled.textarea`
   border: none;
   padding: 10px;
+  background-color: transparent;
   //background-color: #f8f9fa !important;
   &:active {
     border: none;
