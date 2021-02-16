@@ -123,9 +123,11 @@ const MarkdownEditor_Container = styled.div`
 
 const TitleInput = styled.input`
   all: unset;
+  width: 100%;
   font-weight: bold;
   color: #6d9b7b;
-  padding: 10px 0 20px 10px;
+  box-sizing: border-box;
+  padding: 10px 10px 20px 10px;
   font-size: ${fontSize.large};
   &::placeholder {
     color: #6d9b7b;
