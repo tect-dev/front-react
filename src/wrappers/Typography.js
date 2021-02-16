@@ -124,14 +124,14 @@ export const TypographyBlock = styled.div`
     padding-left: 2rem;
     color: ${colorPalette.gray9};
     ul,
-    ol {
-      padding-left: 1rem;
+    ol,
+    li {
     }
     *:first-child {
-      margin-top: 0;
+      margin-top: 5px;
     }
     *:last-child {
-      margin-bottom: 0;
+      margin-bottom: 5px;
     }
   }
 `

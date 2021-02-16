@@ -53,14 +53,14 @@ const MainLayout = styled.div`
   //background-color: ${colorPalette.gray0};
 `
 
-const ContentWrapper = styled.main`
+export const ContentWrapper = styled.main`
   margin-top: 100px;
   margin-bottom: 50px;
   margin-left: 20vw;
   margin-right: 20vw;
   @media (max-width: 1440px) {
-    margin-left: 15vw;
-    margin-right: 15vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
   }
   @media (max-width: 1024px) {
     margin-left: 10vw;

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail, {
+  TechtreeThumbnailCard,
   TechtreeInfo,
   TechtreeThumbnailBlock,
   TechtreeThumbnailImage,
 } from '../../components/TechtreeThumbnail'
-import { TechtreeThumbnailCard } from '../../components/TechtreeThumbnail'
 import { Spinner } from '../../components/Spinner'
+import { Button } from '../../components/Button'
 import TreeIcon from '../../assets/tree.svg'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 
@@ -22,20 +23,28 @@ import { colorPalette, boxShadow } from '../../lib/constants'
 
 export default function TechtreeListPage() {
   const dispatch = useDispatch()
-  const history = useHistory()
+
   const { techtreeList } = useSelector((state) => {
     return { techtreeList: state.techtree.techtreeList }
   })
-  const { loading } = useSelector((state) => {
-    return { loading: state.techtree.loading }
+  const { loading, treeSum } = useSelector((state) => {
+    return { loading: state.techtree.loading, treeSum: state.techtree.treeSum }
   })
+
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
+  const [pageNumber, setPageNumber] = useState(1)
+  const treePerPage = 20
+  const pageMaxNumber = Math.floor(treeSum / treePerPage) + 1
+  const pageArray = []
+  for (let i = 0; i < pageMaxNumber; i++) {
+    pageArray.push(i + 1)
+  }
 
   useEffect(() => {
-    dispatch(readTechtreeList())
-  }, [dispatch])
+    dispatch(readTechtreeList(pageNumber))
+  }, [dispatch, pageNumber])
 
   if (loading) {
     return (
@@ -48,53 +57,144 @@ export default function TechtreeListPage() {
   return (
     <MainWrapper>
       <GridWrapper>
-        {/* 링크를 누른순간, 서버에 테크트리가 생성되고, 생성되고 나서 그 테크트리를 불러오는 식으로 하는게 나을듯.*/}
+        {pageNumber === 1 ? (
+          <TechtreeThumbnailCard
+            onClick={() => {
+              if (loginState) {
+                dispatch(createTechtree())
+              } else {
+                alert('로그인이 필요해요')
+              }
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <TechtreeThumbnailBlock>
+              <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
+            </TechtreeThumbnailBlock>
+            <TechtreeInfo>
+              <div style={{ margin: 'auto' }}> 새로운 트리 심기</div>
+            </TechtreeInfo>
+          </TechtreeThumbnailCard>
+        ) : (
+          ''
+        )}
 
-        <TechtreeThumbnailCard
-          onClick={() => {
-            if (loginState) {
-              dispatch(createTechtree())
-            } else {
-              alert('로그인이 필요해요')
-            }
-          }}
-          style={{ cursor: 'pointer' }}
-        >
-          <TechtreeThumbnailBlock>
-            <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
-          </TechtreeThumbnailBlock>
-          <TechtreeInfo>
-            <div style={{ margin: 'auto' }}> 새로운 트리 심기</div>
-          </TechtreeInfo>
-        </TechtreeThumbnailCard>
-
-        {techtreeList.map((techtreeData, index) => {
+        {techtreeList?.map((techtreeData, index) => {
           return (
-            <div>
-              <TechtreeThumbnail
-                nodeList={techtreeData.nodeList}
-                linkList={techtreeData.linkList}
-                techtreeTitle={techtreeData.title}
-                techtreeID={techtreeData._id}
-                techtreeData={techtreeData}
-                key={index}
-              />
-            </div>
+            <TechtreeThumbnail
+              nodeList={techtreeData.nodeList}
+              linkList={techtreeData.linkList}
+              techtreeTitle={techtreeData.title}
+              techtreeID={techtreeData._id}
+              techtreeData={techtreeData}
+              key={index}
+            />
           )
         })}
       </GridWrapper>
+      <PageButtonArea>
+        <PageButtonContainer>
+          {pageArray.map((ele, idx) => {
+            // 1번이랑 마지막은 무조건 렌더링을 해야함.
+            // 최소 5개는 렌더링 해야함.
+            // pageNumber -2, -1, 0 , +1, +2 를 렌더링하고 +3에선 ...을 반환하고 이후 마지막것만 렌더링.
+            // 그러나 pageNumber 가 3보다 작다면 1~5를 렌더링한다.
+
+            if (ele === 1) {
+              if (pageNumber === ele) {
+                return (
+                  <Button
+                    key={idx}
+                    onClick={() => {
+                      setPageNumber(ele)
+                    }}
+                  >
+                    now {ele}
+                  </Button>
+                )
+              } else {
+                return (
+                  <Button
+                    key={idx}
+                    onClick={() => {
+                      setPageNumber(ele)
+                    }}
+                  >
+                    {ele}
+                  </Button>
+                )
+              }
+            }
+
+            if (ele === pageMaxNumber) {
+              if (pageNumber === ele) {
+                return (
+                  <Button
+                    key={idx}
+                    onClick={() => {
+                      setPageNumber(ele)
+                    }}
+                  >
+                    now {ele}
+                  </Button>
+                )
+              } else {
+                return (
+                  <Button
+                    key={idx}
+                    onClick={() => {
+                      setPageNumber(ele)
+                    }}
+                  >
+                    {ele}
+                  </Button>
+                )
+              }
+            }
+
+            if (ele === pageNumber) {
+              return (
+                <Button
+                  key={idx}
+                  onClick={() => {
+                    setPageNumber(ele)
+                  }}
+                >
+                  현재페이지 {ele}
+                </Button>
+              )
+            } else if (ele < pageNumber + 3 && ele > pageNumber - 3) {
+              return (
+                <Button
+                  key={idx}
+                  onClick={() => {
+                    setPageNumber(ele)
+                  }}
+                >
+                  {ele}
+                </Button>
+              )
+            } else if (ele === pageNumber + 3) {
+              return <>...</>
+            } else if (ele === pageNumber - 3) {
+              return <>...</>
+            } else {
+              return
+            }
+          })}
+        </PageButtonContainer>
+      </PageButtonArea>
     </MainWrapper>
   )
 }
 
-const CreateNewTechtree = styled.div`
+const PageButtonContainer = styled.div`
+  display: flex;
+`
+
+const PageButtonArea = styled.div`
+  width: 90%;
   display: grid;
-  grid-template-columns: 1fr;
-  border-radius: 2px;
-  width: 300px;
-  height: 300px;
-  cursor: pointer;
-  box-shadow: ${boxShadow.default};
-  text-align: center;
-  background-color: #ffffff;
+  justify-items: center;
+  padding: 1rem;
 `

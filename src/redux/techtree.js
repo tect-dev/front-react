@@ -2,6 +2,10 @@ import axios from 'axios'
 import { authService } from '../lib/firebase'
 import { uid } from 'uid'
 import { sortISOByTimeStamp } from '../lib/functions'
+import { whiteURL } from '../lib/constants'
+
+const nodePlaceholder =
+  '\n1. 캔버스 위에서 더블 클릭하면, 노드가 만들어져요. \n\n2. 노드를 클릭하면 문서를 작성할 수 있어요.\n\n3. 노드에서 다른 노드로 마우스 드래그를 하면 연결관계를 표현할 수 있어요.\n\n4. 수정모드에서는 노드나 링크를 삭제하거나, 노드를 드래그해서 위치를 바꿀 수 있어요.\n\n5. 마크다운 문법과 코드블럭, 레이텍 문법을 지원합니다.\n\n6. 문서 에디터에 이미지를 드래그 드롭하면 사진을 첨부할 수 있어요.'
 
 const initialState = {
   loading: false,
@@ -10,8 +14,7 @@ const initialState = {
   nextNodeList: [],
   selectedNode: {
     name: '',
-    body:
-      '더블 클릭 -> 노드 생성.\n노드 클릭 -> 노드와 연결된 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
+    body: nodePlaceholder,
   },
   isEditingDocument: false,
   isEditingTechtree: false,
@@ -27,6 +30,7 @@ const initialState = {
       firebaseUid: '',
     },
   },
+  treeSum: 1,
 }
 
 // define ACTION types
@@ -89,12 +93,12 @@ export const createTechtree = () => async (dispatch, getState, { history }) => {
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-          title: '트리의 주제를 입력해주세요!',
+          title: '',
           _id: techtreeID,
           hashtags: [],
           nodeList: `[]`,
           linkList: `[]`,
-          thumbnail: '',
+          thumbnail: whiteURL,
           firebaseToken: idToken,
         },
       })
@@ -118,7 +122,7 @@ export const deleteTechtree = (techtreeID) => async (
       method: 'delete',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
     })
-    history.push(`/`)
+    history.push('/forest')
   } catch (e) {
     console.log('error: ', e)
   }
@@ -308,15 +312,15 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => {
   }
 }
 
-export const readTechtreeList = () => async (dispatch) => {
+export const readTechtreeList = (pageNumber) => async (dispatch) => {
   dispatch({ type: READ_TECHTREE_LIST_TRY })
   try {
     const res = await axios({
       method: 'get',
-      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/page/${pageNumber}`,
     })
     // 여기서 모든 배열내의 테크트리들 바꿔서 정리해줘야하네.
-    const parsedTechtreeList = res.data.map((techtreeData) => {
+    const parsedTechtreeList = res.data.techTree.map((techtreeData) => {
       try {
         const parsedNodeList = JSON.parse(techtreeData.nodeList)
         const parsedLinkList = JSON.parse(techtreeData.linkList)
@@ -338,6 +342,7 @@ export const readTechtreeList = () => async (dispatch) => {
       techtreeList: parsedTechtreeList.sort((a, b) => {
         return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
       }),
+      treeSum: res.data.techTreeSum,
     })
   } catch (e) {
     dispatch({ type: READ_TECHTREE_LIST_FAIL })
@@ -468,6 +473,7 @@ export default function techtree(state = initialState, action) {
         ...state,
         loading: false,
         techtreeList: action.techtreeList,
+        treeSum: action.treeSum,
       }
     case READ_TECHTREE_LIST_FAIL:
       return {
@@ -489,8 +495,7 @@ export default function techtree(state = initialState, action) {
         techtreeTitle: '',
         selectedNode: {
           name: '',
-          body:
-            '더블 클릭 -> 노드 생성.\n노드 클릭 -> 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
+          body: nodePlaceholder,
         },
       }
     case READ_TECHTREE_DATA_SUCCESS:

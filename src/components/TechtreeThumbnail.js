@@ -44,9 +44,7 @@ export default React.memo(function ({
             alt="treeThumbnail"
           />
         </TechtreeThumbnailBlock>
-        <TreeThumbnailFooter>
-          여기엔 트리 좋아요 갯수가 들어가야겠군
-        </TreeThumbnailFooter>
+        <TreeThumbnailFooter></TreeThumbnailFooter>
       </Link>
     </TechtreeThumbnailCard>
   )
@@ -65,6 +63,8 @@ export const TechtreeThumbnailImage = styled.img`
 const TreeThumbnailHeader = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 `
 
 const TreeThumbnailFooter = styled.div`
@@ -87,10 +87,11 @@ export const TechtreeThumbnailCard = styled.div`
   border-radius: 2px;
   grid-row-start: span 1;
   grid-column-start: span 1;
-
+  display: grid;
   width: 100%;
   height: 100%;
-
+  justify-items: center;
+  justify-content: center;
   //width: 290px;
   //height: '300px';
   transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
