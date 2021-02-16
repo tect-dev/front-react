@@ -4,6 +4,7 @@ import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail, {
   TechtreeInfo,
   TechtreeThumbnailBlock,
+  TechtreeThumbnailImage,
 } from '../../components/TechtreeThumbnail'
 import { TechtreeThumbnailCard } from '../../components/TechtreeThumbnail'
 import { Spinner } from '../../components/Spinner'
@@ -60,7 +61,7 @@ export default function TechtreeListPage() {
           style={{ cursor: 'pointer' }}
         >
           <TechtreeThumbnailBlock>
-            <img src={TreeIcon} alt="treeIcon" width="250px" height="250px" />
+            <imgTechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
           </TechtreeThumbnailBlock>
           <TechtreeInfo>
             <div style={{ margin: 'auto' }}> 새로운 테크트리 심기</div>
@@ -69,14 +70,16 @@ export default function TechtreeListPage() {
 
         {techtreeList.map((techtreeData, index) => {
           return (
-            <TechtreeThumbnail
-              nodeList={techtreeData.nodeList}
-              linkList={techtreeData.linkList}
-              techtreeTitle={techtreeData.title}
-              techtreeID={techtreeData._id}
-              techtreeData={techtreeData}
-              key={index}
-            />
+            <div>
+              <TechtreeThumbnail
+                nodeList={techtreeData.nodeList}
+                linkList={techtreeData.linkList}
+                techtreeTitle={techtreeData.title}
+                techtreeID={techtreeData._id}
+                techtreeData={techtreeData}
+                key={index}
+              />
+            </div>
           )
         })}
       </GridWrapper>
