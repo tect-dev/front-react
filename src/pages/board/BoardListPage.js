@@ -233,7 +233,7 @@ export const PostCard = styled.div`
   border-radius: 22px;
   cursor: pointer;
 
-  background-color: #ffffff;
+  background-color: #fffef8;
   box-shadow: ${boxShadow.default};
 
   transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
