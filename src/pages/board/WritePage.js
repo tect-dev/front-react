@@ -4,6 +4,8 @@ import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import MarkdownEditor from '../../components/MarkdownEditor'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
 
+import { mediaSize, fontSize } from '../../lib/constants'
+
 import React, { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -46,25 +48,112 @@ export default function WritePage({ match }) {
   return (
     <MainWrapperWithoutFAB>
       <DoubleSideLayout>
-        <HalfWidthContainer>
-          <input onChange={changeTitle} placeholder="제목을 입력해 주세요" />
+        <HalfWidthContainer_for_Renderer>
+          <Preview> Preview </Preview>
+          <MarkdownRenderer_Container>
+            <MarkdownRenderer text={documentText} />
+          </MarkdownRenderer_Container>
+        </HalfWidthContainer_for_Renderer>
+        <HalfWidthContainer_new>
+          <MarkdownEditor_Container>
+            <TitleInput onChange={changeTitle} placeholder="제목을 입력해 주세요" />
+            <TitleBottomLine />
 
-          <MarkdownEditor
-            bindingText={documentText}
-            bindingSetter={setDocumentText}
-            width="100%"
-          />
-        </HalfWidthContainer>
-        <HalfWidthContainer>
-          <MarkdownRenderer text={documentText} />
-          <button onClick={submitData}>작성완료</button>
-        </HalfWidthContainer>
+            <MarkdownEditor
+              bindingText={documentText}
+              bindingSetter={setDocumentText}
+              width="100%"
+            />
+          </MarkdownEditor_Container>
+          
+          <Hashtags_and_SubmitButton>
+            <SubmitButton onClick={submitData}>작성완료</SubmitButton>
+          </Hashtags_and_SubmitButton>
+        </HalfWidthContainer_new>
       </DoubleSideLayout>
     </MainWrapperWithoutFAB>
   )
 }
 
+export const Preview = styled.div`
+  border-radius: 22px;
+  background: #fffef8;
+  border: 1px solid #6d9b7b;
+  font-size: ${fontSize.large};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #6d9b7b;
+  font-weight: bold;
+  padding-left: 30px;
+  height: 56px;
+  margin-bottom: 10px;
+`
+
 export const HalfWidthContainer = styled(HalfWidthWrapper)`
   background-color: #ffffff;
-  width: 90%;
+  width: 100%;
+`
+export const HalfWidthContainer_new = styled.div`
+  height: 80vh;
+  width: 100%;
+`
+
+export const HalfWidthContainer_for_Renderer = styled(HalfWidthContainer_new)`
+  ${mediaSize.small} {
+    display: none;
+  }
+`
+
+export const MarkdownRenderer_Container = styled.div`
+  overflow: auto;
+  height: 584px;
+  border-radius: 22px;
+  background: #fffef8;
+  border: 1px solid #6d9b7b;
+`
+
+const MarkdownEditor_Container = styled.div`
+  border-radius: 22px;
+  background: #fffef8;
+  border: 1px solid #6d9b7b;
+  box-sizing: border-box;
+  padding: 10px;
+`
+
+const TitleInput = styled.input`
+  all: unset;
+  font-weight: bold;
+  color: #6d9b7b;
+  padding: 10px 0 20px 10px;
+  font-size: ${fontSize.large};
+  &::placeholder {
+    color: #6d9b7b;
+  }
+`
+
+const TitleBottomLine = styled.div`
+  width: 174.5px;
+  height: 3px;
+  margin-left: 10px;
+  margin-bottom: 14px;
+  background: #6d9b7b;
+  border-radius: 1.5px;
+`
+
+const SubmitButton = styled.button`
+  cursor: pointer;
+  font-size: ${fontSize.medium};
+  padding: 8px 17px 7px 22px;
+  background: #6d9b7b;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  font-weight: bold;
+`
+
+const Hashtags_and_SubmitButton = styled.div`
+  margin-top: 84px;
+  display: flex;
+  flex-direction: row-reverse;
 `

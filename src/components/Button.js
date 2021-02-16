@@ -1,11 +1,22 @@
 import React from 'react'
 import '../styles/Button.scss'
 
-import { fontSize } from '../lib/constants'
+import { fontSize, colorPalette } from '../lib/constants'
 import styled from 'styled-components'
 
 export const DefaultButton = styled.button`
   font-size: ${fontSize.small};
+  padding: 8px 10px;
+  border: 2px solid ${colorPalette.mainGreen};
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  background-color: #fff;
+
+  &:hover {
+    background: ${colorPalette.mainGreen};
+    color: white;
+  }
 `
 
 const STYLES = ['btn--primary', 'btn--outline']
