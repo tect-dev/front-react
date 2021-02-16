@@ -63,6 +63,10 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
         align-items: center;
         width: inherit;
         height: 100%;
+
+        &:hover {
+          color: #00bebe;
+        }
       }
 
       .active {

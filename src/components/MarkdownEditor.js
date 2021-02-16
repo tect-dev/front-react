@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
+import { colorPalette, fontSize } from '../lib/constants'
+
 import styled from 'styled-components'
 import {
   FaBold,
@@ -176,7 +178,11 @@ const MarkdownButton = styled.button`
 
 const StyledTextarea = styled.textarea`
   border: none;
+  box-sizing: border-box;
+  font-size: ${fontSize.medium};
+  resize: none;
   padding: 10px;
+  background: none;
   //background-color: #f8f9fa !important;
   &:active {
     border: none;
