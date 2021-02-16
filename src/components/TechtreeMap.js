@@ -189,30 +189,30 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   // 그래프 위치변경시엔 템프라인 비활성화
 
   // 그래프 수정 토글
-  if (
-    reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-    reduxStore.getState().auth.userID
-  ) {
-    svg
-      .append('g')
-      .append('rect')
-      .attr('width', 10)
-      .attr('height', 10)
-      .attr('x', width - 10)
-      .attr('y', height / 2 - 10)
-      .style('fill', 'red')
-      .attr('display', 'inline')
-      .on('click', () => {
-        if (isEditingTechtree) {
-          reduxStore.dispatch(finishTechtreeEdit())
-        } else {
-          reduxStore.dispatch(editTechtree())
-        }
-        initNode()
-        initLink()
-        initLabel()
-      })
-  }
+  //if (
+  //  reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+  //  reduxStore.getState().auth.userID
+  //) {
+  //  svg
+  //    .append('g')
+  //    .append('rect')
+  //    .attr('width', 10)
+  //    .attr('height', 10)
+  //    .attr('x', width - 10)
+  //    .attr('y', height / 2 - 10)
+  //    .style('fill', 'red')
+  //    .attr('display', 'inline')
+  //    .on('click', () => {
+  //      if (isEditingTechtree) {
+  //        reduxStore.dispatch(finishTechtreeEdit())
+  //      } else {
+  //        reduxStore.dispatch(editTechtree())
+  //      }
+  //      initNode()
+  //      initLink()
+  //      initLabel()
+  //    })
+  //}
 
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')

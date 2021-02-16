@@ -1,28 +1,71 @@
 import React from 'react'
 import * as d3 from 'd3'
 import { Link } from 'react-router-dom'
-import { colorPalette, boxShadow, hoverAction } from '../lib/constants'
+import {
+  colorPalette,
+  boxShadow,
+  hoverAction,
+  testURL,
+  fontSize,
+} from '../lib/constants'
 import styled from 'styled-components'
 
+export default React.memo(function ({
+  nodeList,
+  linkList,
+  techtreeTitle,
+  techtreeID,
+  techtreeData,
+}) {
+  const containerRef = React.useRef(null)
+  const imgRef = React.useRef(null)
+
+  React.useEffect(() => {
+    //if (containerRef.current) {
+    //  runForceGraph(containerRef.current, nodeList, linkList, techtreeID)
+    //}
+  }, [])
+
+  return (
+    <TechtreeThumbnailCard>
+      <Link to={`/tree/${techtreeID}`}>
+        <TreeThumbnailHeader>
+          <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            {techtreeTitle}
+          </div>
+          <div style={{ fontSize: '14px' }}>
+            {techtreeData.author.displayName}
+          </div>
+        </TreeThumbnailHeader>
+
+        <TechtreeThumbnailBlock>
+          <TechtreeThumbnailImage src={testURL} alt="treeThumbnail" />
+        </TechtreeThumbnailBlock>
+        <TreeThumbnailFooter>
+          여기엔 트리 좋아요 갯수가 들어가야겠군
+        </TreeThumbnailFooter>
+      </Link>
+    </TechtreeThumbnailCard>
+  )
+})
+
 export const TechtreeThumbnailBlock = styled.div`
-  padding: 1rem;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  h4 {
-    font-size: 1rem;
-    margin: 0;
-    margin-bottom: 0.25rem;
-    line-height: 1.5;
-    word-break: break-word;
-    color: ${colorPalette.gray9};
+  padding: 20px;
+
+  img {
+    object-fit: fill;
   }
-  .description-wrapper {
-    flex: 1;
-  }
-  svg {
-    object-fit: cover;
-  }
+`
+
+export const TechtreeThumbnailImage = styled.img`
+  width: 100%;
+  object-fit: hidden;
+`
+
+const TreeThumbnailHeader = styled.div``
+
+const TreeThumbnailFooter = styled.div`
+  font-size: ${fontSize.small};
 `
 
 export const TechtreeInfo = styled.div`
@@ -37,54 +80,27 @@ export const TechtreeInfo = styled.div`
 
 export const TechtreeThumbnailCard = styled.div`
   border-radius: 2px;
-  //width: 20rem;
+  grid-row-start: span 1;
+  grid-column-start: span 1;
+
+  width: 100%;
+  height: 100%;
+
+  //width: 290px;
   //height: '300px';
   transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
   box-shadow: ${boxShadow.default};
-  place-items: center;
-  background-color: #ffffff;
+  // place-items: center;
+  //background-color: #ffffff;
+  opacity: 0.9;
   &:hover {
     ${hoverAction}
   }
-  margin: 1rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  //margin: 1rem;
+  //overflow: hidden;
+  //  display: flex;
+  // flex-direction: column;
 `
-
-export default React.memo(function ({
-  nodeList,
-  linkList,
-  techtreeTitle,
-  techtreeID,
-  techtreeData,
-}) {
-  const containerRef = React.useRef(null)
-  const imgRef = React.useRef(null)
-
-  React.useEffect(() => {
-    if (containerRef.current) {
-      runForceGraph(containerRef.current, nodeList, linkList, techtreeID)
-    }
-  }, [])
-
-  return (
-    <TechtreeThumbnailCard>
-      <Link to={`/tree/${techtreeID}`}>
-        <TechtreeThumbnailBlock
-          ref={containerRef}
-          className={techtreeID}
-          id={techtreeID}
-        />
-        <div ref={imgRef}></div>
-        <TechtreeInfo>
-          <div>{techtreeTitle}</div>
-          <div>{techtreeData.author.displayName}</div>
-        </TechtreeInfo>
-      </Link>
-    </TechtreeThumbnailCard>
-  )
-})
 
 function runForceGraph(
   container,
