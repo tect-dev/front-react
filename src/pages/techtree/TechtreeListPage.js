@@ -8,7 +8,7 @@ import TechtreeThumbnail, {
   TechtreeThumbnailImage,
 } from '../../components/TechtreeThumbnail'
 import { Spinner } from '../../components/Spinner'
-import { Button } from '../../components/Button'
+import { Button, DefaultButton } from '../../components/Button'
 import TreeIcon from '../../assets/tree.svg'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 
@@ -103,25 +103,25 @@ export default function TechtreeListPage() {
             if (ele === 1) {
               if (pageNumber === ele) {
                 return (
-                  <Button
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    now {ele}
-                  </Button>
-                )
-              } else {
-                return (
-                  <Button
+                  <SelectedButton
                     key={idx}
                     onClick={() => {
                       setPageNumber(ele)
                     }}
                   >
                     {ele}
-                  </Button>
+                  </SelectedButton>
+                )
+              } else {
+                return (
+                  <DefaultButton
+                    key={idx}
+                    onClick={() => {
+                      setPageNumber(ele)
+                    }}
+                  >
+                    {ele}
+                  </DefaultButton>
                 )
               }
             }
@@ -129,50 +129,50 @@ export default function TechtreeListPage() {
             if (ele === pageMaxNumber) {
               if (pageNumber === ele) {
                 return (
-                  <Button
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    now {ele}
-                  </Button>
-                )
-              } else {
-                return (
-                  <Button
+                  <SelectedButton
                     key={idx}
                     onClick={() => {
                       setPageNumber(ele)
                     }}
                   >
                     {ele}
-                  </Button>
+                  </SelectedButton>
+                )
+              } else {
+                return (
+                  <DefaultButton
+                    key={idx}
+                    onClick={() => {
+                      setPageNumber(ele)
+                    }}
+                  >
+                    {ele}
+                  </DefaultButton>
                 )
               }
             }
 
             if (ele === pageNumber) {
               return (
-                <Button
-                  key={idx}
-                  onClick={() => {
-                    setPageNumber(ele)
-                  }}
-                >
-                  현재페이지 {ele}
-                </Button>
-              )
-            } else if (ele < pageNumber + 3 && ele > pageNumber - 3) {
-              return (
-                <Button
+                <SelectedButton
                   key={idx}
                   onClick={() => {
                     setPageNumber(ele)
                   }}
                 >
                   {ele}
-                </Button>
+                </SelectedButton>
+              )
+            } else if (ele < pageNumber + 3 && ele > pageNumber - 3) {
+              return (
+                <DefaultButton
+                  key={idx}
+                  onClick={() => {
+                    setPageNumber(ele)
+                  }}
+                >
+                  {ele}
+                </DefaultButton>
               )
             } else if (ele === pageNumber + 3) {
               return <>...</>
@@ -197,4 +197,8 @@ const PageButtonArea = styled.div`
   display: grid;
   justify-items: center;
   padding: 1rem;
+`
+
+const SelectedButton = styled(DefaultButton)`
+  background-color: ${colorPalette.mainGreen};
 `

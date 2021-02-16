@@ -148,13 +148,17 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
   }, [text])
 
   return (
-    <>
-      <TypographyBlock>
+    <Container>
+      <TypographyBlock> 
         <MarkdownStyledBlock
           className={'dracula'}
           dangerouslySetInnerHTML={{ __html: html }}
         ></MarkdownStyledBlock>
       </TypographyBlock>
-    </>
+    </Container>
   )
 })
+
+export const Container = styled.div`
+  padding: 10px;
+`
