@@ -3,9 +3,9 @@ import { colorPalette } from '../lib/constants'
 import { mediaQuery } from '../lib/constants'
 
 export const TypographyBlock = styled.div`
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: #222426;
-  line-height: 1.7;
+  line-height: 1.1;
   letter-spacing: -0.004em;
   word-break: keep-all;
   word-wrap: break-word;

@@ -9,9 +9,9 @@ const initialState = {
   previousNodeList: [],
   nextNodeList: [],
   selectedNode: {
-    name: '자신의 테크트리 꾸며보세요',
+    name: '',
     body:
-      '더블 클릭 -> 노드 생성.\n노드 클릭 -> 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
+      '더블 클릭 -> 노드 생성.\n노드 클릭 -> 노드와 연결된 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
   },
   isEditingDocument: false,
   isEditingTechtree: false,
@@ -94,6 +94,7 @@ export const createTechtree = () => async (dispatch, getState, { history }) => {
           hashtags: [],
           nodeList: `[]`,
           linkList: `[]`,
+          thumbnail: '',
           firebaseToken: idToken,
         },
       })
@@ -138,7 +139,7 @@ export const updateTechtree = (
         title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
-        // thumbnailURL,
+        thumbnail: thumbnailURL,
       },
     })
     dispatch({ type: UPDATE_TECHTREE_DATA_SUCCESS, techtreeTitle })
@@ -487,7 +488,7 @@ export default function techtree(state = initialState, action) {
         nextNodeList: [],
         techtreeTitle: '',
         selectedNode: {
-          name: '자신의 테크트리 꾸며보세요',
+          name: '',
           body:
             '더블 클릭 -> 노드 생성.\n노드 클릭 -> 문서 생성.\n노드에서 다른 노드로 마우스 드래그 -> 노드끼리 연결',
         },

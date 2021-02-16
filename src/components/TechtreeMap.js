@@ -2,7 +2,7 @@ import React from 'react'
 import * as d3 from 'd3'
 import { uid } from 'uid'
 
-import { colorPalette } from '../lib/constants'
+import { colorPalette, fontSize } from '../lib/constants'
 import styled from 'styled-components'
 import xCircle from '../assets/xCircle.svg'
 import grayX from '../assets/xCircle.svg'
@@ -21,8 +21,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { reduxStore } from '../index'
 
 const TechtreeThumbnailBlock = styled.div`
-  border-radius: 1px;
-  border: 2px solid ${colorPalette.gray0};
+  border-radius: 22px;
+  border: 1px solid ${colorPalette.mainGreen};
 `
 
 export default React.memo(function TechtreeMap({
@@ -85,8 +85,8 @@ function initGraph(container, originalNodeList, originalLinkList) {
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
 
-  const width = 600
-  const height = 600
+  const width = 500
+  const height = 500
 
   let nodeList = originalNodeList
   let linkList = originalLinkList
@@ -109,17 +109,6 @@ function initGraph(container, originalNodeList, originalLinkList) {
     .style('opacity', '0')
     .attr('display', 'none')
 
-  // 그래프 수정 버튼
-  svg
-    .append('g:graphEditButton')
-    .append('rect')
-    .attr('width', 10)
-    .attr('height', 10)
-    .attr('x', width / 2 - 10)
-    .attr('y', height / 2 - 10)
-    .style('fill', 'red')
-    .attr('display', 'inline')
-
   const linkGroup = svg.append('g').attr('class', 'links')
   const nodeGroup = svg.append('g').attr('class', 'nodes')
   const labelGroup = svg.append('g').attr('class', 'labels')
@@ -137,6 +126,11 @@ function initGraph(container, originalNodeList, originalLinkList) {
 // 그래프가 갱신될때 호출되는 함수
 function updateGraph(container, dispatch, isEditingTechtree) {
   const nodeRadius = 15
+  const nodeColor = colorPalette.mainGreen
+
+  const selectedColor = colorPalette.teal5
+
+  const labelSize = fontSize.small
 
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
@@ -200,7 +194,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   //    .attr('height', 10)
   //    .attr('x', width - 10)
   //    .attr('y', height / 2 - 10)
-  //    .style('fill', 'red')
+  //    .style('fill', selectedColor)
   //    .attr('display', 'inline')
   //    .on('click', () => {
   //      if (isEditingTechtree) {
@@ -283,7 +277,14 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .data(nodeList)
         .join('circle')
         .attr('r', (d) => d.radius)
-        .style('fill', (d) => d.fillColor)
+        .style('fill', (d) => nodeColor) // 나중에 d.fillColor 로 변경
+        .style('stroke', (d) => {
+          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
+            return selectedColor
+          } else {
+            return
+          }
+        })
         .style('stroke', (d) => {
           if (d.id === reduxStore.getState().techtree.selectedNode.id) {
             return 'red'
@@ -344,7 +345,14 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .data(nodeList)
         .join('circle')
         .attr('r', (d) => d.radius)
-        .style('fill', (d) => d.fillColor)
+        .style('fill', (d) => nodeColor)
+        .style('stroke', (d) => {
+          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
+            return selectedColor
+          } else {
+            return
+          }
+        })
         .style('stroke', (d) => {
           if (d.id === reduxStore.getState().techtree.selectedNode.id) {
             return 'red'
@@ -458,7 +466,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .attr('href', grayX)
       .attr('width', deleteButtonLength)
       .attr('height', deleteButtonLength)
-      .style('fill', (d) => d.fillColor)
+      .style('fill', (d) => nodeColor)
       .attr('x', (d) => {
         return d.x - d.radius * 1.5
       })
@@ -512,6 +520,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .text((d) => {
         return d.name
       })
+      .style('font-size', labelSize)
       .style('user-select', 'none')
       .style(
         'text-shadow',
