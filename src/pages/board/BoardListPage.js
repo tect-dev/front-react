@@ -100,7 +100,7 @@ export default function QuestionListPage({ match }) {
                     <div style={{ marginRight: '10px' }}>
                       좋아요 {postData.like}
                     </div>
-                    <div>답변 {postData.answerSum}</div>
+                    <div>댓글 {postData.answerSum}</div>
                   </LikeComment>
                   {/* <div>{postData.author[0]?.displayName}</div>
                   <div>{postData.hashtags[0]}</div> */}
