@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { setUserPlace } from '../redux/auth'
 import { boxShadow, colorPalette, hoverAction } from '../lib/constants'
 import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
+import MarkdownRenderer from '../components/MarkdownRenderer'
 
 const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
 
