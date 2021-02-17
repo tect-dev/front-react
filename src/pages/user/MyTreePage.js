@@ -7,6 +7,7 @@ import { logout, getUserInfo } from '../../redux/auth'
 import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
 import { Button } from '../../components/Button'
+import { StyledTitle } from '../../components/TitleInput'
 import TreeIcon from '../../assets/tree.svg'
 import MainWrapper from '../../wrappers/MainWrapper'
 import { GridWrapper } from '../../wrappers/GridWrapper'
@@ -16,7 +17,9 @@ import {
   TechtreeInfo,
   TechtreeThumbnailBlock,
   TechtreeThumbnailImage,
+  TreeThumbnailHeader,
 } from '../../components/TechtreeThumbnail'
+import { TreePageHeader } from '../techtree/TechtreeDetailPage'
 
 import { createTechtree, readTechtreeList } from '../../redux/techtree'
 import { sortISOByTimeStamp } from '../../lib/functions'
@@ -36,6 +39,11 @@ export default function MyTreePage({ match }) {
       treeData: state.auth.userData.treeData.sort((a, b) => {
         return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
       }),
+    }
+  })
+  const { forestOwnerDisplayName } = useSelector((state) => {
+    return {
+      forestOwnerDisplayName: state.auth.userData?.displayName,
     }
   })
 
@@ -59,6 +67,7 @@ export default function MyTreePage({ match }) {
   }
   return (
     <MainWrapper>
+      <TreePageHeader>{forestOwnerDisplayName}의 Forest</TreePageHeader>
       <GridWrapper>
         {loginState ? (
           <TechtreeThumbnailCard
@@ -71,12 +80,13 @@ export default function MyTreePage({ match }) {
             }}
             style={{ cursor: 'pointer' }}
           >
+            <TreeThumbnailHeader>
+              <StyledTitle>새로운 트리 심기</StyledTitle>
+            </TreeThumbnailHeader>
             <TechtreeThumbnailBlock>
               <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
             </TechtreeThumbnailBlock>
-            <TechtreeInfo>
-              <div style={{ margin: 'auto' }}> 새로운 트리 심기</div>
-            </TechtreeInfo>
+            <TechtreeInfo></TechtreeInfo>
           </TechtreeThumbnailCard>
         ) : (
           ''

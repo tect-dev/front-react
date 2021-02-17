@@ -7,6 +7,27 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setUserPlace } from '../redux/auth'
+import { boxShadow, colorPalette, hoverAction } from '../lib/constants'
+import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
+
+const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
+
+const nameSet = shuffleArray([
+  '자연대',
+  '공대',
+  '문과대',
+  '상경대',
+  '경영대',
+  '생명대',
+  '신과대',
+  '사과대',
+  '생과대',
+  '간호대',
+  '의대',
+  '치대',
+  '언더우드',
+  '음대',
+])
 
 export default function HomePage() {
   const dispatch = useDispatch()
@@ -47,44 +68,105 @@ export default function HomePage() {
     </MainWrapperDefault>
   )
 }
+
+function OneBlock({ color, name }) {
+  return (
+    <WidthOneBlock style={{ backgroundColor: color }}>
+      <Link
+        to={`/board/${name}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'grid',
+          alignItems: 'center',
+        }}
+      >
+        {name}
+      </Link>
+    </WidthOneBlock>
+  )
+}
+
+function ThreeBlock({ color, name }) {
+  return (
+    <WidthThreeBlock style={{ backgroundColor: color }}>
+      <Link
+        to={`/forest`}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'grid',
+          alignItems: 'center',
+        }}
+      >
+        {name}
+      </Link>
+    </WidthThreeBlock>
+  )
+}
+
 function DesktopBlocks() {
   return (
     <>
-      <WidthOneBlock>
-        <Link to={`/board/test1`}>test1</Link>
-      </WidthOneBlock>
-      <WidthOneBlock>
-        <Link to={`/board/test2`}>test2</Link>
-      </WidthOneBlock>
-      <WidthOneBlock>
-        <Link to={`/board/physics`}>physics</Link>
-      </WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[0]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[1]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[2]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[3]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[4]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[5]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[6]}
+      ></OneBlock>
+      <ThreeBlock color={'none'} name={'foresty와 함께'}></ThreeBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[7]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[8]}
+      ></OneBlock>
 
-      <WidthOneBlock>
-        <Link to={`/board/mathematics`}>mathematics</Link>
-      </WidthOneBlock>
-
-      <WidthOneBlock>
-        {' '}
-        <Link to={`/board/comtuter science`}>comtuter science</Link>
-      </WidthOneBlock>
-      <WidthOneBlock>economics</WidthOneBlock>
-
-      <WidthOneBlock>7</WidthOneBlock>
-      <WidthThreeBlock>foresty와 함께</WidthThreeBlock>
-      <WidthOneBlock>9</WidthOneBlock>
-      <WidthOneBlock>10</WidthOneBlock>
-
-      <WidthOneBlock>11</WidthOneBlock>
-      <WidthOneBlock>12</WidthOneBlock>
-      <WidthThreeBlock>지식의 나무를 심어보세요</WidthThreeBlock>
-      <WidthOneBlock>14</WidthOneBlock>
-      <WidthOneBlock>15</WidthOneBlock>
-      <WidthOneBlock>16</WidthOneBlock>
-      <WidthOneBlock>17</WidthOneBlock>
-      <WidthOneBlock>18</WidthOneBlock>
-      <WidthOneBlock>19</WidthOneBlock>
-      <WidthOneBlock>20</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[9]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[10]}
+      ></OneBlock>
+      <ThreeBlock color={'none'} name={'지식의 숲을 가꿔보세요'}></ThreeBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[11]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[12]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[13]}
+      ></OneBlock>
     </>
   )
 }
@@ -111,47 +193,98 @@ export const BlockWrapper = styled.div`
 export const WidthOneBlock = styled.div`
   grid-row-start: span 1;
   grid-column-start: span 1;
-
+  border-radius: 11px;
+  text-align: center;
+  display: grid;
+  align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #999999;
+  box-shadow: ${boxShadow.default};
+  &:hover {
+    ${hoverAction}
+  }
+  //background-color: #999999;
 `
 export const WidthThreeBlock = styled.div`
   grid-row-start: span 1;
   grid-column-start: span 3;
-
+  text-align: center;
+  display: grid;
+  align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #999999;
+  box-shadow: ${boxShadow.default};
+  &:hover {
+    ${hoverAction}
+  }
+  //background-color: #ffffff;
 `
 
 function TabletBlocks() {
   return (
     <>
-      <WidthOneBlock>1</WidthOneBlock>
-      <WidthOneBlock>2</WidthOneBlock>
-      <WidthOneBlock>3</WidthOneBlock>
-      <WidthOneBlock>4</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[0]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[1]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[2]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[3]}
+      ></OneBlock>
 
-      <WidthThreeBlock>5</WidthThreeBlock>
-      <WidthOneBlock>6</WidthOneBlock>
+      <ThreeBlock color={'none'} name={'foresty와 함께'}></ThreeBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[4]}
+      ></OneBlock>
 
-      <WidthOneBlock>7</WidthOneBlock>
-      <WidthThreeBlock>8</WidthThreeBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[5]}
+      ></OneBlock>
+      <ThreeBlock color={'none'} name={'지식의 숲을 가꿔보세요'}></ThreeBlock>
 
-      <WidthOneBlock>9</WidthOneBlock>
-      <WidthOneBlock>10</WidthOneBlock>
-      <WidthOneBlock>11</WidthOneBlock>
-      <WidthOneBlock>12</WidthOneBlock>
-      <WidthOneBlock>12</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[6]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[7]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[8]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[9]}
+      ></OneBlock>
 
-      <WidthOneBlock>14</WidthOneBlock>
-      <WidthOneBlock>15</WidthOneBlock>
-      <WidthOneBlock>16</WidthOneBlock>
-      <WidthOneBlock>17</WidthOneBlock>
-      <WidthOneBlock>18</WidthOneBlock>
-      <WidthOneBlock>19</WidthOneBlock>
-      <WidthOneBlock>20</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[10]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[11]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[12]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[13]}
+      ></OneBlock>
     </>
   )
 }
@@ -159,31 +292,70 @@ function TabletBlocks() {
 function MobileBlocks() {
   return (
     <>
-      <WidthOneBlock>1</WidthOneBlock>
-      <WidthOneBlock>2</WidthOneBlock>
-      <WidthOneBlock>3</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[0]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[1]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[2]}
+      ></OneBlock>
 
-      <WidthThreeBlock>4</WidthThreeBlock>
+      <ThreeBlock color={'none'} name={'foresty와 함께'}></ThreeBlock>
 
-      <WidthThreeBlock>5</WidthThreeBlock>
+      <ThreeBlock color={'none'} name={'지식의 숲을 가꿔보세요'}></ThreeBlock>
 
-      <WidthOneBlock>6</WidthOneBlock>
-      <WidthOneBlock>7</WidthOneBlock>
-      <WidthOneBlock>8</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[3]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[4]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[5]}
+      ></OneBlock>
 
-      <WidthOneBlock>9</WidthOneBlock>
-      <WidthOneBlock>10</WidthOneBlock>
-      <WidthOneBlock>11</WidthOneBlock>
-      <WidthOneBlock>12</WidthOneBlock>
-      <WidthOneBlock>12</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[6]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[7]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[8]}
+      ></OneBlock>
 
-      <WidthOneBlock>14</WidthOneBlock>
-      <WidthOneBlock>15</WidthOneBlock>
-      <WidthOneBlock>16</WidthOneBlock>
-      <WidthOneBlock>17</WidthOneBlock>
-      <WidthOneBlock>18</WidthOneBlock>
-      <WidthOneBlock>19</WidthOneBlock>
-      <WidthOneBlock>20</WidthOneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[9]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[10]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[11]}
+      ></OneBlock>
+
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[12]}
+      ></OneBlock>
+      <OneBlock
+        color={colorSet[getRandomNumberInArray(colorSet.length)]}
+        name={nameSet[13]}
+      ></OneBlock>
     </>
   )
 }

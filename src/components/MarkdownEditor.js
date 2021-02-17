@@ -39,15 +39,14 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
     const file = e?.dataTransfer?.files[0]
     // input attribute로 accept="image/*"를 지정하지
     // 않았기 때문에 여기서 image만 access 가능하게 처리
-    console.log('e.dataTransfer: ', e.dataTransfer)
-    console.log('file: ', file)
+
     if (file.type.startsWith('image/')) {
       const reader = new FileReader()
       reader.readAsDataURL(file)
 
       let formData = new FormData()
       formData.append('image', file)
-      console.log('파일데이터: ', file)
+
       const res = await axios({
         url: `${process.env.REACT_APP_BACKEND_URL}/image`,
         method: 'POST',

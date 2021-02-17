@@ -55,7 +55,6 @@ export default function ProfilePage({ match }) {
   const onChangeIntroduce = useCallback(
     (e) => {
       setIntroduce(e.target.value)
-      console.log('introduce: ', introduce)
     },
     [introduce]
   )

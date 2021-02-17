@@ -67,7 +67,7 @@ export default function Navbar() {
       >
         <div className="logo-container">
           <NavLink to="/" className="logo">
-            Tect.dev
+            Foresty
           </NavLink>
         </div>
 
@@ -96,8 +96,7 @@ export default function Navbar() {
                 게시판
               </NavLink>
             </li>
-
-            <SearchContainer popup={false}>
+            {/*     <SearchContainer popup={false}>
               <div
                 className="visibleOnPc"
                 style={searchClick ? { display: 'block' } : null}
@@ -119,6 +118,7 @@ export default function Navbar() {
                 <FaSearch />
               </div>
             </SearchContainer>
+       */}
             <div className="auth-container">
               {loginState ? (
                 <div className="mypage-container">

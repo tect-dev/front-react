@@ -33,7 +33,7 @@ const MarkdownStyledBlock = styled.div`
     font-size: 0.875rem;
     padding: 1rem;
     border-radius: 4px;
-    line-height: 1.1;
+    line-height: 1.6;
     overflow-x: auto;
     letter-spacing: 0px;
     ${mediaSize.small} {

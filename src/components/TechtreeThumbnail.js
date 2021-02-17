@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 import { Link } from 'react-router-dom'
+import { StyledTitle } from './TitleInput'
 import {
   colorPalette,
   boxShadow,
@@ -30,9 +31,7 @@ export default React.memo(function ({
     <TechtreeThumbnailCard>
       <Link to={`/tree/${techtreeID}`}>
         <TreeThumbnailHeader>
-          <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-            {techtreeTitle}
-          </div>
+          <StyledTitle>{techtreeTitle}</StyledTitle>
           <div style={{ fontSize: '14px' }}>
             {techtreeData.author[0]?.displayName}
           </div>
@@ -52,24 +51,25 @@ export default React.memo(function ({
 
 export const TechtreeThumbnailBlock = styled.div`
   padding: 20px;
-  // background-color: '#ffffff';
 `
 
 export const TechtreeThumbnailImage = styled.img`
   width: 100%;
   //height: 250px;
   object-fit: fill;
-  //background-color: '#ffffff';
+  border-radius: 22px;
+  //border: 1px solid ${colorPalette.gray1};
+  background-color: #ffffff;
 `
 
-const TreeThumbnailHeader = styled.div`
+export const TreeThumbnailHeader = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
 `
 
-const TreeThumbnailFooter = styled.div`
+export const TreeThumbnailFooter = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
   font-size: ${fontSize.small};
@@ -86,7 +86,7 @@ export const TechtreeInfo = styled.div`
 `
 
 export const TechtreeThumbnailCard = styled.div`
-  border-radius: 2px;
+  border-radius: 10px;
   grid-row-start: span 1;
   grid-column-start: span 1;
   display: grid;
@@ -100,8 +100,8 @@ export const TechtreeThumbnailCard = styled.div`
   box-shadow: ${boxShadow.default};
   // place-items: center;
 
-  background-color: '#ffffff';
-  //opacity: 0.9;
+  background-color: #ffffff;
+
   &:hover {
     ${hoverAction}
   }

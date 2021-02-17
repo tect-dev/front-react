@@ -71,6 +71,28 @@ export const colorPalette = {
   cyan8: '#0c8599',
   cyan9: '#0b7285',
 
+  /* green */
+  green0: '#ebfbee',
+  green1: '#d3f9d8',
+  green2: '#b2f2bb',
+  green3: '#8ce99a',
+  green4: '#69db7c',
+  green5: '#51cf66',
+  green6: '#40c057',
+  green7: '#37b24d',
+  green8: '#2f9e44',
+  green9: '#2b8a3e',
+  /* lime */
+  lime0: '#f4fce3',
+  lime1: '#e9fac8',
+  lime2: '#d8f5a2',
+  lime3: '#c0eb75',
+  lime4: '#a9e34b',
+  lime5: '#94d82d',
+  lime6: '#82c91e',
+  lime7: '#74b816',
+  lime8: '#66a80f',
+  lime9: '#5c940d',
   /* teal */
   teal0: '#F3FFFB',
   teal1: '#C3FAE8',

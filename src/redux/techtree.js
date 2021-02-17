@@ -185,7 +185,7 @@ export const finishDocuEdit = (
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
+        //title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -209,7 +209,7 @@ export const createNode = (nodeList, linkList, techtreeData) => {
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
+        // title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -227,7 +227,7 @@ export const createLink = (nodeList, linkList, techtreeData) => {
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
+        //title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -272,7 +272,7 @@ export const deleteNode = (
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-          title: techtreeData.title,
+          //title: techtreeData.title,
           _id: uid(24),
           hashtags: [],
           nodeList: stringifiedNodeList,
@@ -301,7 +301,7 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => {
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
+        //title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(newLinkList),
       },
@@ -382,7 +382,7 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
       })
     }
   } catch (e) {
-    console.log('READ_TECHTREE_DATA_FAIL: ', e)
+    console.log('error_READ_TECHTREE_DATA_FAIL: ', e)
     dispatch({ type: READ_TECHTREE_DATA_FAIL })
   }
 }
