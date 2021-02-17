@@ -53,10 +53,10 @@ function App() {
           <Route path="/forest" exact={true} component={TechtreeListPage} />
           <Route path="/tree/:techtreeID" component={TechtreeDetailPage} />
 
-          <Route path="/board/:category" component={BoardListPage} />
+          <Route path="/board/:category" exact component={BoardListPage} />
           <Route path="/post/edit/:postID" exact component={EditPage} />
-          <Route path="/post/:postID" component={PostDetailPage} />
-          <Route path="/write/:category" component={WritePage} />
+          <Route path="/post/:postID" exact component={PostDetailPage} />
+          <Route path="/write/:category" exact component={WritePage} />
 
           <Route path="/about" exact={true} component={AboutPage} />
           <Route path="/user/:userID" component={ProfilePage} />

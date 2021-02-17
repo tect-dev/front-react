@@ -16,7 +16,6 @@ export default function PostDetailPage({ match }) {
 
   const { userID, loading, postTitle, postContent, postCreatedAt, postAuthor, postPlace } = useSelector(
     (state) => {
-      console.log(state)
       return {
         userID: state.auth.userID,
         loading : state.board.loading,
@@ -72,9 +71,11 @@ export default function PostDetailPage({ match }) {
         {/* {postCreatedAt} */}
         {userID === postAuthor?.firebaseUid ? (
           <PostFooter>
-            <Link to={`edit/${postID}`}>
-              <Button>수정</Button>
-            </Link>
+            <Button>
+              <Link to={`edit/${postID}`}>
+                수정
+              </Link>
+            </Button>
             <Button onClick={onDeleteQuestion}>삭제</Button> 
           </PostFooter>
         ) : (

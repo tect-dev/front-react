@@ -3,33 +3,28 @@ import { useInput } from '../../hooks/hooks'
 import DoublesideLayout from '../../components/layout/DoublesideLayout'
 import { useSelector, useDispatch } from 'react-redux'
 import MarkdownRenderingBlock from '../../components/MarkdownRenderingBlock'
-import QuestionEditSection from '../../components/question/QuestionEditSection'
+import WritePage from './WritePage'
 import { useHistory, Redirect } from 'react-router-dom'
 
 const EditPage = () => {
-  const { loading, data, userID } = useSelector((state) => {
+  const { data, userID, userPlace } = useSelector((state) => {
     return {
-      loading: state.board.loading,
       data: state.board,
       userID: state.auth.userID,
+      userPlace: state.auth.userPlace
     }
   }) || {
     data: null,
     userID: null,
-  }
-  console.log(loading)
-  const history = useHistory()
-    
-  
+  } 
   return (
-    <DoublesideLayout>
-      {/* {data ? (
-        <QuestionEditSection initialData={data} />
+    <>
+      {data.postID && userID === data?.postAuthor?.firebaseUid ? (
+        <WritePage match={{params: {category : userPlace}}} prevPost={data}/>
       ) : (
         <Redirect to="/board/main" />
-      )} */}
-      만드는 중
-    </DoublesideLayout>
+      )}
+    </>
   )
 }
 

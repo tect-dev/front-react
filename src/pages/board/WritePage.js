@@ -10,16 +10,17 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { createPost } from '../../redux/board'
+import { createPost, updatePost } from '../../redux/board'
 import { uid } from 'uid'
 
-export default function WritePage({ match }) {
+export default function WritePage({ match, prevPost }) {
   const { category } = match.params
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const [title, setTitle] = useState('')
-  const [documentText, setDocumentText] = useState('')
+  const [isEdit, setIsEdit ] = useState(prevPost ? true : false)
+  const [title, setTitle] = useState(prevPost ? prevPost.postTitle : '')
+  const [documentText, setDocumentText] = useState(prevPost ? prevPost.postContent : '')
   const hashtags = [category]
   const { loginState } = useSelector((state) => {
     return { loginState: state.auth.loginState }
@@ -40,9 +41,24 @@ export default function WritePage({ match }) {
     [title]
   )
 
-  const submitData = useCallback(() => {
-    const postID = uid(24)
-    dispatch(createPost(postID, title, documentText, hashtags))
+  const submitData = useCallback(e => {
+    e.preventDefault()
+    if (!title || !documentText) {
+      return alert('제목과 본문을 작성해 주세요.')
+    }
+    if(isEdit){
+      const formData = {
+        postID: prevPost.postID,
+        title: title,
+        contentType: 'question',
+        content: documentText,
+        hashtags: hashtags,
+      }
+      dispatch(updatePost(formData))
+    } else {
+      const postID = uid(24)
+      dispatch(createPost(postID, title, documentText, hashtags))
+    }
   }, [title, documentText, hashtags])
 
   return (
@@ -56,7 +72,7 @@ export default function WritePage({ match }) {
         </HalfWidthContainer_for_Renderer>
         <HalfWidthContainer_new>
           <MarkdownEditor_Container>
-            <TitleInput onChange={changeTitle} placeholder="제목을 입력해 주세요" />
+            <TitleInput value={title} onChange={changeTitle} placeholder="제목을 입력해 주세요" />
             <TitleBottomLine />
 
             <MarkdownEditor
@@ -67,7 +83,9 @@ export default function WritePage({ match }) {
           </MarkdownEditor_Container>
           
           <Hashtags_and_SubmitButton>
-            <SubmitButton onClick={submitData}>작성완료</SubmitButton>
+            <SubmitButton onClick={submitData}>
+              {prevPost ? "수정완료" : "작성완료"}
+            </SubmitButton>
           </Hashtags_and_SubmitButton>
         </HalfWidthContainer_new>
       </DoubleSideLayout>
