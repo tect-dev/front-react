@@ -1,19 +1,25 @@
 import MainWrapper from '../../wrappers/MainWrapper'
-
-import React, { useEffect } from 'react'
+import { Spinner } from '../../components/Spinner'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { readPostDetail } from '../../redux/board'
+import { readPostDetail, deletePost } from '../../redux/board'
 import { fontSize } from '../../lib/constants'
+import { Link, useHistory } from 'react-router-dom'
+import MarkdownRenderer from '../../components/MarkdownRenderer'
 
 import styled from "styled-components"
 
 export default function PostDetailPage({ match }) {
   const { postID } = match.params
   const dispatch = useDispatch()
+  const history = useHistory()
 
-  const { postTitle, postContent, postCreatedAt, postAuthor, postPlace } = useSelector(
+  const { userID, loading, postTitle, postContent, postCreatedAt, postAuthor, postPlace } = useSelector(
     (state) => {
+      console.log(state)
       return {
+        userID: state.auth.userID,
+        loading : state.board.loading,
         postPlace: state.auth.userPlace,
         postTitle: state.board.postTitle,
         postContent: state.board.postContent,
@@ -27,10 +33,23 @@ export default function PostDetailPage({ match }) {
     dispatch(readPostDetail(postID))
   }, [])
 
+  const onDeleteQuestion = useCallback(() => {
+    //alert('정말 삭제합니까?');
+    dispatch(deletePost(postID))
+  }, [dispatch])
+
+  if (loading){
+    return (
+      <MainWrapper>
+        <Spinner />
+      </MainWrapper>
+    )
+  }
+
   return (
     <MainWrapper>
       <PlaceContainer>
-        {postPlace}
+        <Link to={`/board/${postPlace}`}>{postPlace}</Link>
       </PlaceContainer>
       <PostContainer>
         <PostHeader>
@@ -45,12 +64,22 @@ export default function PostDetailPage({ match }) {
           </Likes>
         </PostHeader>
         <PostTitle>
-          {postTitle}
+          <MarkdownRenderer text={postTitle} />
         </PostTitle>
         <PostContent>
           {postContent}
         </PostContent>
         {/* {postCreatedAt} */}
+        {userID === postAuthor?.firebaseUid ? (
+          <PostFooter>
+            <Link to={`edit/${postID}`}>
+              <Button>수정</Button>
+            </Link>
+            <Button onClick={onDeleteQuestion}>삭제</Button> 
+          </PostFooter>
+        ) : (
+          ''
+        )}
       </PostContainer>
       <div>
         {/* 나중에 map으로 iteration 돌려야 함. */}
@@ -85,7 +114,7 @@ export default function PostDetailPage({ match }) {
                 type="checkbox"
                 id="anonymousCheck"
               />
-              <label for="anonymousCheck">
+              <label htmlFor="anonymousCheck">
               </label>
               
             </Anonymous>
@@ -95,7 +124,10 @@ export default function PostDetailPage({ match }) {
           </CommentEditor_Right>
         </CommentEditor>
       </div>
-      <BackButton onClick={e=>console.log(e)}>
+      <BackButton onClick={e=>{
+        e.preventDefault()
+        history.push(`/board/${postPlace}`)
+      }}>
         <HamburgerSVG/>
         <span>목록</span>
       </BackButton>
@@ -168,6 +200,11 @@ const PostContent = styled.div`
   color: #999;
   margin-bottom: 66px;
 `
+const PostFooter = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+`
+
 
 const Comment = styled(PostContainer)`
   background: none;
@@ -238,6 +275,17 @@ const CommentSubmit = styled.button`
   background: #f8f6ed;
   color: #b2c8b4;
   border-radius: 10px;
+`
+
+const Button = styled.button`
+  all:unset;
+  cursor: pointer;
+  padding: 5px 20px;
+  font-size: ${fontSize.medium};
+  background: #b2c8b4;
+  color: #f8f6ed;
+  border-radius: 10px;
+  margin-left: 10px;
 `
 
 const HamburgerSVG = () => {

@@ -34,6 +34,10 @@ const CREATE_ANSWER_TRY = 'board/CREATE_ANSWER_TRY'
 const CREATE_ANSWER_SUCCESS = 'board/CREATE_ANSWER_SUCCESS'
 const CREATE_ANSWER_FAIL = 'board/CREATE_ANSWER_FAIL'
 
+const DELETE_POST_TRY = 'board/DELETE_POST_TRY'
+const DELETE_POST_SUCCESS = 'board/DELETE_POST_SUCCESS'
+const DELETE_POST_FAIL = 'board/DELETE_POST_FAIL'
+
 export const readPostList = (querystring, pageNumber) => async (dispatch) => {
   dispatch({ type: READ_POST_LIST_TRY })
   try {
@@ -127,6 +131,26 @@ export const createAnswer = (data) => async (dispatch) => {
   }
 }
 
+export const deletePost = (postID) => async (
+  dispatch,
+  getState,
+  { history }
+) => {
+  dispatch({ type: DELETE_POST_TRY })
+  try {
+    await axios({
+      method: 'delete',
+      url: `${process.env.REACT_APP_BACKEND_URL}/question/${postID}`,
+    })
+    await dispatch({ type: DELETE_POST_SUCCESS })
+    history.push('/board/main')
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: DELETE_POST_FAIL, error: e })
+    alert('게시글을 삭제하는데 오류가 발생했습니다.')
+  }
+}
+
 export default function board(state = initialState, action) {
   switch (action.type) {
     case READ_POST_LIST_TRY:
@@ -170,6 +194,24 @@ export default function board(state = initialState, action) {
       return { ...state, loading: false }
     case CREATE_QUESTION_FAIL:
       return { ...state, loading: false, error: action.error }
+    case DELETE_POST_TRY:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    case DELETE_POST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+      }
+    case DELETE_POST_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      }
     default:
       return { ...state }
   }
