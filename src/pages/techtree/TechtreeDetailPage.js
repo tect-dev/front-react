@@ -8,18 +8,13 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
-import { Button, DefaultButton } from '../../components/Button'
+import { DefaultButton } from '../../components/Button'
 import {
   TitleInput,
   TitleBottomLine,
   StyledTitle,
 } from '../../components/TitleInput'
 
-import {
-  TechtreeThumbnailCard,
-  TechtreeThumbnailBlock,
-  TechtreeInfo,
-} from '../../components/Block'
 import Loader from 'react-loader-spinner'
 
 import styled from 'styled-components'
@@ -31,13 +26,11 @@ import {
   updateTechtree,
   deleteTechtree,
   changeTechtreeTitle,
-  changeDocument,
   editTechtree,
   finishTechtreeEdit,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
-import { colorPalette, mediaSize, fontSize } from '../../lib/constants'
-import MainWrapperDefault from '../../wrappers/MainWrapper'
+import { colorPalette, fontSize } from '../../lib/constants'
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
@@ -195,8 +188,8 @@ export default function TechtreeDetailPage({ match }) {
             </TreeTitleArea>
             <TreeEditorArea>
               <TechtreeMap
-                techtreeTitle={techtreeTitle}
-                techtreeID={techtreeID}
+              //techtreeTitle={techtreeTitle}
+              //techtreeID={techtreeID}
               />
             </TreeEditorArea>
 
@@ -375,13 +368,10 @@ export default function TechtreeDetailPage({ match }) {
   }
 }
 
-const TreeDetailPageMainWrapper = styled(MainWrapper)``
-
 export const TreePageHeader = styled.div`
   width: inherit;
   padding-left: 10px;
   display: grid;
-
   //border: 1px solid ${colorPalette.mainGreen};
   font-size: ${fontSize.xlarge};
   color: ${colorPalette.gray7};
@@ -390,7 +380,7 @@ export const TreePageHeader = styled.div`
   color: ${colorPalette.gray7};
 `
 
-const TreeTitleArea = styled.div`
+export const TreeTitleArea = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
   width: 100%;
@@ -398,13 +388,13 @@ const TreeTitleArea = styled.div`
   align-items: center;
 `
 
-const StyledDisplayName = styled(StyledTitle)`
+export const StyledDisplayName = styled(StyledTitle)`
   font-size: ${fontSize.small};
 `
 
-const TreeEditorArea = styled.div``
+export const TreeEditorArea = styled.div``
 
-const TreeEditButtonArea = styled.div`
+export const TreeEditButtonArea = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-between;
@@ -412,7 +402,7 @@ const TreeEditButtonArea = styled.div`
   padding: 20px;
 `
 
-const DocuWrapper = styled.div`
+export const DocuWrapper = styled.div`
   border-radius: 22px;
   background: #ffffff;
   border: 0.5px solid #6d9b7b;
@@ -420,15 +410,15 @@ const DocuWrapper = styled.div`
   padding: 10px;
 `
 
-const DocuHeaderArea = styled.div`
+export const DocuHeaderArea = styled.div`
   display: grid;
   justify-content: space-between;
   grid-template-columns: 2fr 1fr;
 `
 
-const DocuBodyArea = styled.div``
+export const DocuBodyArea = styled.div``
 
-const NodeButtonArea = styled.div`
+export const NodeButtonArea = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
@@ -438,29 +428,16 @@ const NodeButtonArea = styled.div`
   font-size: ${fontSize.small};
 `
 
-const PrevNodeArea = styled.div``
+export const PrevNodeArea = styled.div``
 
-const NextNodeArea = styled.div``
+export const NextNodeArea = styled.div``
 
-const HalfWidthContainer = styled(HalfWidthWrapper)`
+export const HalfWidthContainer = styled(HalfWidthWrapper)`
   overflow: visible;
   //overflow: hidden;
 `
-const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
+
+export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
   width: 80%;
   height: 80vh;
-`
-
-const StyledTitleInput = styled.input`
-  height: 30px;
-  font-size: 24px;
-  //font-weight: bold;
-  background-color: transparent;
-  cursor: text;
-  border: 1px solid ${colorPalette.mainGreen};
-  border-radius: 22px;
-  outline: none;
-  padding: 1rem;
-  margin: 1rem;
-  width: 80%;
 `
