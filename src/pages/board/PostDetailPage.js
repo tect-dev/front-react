@@ -63,10 +63,10 @@ export default function PostDetailPage({ match }) {
           </Likes>
         </PostHeader>
         <PostTitle>
-          <MarkdownRenderer text={postTitle} />
+          {postTitle}
         </PostTitle>
         <PostContent>
-          {postContent}
+          <MarkdownRenderer text={postContent} />
         </PostContent>
         {/* {postCreatedAt} */}
         {userID === postAuthor?.firebaseUid ? (
