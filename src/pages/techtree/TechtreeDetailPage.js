@@ -170,9 +170,7 @@ export default function TechtreeDetailPage({ match }) {
   } else if (!loading) {
     return (
       <MainWrapper>
-        <TreePageHeader>
-          <div>나만의 나무를 심어보세요</div>
-        </TreePageHeader>
+        <TreePageHeader>Tree</TreePageHeader>
         <DoubleSideLayout>
           <HalfWidthContainer>
             <TreeTitleArea>
@@ -181,6 +179,7 @@ export default function TechtreeDetailPage({ match }) {
                   value={techtreeTitle}
                   placeholder="트리의 주제를 적어주세요!"
                   onChange={onChangeTechtreeTitle}
+                  maxLength="30"
                 />
               ) : (
                 <>
@@ -237,12 +236,14 @@ export default function TechtreeDetailPage({ match }) {
                 ''
               )}
               {isSavingTechtree ? (
-                <Loader
-                  type="Grid"
-                  color={colorPalette.teal5}
-                  height={20}
-                  width={20}
-                />
+                <div>
+                  <Loader
+                    type="Grid"
+                    color={colorPalette.teal5}
+                    height={20}
+                    width={20}
+                  />
+                </div>
               ) : (
                 ''
               )}
@@ -376,14 +377,16 @@ export default function TechtreeDetailPage({ match }) {
 
 const TreeDetailPageMainWrapper = styled(MainWrapper)``
 
-const TreePageHeader = styled.div`
-  width: 90%;
+export const TreePageHeader = styled.div`
+  width: inherit;
+  padding-left: 10px;
   display: grid;
 
   //border: 1px solid ${colorPalette.mainGreen};
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding: 1rem;
+  font-size: ${fontSize.xlarge};
+  color: ${colorPalette.gray7};
+  font-weight: bold;
+  margin: 1rem;
   color: ${colorPalette.gray7};
 `
 
@@ -404,13 +407,14 @@ const TreeEditorArea = styled.div``
 const TreeEditButtonArea = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  justify-content: space-around;
+  justify-content: space-between;
+  justify-items: center;
   padding: 20px;
 `
 
 const DocuWrapper = styled.div`
   border-radius: 22px;
-  background: #fffef8;
+  background: #ffffff;
   border: 0.5px solid #6d9b7b;
   box-sizing: border-box;
   padding: 10px;

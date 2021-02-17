@@ -4,11 +4,11 @@ import { dispatch } from 'd3'
 
 const initialState = {
   loginState: false,
-  userID: '000000000000000000000000',
-  userNickname: '익명',
+  userID: '000000000000000000000000', // myID 로 고쳐야함
+  userNickname: '익명', // myDisplayName 으로 고쳐야함
   loading: false,
-  userData: { treeData: [] },
-  userPlace: 'main',
+  userData: { treeData: [], displayName: '' },
+  userPlace: 'main', //내가 어느 게시판 들어갔느냐
 }
 
 // define ACTION type
@@ -127,12 +127,8 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: LOG_OUT_TRY })
 
   try {
-    axios({
-      url: `${process.env.REACT_APP_BACKEND_URL}/login/sessionLogout`,
-      method: 'GET',
-    })
     authService.signOut()
-    localStorage.removeItem('user')
+
     dispatch({ type: LOG_OUT_SUCCESS })
   } catch (e) {
     dispatch({ type: LOG_OUT_FAIL })

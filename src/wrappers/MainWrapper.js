@@ -94,6 +94,10 @@ export const ContentWrapper = styled.main`
   margin-bottom: 50px;
   margin-left: 20vw;
   margin-right: 20vw;
+  @media (max-width: 1920px) {
+    margin-left: 15vw;
+    margin-right: 15vw;
+  }
   @media (max-width: 1440px) {
     margin-left: 10vw;
     margin-right: 10vw;

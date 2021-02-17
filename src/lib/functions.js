@@ -1,6 +1,18 @@
 import sanitize from 'sanitize-html'
 import { katexWhiteList } from './katexWhiteList'
 
+export function getRandomNumberInArray(arrayLength) {
+  return Math.floor(Math.random() * arrayLength)
+}
+
+export function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+  return array
+}
+
 export function returnPreviousNodeList(someLinkList, someNodeList, someNode) {
   let previousNodeList = []
   someLinkList.map((linkElement) => {
@@ -182,11 +194,15 @@ export const htmlFilter = (html) => {
 }
 
 export const refineDatetime = (raw) => {
-  if(raw === "지금"){return raw}
-  if(typeof(raw)!=='string'){return "잘못된 매개변수"}
+  if (raw === '지금') {
+    return raw
+  }
+  if (typeof raw !== 'string') {
+    return '잘못된 매개변수'
+  }
   let datetime = new Date(raw)
-  const [ yyyy, MM, dd ] = datetime.toLocaleDateString().split('.')
-  const [ hh, mm, ss ] = datetime.toLocaleTimeString().split(':')
+  const [yyyy, MM, dd] = datetime.toLocaleDateString().split('.')
+  const [hh, mm, ss] = datetime.toLocaleTimeString().split(':')
 
   return `${yyyy}년 ${MM}월 ${dd}일 ${hh}시 ${mm}분 ${ss}초`
 }

@@ -6,9 +6,12 @@ import TechtreeThumbnail, {
   TechtreeInfo,
   TechtreeThumbnailBlock,
   TechtreeThumbnailImage,
+  TreeThumbnailHeader,
 } from '../../components/TechtreeThumbnail'
+import { TreePageHeader } from './TechtreeDetailPage'
 import { Spinner } from '../../components/Spinner'
 import { Button, DefaultButton } from '../../components/Button'
+import { StyledTitle } from '../../components/TitleInput'
 import TreeIcon from '../../assets/tree.svg'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 
@@ -56,6 +59,7 @@ export default function TechtreeListPage() {
 
   return (
     <MainWrapper>
+      <TreePageHeader>모두의 Forest</TreePageHeader>
       <GridWrapper>
         {pageNumber === 1 ? (
           <TechtreeThumbnailCard
@@ -68,12 +72,13 @@ export default function TechtreeListPage() {
             }}
             style={{ cursor: 'pointer' }}
           >
+            <TreeThumbnailHeader>
+              <StyledTitle>새 나무 심기</StyledTitle>
+            </TreeThumbnailHeader>
             <TechtreeThumbnailBlock>
               <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
             </TechtreeThumbnailBlock>
-            <TechtreeInfo>
-              <div style={{ margin: 'auto' }}> 새로운 트리 심기</div>
-            </TechtreeInfo>
+            <TechtreeInfo></TechtreeInfo>
           </TechtreeThumbnailCard>
         ) : (
           ''
