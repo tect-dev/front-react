@@ -28,8 +28,8 @@ const MarkdownStyledBlock = styled.div`
   }
   word-break: break-all;
   pre {
-    font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas,
-      'Courier New', monospace;
+    font-family: 'Noto Sans KR', 'Fira Mono', source-code-pro, Menlo, Monaco,
+      Consolas, 'Courier New', monospace;
     font-size: 0.875rem;
     padding: 1rem;
     border-radius: 4px;
@@ -149,7 +149,7 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
 
   return (
     <Container>
-      <TypographyBlock> 
+      <TypographyBlock>
         <MarkdownStyledBlock
           className={'dracula'}
           dangerouslySetInnerHTML={{ __html: html }}

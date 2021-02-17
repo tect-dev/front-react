@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom'
 import MainLayout from '../../components/layout/MainLayout'
 import '../../styles/page/user/ProfilePage.scss'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout, getUserInfo } from '../../redux/auth'
+import { logout, getUserInfo, updateProfile } from '../../redux/auth'
 import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
 import { Button } from '../../components/Button'
@@ -35,6 +35,9 @@ export default function ProfilePage({ match }) {
     }
   })
 
+  const [displayName, setDisplayName] = useState('')
+  const [introduce, setIntroduce] = useState('')
+
   const dispatch = useDispatch()
 
   const onClickLogout = useCallback(() => {
@@ -42,9 +45,32 @@ export default function ProfilePage({ match }) {
     history.push('/')
   }, [dispatch])
 
+  const onChangeDisplayName = useCallback(
+    (e) => {
+      setDisplayName(e.target.value)
+    },
+    [displayName]
+  )
+
+  const onChangeIntroduce = useCallback(
+    (e) => {
+      setIntroduce(e.target.value)
+      console.log('introduce: ', introduce)
+    },
+    [introduce]
+  )
+
+  const submitProfile = useCallback(
+    (e) => {
+      e.preventDefault()
+      dispatch(updateProfile(myID, displayName, introduce))
+    },
+    [myID, displayName, introduce]
+  )
+
   useEffect(() => {
     dispatch(getUserInfo(userID))
-  }, [dispatch])
+  }, [dispatch, userID])
 
   if (loading) {
     return (
@@ -55,6 +81,9 @@ export default function ProfilePage({ match }) {
   }
   return (
     <MainWrapper>
+      <input value={displayName} onChange={onChangeDisplayName} />
+      <input value={introduce} onChange={onChangeIntroduce} />
+      <button onClick={submitProfile}>자기소개 수정</button>
       <GridContainer>
         {treeData?.map((techtreeData, index) => {
           const parsedNodeList = JSON.parse(techtreeData.nodeList)

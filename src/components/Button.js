@@ -5,9 +5,10 @@ import { fontSize, colorPalette } from '../lib/constants'
 import styled from 'styled-components'
 
 export const DefaultButton = styled.button`
-  font-size: ${fontSize.small};
-  padding: 8px 10px;
-  border: 2px solid ${colorPalette.mainGreen};
+  font-size: ${fontSize.xsmall};
+  padding: 6px 8px;
+  margin: 2px;
+  border: 1px solid ${colorPalette.mainGreen};
   border-radius: 5px;
   outline: none;
   cursor: pointer;

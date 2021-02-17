@@ -39,8 +39,8 @@ export const TypographyBlock = styled.div`
     }
   }
   code {
-    font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas,
-      'Courier New', monospace;
+    font-family: 'Noto Sans KR', 'Fira Mono', source-code-pro, Menlo, Monaco,
+      Consolas, 'Courier New', monospace;
   }
   hr {
     border: none;
