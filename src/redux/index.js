@@ -6,6 +6,7 @@ import updatePost from './updatePost'
 import deletePost from './deletePost'
 import techtree from './techtree'
 import board from './board'
+import demo from './demo'
 
 const rootReducer = combineReducers({
   auth,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   deletePost,
   techtree,
   board,
+  demo,
 })
 
 // reducer는 export default 해야된다는데 why??

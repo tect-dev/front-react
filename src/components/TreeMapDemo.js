@@ -14,9 +14,7 @@ import {
   createLink,
   deleteNode,
   deleteLink,
-  editTechtree,
-  finishTechtreeEdit,
-} from '../redux/techtree'
+} from '../redux/demo'
 import { useDispatch, useSelector } from 'react-redux'
 import { reduxStore } from '../index'
 
@@ -37,10 +35,10 @@ export default React.memo(function TechtreeMap() {
     isEditingTechtree,
   } = useSelector((state) => {
     return {
-      selectedNode: state.techtree.selectedNode,
-      nodeList: state.techtree.nodeList,
-      linkList: state.techtree.linkList,
-      loginState: state.auth.loginState,
+      selectedNode: state.demo.selectedNode,
+      nodeList: state.demo.demoNodeList,
+      linkList: state.demo.demoLinkList,
+      loginState: true,
       isEditingTechtree: state.techtree.isEditingTechtree,
     }
   })
@@ -145,8 +143,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   const absoluteYPosition = scrolledTopLength + relativeTop
   const absoluteXPosition = relativeLeft
 
-  let nodeList = reduxStore.getState().techtree.nodeList
-  let linkList = reduxStore.getState().techtree.linkList
+  let nodeList = reduxStore.getState().demo.demoNodeList
+  let linkList = reduxStore.getState().demo.demoLinkList
   let tempPairingNodes = {
     startNodeID: null,
     startX: null,
