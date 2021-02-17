@@ -34,6 +34,10 @@ const CREATE_ANSWER_TRY = 'board/CREATE_ANSWER_TRY'
 const CREATE_ANSWER_SUCCESS = 'board/CREATE_ANSWER_SUCCESS'
 const CREATE_ANSWER_FAIL = 'board/CREATE_ANSWER_FAIL'
 
+const UPDATE_POST_TRY = 'board/UPDATE_POST_TRY'
+const UPDATE_POST_SUCCESS = 'board/UPDATE_POST_SUCCESS'
+const UPDATE_POST_FAIL = 'board/UPDATE_POST_FAIL'
+
 const DELETE_POST_TRY = 'board/DELETE_POST_TRY'
 const DELETE_POST_SUCCESS = 'board/DELETE_POST_SUCCESS'
 const DELETE_POST_FAIL = 'board/DELETE_POST_FAIL'
@@ -131,6 +135,31 @@ export const createAnswer = (data) => async (dispatch) => {
   }
 }
 
+export const updatePost = (data) => async (
+  dispatch,
+  getState,
+  { history }
+) => {
+  dispatch({ type: UPDATE_POST_TRY })
+  try {
+    //const obj = JSON.stringify(data)
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/question/${data.postID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { ...data, firebaseToken: idToken },
+      })
+      await dispatch({ type: UPDATE_POST_SUCCESS })
+      history.push(`/post/${data.postID}`)
+    })
+    // obj 는 스트링으로 만든거라서, data 를 써야함.
+  } catch (e) {
+    alert('error: ', e)
+    dispatch({ type: UPDATE_POST_FAIL, error: e })
+  }
+}
+
 export const deletePost = (postID) => async (
   dispatch,
   getState,
@@ -207,6 +236,25 @@ export default function board(state = initialState, action) {
         error: null,
       }
     case DELETE_POST_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      }
+    case UPDATE_POST_TRY:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    case UPDATE_POST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        isUpdated: true,
+      }
+    case UPDATE_POST_FAIL:
       return {
         ...state,
         loading: false,
