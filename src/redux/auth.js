@@ -1,5 +1,6 @@
 import { authService, firebaseInstance } from '../lib/firebase'
 import axios from 'axios'
+import { dispatch } from 'd3'
 
 const initialState = {
   loginState: false,
@@ -51,7 +52,7 @@ const session_login = () => {
     })
 }
 
-const session_signup = (displayName) => {
+const session_signup = (displayName, introduce) => {
   authService.currentUser
     .getIdToken(true)
     .then((idToken) => {
@@ -61,6 +62,7 @@ const session_signup = (displayName) => {
         data: {
           firebaseToken: idToken,
           displayName: displayName,
+          introduce: introduce,
         },
         withCredentials: true,
       })
@@ -103,7 +105,7 @@ export const emailLogin = (email, password) => async (dispatch) => {
   }
 }
 
-export const emailSignUp = (email, password, displayName) => async (
+export const emailSignUp = (email, password, displayName, introduce) => async (
   dispatch
 ) => {
   dispatch({ type: CREATE_USER_TRY })
@@ -111,7 +113,7 @@ export const emailSignUp = (email, password, displayName) => async (
     await authService
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        session_signup(displayName)
+        session_signup(displayName, introduce)
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {
@@ -149,6 +151,26 @@ export const getUserInfo = (userID) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: GET_USER_FAIL, error: e })
+  }
+}
+
+export const updateProfile = (userID, displayName, introduce) => async (
+  dispatch
+) => {
+  try {
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      const res = await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/user/update`,
+        data: {
+          displayName: displayName,
+          introduce: introduce,
+          firebaseToken: idToken,
+        },
+      })
+    })
+  } catch (e) {
+    console.log('error: ', e)
   }
 }
 

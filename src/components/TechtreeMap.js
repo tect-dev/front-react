@@ -69,7 +69,10 @@ export default React.memo(function TechtreeMap({
 
   return (
     <>
-      <TechtreeThumbnailBlock ref={containerRef} />
+      <TechtreeThumbnailBlock
+        style={{ backgroundColor: '#ffffff' }}
+        ref={containerRef}
+      />
     </>
   )
 })

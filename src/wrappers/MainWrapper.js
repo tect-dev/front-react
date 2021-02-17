@@ -1,10 +1,24 @@
 import styled from 'styled-components'
 import Navbar, { NavbarInTheHomePage } from '../components/layout/Navbar'
-import { Container, Button, Link } from 'react-floating-action-button'
+import {
+  Container,
+  Button,
+  Link,
+  lightColors,
+  darkColors,
+} from 'react-floating-action-button'
+import {
+  FaTimes,
+  FaBars,
+  FaSearch,
+  FaUserAlt,
+  FaQuestion,
+} from 'react-icons/fa'
 
 import { colorPalette } from '../lib/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { createTechtree } from '../redux/techtree'
+import { pointer } from 'd3'
 
 export default function MainWrapperDefault({ children }) {
   const dispatch = useDispatch()
@@ -18,27 +32,49 @@ export default function MainWrapperDefault({ children }) {
       <Container>
         {loginState ? (
           <Button
-            href="/"
             tooltip="나무 심기"
-            icon="fa fa-sticky-note"
+            icon="fas fa-plus"
             style={{ curosr: 'pointer' }}
             onClick={() => {
               dispatch(createTechtree())
             }}
+            styles={{
+              backgroundColor: colorPalette.teal5,
+              color: lightColors.white,
+              curosr: 'pointer',
+            }}
           />
         ) : (
-          <Button tooltip="나무를 심으려면 로그인이 필요해요!"></Button>
+          <Button
+            styles={{
+              backgroundColor: colorPalette.teal5,
+              color: lightColors.white,
+            }}
+            icon="fas fa-plus"
+            tooltip="나무를 심으려면 로그인이 필요해요!"
+          ></Button>
         )}
 
         {loginState ? (
           <Link
             tooltip="내 숲으로 가기"
-            icon="fa fa-plus"
-            rotate={true}
+            icon="fas fa-tree"
+            //rotate={true}
             href={`/forest/${userID}`}
+            styles={{
+              backgroundColor: colorPalette.teal5,
+              color: lightColors.white,
+            }}
           />
         ) : (
-          <Button tooltip="로그인이 필요해요!"></Button>
+          <Button
+            tooltip="내 숲으로 가려면 로그인이 필요해요!"
+            icon="fas fa-tree"
+            styles={{
+              backgroundColor: colorPalette.teal5,
+              color: lightColors.white,
+            }}
+          ></Button>
         )}
       </Container>
     </MainLayout>

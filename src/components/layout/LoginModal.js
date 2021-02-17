@@ -11,6 +11,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [displayName, setDisplayName] = useState()
+  const [introduce, setIntroduce] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [loginResult, setLoginResult] = useState(null)
 
@@ -47,6 +48,13 @@ export const LoginModal = React.memo(({ labelFor }) => {
     [displayName]
   )
 
+  const onChangeIntroduce = useCallback(
+    (e) => {
+      setIntroduce(e.target.value)
+    },
+    [introduce]
+  )
+
   const onEmailLogin = useCallback(
     async (e) => {
       e.preventDefault()
@@ -60,9 +68,9 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onEmailSignUp = useCallback(
     (e) => {
       e.preventDefault()
-      dispatch(emailSignUp(email, password, displayName))
+      dispatch(emailSignUp(email, password, displayName, introduce))
     },
-    [dispatch, email, password, displayName]
+    [dispatch, email, password, displayName, introduce]
   )
 
   return (
@@ -78,7 +86,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 id="login-id-input"
                 className="login-input"
                 type="email"
-                placeholder="Enter Login Email"
+                placeholder="로그인 이메일을 입력해 주세요."
                 name="email"
                 value={email}
                 onChange={onChangeEmail}
@@ -87,7 +95,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 id="login-pw-input"
                 className="login-input"
                 type="password"
-                placeholder="Enter Password"
+                placeholder="로그인 비밀번호를 입력해 주세요."
                 name="password"
                 value={password}
                 onChange={onChangePassword}
@@ -96,11 +104,24 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 <input
                   className="login-input"
                   type="text"
-                  placeholder="Enter displayName"
+                  placeholder="표시될 닉네임을 입력해주세요."
                   required
                   name="displayName"
                   value={displayName}
                   onChange={onChangedisplayName}
+                />
+              ) : (
+                ''
+              )}
+              {isSignUp ? (
+                <input
+                  className="login-input"
+                  type="text"
+                  placeholder="자기 소개를 입력해주세요."
+                  required
+                  name="introduce"
+                  value={introduce}
+                  onChange={onChangeIntroduce}
                 />
               ) : (
                 ''

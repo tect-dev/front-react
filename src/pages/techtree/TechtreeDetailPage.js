@@ -9,6 +9,11 @@ import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
 import { Button, DefaultButton } from '../../components/Button'
+import {
+  TitleInput,
+  TitleBottomLine,
+  StyledTitle,
+} from '../../components/TitleInput'
 
 import {
   TechtreeThumbnailCard,
@@ -172,18 +177,21 @@ export default function TechtreeDetailPage({ match }) {
           <HalfWidthContainer>
             <TreeTitleArea>
               {techtreeData.author.firebaseUid === userID ? (
-                <StyledTitleInput
+                <TitleInput
                   value={techtreeTitle}
                   placeholder="트리의 주제를 적어주세요!"
                   onChange={onChangeTechtreeTitle}
                 />
               ) : (
-                <div>
-                  {techtreeTitle} -
-                  <Link to={`/user/${techtreeData.author.firebaseUid}`}>
-                    {techtreeData.author.displayName}
-                  </Link>
-                </div>
+                <>
+                  <StyledTitle>{techtreeTitle}</StyledTitle>
+
+                  <StyledDisplayName>
+                    <Link to={`/user/${techtreeData.author.firebaseUid}`}>
+                      {techtreeData.author.displayName}
+                    </Link>
+                  </StyledDisplayName>
+                </>
               )}
             </TreeTitleArea>
             <TreeEditorArea>
@@ -246,12 +254,12 @@ export default function TechtreeDetailPage({ match }) {
               <DocuHeaderArea>
                 <div className="docuTitle">
                   {isEditingDocument ? (
-                    <StyledTitleInput
+                    <TitleInput
                       value={documentTitle}
                       onChange={onChangeDocumentTitle}
                     />
                   ) : (
-                    <h2>{selectedNode.name}</h2>
+                    <StyledTitle>{selectedNode.name}</StyledTitle>
                   )}
                 </div>
 
@@ -278,12 +286,13 @@ export default function TechtreeDetailPage({ match }) {
                   )}
                 </div>
               </DocuHeaderArea>
-
+              <TitleBottomLine />
               <DocuBodyArea>
                 {isEditingDocument ? (
                   <MarkdownEditor
                     bindingText={documentText}
                     bindingSetter={setDocumentText}
+                    width="100%"
                   />
                 ) : (
                   <MarkdownRenderer text={selectedNode.body} />
@@ -295,26 +304,32 @@ export default function TechtreeDetailPage({ match }) {
                 {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
                 {previousNodeList.map((node) => {
                   return (
-                    <DefaultButton
-                      onClick={() => {
-                        const newPreviousNodeList = returnPreviousNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        const newNextNodeList = returnNextNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        dispatch(
-                          selectNode(newPreviousNodeList, newNextNodeList, node)
-                        )
-                        window.scrollTo(0, 0)
-                      }}
-                    >
-                      {node?.name}
-                    </DefaultButton>
+                    <div>
+                      <DefaultButton
+                        onClick={() => {
+                          const newPreviousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          const newNextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          dispatch(
+                            selectNode(
+                              newPreviousNodeList,
+                              newNextNodeList,
+                              node
+                            )
+                          )
+                          window.scrollTo(0, 0)
+                        }}
+                      >
+                        {node?.name}
+                      </DefaultButton>
+                    </div>
                   )
                 })}
               </PrevNodeArea>
@@ -322,26 +337,32 @@ export default function TechtreeDetailPage({ match }) {
                 {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
                 {nextNodeList.map((node) => {
                   return (
-                    <DefaultButton
-                      onClick={() => {
-                        const newPreviousNodeList = returnPreviousNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        const newNextNodeList = returnNextNodeList(
-                          linkList,
-                          nodeList,
-                          node
-                        )
-                        dispatch(
-                          selectNode(newPreviousNodeList, newNextNodeList, node)
-                        )
-                        window.scrollTo(0, 0)
-                      }}
-                    >
-                      {node?.name}
-                    </DefaultButton>
+                    <div>
+                      <DefaultButton
+                        onClick={() => {
+                          const newPreviousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          const newNextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          dispatch(
+                            selectNode(
+                              newPreviousNodeList,
+                              newNextNodeList,
+                              node
+                            )
+                          )
+                          window.scrollTo(0, 0)
+                        }}
+                      >
+                        {node?.name}
+                      </DefaultButton>
+                    </div>
                   )
                 })}
               </NextNodeArea>
@@ -358,14 +379,24 @@ const TreeDetailPageMainWrapper = styled(MainWrapper)``
 const TreePageHeader = styled.div`
   width: 90%;
   display: grid;
-  border: 1px solid ${colorPalette.mainGreen};
-  margin: 1rem;
+
+  //border: 1px solid ${colorPalette.mainGreen};
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   padding: 1rem;
   color: ${colorPalette.gray7};
 `
 
 const TreeTitleArea = styled.div`
-  font-size: ${fontSize.large};
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  width: 100%;
+  justify-items: space-between;
+  align-items: center;
+`
+
+const StyledDisplayName = styled(StyledTitle)`
+  font-size: ${fontSize.small};
 `
 
 const TreeEditorArea = styled.div``
@@ -378,15 +409,17 @@ const TreeEditButtonArea = styled.div`
 `
 
 const DocuWrapper = styled.div`
-  padding: 30px;
   border-radius: 22px;
-  border: 1px solid ${colorPalette.mainGreen};
+  background: #fffef8;
+  border: 0.5px solid #6d9b7b;
+  box-sizing: border-box;
+  padding: 10px;
 `
 
 const DocuHeaderArea = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-content: space-around;
+  justify-content: space-between;
+  grid-template-columns: 2fr 1fr;
 `
 
 const DocuBodyArea = styled.div``
@@ -395,7 +428,8 @@ const NodeButtonArea = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
-  justify-content: space-around;
+
+  justify-content: space-between;
   padding: 20px;
   font-size: ${fontSize.small};
 `
@@ -410,6 +444,7 @@ const HalfWidthContainer = styled(HalfWidthWrapper)`
 `
 const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
   width: 80%;
+  height: 80vh;
 `
 
 const StyledTitleInput = styled.input`
