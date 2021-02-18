@@ -452,9 +452,12 @@ export const PrevNodeArea = styled.div``
 
 export const NextNodeArea = styled.div``
 
-export const HalfWidthContainer = styled(HalfWidthWrapper)`
-  overflow-x: scroll;
-  //overflow: hidden;
+export const HalfWidthContainer = styled.div`
+  overflow: visible;
+  //@media (max-width: 650px) {
+  //  overflow-x: scroll;
+  //}
+  
 `
 
 export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`

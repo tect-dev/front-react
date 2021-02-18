@@ -238,7 +238,7 @@ export const createLink = (nodeList, linkList, techtreeData) => async (
         },
       })
     })
-    return { type: CREATE_LINK, linkList: linkList }
+    dispatch ({ type: CREATE_LINK, linkList: linkList })
   } catch (e) {
     console.log('error: ', e)
   }
@@ -287,7 +287,7 @@ export const deleteNode = (
         },
       })
     })
-    return { type: DELETE_NODE, newNodeList, newLinkList }
+    dispatch({ type: DELETE_NODE, newNodeList, newLinkList })
   } catch (e) {
     alert('error: ', e)
     //dispatch({ type: CREATE_QUESTION_FAIL, error: e })
@@ -314,7 +314,7 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
         linkList: JSON.stringify(newLinkList),
       },
     })
-    return { type: DELETE_LINK, newLinkList }
+    dispatch({ type: DELETE_LINK, newLinkList })
   } catch (e) {
     console.log('error: ', e)
   }
