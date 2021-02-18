@@ -25,6 +25,7 @@ export const fontSize = {
   medium: '16px',
   large: '20px',
   xlarge: '24px',
+  xxlarge: '36px',
 }
 
 export const boxShadow = {
@@ -127,7 +128,7 @@ export const colorPalette = {
   red8: '#e03131',
   red9: '#c92a2a',
 
-  mainGreen: '#6D9B7B',
+  mainGreen: '#69bc69',
 }
 
 export const whiteURL =

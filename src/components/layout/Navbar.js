@@ -10,6 +10,8 @@ import {
   FaQuestion,
 } from 'react-icons/fa'
 import { LoginModal } from './LoginModal'
+import MainLogo from '../../assets/MainLogo.png'
+
 import styled from 'styled-components'
 
 export default function Navbar() {
@@ -65,9 +67,12 @@ export default function Navbar() {
         className="header-container"
         style={searchClick ? { display: 'none' } : null}
       >
-        <div className="logo-container">
-          <NavLink to="/" className="logo">
-            Foresty
+        <div
+          className="logo-container"
+          style={{ display: 'grid', alignItems: 'center' }}
+        >
+          <NavLink to="/">
+            <img src={MainLogo} height="50" />
           </NavLink>
         </div>
 

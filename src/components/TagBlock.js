@@ -4,14 +4,14 @@ import styled from 'styled-components'
 const StyledTagBlock = styled.div`
   display: inline-flex;
   border-radius: 5px;
-  background: #00bebe;
+  background: #69bc69;
   color: #ffffff;
   padding: 2px 2px;
   margin: 2px 2px 0 2px;
   width: inherit;
   opacity: 0.8;
   &:hover {
-    background: #00bebe;
+    background: #69bc69;
     color: #ffffff;
     transition: all ease-in 0.2s;
     opacity: 1;
