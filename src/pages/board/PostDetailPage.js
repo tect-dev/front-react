@@ -13,8 +13,8 @@ export default function PostDetailPage({ match }) {
   const { postID } = match.params
   const dispatch = useDispatch()
   const history = useHistory()
-
-  const { userID, loading, postTitle, postContent, postCreatedAt, postAuthor, postPlace } = useSelector(
+  const { userID, loading, postTitle, postContent, postCreatedAt, 
+    postAuthor, postPlace, answers, postLike } = useSelector(
     (state) => {
       return {
         userID: state.auth.userID,
@@ -24,6 +24,8 @@ export default function PostDetailPage({ match }) {
         postContent: state.board.postContent,
         postCreatedAt: state.board.postCreatedAt,
         postAuthor: state.board.postAuthor,
+        answers: state.board.postAnswers,
+        postLike: state.board.postLike
       }
     }
   )
@@ -59,14 +61,14 @@ export default function PostDetailPage({ match }) {
             </AuthorName>
           </PostHeader_Left>
           <Likes>
-            좋아요 0
+            좋아요 {postLike}
           </Likes>
         </PostHeader>
         <PostTitle>
           {postTitle}
         </PostTitle>
         <PostContent>
-          <MarkdownRenderer text={postContent} />
+          <MarkdownRenderer text={postContent} style={{padding: "0px"}}/>
         </PostContent>
         {/* {postCreatedAt} */}
         {userID === postAuthor?.firebaseUid ? (
@@ -83,24 +85,28 @@ export default function PostDetailPage({ match }) {
         )}
       </PostContainer>
       <div>
+        {answers?.length ? answers.map((answer, idx) => {
+          return(
+            <Comment>
+            {/* 아직은 거의 비슷해서 그냥 복붙함. */}
+              <PostHeader>
+                <PostHeader_Left>
+                  <AnonymousSVG/>
+                  <AuthorName>
+                    {answer.eachAnswer.author.displayName}
+                  </AuthorName>
+                </PostHeader_Left>
+                <Likes>
+                  좋아요 {answer.eachAnswer.like}
+                </Likes>
+              </PostHeader>
+              <CommentContent>
+                {answer.eachAnswer.content}
+              </CommentContent>
+            </Comment>
+          )
+        }) : null}
         {/* 나중에 map으로 iteration 돌려야 함. */}
-        <Comment>
-          {/* 아직은 거의 비슷해서 그냥 복붙함. */}
-          <PostHeader>
-            <PostHeader_Left>
-              <AnonymousSVG/>
-              <AuthorName>
-                익명
-              </AuthorName>
-            </PostHeader_Left>
-            <Likes>
-              좋아요 0
-            </Likes>
-          </PostHeader>
-          <CommentContent>
-            댓글 본문입니다.
-          </CommentContent>
-        </Comment>
 
         <CommentEditor>
           <CommentTextarea
@@ -135,6 +141,8 @@ export default function PostDetailPage({ match }) {
     </MainWrapper>
   )
 }
+
+const Comments = () => {}
 
 const PlaceContainer = styled.div`
   padding: 40px 20px;
