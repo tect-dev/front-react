@@ -127,7 +127,7 @@ export const colorPalette = {
   red8: '#e03131',
   red9: '#c92a2a',
 
-  mainGreen: '#6D9B7B',
+  mainGreen: '#69bc69',
 }
 
 export const whiteURL =

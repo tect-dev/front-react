@@ -432,7 +432,10 @@ export const DocuHeaderArea = styled.div`
   grid-template-columns: 2fr 1fr;
 `
 
-export const DocuBodyArea = styled.div``
+export const DocuBodyArea = styled.div`
+  padding-left: 1rem;
+  padding-right: 1rem;
+`
 
 export const NodeButtonArea = styled.div`
   display: grid;
