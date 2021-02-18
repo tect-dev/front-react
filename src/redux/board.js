@@ -40,9 +40,17 @@ const UPDATE_POST_TRY = 'board/UPDATE_POST_TRY'
 const UPDATE_POST_SUCCESS = 'board/UPDATE_POST_SUCCESS'
 const UPDATE_POST_FAIL = 'board/UPDATE_POST_FAIL'
 
+const UPDATE_ANSWER_TRY = 'board/UPDATE_ANSWER_TRY'
+const UPDATE_ANSWER_SUCCESS = 'board/UPDATE_ANSWER_SUCCESS'
+const UPDATE_ANSWER_FAIL = 'board/UPDATE_ANSWER_FAIL'
+
 const DELETE_POST_TRY = 'board/DELETE_POST_TRY'
 const DELETE_POST_SUCCESS = 'board/DELETE_POST_SUCCESS'
 const DELETE_POST_FAIL = 'board/DELETE_POST_FAIL'
+
+const DELETE_ANSWER_TRY = 'board/DELETE_ANSWER_TRY'
+const DELETE_ANSWER_SUCCESS = 'board/DELETE_ANSWER_SUCCESS'
+const DELETE_ANSWER_FAIL = 'board /DELETE_ANSWER_FAIL'
 
 export const readPostList = (querystring, pageNumber) => async (dispatch) => {
   dispatch({ type: READ_POST_LIST_TRY })
@@ -84,7 +92,6 @@ export const readPostDetail = (uid) => async (dispatch) => {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/question/${uid}`
     )
-    console.log(res.data)
     dispatch({ type: READ_POST_DETAIL_SUCCESS, postData: res.data })
   } catch (e) {
     console.log('error: ', e)
@@ -163,6 +170,27 @@ export const updatePost = (data) => async (
   }
 }
 
+export const updateAnswer = (answerID, data) => async (
+    dispatch,
+  ) => {
+  dispatch({ type: UPDATE_ANSWER_TRY })
+  try {
+    await authService.currentUser.getIdToken(true).then( async (idToken) => {
+      // const obj = JSON.stringify(data)
+      const res = await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/answer/${answerID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: {content: data, firebaseToken: idToken},
+      })
+    })
+    dispatch({ type: UPDATE_ANSWER_SUCCESS })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: UPDATE_ANSWER_FAIL, error: e })
+  }
+}
+
 export const deletePost = (postID) => async (
   dispatch,
   getState,
@@ -182,7 +210,20 @@ export const deletePost = (postID) => async (
     alert('게시글을 삭제하는데 오류가 발생했습니다.')
   }
 }
-
+export const deleteAnswer = (answerID) => async (dispatch) => {
+  dispatch({ type: DELETE_ANSWER_TRY })
+  try {
+    await axios({
+      method: 'delete',
+      url: `${process.env.REACT_APP_BACKEND_URL}/answer/${answerID}`,
+    })
+    dispatch({ type: DELETE_ANSWER_SUCCESS })
+  } catch (e) {
+    console.log('error: ', e)
+    dispatch({ type: DELETE_ANSWER_FAIL, error: e })
+    alert('게시글을 삭제하는데 오류가 발생했습니다.')
+  }
+}
 export default function board(state = initialState, action) {
   switch (action.type) {
     case READ_POST_LIST_TRY:
@@ -247,6 +288,20 @@ export default function board(state = initialState, action) {
         loading: false,
         error: action.error,
       }
+    case DELETE_ANSWER_TRY:
+      return {
+        ...state, // 자연스러운 삭제 ux를 위해 loading 삭제
+      }
+    case DELETE_ANSWER_SUCCESS:
+      return {
+        ...state,
+      }
+    case DELETE_ANSWER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      }
     case UPDATE_POST_TRY:
       return {
         ...state,
@@ -266,6 +321,21 @@ export default function board(state = initialState, action) {
         loading: false,
         error: action.error,
       }
+    case UPDATE_ANSWER_TRY:
+      return {
+        ...state, // 자연스러운 수정 ux를 위해 loading 제거
+      }
+    case UPDATE_ANSWER_SUCCESS:
+      return {
+        ...state,
+        isUpdated: true,
+      }
+    case UPDATE_ANSWER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        }
     default:
       return { ...state }
   }
