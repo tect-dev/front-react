@@ -1,11 +1,13 @@
 import MainWrapper from '../../wrappers/MainWrapper'
 import { Spinner } from '../../components/Spinner'
-import React, { useEffect, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'  
 import { readPostDetail, deletePost } from '../../redux/board'
 import { fontSize } from '../../lib/constants'
 import { Link, useHistory } from 'react-router-dom'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
+import { AnswerEditor, AnswerTextarea } from '../../components/board/AnswerEditor'
+import { Answer } from '../../components/board/Answer'
 
 import styled from "styled-components"
 
@@ -13,25 +15,39 @@ export default function PostDetailPage({ match }) {
   const { postID } = match.params
   const dispatch = useDispatch()
   const history = useHistory()
-  const { userID, loading, postTitle, postContent, postCreatedAt, 
-    postAuthor, postPlace, answers, postLike } = useSelector(
+  const { user, loading, postTitle, postContent, postCreatedAt, 
+    postAuthor, postPlace, postAnswers, postLike } = useSelector(
     (state) => {
       return {
-        userID: state.auth.userID,
+        user: state.auth,
         loading : state.board.loading,
         postPlace: state.auth.userPlace,
         postTitle: state.board.postTitle,
         postContent: state.board.postContent,
         postCreatedAt: state.board.postCreatedAt,
         postAuthor: state.board.postAuthor,
-        answers: state.board.postAnswers,
+        postAnswers: state.board.postAnswers,
         postLike: state.board.postLike
       }
     }
   )
+  const [ answers, setAnswers ] = useState(null)
+  const [ isEdit , setIsEdit ] = useState(false)
+
+  const onSetIsEdit = useCallback((param)=>{
+    setIsEdit(param)
+  }, [])
 
   useEffect(() => {
     dispatch(readPostDetail(postID))
+  }, [])
+
+  useEffect(()=>{
+    setAnswers(postAnswers)
+  }, postAnswers)
+
+  const onSetAnswers = useCallback(answers => {
+    setAnswers(answers)
   }, [])
 
   const onDeleteQuestion = useCallback(() => {
@@ -71,7 +87,7 @@ export default function PostDetailPage({ match }) {
           <MarkdownRenderer text={postContent} style={{padding: "0px"}}/>
         </PostContent>
         {/* {postCreatedAt} */}
-        {userID === postAuthor?.firebaseUid ? (
+        {user.userID === postAuthor?.firebaseUid ? (
           <PostFooter>
             <Button>
               <Link to={`edit/${postID}`}>
@@ -87,49 +103,24 @@ export default function PostDetailPage({ match }) {
       <div>
         {answers?.length ? answers.map((answer, idx) => {
           return(
-            <Comment>
-            {/* 아직은 거의 비슷해서 그냥 복붙함. */}
-              <PostHeader>
-                <PostHeader_Left>
-                  <AnonymousSVG/>
-                  <AuthorName>
-                    {answer.eachAnswer.author.displayName}
-                  </AuthorName>
-                </PostHeader_Left>
-                <Likes>
-                  좋아요 {answer.eachAnswer.like}
-                </Likes>
-              </PostHeader>
-              <CommentContent>
-                {answer.eachAnswer.content}
-              </CommentContent>
-            </Comment>
+            <Answer
+              answer={answer}
+              answers={answers}
+              setAnswers={onSetAnswers}
+              key={idx}
+              user={user}
+            >
+            </Answer>
           )
         }) : null}
         {/* 나중에 map으로 iteration 돌려야 함. */}
 
-        <CommentEditor>
-          <CommentTextarea
-            placeholder="댓글을 입력해주세요"
-          />
-          <CommentEditor_Right>
-            <Anonymous>
-              <span>
-                익명
-              </span>
-              <input
-                type="checkbox"
-                id="anonymousCheck"
-              />
-              <label htmlFor="anonymousCheck">
-              </label>
-              
-            </Anonymous>
-            <CommentSubmit onClick={e=>console.log(e)}>
-              등록
-            </CommentSubmit>
-          </CommentEditor_Right>
-        </CommentEditor>
+        <AnswerEditor
+          user={user}
+          postID={postID}
+          answers={answers}
+          setAnswers={onSetAnswers}
+        />
       </div>
       <BackButton onClick={e=>{
         e.preventDefault()
@@ -142,8 +133,6 @@ export default function PostDetailPage({ match }) {
   )
 }
 
-const Comments = () => {}
-
 const PlaceContainer = styled.div`
   padding: 40px 20px;
   font-size: ${fontSize.xlarge};
@@ -151,7 +140,7 @@ const PlaceContainer = styled.div`
   color: #707070;
 `
 
-const PostContainer = styled.div`
+export const PostContainer = styled.div`
   background: #fffef8;
   border-radius: 22px;
   border: 1px solid #6d9b7b;
@@ -159,19 +148,19 @@ const PostContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const PostHeader = styled.div`
+export const PostHeader = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 17px;
 `
 
-const PostHeader_Left= styled.div`
+export const PostHeader_Left= styled.div`
   display: flex;
   /* justify-content: space-between; */
   align-items: center;
 `
 
-const AnonymousSVG = () => {
+export const AnonymousSVG = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
       <g id="그룹_14" data-name="그룹 14" transform="translate(-365 -717)">
@@ -185,108 +174,37 @@ const AnonymousSVG = () => {
   )
 }
 
-const AuthorName = styled.div`
+export const AuthorName = styled.div`
   font-size: ${fontSize.small};
   font-weight: bold;
   margin-left: 10px;
   color: #707070;
 `
 
-const Likes = styled.div`
+export const Likes = styled.div`
   font-size: ${fontSize.small};
   color: #707070;
 `
 
-const PostTitle = styled.div`
+export const PostTitle = styled.div`
   margin-bottom: 21px;
   color: #6d9b7b;
   font-size: ${fontSize.large};
   font-weight: bold;
 `
 
-const PostContent = styled.div`
+export const PostContent = styled.div`
   font-size: ${fontSize.medium};
   color: #999;
   margin-bottom: 66px;
 `
-const PostFooter = styled.div`
+export const PostFooter = styled.div`
   display: flex;
   flex-direction: row-reverse;
 `
 
 
-const Comment = styled(PostContainer)`
-  background: none;
-`
-
-const CommentContent = styled.div`
-  font-size: ${fontSize.medium};
-  color: #999;
-  margin-bottom: 10px;
-`
-
-const CommentEditor = styled.div`
-  padding: 20px;
-  font-size: ${fontSize.medium};
-  border-radius: 17px;
-  background: #b2c8b4;
-  margin-bottom: 30px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-`
-
-const CommentEditor_Right = styled.div`
-  display: flex;
-`
-
-const CommentTextarea = styled.textarea`
-  all: unset;
-  color: #fff;
-  
-  width: calc(100% - 150px);
-
-  &::placeholder {
-    color: #fff;
-  }
-`
-
-const Anonymous = styled.div`
-  display: flex;
-  align-items: center;
-  color: #f8f6ed;
-  margin-right: 16px;
-
-  input {
-    display: none;
-
-    &:checked + label {
-      background: #f8f6ed;
-    }
-  }
-  label {
-    display: inline-block;
-    cursor: pointer;
-    width: 9px;
-    height: 9px;
-    background: none;
-    border: 1px solid #f8f6ed;
-    border-radius: 3px;
-  }
-`
-
-const CommentSubmit = styled.button`
-  all:unset;
-  cursor: pointer;
-  padding: 5px 20px;
-  font-size: ${fontSize.medium};
-  background: #f8f6ed;
-  color: #b2c8b4;
-  border-radius: 10px;
-`
-
-const Button = styled.button`
+export const Button = styled.button`
   all:unset;
   cursor: pointer;
   padding: 5px 20px;
