@@ -114,6 +114,7 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         session_signup(displayName, introduce)
+        //authService.currentUser.sendEmailVerification()
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {

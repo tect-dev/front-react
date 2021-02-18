@@ -25,28 +25,125 @@ const DELETE_NODE = 'demo/DELETE_NODE'
 const CREATE_LINK = 'demo/CREATE_LINK'
 const DELETE_LINK = 'demo/DELETE_LINK'
 
-const EDIT_DOCUMENT = 'demo/EDIT_DOCUMENT'
-const FINISH_DOCU_EDIT = 'demo/FINISH_DOCU_EDIT'
+const START_EDIT_DOCU = 'demo/START_EDIT_DOCU'
+const FINISH_EDIT_DOCU = 'demo/FINISH_EDIT_DOCU'
 
 const EDIT_TECHTREE = 'demo/EDIT_TECHTREE'
 const FINISH_TECHTREE_EDIT = 'demo/FINISH_TECHTREE_EDIT'
 
-const SELECT_NODE = 'techtree/SELECT_NODE'
+const SELECT_NODE = 'demo/SELECT_NODE'
 
-export const selectNode = (prevNodeList, nextNodeList, node) => {
-  return { type: SELECT_NODE, prevNodeList, nextNodeList, node }
+export const startEditDocu = () => {
+  return { type: START_EDIT_DOCU }
+}
+export const finishEditDocu = (
+  nodeID,
+  nodeName,
+  nodeBody,
+  nodeList,
+  linkList,
+  techtreeData
+) => {
+  const changingIndex = nodeList.findIndex((element) => nodeID === element.id)
+  const changingNode = nodeList[changingIndex]
+  const newNodeList = nodeList
+  newNodeList[changingIndex] = {
+    ...changingNode,
+    id: nodeID,
+    name: nodeName,
+    body: nodeBody,
+  }
+  return { type: FINISH_EDIT_DOCU, newNodeList, nodeName, nodeBody }
 }
 
-export const createNode = () => async (dispatch) => {}
+export const finishTreeEdit = () => {}
 
-export const deleteNode = () => async (dispatch) => {}
+export const startEditTree = () => {}
+export const changeTreeTitle = () => (dispatch) => {}
 
-export const createLink = () => async (dispatch) => {}
+export const selectNode = (prevNodeList, nextNodeList, node) => (dispatch) => {
+  dispatch({ type: SELECT_NODE, prevNodeList, nextNodeList, node })
+}
 
-export const deleteLink = () => async (dispatch) => {}
+export const createNode = (newNodeList, linkList, techtreeData) => async (
+  dispatch
+) => {
+  dispatch({ type: CREATE_NODE, newNodeList })
+}
+
+export const deleteNode = (
+  nodeList,
+  linkList,
+  techtreeID,
+  node,
+  techtreeData
+) => async (dispatch) => {
+  const deletionBinaryList = linkList.map((link) => {
+    if (link.startNodeID === node.id) {
+      return 0
+    } else if (link.endNodeID === node.id) {
+      return 0
+    } else {
+      return 1
+    }
+  })
+  // 이러면 linkList 랑 원소의 갯수가 같은 0101010 배열이 나올것.
+  const newLinkList = linkList.filter((link, index) => {
+    return deletionBinaryList[index] === 1
+  })
+  const deleteNodeIndex = nodeList.findIndex((ele) => {
+    return ele.id === node.id
+  })
+  const newNodeList = nodeList.filter((ele, index) => {
+    return ele.id !== node.id
+  })
+  try {
+    dispatch({ type: DELETE_NODE, newNodeList, newLinkList })
+  } catch (e) {
+    alert('error: ', e)
+    //dispatch({ type: CREATE_QUESTION_new, error: e })
+    //diLinkch({ type: CREATLinkESTION_new, error: e })
+  }
+}
+
+export const createLink = (nodeList, linkList, techtreeData) => async (
+  dispatch
+) => {
+  dispatch({ type: CREATE_LINK, demoLinkList: linkList })
+}
+
+export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
+  dispatch
+) => {
+  const newLinkList = linkList.filter((ele) => {
+    return ele.id !== link.id
+  })
+  try {
+    dispatch({ type: DELETE_LINK, newLinkList })
+  } catch (e) {
+    console.log('error: ', e)
+  }
+}
 
 export default function demo(state = initialState, action) {
   switch (action.type) {
+    case START_EDIT_DOCU:
+      return {
+        ...state,
+        isEditingDocument: true,
+      }
+    case FINISH_EDIT_DOCU:
+      return {
+        ...state,
+        demoNodeList: action.newNodeList,
+        isEditingDocument: false,
+        selectedNode: {
+          ...state.selectedNode,
+          name: action.nodeName,
+          body: action.nodeBody,
+        },
+      }
+
     case SELECT_NODE:
       return {
         ...state,
@@ -57,12 +154,13 @@ export default function demo(state = initialState, action) {
     case CREATE_NODE:
       return {
         ...state,
-        demoNodeList: action.demoNodeList,
+        demoNodeList: action.newNodeList,
       }
     case DELETE_NODE:
       return {
         ...state,
-        demoNodeList: action.demoNodeList,
+        demoNodeList: action.newNodeList,
+        demoLinkList: action.newLinkList,
       }
 
     case CREATE_LINK:
