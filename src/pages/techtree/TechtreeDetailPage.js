@@ -435,6 +435,7 @@ export const DocuHeaderArea = styled.div`
 export const DocuBodyArea = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
+  padding-bottom: 1rem;
 `
 
 export const NodeButtonArea = styled.div`
@@ -452,7 +453,7 @@ export const PrevNodeArea = styled.div``
 export const NextNodeArea = styled.div``
 
 export const HalfWidthContainer = styled(HalfWidthWrapper)`
-  overflow: visible;
+  overflow-x: scroll;
   //overflow: hidden;
 `
 

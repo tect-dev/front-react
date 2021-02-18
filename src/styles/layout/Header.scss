@@ -17,15 +17,15 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
   width: inherit;
   height: $header-height;
   background: #fff;
-  position: fixed;  /* layout 3 */
-  top: 0;           /* layout 3 */
-  box-shadow:  0 1.5px 0 rgba(0,0,0,0.22);
-  z-index: 10;      /* layout 7 > issue 1 */
+  position: fixed; /* layout 3 */
+  top: 0; /* layout 3 */
+  box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.22);
+  z-index: 10; /* layout 7 > issue 1 */
 
   &-container {
     display: flex;
     width: $pc-max-width;
-    justify-content: space-between;  /* header 1 */
+    justify-content: space-between; /* header 1 */
     padding: 5px 5px 5px 5px;
   }
 
@@ -51,7 +51,7 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
 
     &-container {
       @include header-button-wrapper;
-      justify-content:space-around;
+      justify-content: space-around;
       width: 100%;
     }
 
@@ -65,7 +65,7 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
         height: 100%;
 
         &:hover {
-          color: #00bebe;
+          color: #69bc69;
         }
       }
 
@@ -89,14 +89,12 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     }
   }
 
-  
-
-  .auth-container{
+  .auth-container {
     @include header-button-wrapper;
     justify-content: center;
     // width: 70px; /* header 1 */
 
-    .mypage-container{
+    .mypage-container {
       @include header-button-item;
     }
 
@@ -105,28 +103,29 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
 
       .login-modal-btn {
         @include btn;
-        font-family: Arial,sans-serif;
+        font-family: Arial, sans-serif;
         color: $primary-color;
 
-        &:hover{
-          transition: all ease-in 0.2s
+        &:hover {
+          transition: all ease-in 0.2s;
         }
       }
 
       // below is for modal design
       .login-modal-input {
         display: none;
-  
+
         &:checked + label {
           background: $primary-color;
           color: white;
         }
       }
-  
+
       .login-modal-input:checked ~ .login-modal {
         display: block;
         background: rgba(0, 0, 0, 0.7);
-        opacity: 1; visibility: visible;
+        opacity: 1;
+        visibility: visible;
       }
     }
   }
@@ -135,11 +134,9 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     display: none;
   }
 
-
-  @media screen and (max-width : 768px) {
-    
+  @media screen and (max-width: 768px) {
     .visibleOnPc {
-      display: none
+      display: none;
     }
 
     .visibleOnMobile {
@@ -155,7 +152,6 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     }
   }
 }
-
 
 // @media screen and (max-width: 768px) {
 //   .navbar-container {
@@ -197,16 +193,16 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
 
 //   .navbar-item:hover {
 //     border-radius: 0;
-//     background: #00bebe;
+//     background: #69bc69;
 //     border : none;
 //     color: #fff;
 //     transition: 250ms;
 //     }
-  
+
 //   .logo {
 //       width: 150px;
 //   }
-  
+
 //   .menu-icon {
 //       position: absolute;
 //       display: flex;

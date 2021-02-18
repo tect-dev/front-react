@@ -449,7 +449,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         radius: nodeRadius,
         body: '새로운 내용',
         hashtags: [],
-        fillColor: '#00bebe',
+        fillColor: '#69bc69',
         parentNodeID: [],
         childNodeID: [],
       }
@@ -468,7 +468,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           radius: nodeRadius,
           body: '새로운 내용',
           hashtags: [],
-          fillColor: '#00bebe',
+          fillColor: '#69bc69',
           parentNodeID: [],
           childNodeID: [],
         }
