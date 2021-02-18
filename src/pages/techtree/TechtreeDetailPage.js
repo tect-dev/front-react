@@ -432,7 +432,11 @@ export const DocuHeaderArea = styled.div`
   grid-template-columns: 2fr 1fr;
 `
 
-export const DocuBodyArea = styled.div``
+export const DocuBodyArea = styled.div`
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+`
 
 export const NodeButtonArea = styled.div`
   display: grid;
@@ -448,9 +452,12 @@ export const PrevNodeArea = styled.div``
 
 export const NextNodeArea = styled.div``
 
-export const HalfWidthContainer = styled(HalfWidthWrapper)`
+export const HalfWidthContainer = styled.div`
   overflow: visible;
-  //overflow: hidden;
+  //@media (max-width: 650px) {
+  //  overflow-x: scroll;
+  //}
+  
 `
 
 export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`

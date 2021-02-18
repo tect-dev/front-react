@@ -27,13 +27,20 @@ import {
   StyledTitle,
 } from '../components/TitleInput'
 import Loader from 'react-loader-spinner'
+import MainIcon from '../assets/MainIcon.png'
+import CountUp from 'react-countup'
 
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserPlace } from '../redux/auth'
-import { boxShadow, colorPalette, hoverAction } from '../lib/constants'
+import {
+  boxShadow,
+  colorPalette,
+  hoverAction,
+  fontSize,
+} from '../lib/constants'
 import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
 import {
   selectNode,
@@ -64,6 +71,10 @@ const nameSet = shuffleArray([
   '치대',
   '언더우드',
   '음대',
+  '교육대',
+  '글로벌인재',
+  '연계전공',
+  '약학',
 ])
 
 export default function HomePage() {
@@ -96,12 +107,21 @@ export default function HomePage() {
 
   return (
     <MainWrapperDefault>
-      <TreePageHeader>
-        Foresty와 함께 지식의 숲을 가꿔나가요. 지금까지 심어진 나무 {treeSum}
-        그루
-      </TreePageHeader>
-      <DemoTree />
+      <HomePageHeader>
+        <div>
+          <img src={MainIcon} height="101px" />
+          <div>Foresty와 함께 지식의 숲을 가꿔나가요.</div>
 
+          <div>지금까지 Foresty에 심어진 나무</div>
+          <TreeSumText>
+            {treeSum ? <CountUp end={treeSum} duration={2.5} /> : ''}
+          </TreeSumText>
+        </div>
+      </HomePageHeader>
+      <DemoTree />
+      <HomePageSection>
+        같은 전공으로 묶이는 커뮤니티를 통해 정보를 공유할 수 있어요
+      </HomePageSection>
       <BlockWrapper>
         {windowSize.width > 1024 ? <DesktopBlocks></DesktopBlocks> : ''}
         {1024 > windowSize.width && windowSize.width > 650 ? (
@@ -114,6 +134,25 @@ export default function HomePage() {
     </MainWrapperDefault>
   )
 }
+
+export const HomePageSection = styled.div`
+  display: grid;
+  font-size: ${fontSize.medium};
+  line-height: ${fontSize.xlarge};
+  text-align: center;
+  text-decoration: none solid rgb(53, 53, 53);
+  height: 475px;
+  align-items: center;
+`
+
+export const HomePageHeader = styled(HomePageSection)``
+
+export const TreeSumText = styled.div`
+  font-size: ${fontSize.xxlarge};
+  font-weight: 500;
+  color: ${colorPalette.cyan6};
+  line-height: 42px;
+`
 
 function DemoTree() {
   const dispatch = useDispatch()
@@ -223,9 +262,9 @@ function DemoTree() {
           <TreeEditButtonArea>
             <DefaultButton
               onClick={() => {
-                const deleteOK = window.confirm(`정말 삭제하시나요?`)
+                const deleteOK = window.confirm(`트리 전체가 삭제됩니다!`)
                 if (deleteOK) {
-                  alert('사용자 데모라 삭제되지 않아요.')
+                  //alert('')
                 } else {
                   return
                 }
@@ -374,7 +413,14 @@ function DemoTree() {
 
 function OneBlock({ color, name }) {
   return (
-    <WidthOneBlock style={{ backgroundColor: color }}>
+    <WidthOneBlock
+      style={{
+        backgroundColor: color,
+        color: '#ffffff',
+        fontWeight: 500,
+        fontSize: fontSize.xlarge,
+      }}
+    >
       <Link
         to={`/board/${name}`}
         style={{
@@ -392,7 +438,14 @@ function OneBlock({ color, name }) {
 
 function ThreeBlock({ color, name }) {
   return (
-    <WidthThreeBlock style={{ backgroundColor: color }}>
+    <WidthThreeBlock
+      style={{
+        backgroundColor: color,
+        color: colorPalette.gray7,
+        fontSize: fontSize.xlarge,
+        fontWeight: 500,
+      }}
+    >
       <Link
         to={`/forest`}
         style={{
@@ -411,65 +464,33 @@ function ThreeBlock({ color, name }) {
 function DesktopBlocks() {
   return (
     <>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[0]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[1]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[2]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[3]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[4]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[5]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[6]}
-      ></OneBlock>
-      <ThreeBlock color={'none'} name={'foresty와 함께'}></ThreeBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[7]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[8]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[0]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[1]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[2]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[3]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[4]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[5]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[6]}></OneBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={'Foresty와 함께'}
+      ></ThreeBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[7]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[8]}></OneBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[9]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[10]}
-      ></OneBlock>
-      <ThreeBlock color={'none'} name={'지식의 숲을 가꿔보세요'}></ThreeBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[11]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[12]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[13]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[9]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[10]}></OneBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={'지식의 숲을 가꿔보세요'}
+      ></ThreeBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[11]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[12]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[13]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[14]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[15]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[16]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[17]}></OneBlock>
     </>
   )
 }
@@ -496,12 +517,13 @@ export const BlockWrapper = styled.div`
 export const WidthOneBlock = styled.div`
   grid-row-start: span 1;
   grid-column-start: span 1;
-  border-radius: 11px;
+  border-radius: 35px;
   text-align: center;
   display: grid;
   align-items: center;
   width: 100%;
-  height: 100%;
+  //height: auto;
+  aspect-ratio: 1/1; // 모바일에서는 작동을 안해!
   box-shadow: ${boxShadow.default};
   &:hover {
     ${hoverAction}
@@ -511,6 +533,7 @@ export const WidthThreeBlock = styled.div`
   grid-row-start: span 1;
   grid-column-start: span 3;
   text-align: center;
+  border-radius: 35px;
   display: grid;
   align-items: center;
   width: 100%;
@@ -524,68 +547,37 @@ export const WidthThreeBlock = styled.div`
 function TabletBlocks() {
   return (
     <>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[0]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[1]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[2]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[3]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[0]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[1]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[2]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[3]}></OneBlock>
 
-      <ThreeBlock color={'none'} name={'foresty와 함께'}></ThreeBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[4]}
-      ></OneBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={'Foresty와 함께'}
+      ></ThreeBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[4]}></OneBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[5]}
-      ></OneBlock>
-      <ThreeBlock color={'none'} name={'지식의 숲을 가꿔보세요'}></ThreeBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[5]}></OneBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={'지식의 숲을 가꿔보세요'}
+      ></ThreeBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[6]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[7]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[8]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[9]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[6]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[7]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[8]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[9]}></OneBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[10]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[11]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[12]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[13]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[10]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[11]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[12]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[13]}></OneBlock>
+
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[14]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[15]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[16]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[17]}></OneBlock>
     </>
   )
 }
@@ -593,70 +585,39 @@ function TabletBlocks() {
 function MobileBlocks() {
   return (
     <>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[0]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[1]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[2]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[0]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[1]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[2]}></OneBlock>
 
-      <ThreeBlock color={'none'} name={'foresty와 함께'}></ThreeBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={'Foresty와 함께'}
+      ></ThreeBlock>
 
-      <ThreeBlock color={'none'} name={'지식의 숲을 가꿔보세요'}></ThreeBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={'지식의 숲을 가꿔보세요'}
+      ></ThreeBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[3]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[4]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[5]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[3]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[4]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[5]}></OneBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[6]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[7]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[8]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[6]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[7]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[8]}></OneBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[9]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[10]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[11]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[9]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[10]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[11]}></OneBlock>
 
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[12]}
-      ></OneBlock>
-      <OneBlock
-        color={colorSet[getRandomNumberInArray(colorSet.length)]}
-        name={nameSet[13]}
-      ></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[12]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[13]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[14]}></OneBlock>
+
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[15]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[16]}></OneBlock>
+      <OneBlock color={colorPalette.mainGreen} name={nameSet[17]}></OneBlock>
     </>
   )
 }

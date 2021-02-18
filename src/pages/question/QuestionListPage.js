@@ -1,7 +1,11 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import MainLayout from '../../components/layout/MainLayout'
-import { readQuestionList, readHashtagResults, refreshHashtag } from '../../redux/readPost'
+import {
+  readQuestionList,
+  readHashtagResults,
+  refreshHashtag,
+} from '../../redux/readPost'
 import { Link } from 'react-router-dom'
 import QuestionBlock from '../../components/question/QuestionBlock'
 import { Spinner } from '../../components/Spinner'
@@ -13,21 +17,21 @@ import '../../styles/page/question/QuestionListPage.scss'
 import styled from 'styled-components'
 import { colorPalette } from '../../lib/constants'
 
-import ErrorPage from "../../components/layout/ErrorPage"
-import NoDataPage from "../../components/layout/NoDataPage"
+import ErrorPage from '../../components/layout/ErrorPage'
+import NoDataPage from '../../components/layout/NoDataPage'
 
 export default function QuestionListPage({ location }) {
   const { loading, data, error } = useSelector((state) => {
     return state.readPost.questionList
   })
-  let hashtag = useSelector((state)=>{
+  let hashtag = useSelector((state) => {
     return state.readPost.hashtag
   })
   const { loginState } = useSelector((state) => {
     return { loginState: state.auth.loginState }
   })
 
-  const [ title, setTitle ] = useState(hashtag ? hashtag : "최신")
+  const [title, setTitle] = useState(hashtag ? hashtag : '최신')
 
   const dispatch = useDispatch()
 
@@ -35,7 +39,7 @@ export default function QuestionListPage({ location }) {
   // react 는 컴포넌트가 리렌더링되면 함수도 새로 생기는데, 반복적으로 사용하는 함수를 리렌더링 하지 않고 재사용하기 위함.
 
   useEffect(() => {
-    if(!hashtag){
+    if (!hashtag) {
       dispatch(readQuestionList(false))
     }
     return () => {
@@ -43,8 +47,8 @@ export default function QuestionListPage({ location }) {
     }
   }, [dispatch])
 
-  useEffect(()=>{
-    if(hashtag){
+  useEffect(() => {
+    if (hashtag) {
       setTitle(hashtag)
     }
   }, [hashtag])
@@ -52,20 +56,12 @@ export default function QuestionListPage({ location }) {
   if (loading)
     return (
       <MainLayout>
-        <Spinner/>
+        <Spinner />
       </MainLayout>
     )
-  if (error)
-    return (
-      <ErrorPage>
-        {error.toString()}
-      </ErrorPage>
-    )
+  if (error) return <ErrorPage>{error.toString()}</ErrorPage>
 
-  if (!data)
-    return (
-      <NoDataPage/>
-    )
+  if (!data) return <NoDataPage />
 
   const selectTitleLatest = (e) => {
     e.preventDefault()
@@ -76,7 +72,7 @@ export default function QuestionListPage({ location }) {
     e.preventDefault()
     const target = e.target.innerText.replace('#', '')
     setTitle(target)
-    if(title === "최신"){
+    if (title === '최신') {
       dispatch(readHashtagResults(target))
     }
   }
@@ -89,18 +85,22 @@ export default function QuestionListPage({ location }) {
             <div className="questionList-left">
               <div className="questionList-left-top">
                 <TitleContainer>
-                  {title === "최신"
-                    ? <SelectedTitle>최신</SelectedTitle>
-                    : <Title onClick={selectTitleLatest}>최신</Title>
-                  }
-                  {hashtag
-                    ? <>
-                      {title === hashtag
-                        ? <SelectedTitle>{"#" + hashtag}</SelectedTitle>
-                        : <Title onClick={selectTitleHashtag}>{"#" + hashtag}</Title>
-                      }
-                      </>
-                    : null}
+                  {title === '최신' ? (
+                    <SelectedTitle>최신</SelectedTitle>
+                  ) : (
+                    <Title onClick={selectTitleLatest}>최신</Title>
+                  )}
+                  {hashtag ? (
+                    <>
+                      {title === hashtag ? (
+                        <SelectedTitle>{'#' + hashtag}</SelectedTitle>
+                      ) : (
+                        <Title onClick={selectTitleHashtag}>
+                          {'#' + hashtag}
+                        </Title>
+                      )}
+                    </>
+                  ) : null}
                 </TitleContainer>
                 {loginState ? (
                   <Link to={'/question/write'} className="ask-btn-container">
@@ -142,6 +142,6 @@ export const Title = styled.div`
 `
 
 export const SelectedTitle = styled(Title)`
-  color: #00bebe;
-  border-bottom: 2px solid #00bebe;
+  color: #69bc69;
+  border-bottom: 2px solid #69bc69;
 `

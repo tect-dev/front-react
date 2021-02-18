@@ -7,7 +7,7 @@ import styled from 'styled-components'
 const Hashtag = styled.div`
   display: inline-flex;
   border-radius: 5px;
-  background: #00bebe;
+  background: #69bc69;
   color: rgba(255, 255, 255, 0.9);
   padding: 2px 2px;
   margin: 2px 2px 0 2px;
