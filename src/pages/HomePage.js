@@ -522,7 +522,8 @@ export const WidthOneBlock = styled.div`
   display: grid;
   align-items: center;
   width: 100%;
-  aspect-ratio: 1/1;
+  //height: auto;
+  aspect-ratio: 1/1; // 모바일에서는 작동을 안해!
   box-shadow: ${boxShadow.default};
   &:hover {
     ${hoverAction}
@@ -613,7 +614,7 @@ function MobileBlocks() {
       <OneBlock color={colorPalette.mainGreen} name={nameSet[12]}></OneBlock>
       <OneBlock color={colorPalette.mainGreen} name={nameSet[13]}></OneBlock>
       <OneBlock color={colorPalette.mainGreen} name={nameSet[14]}></OneBlock>
-      
+
       <OneBlock color={colorPalette.mainGreen} name={nameSet[15]}></OneBlock>
       <OneBlock color={colorPalette.mainGreen} name={nameSet[16]}></OneBlock>
       <OneBlock color={colorPalette.mainGreen} name={nameSet[17]}></OneBlock>
