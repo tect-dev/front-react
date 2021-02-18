@@ -123,9 +123,9 @@ function initGraph(container, originalNodeList, originalLinkList) {
 // 그래프가 갱신될때 호출되는 함수
 function updateGraph(container, dispatch, isEditingTechtree) {
   const nodeRadius = 15
-  const nodeColor = colorPalette.mainGreen
+  const nodeColor = `${colorPalette.mainGreen}`
 
-  const selectedColor = colorPalette.teal5
+  const selectedColor = `${colorPalette.gray9}`
 
   const labelSize = fontSize.small
 
@@ -248,19 +248,13 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .attr('r', (d) => d.radius)
         .style('fill', (d) => nodeColor) // 나중에 d.fillColor 로 변경
         .style('stroke', (d) => {
-          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
+          if (d.id === reduxStore.getState().demo.selectedNode.id) {
             return selectedColor
           } else {
             return
           }
         })
-        .style('stroke', (d) => {
-          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
-            return 'red'
-          } else {
-            return
-          }
-        })
+
         .attr('cx', (d) => {
           return d.x
         })
@@ -316,19 +310,13 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .attr('r', (d) => d.radius)
         .style('fill', (d) => nodeColor)
         .style('stroke', (d) => {
-          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
+          if (d.id === reduxStore.getState().demo.selectedNode.id) {
             return selectedColor
           } else {
             return
           }
         })
-        .style('stroke', (d) => {
-          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
-            return 'red'
-          } else {
-            return
-          }
-        })
+
         .attr('cx', (d) => {
           return d.x
         })

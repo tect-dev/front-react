@@ -30,7 +30,7 @@ const initialState = {
       firebaseUid: '',
     },
   },
-  treeSum: 1,
+  treeSum: null,
 }
 
 // define ACTION types
@@ -219,23 +219,29 @@ export const createNode = (nodeList, linkList, techtreeData) => {
   })
   return { type: CREATE_NODE, nodeList: nodeList }
 }
-export const createLink = (nodeList, linkList, techtreeData) => {
+export const createLink = (nodeList, linkList, techtreeData) => async (
+  dispatch
+) => {
   const techtreeID = techtreeData._id
   const techtreeTitle = techtreeData.title
-  authService.currentUser.getIdToken(true).then(async (idToken) => {
-    axios({
-      method: 'put',
-      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
-      data: {
-        //title: techtreeTitle,
-        nodeList: JSON.stringify(nodeList),
-        linkList: JSON.stringify(linkList),
-        _id: techtreeID,
-        firebaseToken: idToken,
-      },
+  try {
+    authService.currentUser.getIdToken(true).then(async (idToken) => {
+      axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+        data: {
+          //title: techtreeTitle,
+          nodeList: JSON.stringify(nodeList),
+          linkList: JSON.stringify(linkList),
+          _id: techtreeID,
+          firebaseToken: idToken,
+        },
+      })
     })
-  })
-  return { type: CREATE_LINK, linkList: linkList }
+    return { type: CREATE_LINK, linkList: linkList }
+  } catch (e) {
+    console.log('error: ', e)
+  }
 }
 export const deleteNode = (
   nodeList,
@@ -243,7 +249,7 @@ export const deleteNode = (
   techtreeID,
   node,
   techtreeData
-) => {
+) => async (dispatch) => {
   const deletionBinaryList = linkList.map((link) => {
     if (link.startNodeID === node.id) {
       return 0
@@ -290,7 +296,9 @@ export const deleteNode = (
   //nodeList.splice(deleteNodeIndex, 1)
 }
 
-export const deleteLink = (nodeList, linkList, techtreeData, link) => {
+export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
+  dispatch
+) => {
   const techtreeID = techtreeData._id
   const techtreeTitle = techtreeData.title
   const newLinkList = linkList.filter((ele) => {

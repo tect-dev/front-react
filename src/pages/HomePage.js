@@ -36,15 +36,15 @@ import { setUserPlace } from '../redux/auth'
 import { boxShadow, colorPalette, hoverAction } from '../lib/constants'
 import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
 import {
-  finishDocuEdit,
   selectNode,
   readTechtree,
   updateTechtree,
   deleteTechtree,
-  changeTechtreeTitle,
-  editTechtree,
-  finishTechtreeEdit,
-} from '../redux/techtree'
+  changeTreeTitle,
+  startEditDocu,
+  finishEditDocu,
+} from '../redux/demo'
+import { editTechtree, finishTechtreeEdit } from '../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
 
 const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
@@ -68,6 +68,9 @@ const nameSet = shuffleArray([
 
 export default function HomePage() {
   const dispatch = useDispatch()
+  const { treeSum } = useSelector((state) => {
+    return { treeSum: state.techtree.treeSum }
+  })
   const isClient = typeof window === 'object'
   function getSize() {
     return {
@@ -93,9 +96,12 @@ export default function HomePage() {
 
   return (
     <MainWrapperDefault>
+      <TreePageHeader>
+        Foresty와 함께 지식의 숲을 가꿔나가요. 지금까지 심어진 나무 {treeSum}
+        그루
+      </TreePageHeader>
       <DemoTree />
 
-      <TreePageHeader>지금까지 심어진 지식의 나무 ... 그루</TreePageHeader>
       <BlockWrapper>
         {windowSize.width > 1024 ? <DesktopBlocks></DesktopBlocks> : ''}
         {1024 > windowSize.width && windowSize.width > 650 ? (
@@ -156,12 +162,12 @@ function DemoTree() {
 
   const onChangeTechtreeTitle = useCallback((e) => {
     e.preventDefault()
-    dispatch(changeTechtreeTitle(e.target.value))
+    dispatch(changeTreeTitle(e.target.value))
   }, [])
 
   const onFinishDocuEdit = useCallback(() => {
     dispatch(
-      finishDocuEdit(
+      finishEditDocu(
         selectedNode.id,
         documentTitle,
         documentText,
@@ -193,7 +199,7 @@ function DemoTree() {
     async (e) => {
       e.preventDefault()
 
-      dispatch(updateTechtree(nodeList, linkList, techtreeTitle))
+      //dispatch(updateTechtree(nodeList, linkList, techtreeTitle))
     },
     [dispatch, nodeList, linkList, techtreeTitle]
   )
@@ -239,7 +245,7 @@ function DemoTree() {
         </HalfWidthContainer>
 
         <HalfWidthDocumentContainer>
-          <DocuWrapper>
+          <DocuWrapper id="docuWrapper">
             <DocuHeaderArea>
               <div className="docuTitle">
                 {isEditingDocument ? (
@@ -286,9 +292,9 @@ function DemoTree() {
           <NodeButtonArea>
             <PrevNodeArea>
               {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
-              {previousNodeList.map((node) => {
+              {previousNodeList.map((node, idx) => {
                 return (
-                  <div>
+                  <div key={idx}>
                     <DefaultButton
                       onClick={() => {
                         const newPreviousNodeList = returnPreviousNodeList(
@@ -304,7 +310,15 @@ function DemoTree() {
                         dispatch(
                           selectNode(newPreviousNodeList, newNextNodeList, node)
                         )
-                        window.scrollTo(0, 0)
+                        const offsetElement = document.getElementById(
+                          'docuWrapper'
+                        )
+                        const clientRect = offsetElement.getBoundingClientRect()
+                        const relativeTop = clientRect.top
+                        const scrolledTopLength = window.pageYOffset
+                        const absoluteYPosition =
+                          scrolledTopLength + relativeTop
+                        window.scrollTo(0, absoluteYPosition - 80)
                       }}
                     >
                       {node?.name}
@@ -315,9 +329,9 @@ function DemoTree() {
             </PrevNodeArea>
             <NextNodeArea>
               {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
-              {nextNodeList.map((node) => {
+              {nextNodeList.map((node, idx) => {
                 return (
-                  <div>
+                  <div key={idx}>
                     <DefaultButton
                       onClick={() => {
                         const newPreviousNodeList = returnPreviousNodeList(
@@ -333,7 +347,15 @@ function DemoTree() {
                         dispatch(
                           selectNode(newPreviousNodeList, newNextNodeList, node)
                         )
-                        window.scrollTo(0, 0)
+                        const offsetElement = document.getElementById(
+                          'docuWrapper'
+                        )
+                        const clientRect = offsetElement.getBoundingClientRect()
+                        const relativeTop = clientRect.top
+                        const scrolledTopLength = window.pageYOffset
+                        const absoluteYPosition =
+                          scrolledTopLength + relativeTop
+                        window.scrollTo(0, absoluteYPosition - 80)
                       }}
                     >
                       {node?.name}

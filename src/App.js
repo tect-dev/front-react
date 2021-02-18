@@ -21,7 +21,9 @@ import MyTreePage from './pages/user/MyTreePage'
 import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './ErrorBoundary'
 import './App.css'
+
 import { useSelector, useDispatch } from 'react-redux'
+import { readTechtreeList } from './redux/techtree'
 import { checkAuth } from './redux/auth'
 import { authService } from './lib/firebase'
 
@@ -40,7 +42,8 @@ function App() {
         dispatch(checkAuth(user))
       }
     })
-  }, [])
+    dispatch(readTechtreeList(1))
+  }, [dispatch])
 
   return (
     <>

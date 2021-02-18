@@ -244,7 +244,7 @@ export default function TechtreeDetailPage({ match }) {
           </HalfWidthContainer>
 
           <HalfWidthDocumentContainer>
-            <DocuWrapper>
+            <DocuWrapper id="docuWrapper">
               <DocuHeaderArea>
                 <div className="docuTitle">
                   {isEditingDocument ? (
@@ -318,7 +318,15 @@ export default function TechtreeDetailPage({ match }) {
                               node
                             )
                           )
-                          window.scrollTo(0, 0)
+                          const offsetElement = document.getElementById(
+                            'docuWrapper'
+                          )
+                          const clientRect = offsetElement.getBoundingClientRect()
+                          const relativeTop = clientRect.top
+                          const scrolledTopLength = window.pageYOffset
+                          const absoluteYPosition =
+                            scrolledTopLength + relativeTop
+                          window.scrollTo(0, absoluteYPosition - 80)
                         }}
                       >
                         {node?.name}
@@ -351,7 +359,15 @@ export default function TechtreeDetailPage({ match }) {
                               node
                             )
                           )
-                          window.scrollTo(0, 0)
+                          const offsetElement = document.getElementById(
+                            'docuWrapper'
+                          )
+                          const clientRect = offsetElement.getBoundingClientRect()
+                          const relativeTop = clientRect.top
+                          const scrolledTopLength = window.pageYOffset
+                          const absoluteYPosition =
+                            scrolledTopLength + relativeTop
+                          window.scrollTo(0, absoluteYPosition - 80)
                         }}
                       >
                         {node?.name}
