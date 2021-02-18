@@ -18,6 +18,7 @@ import {
   boxShadow,
   hoverAction,
   fontSize,
+  mediaSize
 } from '../../lib/constants'
 
 import ErrorPage from '../../components/layout/ErrorPage'
@@ -247,6 +248,7 @@ export const BoardListWrapper = styled.div`
   width: inherit;
   display: grid;
   grid-row-gap: 25px;
+  box-sizing: border-box;
   /* border: 1px solid 'black'; */
 `
 
@@ -310,6 +312,11 @@ export const ContentSubstring = styled.div`
   font-size: ${fontSize.small};
   color: #999;
   margin-bottom: 22px;
+  width: calc(80px + 60vw);
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  
 `
 
 export const LikeComment = styled.div`
@@ -323,10 +330,15 @@ export const PostCard = styled.div`
   padding: 22px;
   box-sizing: border-box;
   background: #fffef8;
-  width: 100%;
+  width: inherit;
   height: 140px;
   border-radius: 22px;
   cursor: pointer;
+  ${mediaSize.xsmall} {
+    & {
+      padding: 20px 10px;
+    }
+  }
 
   background-color: #fffef8;
   box-shadow: ${boxShadow.default};
