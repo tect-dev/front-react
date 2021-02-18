@@ -94,6 +94,8 @@ export default function HomePage() {
   return (
     <MainWrapperDefault>
       <DemoTree />
+
+      <TreePageHeader>지금까지 심어진 지식의 나무 ... 그루</TreePageHeader>
       <BlockWrapper>
         {windowSize.width > 1024 ? <DesktopBlocks></DesktopBlocks> : ''}
         {1024 > windowSize.width && windowSize.width > 650 ? (
@@ -482,7 +484,6 @@ export const WidthOneBlock = styled.div`
   &:hover {
     ${hoverAction}
   }
-  //background-color: #999999;
 `
 export const WidthThreeBlock = styled.div`
   grid-row-start: span 1;
@@ -496,7 +497,6 @@ export const WidthThreeBlock = styled.div`
   &:hover {
     ${hoverAction}
   }
-  //background-color: #ffffff;
 `
 
 function TabletBlocks() {
