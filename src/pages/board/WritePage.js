@@ -129,6 +129,7 @@ export const MarkdownRenderer_Container = styled.div`
   border-radius: 22px;
   background: #fffef8;
   border: 1px solid #6d9b7b;
+  padding: 20px;
 `
 
 const MarkdownEditor_Container = styled.div`
