@@ -12,7 +12,9 @@ const initialState = {
   postTitle: '',
   postContent: '',
   postCreatedAt: '',
+  postAnswers: null,
   postID: '',
+  postLike: 0,
   postAuthor: { firebaseUid: '', displayName: '' },
 }
 
@@ -82,6 +84,7 @@ export const readPostDetail = (uid) => async (dispatch) => {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/question/${uid}`
     )
+    console.log(res.data)
     dispatch({ type: READ_POST_DETAIL_SUCCESS, postData: res.data })
   } catch (e) {
     console.log('error: ', e)
@@ -202,15 +205,18 @@ export default function board(state = initialState, action) {
         postContent: '',
         postID: '',
         postCreatedAt: '',
+        postAnswers: null,
         postAuthor: { firebaseUid: '', displayName: '' },
       }
     case READ_POST_DETAIL_SUCCESS:
       return {
         ...state,
         loading: false,
+        postAnswers: action.postData.answerList,
         postTitle: action.postData.question.title,
         postContent: action.postData.question.content,
         postID: action.postData.question._id,
+        postLike: action.postData.question.like,
         postCreatedAt: action.postData.question.createdAt,
         postAuthor: action.postData.question.author,
       }
