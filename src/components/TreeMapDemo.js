@@ -177,34 +177,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
     .attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', linkColor)
 
-  // 그래프 위치변경시엔 템프라인 비활성화
-
-  // 그래프 수정 토글
-  //if (
-  //  reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-  //  reduxStore.getState().auth.userID
-  //) {
-  //  svg
-  //    .append('g')
-  //    .append('rect')
-  //    .attr('width', 10)
-  //    .attr('height', 10)
-  //    .attr('x', width - 10)
-  //    .attr('y', height / 2 - 10)
-  //    .style('fill', selectedColor)
-  //    .attr('display', 'inline')
-  //    .on('click', () => {
-  //      if (isEditingTechtree) {
-  //        reduxStore.dispatch(finishTechtreeEdit())
-  //      } else {
-  //        reduxStore.dispatch(editTechtree())
-  //      }
-  //      initNode()
-  //      initLink()
-  //      initLabel()
-  //    })
-  //}
-
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')
   const labelGroup = svg.select('.labels')
@@ -373,88 +345,42 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         })
         .style('cursor', 'pointer')
         .on('mousedown', (d) => {
-          if (
-            reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-            reduxStore.getState().auth.userID
-          ) {
-            svg
-              .select('g')
-              .select('.tempLine')
-              .attr('x1', d.x)
-              .attr('y1', d.y)
-              .style('opacity', '1')
-              .attr('display', 'inline')
-            tempPairingNodes.startNodeID = d.id
-            tempPairingNodes.startX = d.x
-            tempPairingNodes.startY = d.y
-          }
+          svg
+            .select('g')
+            .select('.tempLine')
+            .attr('x1', d.x)
+            .attr('y1', d.y)
+            .style('opacity', '1')
+            .attr('display', 'inline')
+          tempPairingNodes.startNodeID = d.id
+          tempPairingNodes.startX = d.x
+          tempPairingNodes.startY = d.y
         })
         .on('mouseup', (d) => {
+          tempPairingNodes.endNodeID = d.id
+          tempPairingNodes.endX = d.x
+          tempPairingNodes.endY = d.y
+          // 연결된 노드를 데이터에 반영
           if (
-            reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-            reduxStore.getState().auth.userID
+            tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
+            tempPairingNodes.startX !== tempPairingNodes.endX &&
+            tempPairingNodes.startY !== tempPairingNodes.endY &&
+            !linkList.find(
+              (element) =>
+                element.startNodeID === tempPairingNodes.startNodeID &&
+                element.endNodeID === tempPairingNodes.endNodeID
+            ) &&
+            d3.select('.tempLine').attr('x1') > 0 &&
+            d3.select('.tempLine').attr('y1') > 0
           ) {
-            tempPairingNodes.endNodeID = d.id
-            tempPairingNodes.endX = d.x
-            tempPairingNodes.endY = d.y
-            // 연결된 노드를 데이터에 반영
-            if (
-              tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-              tempPairingNodes.startX !== tempPairingNodes.endX &&
-              tempPairingNodes.startY !== tempPairingNodes.endY &&
-              !linkList.find(
-                (element) =>
-                  element.startNodeID === tempPairingNodes.startNodeID &&
-                  element.endNodeID === tempPairingNodes.endNodeID
-              ) &&
-              d3.select('.tempLine').attr('x1') > 0 &&
-              d3.select('.tempLine').attr('y1') > 0
-            ) {
-              tempPairingNodes.id = `link${uid(20)}`
-              linkList.push({ ...tempPairingNodes })
-              updateLink()
-            }
-            svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-            tempPairingNodes = {}
+            tempPairingNodes.id = `link${uid(20)}`
+            linkList.push({ ...tempPairingNodes })
+            updateLink()
           }
+          svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
+          tempPairingNodes = {}
         })
     }
-
-    /*
-      .call(
-        d3
-          .drag()
-          .on('start', (d) => {
-            d3.select(this).raise().classed('active', true)
-          })
-          .on('drag', (node) => {
-            const newLinkList = linkList.map((link) => {
-              if (link.startNodeID === node.id) {
-                return { ...link, startX: d3.event.x, startY: d3.event.y }
-              } else if (link.endNodeID === node.id) {
-                return { ...link, endX: d3.event.x, endY: d3.event.y }
-              } else {
-                return link
-              }
-            })
-            linkList = newLinkList
-            initLink()
-            d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y)
-            node.x = d3.event.x
-            node.y = d3.event.y
-            initNode()
-            initLabel()
-          })
-          .on('end', function (node) {
-            d3.select(this).classed('active', false)
-            node.x = d3.event.x
-            node.y = d3.event.y
-            updateNode()
-            updateLink()
-          })
-      )
-      */
-
     // 노드 삭제용 버튼 만들기
     nodeGroup
       .selectAll('image')
@@ -527,10 +453,25 @@ function updateGraph(container, dispatch, isEditingTechtree) {
 
   if (isEditingTechtree) {
     svg.on('dblclick', () => {
-      if (
-        reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-        reduxStore.getState().auth.userID
-      ) {
+      const createdNode = {
+        id: `node${uid(20)}`,
+        name: '새로운 노드',
+        x: d3.event.pageX - absoluteXPosition,
+        y: d3.event.pageY - absoluteYPosition,
+        radius: nodeRadius,
+        body: '새로운 내용',
+        hashtags: [],
+        fillColor: '#00bebe',
+        parentNodeID: [],
+        childNodeID: [],
+      }
+      nodeList = [...nodeList, createdNode]
+      reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
+      updateNode()
+    })
+  } else {
+    svg
+      .on('dblclick', () => {
         const createdNode = {
           id: `node${uid(20)}`,
           name: '새로운 노드',
@@ -546,31 +487,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         nodeList = [...nodeList, createdNode]
         reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
         updateNode()
-      }
-    })
-  } else {
-    svg
-      .on('dblclick', () => {
-        if (
-          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-          reduxStore.getState().auth.userID
-        ) {
-          const createdNode = {
-            id: `node${uid(20)}`,
-            name: '새로운 노드',
-            x: d3.event.pageX - absoluteXPosition,
-            y: d3.event.pageY - absoluteYPosition,
-            radius: nodeRadius,
-            body: '새로운 내용',
-            hashtags: [],
-            fillColor: '#00bebe',
-            parentNodeID: [],
-            childNodeID: [],
-          }
-          nodeList = [...nodeList, createdNode]
-          reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
-          updateNode()
-        }
       })
       .on('mousemove', (d) => {
         svg
