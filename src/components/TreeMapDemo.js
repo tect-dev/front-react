@@ -20,6 +20,7 @@ import { reduxStore } from '../index'
 
 const TechtreeThumbnailBlock = styled.div`
   border-radius: 22px;
+
   border: 1px solid ${colorPalette.mainGreen};
 `
 
@@ -92,8 +93,15 @@ function initGraph(container, originalNodeList, originalLinkList) {
     .select(container)
     .append('svg')
     .attr('id', 'techtreeContainer')
-    .attr('width', width)
-    .attr('height', height)
+    //  .attr('width', width)
+    //  .attr('height', height)
+    .attr('viewBox', `0 0 ${width} ${height}`)
+
+  //.call(
+  //  d3.zoom().on('zoom', function () {
+  //    svg.attr('transform', d3.event.transform)
+  //  })
+  //)
 
   // 마우스 드래그할때 나타나는 임시 라인 만들어두기.
   svg
@@ -128,12 +136,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   const selectedColor = `${colorPalette.gray9}`
 
   const labelSize = fontSize.small
-
+  const width = 500
+  const height = 500
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
-
-  const width = 600
-  const height = 600
 
   const offsetElement = document.getElementById('techtreeContainer')
   const clientRect = offsetElement.getBoundingClientRect()
@@ -378,7 +384,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                 initLink()
                 initNode()
                 initLabel()
-                console.log('드래그중:')
+                console.log('d3.event.x: ', d3.event.x)
+                console.log('d3.event.y: ', d3.event.y)
               }
             })
             .on('end', (startNode) => {
@@ -427,36 +434,37 @@ function updateGraph(container, dispatch, isEditingTechtree) {
               })
               //updateNode()
               //updateLink()
+              svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
               svg.select('.tempLine').style('opacity', '0')
-              console.log('드래그 종료: ', pointerX)
+              //console.log('드래그 종료: ', pointerX)
             })
         )
-        .on('mouseup', (d) => {
-          console.log('노드 위에서 마우스 업: ', d)
-          tempPairingNodes.endNodeID = d.id
-          tempPairingNodes.endX = d.x
-          tempPairingNodes.endY = d.y
-          // 연결된 노드를 데이터에 반영
-          if (
-            tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-            tempPairingNodes.startX !== tempPairingNodes.endX &&
-            tempPairingNodes.startY !== tempPairingNodes.endY &&
-            !linkList.find(
-              (element) =>
-                element.startNodeID === tempPairingNodes.startNodeID &&
-                element.endNodeID === tempPairingNodes.endNodeID
-            ) &&
-            d3.select('.tempLine').attr('x1') > 1 &&
-            d3.select('.tempLine').attr('y1') > 1 &&
-            d3.select('.tempLine').style('opacity') != 0
-          ) {
-            tempPairingNodes.id = `link${uid(20)}`
-            linkList.push({ ...tempPairingNodes })
-            updateLink()
-          }
-          svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-          tempPairingNodes = {}
-        })
+      //.on('mouseup', (d) => {
+      //  console.log('노드 위에서 마우스 업: ', d)
+      //  tempPairingNodes.endNodeID = d.id
+      //  tempPairingNodes.endX = d.x
+      //  tempPairingNodes.endY = d.y
+      //  // 연결된 노드를 데이터에 반영
+      //  if (
+      //    tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
+      //    tempPairingNodes.startX !== tempPairingNodes.endX &&
+      //    tempPairingNodes.startY !== tempPairingNodes.endY &&
+      //    !linkList.find(
+      //      (element) =>
+      //        element.startNodeID === tempPairingNodes.startNodeID &&
+      //        element.endNodeID === tempPairingNodes.endNodeID
+      //    ) &&
+      //    d3.select('.tempLine').attr('x1') > 1 &&
+      //    d3.select('.tempLine').attr('y1') > 1 &&
+      //    d3.select('.tempLine').style('opacity') != 0
+      //  ) {
+      //    tempPairingNodes.id = `link${uid(20)}`
+      //    linkList.push({ ...tempPairingNodes })
+      //    updateLink()
+      //  }
+      //  svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
+      //  tempPairingNodes = {}
+      //})
     }
     // 노드 삭제용 버튼 만들기
     nodeGroup
@@ -533,8 +541,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       const createdNode = {
         id: `node${uid(20)}`,
         name: '새로운 노드',
-        x: d3.event.pageX - absoluteXPosition,
-        y: d3.event.pageY - absoluteYPosition,
+        x: d3.event.x - relativeLeft,
+        y: d3.event.y - relativeTop,
         radius: nodeRadius,
         body: '새로운 내용',
         hashtags: [],
@@ -548,12 +556,14 @@ function updateGraph(container, dispatch, isEditingTechtree) {
     })
   } else {
     svg
-      .on('dblclick', () => {
+      .on('dblclick', (e) => {
+        const ratioFactor = width / clientRect.width
+
         const createdNode = {
           id: `node${uid(20)}`,
           name: '새로운 노드',
-          x: d3.event.pageX - absoluteXPosition,
-          y: d3.event.pageY - absoluteYPosition,
+          x: d3.event.offsetX * ratioFactor,
+          y: d3.event.offsetY * ratioFactor,
           radius: nodeRadius,
           body: '새로운 내용',
           hashtags: [],
@@ -566,7 +576,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         updateNode()
       })
       .on('mousemove', (d) => {
-        //d3.event.preventDefault()
         svg
           .select('g')
           .select('.tempLine')
@@ -574,11 +583,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           .attr('y2', d3.event.pageY - absoluteYPosition)
       })
       .on('mouseup', (d) => {
-        // 터치 끝나면 마우스 스크롤 기능 복구해야함.
-
-        // window.removeEventListener(wheelEvent, preventDefault, wheelOpt)
-        // window.removeEventListener('touchmove', preventDefault, wheelOpt)
-        // console.log('스크롤 동작 활성화:')
         svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
         svg.select('.tempLine').style('opacity', '0')
       })
