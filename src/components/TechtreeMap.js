@@ -84,8 +84,8 @@ function initGraph(container, originalNodeList, originalLinkList) {
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
 
-  const width = 500
-  const height = 500
+  const width = 700
+  const height = 700
 
   let nodeList = originalNodeList
   let linkList = originalLinkList
@@ -94,8 +94,9 @@ function initGraph(container, originalNodeList, originalLinkList) {
     .select(container)
     .append('svg')
     .attr('id', 'techtreeContainer')
-    .attr('width', width)
-    .attr('height', height)
+    //  .attr('width', width)
+    //  .attr('height', height)
+    .attr('viewBox', `0 0 ${width} ${height}`)
 
   // 마우스 드래그할때 나타나는 임시 라인 만들어두기.
   svg
@@ -127,15 +128,15 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   const nodeRadius = 15
   const nodeColor = colorPalette.mainGreen
 
-  const selectedColor = colorPalette.teal5
+  const selectedColor = colorPalette.gray8
 
   const labelSize = fontSize.small
 
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
 
-  const width = 600
-  const height = 600
+  const width = 700
+  const height = 700
 
   const offsetElement = document.getElementById('techtreeContainer')
   const clientRect = offsetElement.getBoundingClientRect()
@@ -179,38 +180,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
     .attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', linkColor)
 
-  // 그래프 위치변경시엔 템프라인 비활성화
-
-  // 그래프 수정 토글
-  //if (
-  //  reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-  //  reduxStore.getState().auth.userID
-  //) {
-  //  svg
-  //    .append('g')
-  //    .append('rect')
-  //    .attr('width', 10)
-  //    .attr('height', 10)
-  //    .attr('x', width - 10)
-  //    .attr('y', height / 2 - 10)
-  //    .style('fill', selectedColor)
-  //    .attr('display', 'inline')
-  //    .on('click', () => {
-  //      if (isEditingTechtree) {
-  //        reduxStore.dispatch(finishTechtreeEdit())
-  //      } else {
-  //        reduxStore.dispatch(editTechtree())
-  //      }
-  //      initNode()
-  //      initLink()
-  //      initLabel()
-  //    })
-  //}
-
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')
   const labelGroup = svg.select('.labels')
-  const deleteButtonLength = 10
+  const deleteButtonLength = 15
   const techtreeID = reduxStore.getState().techtree.techtreeData._id
 
   function initLink() {
@@ -284,13 +257,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
             return
           }
         })
-        .style('stroke', (d) => {
-          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
-            return 'red'
-          } else {
-            return
-          }
-        })
+
         .attr('cx', (d) => {
           return d.x
         })
@@ -352,13 +319,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
             return
           }
         })
-        .style('stroke', (d) => {
-          if (d.id === reduxStore.getState().techtree.selectedNode.id) {
-            return 'red'
-          } else {
-            return
-          }
-        })
+
         .attr('cx', (d) => {
           return d.x
         })
@@ -374,88 +335,101 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           dispatch(selectNode(previousNodeList, nextNodeList, d))
         })
         .style('cursor', 'pointer')
-        .on('mousedown', (d) => {
-          if (
-            reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-            reduxStore.getState().auth.userID
-          ) {
-            svg
-              .select('g')
-              .select('.tempLine')
-              .attr('x1', d.x)
-              .attr('y1', d.y)
-              .style('opacity', '1')
-              .attr('display', 'inline')
-            tempPairingNodes.startNodeID = d.id
-            tempPairingNodes.startX = d.x
-            tempPairingNodes.startY = d.y
-          }
-        })
-        .on('mouseup', (d) => {
-          if (
-            reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-            reduxStore.getState().auth.userID
-          ) {
-            tempPairingNodes.endNodeID = d.id
-            tempPairingNodes.endX = d.x
-            tempPairingNodes.endY = d.y
-            // 연결된 노드를 데이터에 반영
-            if (
-              tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-              tempPairingNodes.startX !== tempPairingNodes.endX &&
-              tempPairingNodes.startY !== tempPairingNodes.endY &&
-              !linkList.find(
-                (element) =>
-                  element.startNodeID === tempPairingNodes.startNodeID &&
-                  element.endNodeID === tempPairingNodes.endNodeID
-              ) &&
-              d3.select('.tempLine').attr('x1') > 0 &&
-              d3.select('.tempLine').attr('y1') > 0
-            ) {
-              tempPairingNodes.id = `link${uid(20)}`
-              linkList.push({ ...tempPairingNodes })
-              updateLink()
-            }
-            svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-            tempPairingNodes = {}
-          }
-        })
-    }
-
-    /*
-      .call(
-        d3
-          .drag()
-          .on('start', (d) => {
-            d3.select(this).raise().classed('active', true)
-          })
-          .on('drag', (node) => {
-            const newLinkList = linkList.map((link) => {
-              if (link.startNodeID === node.id) {
-                return { ...link, startX: d3.event.x, startY: d3.event.y }
-              } else if (link.endNodeID === node.id) {
-                return { ...link, endX: d3.event.x, endY: d3.event.y }
-              } else {
-                return link
+        .call(
+          d3
+            .drag()
+            .on('start', (d) => {
+              svg
+                .select('g')
+                .select('.tempLine')
+                .attr('x1', d.x)
+                .attr('y1', d.y)
+              svg
+                .select('g')
+                .select('.tempLine')
+                .attr('x2', d3.event.x)
+                .attr('y2', d3.event.y)
+              svg
+                .select('g')
+                .select('.tempLine')
+                .style('opacity', '1')
+                .attr('display', 'inline')
+              tempPairingNodes.startNodeID = d.id
+              tempPairingNodes.startX = d.x
+              tempPairingNodes.startY = d.y
+            })
+            .on('drag', (node) => {
+              if (
+                d3.select('.tempLine').attr('x1') > 1 &&
+                d3.select('.tempLine').attr('y1') > 1 &&
+                d3.select('.tempLine').style('opacity') != 0
+              ) {
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .attr('x2', d3.event.x)
+                  .attr('y2', d3.event.y)
+                initLink()
+                initNode()
+                initLabel()
+                console.log('d3.event.x: ', d3.event.x)
+                console.log('d3.event.y: ', d3.event.y)
               }
             })
-            linkList = newLinkList
-            initLink()
-            d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y)
-            node.x = d3.event.x
-            node.y = d3.event.y
-            initNode()
-            initLabel()
-          })
-          .on('end', function (node) {
-            d3.select(this).classed('active', false)
-            node.x = d3.event.x
-            node.y = d3.event.y
-            updateNode()
-            updateLink()
-          })
-      )
-      */
+            .on('end', (startNode) => {
+              const pointerX = d3.event.x
+              const pointerY = d3.event.y
+              nodeList.map((node) => {
+                if (
+                  (node.x - pointerX) * (node.x - pointerX) +
+                    (node.y - pointerY) * (node.y - pointerY) <
+                  nodeRadius * nodeRadius
+                ) {
+                  console.log('노드:', node)
+                  tempPairingNodes.endNodeID = node.id
+                  tempPairingNodes.endX = node.x
+                  tempPairingNodes.endY = node.y
+                  console.log('출발노드 아이디:', tempPairingNodes.startNodeID)
+                  console.log('도착노드 아이디:', tempPairingNodes.endNodeID)
+                  // 연결된 노드를 데이터에 반영
+                  if (
+                    tempPairingNodes.startNodeID !==
+                      tempPairingNodes.endNodeID &&
+                    tempPairingNodes.startX !== tempPairingNodes.endX &&
+                    tempPairingNodes.startY !== tempPairingNodes.endY &&
+                    !linkList.find(
+                      (element) =>
+                        element.startNodeID === tempPairingNodes.startNodeID &&
+                        element.endNodeID === tempPairingNodes.endNodeID
+                    ) &&
+                    d3.select('.tempLine').attr('x1') > 1 &&
+                    d3.select('.tempLine').attr('y1') > 1 &&
+                    d3.select('.tempLine').style('opacity') != 0
+                  ) {
+                    tempPairingNodes.id = `link${uid(20)}`
+                    linkList.push({ ...tempPairingNodes })
+                    updateLink()
+                    svg.select('.tempLine').style('opacity', '0')
+                    console.log('링크 업데이트:')
+                  }
+                  svg
+                    .select('g')
+                    .select('.tempLine')
+                    .attr('x1', 0)
+                    .attr('y1', 0)
+                    .attr('x2', 0)
+                    .attr('y2', 0)
+                  tempPairingNodes = {}
+                }
+              })
+              //updateNode()
+              //updateLink()
+              svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
+              svg.select('.tempLine').style('opacity', '0')
+              //console.log('드래그 종료: ', pointerX)
+            })
+        )
+    }
 
     // 노드 삭제용 버튼 만들기
     nodeGroup
@@ -467,10 +441,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .attr('height', deleteButtonLength)
       .style('fill', (d) => nodeColor)
       .attr('x', (d) => {
-        return d.x - d.radius * 1.5
+        return d.x - d.radius * 1.7
       })
       .attr('y', (d) => {
-        return d.y - d.radius * 1.5
+        return d.y - d.radius * 1.7
       })
       .attr('class', (d) => {
         return d.id
@@ -533,11 +507,12 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
         reduxStore.getState().auth.userID
       ) {
+        const ratioFactor = width / clientRect.width
         const createdNode = {
           id: `node${uid(20)}`,
           name: '새로운 노드',
-          x: d3.event.pageX - absoluteXPosition,
-          y: d3.event.pageY - absoluteYPosition,
+          x: d3.event.offsetX * ratioFactor,
+          y: d3.event.offsetY * ratioFactor,
           radius: nodeRadius,
           body: '새로운 내용',
           hashtags: [],
@@ -557,11 +532,12 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
           reduxStore.getState().auth.userID
         ) {
+          const ratioFactor = width / clientRect.width
           const createdNode = {
             id: `node${uid(20)}`,
             name: '새로운 노드',
-            x: d3.event.pageX - absoluteXPosition,
-            y: d3.event.pageY - absoluteYPosition,
+            x: d3.event.offsetX * ratioFactor,
+            y: d3.event.offsetY * ratioFactor,
             radius: nodeRadius,
             body: '새로운 내용',
             hashtags: [],
@@ -582,6 +558,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           .attr('y2', d3.event.pageY - absoluteYPosition)
       })
       .on('mouseup', (d) => {
+        svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
         svg.select('.tempLine').style('opacity', '0')
       })
   }

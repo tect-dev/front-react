@@ -98,7 +98,7 @@ const MarkdownStyledBlock = styled.div`
   }
 `
 
-export default React.memo(function MarkdownRenderingBlock({ text }) {
+const MarkdownRenderer = React.memo(function MarkdownRenderingBlock({ text }) {
   const [html, setHtml] = useState('')
 
   const codeBlockPattern = /(```[\s\S]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
@@ -155,3 +155,5 @@ export default React.memo(function MarkdownRenderingBlock({ text }) {
     </TypographyBlock>
   )
 })
+
+export default MarkdownRenderer

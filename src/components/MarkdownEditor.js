@@ -14,12 +14,7 @@ import {
 
 import axios from 'axios'
 
-MarkdownEditor.defaultProps = {
-  width: '600px',
-  height: '400px',
-}
-
-function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
+const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const [localText, setLocalText] = useState(bindingText)
 
   const onChangeText = useCallback(
@@ -158,6 +153,13 @@ function MarkdownEditor({ bindingText, bindingSetter, width, height }) {
   )
 }
 
+MarkdownEditor.defaultProps = {
+  width: '600px',
+  height: '400px',
+}
+
+export default React.memo(MarkdownEditor)
+
 const MarkdownToolkit = styled.div`
   margin-bottom: 10px;
 `
@@ -193,5 +195,3 @@ const StyledTextarea = styled.textarea`
     border: none;
   }
 `
-
-export default React.memo(MarkdownEditor)

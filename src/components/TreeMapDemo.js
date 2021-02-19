@@ -83,8 +83,8 @@ function initGraph(container, originalNodeList, originalLinkList) {
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
 
-  const width = 500
-  const height = 500
+  const width = 700
+  const height = 700
 
   let nodeList = originalNodeList
   let linkList = originalLinkList
@@ -136,8 +136,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   const selectedColor = `${colorPalette.gray9}`
 
   const labelSize = fontSize.small
-  const width = 500
-  const height = 500
+  const width = 700
+  const height = 700
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
 
@@ -186,7 +186,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')
   const labelGroup = svg.select('.labels')
-  const deleteButtonLength = 10
+  const deleteButtonLength = 17
   const techtreeID = reduxStore.getState().techtree.techtreeData._id
 
   function initLink() {
@@ -338,23 +338,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           dispatch(selectNode(previousNodeList, nextNodeList, d))
         })
         .style('cursor', 'pointer')
-        //.on('mousedown', (d) => {
-        //  //d3.event.preventDefault()
-        //  svg
-        //    .select('g')
-        //    .select('.tempLine')
-        //    .attr('x1', d.x)
-        //    .attr('y1', d.y)
-        //    .style('opacity', '1')
-        //    .attr('display', 'inline')
-        //  tempPairingNodes.startNodeID = d.id
-        //  tempPairingNodes.startX = d.x
-        //  tempPairingNodes.startY = d.y
-        //  // 모바일 환경에서 마우스 스크롤 방지용.
-        //  //window.addEventListener(wheelEvent, preventDefault, wheelOpt) // modern desktop
-        //  //window.addEventListener('touchmove', preventDefault, wheelOpt) // mobile
-        //  //console.log('스크롤 동작 비활성화:')
-        //})
         .call(
           d3
             .drag()
@@ -364,6 +347,14 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                 .select('.tempLine')
                 .attr('x1', d.x)
                 .attr('y1', d.y)
+              svg
+                .select('g')
+                .select('.tempLine')
+                .attr('x2', d3.event.x)
+                .attr('y2', d3.event.y)
+              svg
+                .select('g')
+                .select('.tempLine')
                 .style('opacity', '1')
                 .attr('display', 'inline')
               tempPairingNodes.startNodeID = d.id
@@ -429,6 +420,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                     .select('.tempLine')
                     .attr('x1', 0)
                     .attr('y1', 0)
+                    .attr('x2', 0)
+                    .attr('y2', 0)
                   tempPairingNodes = {}
                 }
               })
@@ -476,10 +469,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .attr('height', deleteButtonLength)
       .style('fill', (d) => nodeColor)
       .attr('x', (d) => {
-        return d.x - d.radius * 1.5
+        return d.x - d.radius * 1.7
       })
       .attr('y', (d) => {
-        return d.y - d.radius * 1.5
+        return d.y - d.radius * 1.7
       })
       .attr('class', (d) => {
         return d.id
@@ -538,11 +531,12 @@ function updateGraph(container, dispatch, isEditingTechtree) {
 
   if (isEditingTechtree) {
     svg.on('dblclick', () => {
+      const ratioFactor = width / clientRect.width
       const createdNode = {
         id: `node${uid(20)}`,
         name: '새로운 노드',
-        x: d3.event.x - relativeLeft,
-        y: d3.event.y - relativeTop,
+        x: d3.event.offsetX * ratioFactor,
+        y: d3.event.offsetY * ratioFactor,
         radius: nodeRadius,
         body: '새로운 내용',
         hashtags: [],
