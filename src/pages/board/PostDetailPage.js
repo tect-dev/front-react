@@ -115,12 +115,15 @@ export default function PostDetailPage({ match }) {
         }) : null}
         {/* 나중에 map으로 iteration 돌려야 함. */}
 
-        <AnswerEditor
+        {user.loginState && 
+          <AnswerEditor
           user={user}
           postID={postID}
           answers={answers}
           setAnswers={onSetAnswers}
         />
+        }
+        
       </div>
       <BackButton onClick={e=>{
         e.preventDefault()
