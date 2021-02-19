@@ -248,16 +248,18 @@ export default function TechtreeDetailPage({ match }) {
               <DocuHeaderArea>
                 <div className="docuTitle">
                   {isEditingDocument ? (
-                    <TitleInput
-                      value={documentTitle}
-                      onChange={onChangeDocumentTitle}
-                    />
+                    <div>
+                      <TitleInput
+                        value={documentTitle}
+                        onChange={onChangeDocumentTitle}
+                      />
+                    </div>
                   ) : (
                     <StyledTitle>{selectedNode.name}</StyledTitle>
                   )}
                 </div>
 
-                <div className="editDocu">
+                <EditDocuButtonArea>
                   {isEditingDocument ? (
                     <DefaultButton onClick={onFinishEdit}>
                       수정완료
@@ -278,7 +280,7 @@ export default function TechtreeDetailPage({ match }) {
                   ) : (
                     ''
                   )}
-                </div>
+                </EditDocuButtonArea>
               </DocuHeaderArea>
               <TitleBottomLine />
               <DocuBodyArea>
@@ -428,8 +430,12 @@ export const DocuWrapper = styled.div`
 
 export const DocuHeaderArea = styled.div`
   display: grid;
-  justify-content: space-between;
+  //justify-content: space-between;
   grid-template-columns: 2fr 1fr;
+`
+
+export const EditDocuButtonArea = styled.div`
+  display: inline;
 `
 
 export const DocuBodyArea = styled.div`
@@ -457,7 +463,6 @@ export const HalfWidthContainer = styled.div`
   //@media (max-width: 650px) {
   //  overflow-x: scroll;
   //}
-  
 `
 
 export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`

@@ -13,6 +13,7 @@ import {
   NextNodeArea,
   HalfWidthContainer,
   HalfWidthDocumentContainer,
+  EditDocuButtonArea,
 } from '../pages/techtree/TechtreeDetailPage'
 import DoubleSideLayout from '../wrappers/DoubleSideLayout'
 import MarkdownEditor from '../components/MarkdownEditor'
@@ -288,16 +289,18 @@ function DemoTree() {
             <DocuHeaderArea>
               <div className="docuTitle">
                 {isEditingDocument ? (
-                  <TitleInput
-                    value={documentTitle}
-                    onChange={onChangeDocumentTitle}
-                  />
+                  <div>
+                    <TitleInput
+                      value={documentTitle}
+                      onChange={onChangeDocumentTitle}
+                    />
+                  </div>
                 ) : (
                   <StyledTitle>{selectedNode.name}</StyledTitle>
                 )}
               </div>
 
-              <div className="editDocu">
+              <EditDocuButtonArea>
                 {isEditingDocument ? (
                   <DefaultButton onClick={onFinishDocuEdit}>
                     수정완료
@@ -306,14 +309,19 @@ function DemoTree() {
                   ''
                 )}
 
-                <DefaultButton
-                  onClick={() => {
-                    setIsEditingDocument(true)
-                  }}
-                >
-                  문서 수정
-                </DefaultButton>
-              </div>
+                {typeof selectedNode.id !== 'undefined' &&
+                !isEditingDocument ? (
+                  <DefaultButton
+                    onClick={() => {
+                      setIsEditingDocument(true)
+                    }}
+                  >
+                    문서 수정
+                  </DefaultButton>
+                ) : (
+                  ''
+                )}
+              </EditDocuButtonArea>
             </DocuHeaderArea>
             <TitleBottomLine />
             <DocuBodyArea>
