@@ -22,9 +22,16 @@ import { sortISOByTimeStamp } from '../../lib/functions'
 export default function ProfilePage({ match }) {
   const history = useHistory()
   const { userID } = match.params
-  const { compareID, myID, myIntroduce, myDisplayName, myPosts, loading } = useSelector((state) => {
+  const {
+    compareID,
+    myID,
+    myIntroduce,
+    myDisplayName,
+    myPosts,
+    loading,
+  } = useSelector((state) => {
     return {
-      compareID : state.auth.userData?.firebaseUid,
+      compareID: state.auth.userData?.firebaseUid,
       myID: state.auth.userID,
       myIntroduce: state.auth.userData.introduce,
       myDisplayName: state.auth.userData.displayName,
@@ -40,7 +47,7 @@ export default function ProfilePage({ match }) {
     }
   })
 
-  const [isEdit, setIsEdit ] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [introduce, setIntroduce] = useState('')
 
@@ -78,17 +85,12 @@ export default function ProfilePage({ match }) {
     dispatch(getUserInfo(userID))
   }, [dispatch, userID])
 
-  useEffect(()=>{
-    if(myID===compareID){
-      setDisplayName(myDisplayName)
-      setIntroduce(myIntroduce)
-    } else {
-      alert("Invalid Access")
-      history.push('/')
-    }
-  }, [myID, compareID])
+  useEffect(() => {
+    setDisplayName(myDisplayName)
+    setIntroduce(myIntroduce)
+  }, [myDisplayName, myIntroduce])
 
-  if (loading || myID === '000000000000000000000000') {
+  if (loading) {
     return (
       <MainWrapper>
         <Spinner />
@@ -101,55 +103,55 @@ export default function ProfilePage({ match }) {
         <Title>MyPage</Title>
         <MyPageHead>
           <AnonymousSVG />
-          {isEdit
-            ? <DisplayName_Input value={displayName} onChange={onChangeDisplayName} />
-            : <DisplayName>{displayName}</DisplayName>
-          }
+          {isEdit ? (
+            <DisplayName_Input
+              value={displayName}
+              onChange={onChangeDisplayName}
+            />
+          ) : (
+            <DisplayName>{displayName}</DisplayName>
+          )}
         </MyPageHead>
-        {isEdit
-          ? <IntroduceInput value={introduce} onChange={onChangeIntroduce} />
-          : <Introduce>{introduce}</Introduce>
-        }
+        {isEdit ? (
+          <IntroduceInput value={introduce} onChange={onChangeIntroduce} />
+        ) : (
+          <Introduce>{introduce}</Introduce>
+        )}
 
-        {isEdit
-          ? <Button onClick={submitProfile}>수정완료</Button>
-          : <Button onClick={()=>{setIsEdit(true)}}>자기소개 수정</Button>}
+        {isEdit ? (
+          <Button onClick={submitProfile}>수정완료</Button>
+        ) : (
+          <Button
+            onClick={() => {
+              setIsEdit(true)
+            }}
+          >
+            자기소개 수정
+          </Button>
+        )}
       </MyPageContainer>
       <BoardContainer>
         <BoardTitle>작성게시물</BoardTitle>
         <PostsContainer>
-          {myPosts?.map(post => {
+          {myPosts?.map((post) => {
             return (
               <Link to={`/post/${post._id}`}>
-                <PostTitle>
-                  {post.title}
-              </PostTitle>
+                <PostTitle>{post.title}</PostTitle>
               </Link>
             )
           })}
         </PostsContainer>
       </BoardContainer>
-      
-        {treeData?.map((techtreeData, index) => {
-          const parsedNodeList = JSON.parse(techtreeData.nodeList)
-          const parsedLinkList = JSON.parse(techtreeData.linkList)
-          return (
-            <TechtreeThumbnail
-              nodeList={parsedNodeList}
-              linkList={parsedLinkList}
-              techtreeTitle={techtreeData.title}
-              techtreeID={techtreeData._id}
-              techtreeData={techtreeData}
-              key={index}
-            />
-          )
-        })}
-        <ButtonContainer>
-        {myID === userID ? (
-          <>
-          <Tree_Button onClick={()=>{history.push(`/forest/${myID}`)}}>
-            MyTree로 이동
-          </Tree_Button>
+
+      <ButtonContainer>
+        <Tree_Button
+          onClick={() => {
+            history.push(`/forest/${compareID}`)
+          }}
+        >
+          {displayName}의 Forest
+        </Tree_Button>
+        {myID === compareID ? (
           <Logout_Button
             onClick={() => {
               dispatch(logout())
@@ -158,7 +160,6 @@ export default function ProfilePage({ match }) {
           >
             로그아웃
           </Logout_Button>
-          </>
         ) : (
           ''
         )}
@@ -246,7 +247,7 @@ const BoardTitle = styled.div`
 `
 
 const Button = styled.button`
-  all:unset;
+  all: unset;
   display: block;
   border-radius: 10px;
   border: 1px solid #6d9b7b;
