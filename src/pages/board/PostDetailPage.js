@@ -3,7 +3,7 @@ import { Spinner } from '../../components/Spinner'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'  
 import { readPostDetail, deletePost } from '../../redux/board'
-import { fontSize } from '../../lib/constants'
+import { fontSize, AnonymousSVG } from '../../lib/constants'
 import { Link, useHistory } from 'react-router-dom'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { AnswerEditor, AnswerTextarea } from '../../components/board/AnswerEditor'
@@ -117,11 +117,11 @@ export default function PostDetailPage({ match }) {
 
         {user.loginState && 
           <AnswerEditor
-          user={user}
-          postID={postID}
-          answers={answers}
-          setAnswers={onSetAnswers}
-        />
+            user={user}
+            postID={postID}
+            answers={answers}
+            setAnswers={onSetAnswers}
+          />
         }
         
       </div>
@@ -163,19 +163,19 @@ export const PostHeader_Left= styled.div`
   align-items: center;
 `
 
-export const AnonymousSVG = () => {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-      <g id="그룹_14" data-name="그룹 14" transform="translate(-365 -717)">
-        <rect id="사각형_73" data-name="사각형 73" width="40" height="40" rx="10" transform="translate(365 717)" fill="#b2c8b4"/>
-        <g id="그룹_3" data-name="그룹 3" transform="translate(-8.137 450.947)">
-          <circle id="타원_1" data-name="타원 1" cx="7.298" cy="7.298" r="7.298" transform="translate(385.846 276)" fill="#fff"/>
-          <path id="패스_1" data-name="패스 1" d="M393.137,414a12.151,12.151,0,0,0-12.151,12.136h24.3A12.151,12.151,0,0,0,393.137,414Z" transform="translate(0 -121.083)" fill="#fff"/>
-        </g>
-      </g>
-    </svg>
-  )
-}
+// export const AnonymousSVG = () => {
+//   return (
+//     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+//       <g id="그룹_14" data-name="그룹 14" transform="translate(-365 -717)">
+//         <rect id="사각형_73" data-name="사각형 73" width="40" height="40" rx="10" transform="translate(365 717)" fill="#b2c8b4"/>
+//         <g id="그룹_3" data-name="그룹 3" transform="translate(-8.137 450.947)">
+//           <circle id="타원_1" data-name="타원 1" cx="7.298" cy="7.298" r="7.298" transform="translate(385.846 276)" fill="#fff"/>
+//           <path id="패스_1" data-name="패스 1" d="M393.137,414a12.151,12.151,0,0,0-12.151,12.136h24.3A12.151,12.151,0,0,0,393.137,414Z" transform="translate(0 -121.083)" fill="#fff"/>
+//         </g>
+//       </g>
+//     </svg>
+//   )
+// }
 
 export const AuthorName = styled.div`
   font-size: ${fontSize.small};

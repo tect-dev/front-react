@@ -131,6 +131,20 @@ export const colorPalette = {
   mainGreen: '#69bc69',
 }
 
+export const AnonymousSVG = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+      <g id="그룹_14" data-name="그룹 14" transform="translate(-365 -717)">
+        <rect id="사각형_73" data-name="사각형 73" width="40" height="40" rx="10" transform="translate(365 717)" fill="#b2c8b4"/>
+        <g id="그룹_3" data-name="그룹 3" transform="translate(-8.137 450.947)">
+          <circle id="타원_1" data-name="타원 1" cx="7.298" cy="7.298" r="7.298" transform="translate(385.846 276)" fill="#fff"/>
+          <path id="패스_1" data-name="패스 1" d="M393.137,414a12.151,12.151,0,0,0-12.151,12.136h24.3A12.151,12.151,0,0,0,393.137,414Z" transform="translate(0 -121.083)" fill="#fff"/>
+        </g>
+      </g>
+    </svg>
+  )
+}
+
 export const whiteURL =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJ0ZWNodHJlZUNvbnRhaW5lciIgd2lkdGg9IjUwMCIgaGVpZ2h0PSI1MDAiPjxnPjxsaW5lIGNsYXNzPSJ0ZW1wTGluZSIgbWFya2VyLWVuZD0idXJsKCNlbmQtYXJyb3cpIiBkaXNwbGF5PSJub25lIiBzdHlsZT0ic3Ryb2tlOiByZ2IoMTczLCAxODEsIDE4OSk7IHN0cm9rZS13aWR0aDogMi41cHg7IG9wYWNpdHk6IDA7IiB4Mj0iMjc3Ljc1IiB5Mj0iNDk1Ii8+PC9nPjxnIGNsYXNzPSJsaW5rcyIvPjxnIGNsYXNzPSJub2RlcyIvPjxnIGNsYXNzPSJsYWJlbHMiLz48ZGVmcz48bWFya2VyIGlkPSJlbmQtYXJyb3ciIHZpZXdCb3g9IjAgLTUgMTAgMTAiIHJlZlg9IjE5LjUiIG1hcmtlcldpZHRoPSI2IiBtYXJrZXJIZWlnaHQ9IjIyLjUiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTTAsLTVMMTAsMEwwLDUiIGZpbGw9IiNBREI1QkQiLz48L21hcmtlcj48L2RlZnM+PGRlZnM+PG1hcmtlciBpZD0iZW5kLWFycm93IiB2aWV3Qm94PSIwIC01IDEwIDEwIiByZWZYPSIxOS41IiBtYXJrZXJXaWR0aD0iNiIgbWFya2VySGVpZ2h0PSIyMi41IiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0wLC01TDEwLDBMMCw1IiBmaWxsPSIjQURCNUJEIi8+PC9tYXJrZXI+PC9kZWZzPjxkZWZzPjxtYXJrZXIgaWQ9ImVuZC1hcnJvdyIgdmlld0JveD0iMCAtNSAxMCAxMCIgcmVmWD0iMTkuNSIgbWFya2VyV2lkdGg9IjYiIG1hcmtlckhlaWdodD0iMjIuNSIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNMCwtNUwxMCwwTDAsNSIgZmlsbD0iI0FEQjVCRCIvPjwvbWFya2VyPjwvZGVmcz48ZGVmcz48bWFya2VyIGlkPSJlbmQtYXJyb3ciIHZpZXdCb3g9IjAgLTUgMTAgMTAiIHJlZlg9IjE5LjUiIG1hcmtlcldpZHRoPSI2IiBtYXJrZXJIZWlnaHQ9IjIyLjUiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTTAsLTVMMTAsMEwwLDUiIGZpbGw9IiNBREI1QkQiLz48L21hcmtlcj48L2RlZnM+PC9zdmc+'
 

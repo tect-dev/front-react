@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import {
-  PostContainer, PostHeader, PostHeader_Left,  AnonymousSVG,  
+  PostContainer, PostHeader, PostHeader_Left, 
   AuthorName,  Likes, PostFooter, Button
 } from '../../pages/board/PostDetailPage'
-import { fontSize } from '../../lib/constants'
+import { fontSize, AnonymousSVG } from '../../lib/constants'
 import { setUserPlace } from '../../redux/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteAnswer, updateAnswer } from '../../redux/board'
