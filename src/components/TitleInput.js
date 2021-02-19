@@ -7,6 +7,7 @@ export const TitleInput = styled.input`
   font-weight: bold;
   color: #6d9b7b;
   padding: 10px 0 20px 10px;
+  width: 90%;
   font-size: ${fontSize.large};
   &::placeholder {
     color: #6d9b7b;

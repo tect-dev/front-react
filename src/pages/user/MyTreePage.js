@@ -9,6 +9,7 @@ import { Spinner } from '../../components/Spinner'
 import { Button } from '../../components/Button'
 import { StyledTitle } from '../../components/TitleInput'
 import TreeIcon from '../../assets/tree.svg'
+import MainIcon from '../../assets/MainIcon.png'
 import MainWrapper from '../../wrappers/MainWrapper'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
@@ -84,7 +85,7 @@ export default function MyTreePage({ match }) {
               <StyledTitle>새로운 트리 심기</StyledTitle>
             </TreeThumbnailHeader>
             <TechtreeThumbnailBlock>
-              <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
+              <TechtreeThumbnailImage src={MainIcon} alt="treeIcon" />
             </TechtreeThumbnailBlock>
             <TechtreeInfo></TechtreeInfo>
           </TechtreeThumbnailCard>
