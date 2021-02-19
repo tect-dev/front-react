@@ -13,6 +13,7 @@ import { Spinner } from '../../components/Spinner'
 import { Button, DefaultButton } from '../../components/Button'
 import { StyledTitle } from '../../components/TitleInput'
 import TreeIcon from '../../assets/tree.svg'
+import MainIcon from '../../assets/MainIcon.png'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 
 import styled from 'styled-components'
@@ -76,7 +77,7 @@ export default function TechtreeListPage() {
               <StyledTitle>새 나무 심기</StyledTitle>
             </TreeThumbnailHeader>
             <TechtreeThumbnailBlock>
-              <TechtreeThumbnailImage src={TreeIcon} alt="treeIcon" />
+              <TechtreeThumbnailImage src={MainIcon} alt="treeIcon" />
             </TechtreeThumbnailBlock>
             <TechtreeInfo></TechtreeInfo>
           </TechtreeThumbnailCard>
