@@ -26,7 +26,6 @@ export default function Navbar() {
       })
     }
   }
-  const userInfo = JSON.parse(localStorage.getItem('user'))
 
   const { userID, userNickname, loginState, userPlace } = useSelector(
     (state) => {
@@ -88,19 +87,23 @@ export default function Navbar() {
                 className="navbar-item-link"
                 style={{ paddingBottom: '5px' }}
               >
-                숲
+                Forest
               </NavLink>
             </li>
+            {userPlace !== 'main' ? (
+              <li className="navbar-item">
+                <NavLink
+                  to={{ pathname: `/board/${userPlace}` }}
+                  className="navbar-item-link"
+                  style={{ paddingBottom: '5px' }}
+                >
+                  게시판
+                </NavLink>
+              </li>
+            ) : (
+              ''
+            )}
 
-            <li className="navbar-item">
-              <NavLink
-                to={{ pathname: `/board/${userPlace}` }}
-                className="navbar-item-link"
-                style={{ paddingBottom: '5px' }}
-              >
-                게시판
-              </NavLink>
-            </li>
             {/*     <SearchContainer popup={false}>
               <div
                 className="visibleOnPc"

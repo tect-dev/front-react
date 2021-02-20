@@ -32,9 +32,11 @@ export default React.memo(function ({
       <Link to={`/tree/${techtreeID}`}>
         <TreeThumbnailHeader>
           <StyledTitle>{techtreeTitle}</StyledTitle>
-          <div style={{ fontSize: '14px' }}>
+          <StyledTitle
+            style={{ fontSize: fontSize.xsmall, color: colorPalette.gray7 }}
+          >
             {techtreeData.author[0]?.displayName}
-          </div>
+          </StyledTitle>
         </TreeThumbnailHeader>
 
         <TechtreeThumbnailBlock>
@@ -50,11 +52,12 @@ export default React.memo(function ({
 })
 
 export const TechtreeThumbnailBlock = styled.div`
-  padding: 20px;
+  padding: 5px;
 `
 
 export const TechtreeThumbnailImage = styled.img`
-  width: 100%;
+  width: 250px;
+  height: 250px;
   //height: 250px;
   object-fit: fill;
   border-radius: 22px;
@@ -91,9 +94,10 @@ export const TechtreeThumbnailCard = styled.div`
   grid-column-start: span 1;
   display: grid;
   width: 100%;
-  height: 100%;
+  height: 375px;
   justify-items: center;
   justify-content: center;
+  //align-items: center;
   //width: 290px;
   //height: '300px';
   transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;

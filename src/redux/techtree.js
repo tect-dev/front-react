@@ -185,7 +185,7 @@ export const finishDocuEdit = (
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        //title: techtreeTitle,
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -209,7 +209,7 @@ export const createNode = (nodeList, linkList, techtreeData) => {
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        // title: techtreeTitle,
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -230,7 +230,7 @@ export const createLink = (nodeList, linkList, techtreeData) => async (
         method: 'put',
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
         data: {
-          //title: techtreeTitle,
+          title: techtreeTitle,
           nodeList: JSON.stringify(nodeList),
           linkList: JSON.stringify(linkList),
           _id: techtreeID,
@@ -238,7 +238,7 @@ export const createLink = (nodeList, linkList, techtreeData) => async (
         },
       })
     })
-    dispatch ({ type: CREATE_LINK, linkList: linkList })
+    dispatch({ type: CREATE_LINK, linkList: linkList })
   } catch (e) {
     console.log('error: ', e)
   }
@@ -278,7 +278,7 @@ export const deleteNode = (
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-          //title: techtreeData.title,
+          title: techtreeData.title,
           _id: uid(24),
           hashtags: [],
           nodeList: stringifiedNodeList,
@@ -309,7 +309,7 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        //title: techtreeTitle,
+        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(newLinkList),
       },

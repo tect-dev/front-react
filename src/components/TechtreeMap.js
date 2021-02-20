@@ -125,15 +125,16 @@ function initGraph(container, originalNodeList, originalLinkList) {
 
 // 그래프가 갱신될때 호출되는 함수
 function updateGraph(container, dispatch, isEditingTechtree) {
-  const nodeRadius = 15
+  const nodeRadius = 20
   const nodeColor = colorPalette.mainGreen
 
   const selectedColor = colorPalette.gray8
+  const selectedNodeStrokeWidth = '2px'
 
-  const labelSize = fontSize.small
+  const labelSize = fontSize.medium
 
   const linkWidth = '2.5px'
-  const linkColor = `${colorPalette.gray5}`
+  const linkColor = `${colorPalette.gray4}`
 
   const width = 700
   const height = 700
@@ -172,7 +173,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
     .append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
-    .attr('refX', nodeRadius * 1.3)
+    .attr('refX', nodeRadius * 1.1)
     .attr('markerWidth', 6)
     .attr('markerHeight', nodeRadius * 1.5)
     .attr('orient', 'auto')
@@ -248,7 +249,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .selectAll('circle')
         .data(nodeList)
         .join('circle')
-        .attr('r', (d) => d.radius)
+        .attr('r', (d) => nodeRadius)
         .style('fill', (d) => nodeColor) // 나중에 d.fillColor 로 변경
         .style('stroke', (d) => {
           if (d.id === reduxStore.getState().techtree.selectedNode.id) {
@@ -257,6 +258,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
             return
           }
         })
+        .style('stroke-width', selectedNodeStrokeWidth)
 
         .attr('cx', (d) => {
           return d.x
@@ -310,7 +312,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .selectAll('circle')
         .data(nodeList)
         .join('circle')
-        .attr('r', (d) => d.radius)
+        .attr('r', (d) => nodeRadius)
         .style('fill', (d) => nodeColor)
         .style('stroke', (d) => {
           if (d.id === reduxStore.getState().techtree.selectedNode.id) {
@@ -319,7 +321,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
             return
           }
         })
-
+        .style('stroke-width', selectedNodeStrokeWidth)
         .attr('cx', (d) => {
           return d.x
         })
@@ -441,10 +443,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .attr('height', deleteButtonLength)
       .style('fill', (d) => nodeColor)
       .attr('x', (d) => {
-        return d.x - d.radius * 1.7
+        return d.x - nodeRadius * 1.7
       })
       .attr('y', (d) => {
-        return d.y - d.radius * 1.7
+        return d.y - nodeRadius * 1.7
       })
       .attr('class', (d) => {
         return d.id
@@ -497,7 +499,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       .style('user-select', 'none')
       .style(
         'text-shadow',
-        '-3px 0 #F2F1F6, 0 3px #F2F1F6, 3px 0 #F2F1F6, 0 -3px #F2F1F6'
+        '1px 1px 1px #ffffff'
+        //'-3px 0 #F2F1F6, 0 3px #F2F1F6, 3px 0 #F2F1F6, 0 -3px #F2F1F6'
       )
   }
 

@@ -298,9 +298,9 @@ export default function TechtreeDetailPage({ match }) {
             <NodeButtonArea>
               <PrevNodeArea>
                 {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
-                {previousNodeList.map((node) => {
+                {previousNodeList.map((node, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <DefaultButton
                         onClick={() => {
                           const newPreviousNodeList = returnPreviousNodeList(
@@ -339,9 +339,9 @@ export default function TechtreeDetailPage({ match }) {
               </PrevNodeArea>
               <NextNodeArea>
                 {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
-                {nextNodeList.map((node) => {
+                {nextNodeList.map((node, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <DefaultButton
                         onClick={() => {
                           const newPreviousNodeList = returnPreviousNodeList(
@@ -460,13 +460,14 @@ export const NextNodeArea = styled.div``
 
 export const HalfWidthContainer = styled.div`
   overflow: visible;
+  width: 100%;
   //@media (max-width: 650px) {
   //  overflow-x: scroll;
   //}
 `
 
 export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
-  width: 80%;
+  width: 100%;
   height: 80vh;
   @media (max-width: 650px) {
     height: inherit;
