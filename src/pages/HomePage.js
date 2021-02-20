@@ -161,6 +161,7 @@ export default function HomePage() {
         isPopup={isPopup}
         onClick={(e)=>{
           setIsPopUp(false)
+          setselectedDepts(null)
         }}
       >
         <PopupGridContainer
@@ -173,7 +174,10 @@ export default function HomePage() {
               >
                 <Link 
                   style={{
+                    cursor: "pointer",
                     display: "grid",
+                    boxSizing: "border-box",
+                    padding: "20px 10px",
                     placeItems: "center",
                     width: "100%",
                     height: "100%"
@@ -482,6 +486,7 @@ function OneBlock({ color, name, setIsPopUp, setselectedDepts }) {
         color: '#ffffff',
         fontWeight: 500,
         fontSize: fontSize.xlarge,
+        cursor: "pointer"
       }}
       onClick={()=>{
         setIsPopUp(true)
@@ -700,7 +705,6 @@ const PopupWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.2);
-  cursor: pointer;
   left: 0;
   top: 0;
 `
@@ -716,7 +720,6 @@ const PopupGridContainer = styled.div`
 
 const PopupDept = styled.div`
   border-radius: 35px;
-  padding: 20px 10px;
   color: white;
   font-weight: bold;
   background: ${colorPalette.mainGreen};
