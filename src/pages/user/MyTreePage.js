@@ -21,6 +21,7 @@ import {
   TreeThumbnailHeader,
 } from '../../components/TechtreeThumbnail'
 import { TreePageHeader } from '../techtree/TechtreeDetailPage'
+import PlantNewTreeCard from '../../components/PlantNewTreeCard'
 
 import { createTechtree, readTechtreeList } from '../../redux/techtree'
 import { sortISOByTimeStamp } from '../../lib/functions'
@@ -37,9 +38,7 @@ export default function MyTreePage({ match }) {
   })
   const { treeData } = useSelector((state) => {
     return {
-      treeData: state.auth.userData.treeData.sort((a, b) => {
-        return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
-      }),
+      treeData: state.auth.userTreeData,
     }
   })
   const { forestOwnerDisplayName } = useSelector((state) => {
@@ -70,28 +69,7 @@ export default function MyTreePage({ match }) {
     <MainWrapper>
       <TreePageHeader>{forestOwnerDisplayName}의 Forest</TreePageHeader>
       <GridWrapper>
-        {loginState ? (
-          <TechtreeThumbnailCard
-            onClick={() => {
-              if (loginState) {
-                dispatch(createTechtree())
-              } else {
-                alert('로그인이 필요해요')
-              }
-            }}
-            style={{ cursor: 'pointer' }}
-          >
-            <TreeThumbnailHeader>
-              <StyledTitle>새로운 트리 심기</StyledTitle>
-            </TreeThumbnailHeader>
-            <TechtreeThumbnailBlock>
-              <TechtreeThumbnailImage src={MainIcon} alt="treeIcon" />
-            </TechtreeThumbnailBlock>
-            <TechtreeInfo></TechtreeInfo>
-          </TechtreeThumbnailCard>
-        ) : (
-          ''
-        )}
+        {loginState && userID === myID ? <PlantNewTreeCard /> : ''}
 
         {treeData?.map((techtreeData, index) => {
           const parsedNodeList = JSON.parse(techtreeData.nodeList)

@@ -1,13 +1,14 @@
 import { authService, firebaseInstance } from '../lib/firebase'
 import axios from 'axios'
-import { dispatch } from 'd3'
+import { sortISOByTimeStamp } from '../lib/functions'
 
 const initialState = {
   loginState: false,
   userID: '000000000000000000000000', // myID 로 고쳐야함
   userNickname: '익명', // myDisplayName 으로 고쳐야함
   loading: false,
-  userData: { treeData: [], displayName: '' },
+  userData: { displayName: '' },
+  userTreeData: [],
   userPlace: 'main', //내가 어느 게시판 들어갔느냐
 }
 
@@ -234,7 +235,15 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        userData: action.userData,
+        userData: {
+          ...action.userData,
+          treeData: action.userData.treeData.sort((a, b) => {
+            return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
+          }),
+        },
+        userTreeData: action.userData.treeData.sort((a, b) => {
+          return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
+        }),
       }
     case GET_USER_FAIL:
       return {

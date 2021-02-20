@@ -79,6 +79,9 @@ const nameSet = shuffleArray([
   '약학',
 ])
 
+const catchPraise1 = 'With Foresty'
+const catchPraise2 = 'Grow Your Forest'
+
 export default function HomePage() {
   const dispatch = useDispatch()
   const { treeSum } = useSelector((state) => {
@@ -92,13 +95,13 @@ export default function HomePage() {
     }
   }
   const [windowSize, setWindowSize] = useState(getSize)
-  const [ isPopup, setIsPopUp ] = useState(false)
-  const [ selectedDepts, setselectedDepts ] = useState(null)
+  const [isPopup, setIsPopUp] = useState(false)
+  const [selectedDepts, setselectedDepts] = useState(null)
 
-  const onSetIsPopUp = useCallback((param)=>{
+  const onSetIsPopUp = useCallback((param) => {
     setIsPopUp(param)
   })
-  const onSetselectedDepts = useCallback((param)=>{
+  const onSetselectedDepts = useCallback((param) => {
     setselectedDepts(param)
   })
 
@@ -121,12 +124,17 @@ export default function HomePage() {
       <HomePageHeader>
         <div>
           <img src={MainIcon} height="101px" />
-          <div>Foresty와 함께 지식의 숲을 가꿔나가요.</div>
-
-          <div>지금까지 Foresty에 심어진 나무</div>
-          <TreeSumText>
-            {treeSum ? <CountUp end={treeSum} duration={2.5} /> : ''}
-          </TreeSumText>
+          <br />
+          <div>
+            <br />
+            <div>Foresty와 함께 지식의 숲을 가꿔나가요.</div>
+            <br />
+            <div>지금까지 Foresty에 심어진 나무</div>
+            <br />
+            <TreeSumText>
+              {treeSum ? <CountUp end={treeSum} duration={2.5} /> : ''}
+            </TreeSumText>
+          </div>
         </div>
       </HomePageHeader>
       <DemoTree />
@@ -134,53 +142,61 @@ export default function HomePage() {
         같은 전공으로 묶이는 커뮤니티를 통해 정보를 공유할 수 있어요
       </HomePageSection>
       <BlockWrapper>
-        {windowSize.width > 1024 
-          ? <DesktopBlocks
-            onSetIsPopUp={setIsPopUp}
-            onSetselectedDepts={onSetselectedDepts}
-            /> 
-          : ''}
-        {1024 > windowSize.width && windowSize.width > 650 ? (
-          <TabletBlocks 
+        {windowSize.width > 1024 ? (
+          <DesktopBlocks
             onSetIsPopUp={setIsPopUp}
             onSetselectedDepts={onSetselectedDepts}
           />
         ) : (
           ''
         )}
-        {650 > windowSize.width 
-          ? <MobileBlocks
-              onSetIsPopUp={setIsPopUp}
-              onSetselectedDepts={onSetselectedDepts}
-            /> 
-          : ''}
+        {1024 > windowSize.width && windowSize.width > 650 ? (
+          <TabletBlocks
+            onSetIsPopUp={setIsPopUp}
+            onSetselectedDepts={onSetselectedDepts}
+          />
+        ) : (
+          ''
+        )}
+        {650 > windowSize.width ? (
+          <MobileBlocks
+            onSetIsPopUp={setIsPopUp}
+            onSetselectedDepts={onSetselectedDepts}
+          />
+        ) : (
+          ''
+        )}
       </BlockWrapper>
 
       {/* popup modal에 대한 코드 시작 */}
       <PopupWrapper
         isPopup={isPopup}
-        onClick={(e)=>{
+        onClick={(e) => {
           setIsPopUp(false)
           setselectedDepts(null)
         }}
       >
         <PopupGridContainer
-          onClick={(e)=>{e.preventDefault()}}
+          onClick={(e) => {
+            e.preventDefault()
+          }}
         >
-          {selectedDepts?.map(dept => {
-            return(
+          {selectedDepts?.map((dept) => {
+            return (
               <PopupDept
-                onClick={(e)=>{e.preventDefault()}}
+                onClick={(e) => {
+                  e.preventDefault()
+                }}
               >
-                <Link 
+                <Link
                   style={{
-                    cursor: "pointer",
-                    display: "grid",
-                    boxSizing: "border-box",
-                    padding: "20px 10px",
-                    placeItems: "center",
-                    width: "100%",
-                    height: "100%"
+                    cursor: 'pointer',
+                    display: 'grid',
+                    boxSizing: 'border-box',
+                    padding: '20px 10px',
+                    placeItems: 'center',
+                    width: '100%',
+                    height: '100%',
                   }}
                   to={`/board/${dept}`}
                 >
@@ -201,7 +217,7 @@ export const HomePageSection = styled.div`
   line-height: ${fontSize.xlarge};
   text-align: center;
   text-decoration: none solid rgb(53, 53, 53);
-  height: 475px;
+  height: 575px;
   align-items: center;
 `
 
@@ -486,9 +502,9 @@ function OneBlock({ color, name, setIsPopUp, setselectedDepts }) {
         color: '#ffffff',
         fontWeight: 500,
         fontSize: fontSize.xlarge,
-        cursor: "pointer"
+        cursor: 'pointer',
       }}
-      onClick={()=>{
+      onClick={() => {
         setIsPopUp(true)
         setselectedDepts(departments[name])
       }}
@@ -537,33 +553,117 @@ function ThreeBlock({ color, name }) {
 function DesktopBlocks({ onSetIsPopUp, onSetselectedDepts }) {
   return (
     <>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[0]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[1]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[2]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[3]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[4]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[5]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[6]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <ThreeBlock
-        color={colorPalette.gray0}
-        name={'Foresty와 함께'}
-      ></ThreeBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[7]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[8]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[0]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[1]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[2]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[3]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[4]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[5]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[6]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <ThreeBlock color={colorPalette.gray0} name={catchPraise1}></ThreeBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[7]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[8]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[9]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[10]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <ThreeBlock
-        color={colorPalette.gray0}
-        name={'지식의 숲을 가꿔보세요'}
-      ></ThreeBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[11]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[12]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[13]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[14]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[15]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[16]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[17]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[9]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[10]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <ThreeBlock color={colorPalette.gray0} name={catchPraise2}></ThreeBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[11]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[12]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[13]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[14]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[15]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[16]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[17]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
     </>
   )
 }
@@ -595,7 +695,7 @@ export const WidthOneBlock = styled.div`
   display: grid;
   align-items: center;
   width: 100%;
-  //height: auto;
+  height: 100%;
   aspect-ratio: 1/1; // 모바일에서는 작동을 안해!
   box-shadow: ${boxShadow.default};
   &:hover {
@@ -620,37 +720,121 @@ export const WidthThreeBlock = styled.div`
 function TabletBlocks({ onSetIsPopUp, onSetselectedDepts }) {
   return (
     <>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[0]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[1]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[2]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[3]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[0]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[1]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[2]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[3]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <ThreeBlock
-        color={colorPalette.gray0}
-        name={'Foresty와 함께'}
-      ></ThreeBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[4]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <ThreeBlock color={colorPalette.gray0} name={catchPraise1}></ThreeBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[4]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[5]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <ThreeBlock
-        color={colorPalette.gray0}
-        name={'지식의 숲을 가꿔보세요'}
-      ></ThreeBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[5]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <ThreeBlock color={colorPalette.gray0} name={catchPraise2}></ThreeBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[6]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[7]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[8]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[9]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[6]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[7]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[8]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[9]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[10]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[11]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[12]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[13]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[10]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[11]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[12]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[13]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[14]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[15]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[16]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[17]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[14]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[15]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[16]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[17]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
     </>
   )
 }
@@ -658,49 +842,134 @@ function TabletBlocks({ onSetIsPopUp, onSetselectedDepts }) {
 function MobileBlocks({ onSetIsPopUp, onSetselectedDepts }) {
   return (
     <>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[0]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[1]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[2]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[0]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[1]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[2]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <ThreeBlock
-        color={colorPalette.gray0}
-        name={'Foresty와 함께'}
-      ></ThreeBlock>
+      <ThreeBlock color={colorPalette.gray0} name={catchPraise1}></ThreeBlock>
 
-      <ThreeBlock
-        color={colorPalette.gray0}
-        name={'지식의 숲을 가꿔보세요'}
-      ></ThreeBlock>
+      <ThreeBlock color={colorPalette.gray0} name={catchPraise2}></ThreeBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[3]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[4]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[5]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[3]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[4]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[5]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[6]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[7]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[8]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[6]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[7]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[8]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[9]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[10]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[11]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[9]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[10]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[11]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[12]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[13]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[14]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[12]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[13]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[14]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
 
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[15]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[16]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
-      <OneBlock color={colorPalette.mainGreen} name={nameSet[17]} setIsPopUp={onSetIsPopUp} setselectedDepts={onSetselectedDepts}></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[15]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[16]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
+      <OneBlock
+        color={colorPalette.mainGreen}
+        name={nameSet[17]}
+        setIsPopUp={onSetIsPopUp}
+        setselectedDepts={onSetselectedDepts}
+      ></OneBlock>
     </>
   )
 }
 
-
 // popup
 
 const PopupWrapper = styled.div`
-  display: ${props => {return props.isPopup ? "grid" : "none"}};
-  position: fixed;  
+  display: ${(props) => {
+    return props.isPopup ? 'grid' : 'none'
+  }};
+  position: fixed;
   place-items: center;
   width: 100vw;
   height: 100vh;
@@ -715,7 +984,6 @@ const PopupGridContainer = styled.div`
   align-items: center;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-
 `
 
 const PopupDept = styled.div`

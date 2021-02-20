@@ -39,13 +39,13 @@ export default function ProfilePage({ match }) {
       loading: state.auth.loading,
     }
   })
-  const { treeData } = useSelector((state) => {
-    return {
-      treeData: state.auth.userData.treeData.sort((a, b) => {
-        return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
-      }),
-    }
-  })
+  //const { treeData } = useSelector((state) => {
+  //  return {
+  //    treeData: state.auth.userData.treeData.sort((a, b) => {
+  //      return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
+  //    }),
+  //  }
+  //})
 
   const [isEdit, setIsEdit] = useState(false)
   const [displayName, setDisplayName] = useState('')

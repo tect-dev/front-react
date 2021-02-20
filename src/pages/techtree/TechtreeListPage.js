@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import MainWrapper from '../../wrappers/MainWrapper'
-import TechtreeThumbnail, {
-  TechtreeThumbnailCard,
-  TechtreeInfo,
-  TechtreeThumbnailBlock,
-  TechtreeThumbnailImage,
-  TreeThumbnailHeader,
-} from '../../components/TechtreeThumbnail'
+import TechtreeThumbnail from '../../components/TechtreeThumbnail'
+import PlantNewTreeCard from '../../components/PlantNewTreeCard'
 import { TreePageHeader } from './TechtreeDetailPage'
 import { Spinner } from '../../components/Spinner'
 import { Button, DefaultButton } from '../../components/Button'
@@ -62,28 +57,7 @@ export default function TechtreeListPage() {
     <MainWrapper>
       <TreePageHeader>모두의 Forest</TreePageHeader>
       <GridWrapper>
-        {pageNumber === 1 ? (
-          <TechtreeThumbnailCard
-            onClick={() => {
-              if (loginState) {
-                dispatch(createTechtree())
-              } else {
-                alert('로그인이 필요해요')
-              }
-            }}
-            style={{ cursor: 'pointer' }}
-          >
-            <TreeThumbnailHeader>
-              <StyledTitle>새 나무 심기</StyledTitle>
-            </TreeThumbnailHeader>
-            <TechtreeThumbnailBlock>
-              <TechtreeThumbnailImage src={MainIcon} alt="treeIcon" />
-            </TechtreeThumbnailBlock>
-            <TechtreeInfo></TechtreeInfo>
-          </TechtreeThumbnailCard>
-        ) : (
-          ''
-        )}
+        {pageNumber === 1 ? <PlantNewTreeCard /> : ''}
 
         {techtreeList?.map((techtreeData, index) => {
           return (
