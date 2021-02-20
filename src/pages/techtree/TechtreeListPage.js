@@ -10,6 +10,7 @@ import { StyledTitle } from '../../components/TitleInput'
 import TreeIcon from '../../assets/tree.svg'
 import MainIcon from '../../assets/MainIcon.png'
 import { GridWrapper } from '../../wrappers/GridWrapper'
+import PageButtons from '../../components/PageButtons'
 
 import styled from 'styled-components'
 
@@ -19,10 +20,11 @@ import { uid } from 'uid'
 import { createTechtree, readTechtreeList } from '../../redux/techtree'
 import { useDispatch, useSelector } from 'react-redux'
 import { colorPalette, boxShadow } from '../../lib/constants'
+import queryString from 'query-string'
 
-export default function TechtreeListPage() {
+export default function TechtreeListPage({ match, location }) {
   const dispatch = useDispatch()
-
+  //const routingString = location.pathname.split('/')[2].split('?')[0]
   const { techtreeList } = useSelector((state) => {
     return { techtreeList: state.techtree.techtreeList }
   })
@@ -33,13 +35,8 @@ export default function TechtreeListPage() {
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
-  const [pageNumber, setPageNumber] = useState(1)
-  const treePerPage = 20
-  const pageMaxNumber = Math.floor(treeSum / treePerPage) + 1
-  const pageArray = []
-  for (let i = 0; i < pageMaxNumber; i++) {
-    pageArray.push(i + 1)
-  }
+
+  const pageNumber = queryString.parse(location.search).page
 
   useEffect(() => {
     dispatch(readTechtreeList(pageNumber))
@@ -74,94 +71,12 @@ export default function TechtreeListPage() {
       </GridWrapper>
       <PageButtonArea>
         <PageButtonContainer>
-          {pageArray.map((ele, idx) => {
-            // 1번이랑 마지막은 무조건 렌더링을 해야함.
-            // 최소 5개는 렌더링 해야함.
-            // pageNumber -2, -1, 0 , +1, +2 를 렌더링하고 +3에선 ...을 반환하고 이후 마지막것만 렌더링.
-            // 그러나 pageNumber 가 3보다 작다면 1~5를 렌더링한다.
-
-            if (ele === 1) {
-              if (pageNumber === ele) {
-                return (
-                  <SelectedButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </SelectedButton>
-                )
-              } else {
-                return (
-                  <DefaultButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </DefaultButton>
-                )
-              }
-            }
-
-            if (ele === pageMaxNumber) {
-              if (pageNumber === ele) {
-                return (
-                  <SelectedButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </SelectedButton>
-                )
-              } else {
-                return (
-                  <DefaultButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </DefaultButton>
-                )
-              }
-            }
-
-            if (ele === pageNumber) {
-              return (
-                <SelectedButton
-                  key={idx}
-                  onClick={() => {
-                    setPageNumber(ele)
-                  }}
-                >
-                  {ele}
-                </SelectedButton>
-              )
-            } else if (ele < pageNumber + 3 && ele > pageNumber - 3) {
-              return (
-                <DefaultButton
-                  key={idx}
-                  onClick={() => {
-                    setPageNumber(ele)
-                  }}
-                >
-                  {ele}
-                </DefaultButton>
-              )
-            } else if (ele === pageNumber + 3) {
-              return <>...</>
-            } else if (ele === pageNumber - 3) {
-              return <>...</>
-            } else {
-              return
-            }
-          })}
+          <PageButtons
+            pageNumber={pageNumber}
+            treePerPage={20}
+            postSum={treeSum}
+            routingString={`forest`}
+          />
         </PageButtonContainer>
       </PageButtonArea>
     </MainWrapper>
@@ -177,8 +92,4 @@ const PageButtonArea = styled.div`
   display: grid;
   justify-items: center;
   padding: 1rem;
-`
-
-const SelectedButton = styled(DefaultButton)`
-  background-color: ${colorPalette.mainGreen};
 `

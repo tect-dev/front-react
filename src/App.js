@@ -53,7 +53,7 @@ function App() {
       <ErrorBoundary>
         <Switch>
           <Route path="/" exact={true} component={HomePage} />
-          <Route path="/forest" exact={true} component={TechtreeListPage} />
+          <Route path="/forest" component={TechtreeListPage} />
           <Route path="/tree/:techtreeID" component={TechtreeDetailPage} />
 
           <Route path="/board/:category" exact component={BoardListPage} />
