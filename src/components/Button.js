@@ -20,6 +20,10 @@ export const DefaultButton = styled.button`
   }
 `
 
+export const SelectedButton = styled(DefaultButton)`
+  background-color: ${colorPalette.mainGreen};
+`
+
 const STYLES = ['btn--primary', 'btn--outline']
 const SIZES = ['btn--medium', 'btn--large']
 

@@ -4,6 +4,7 @@ import MainLayout from '../../components/layout/MainLayout'
 import MainWrapper from '../../wrappers/MainWrapper'
 import { readQuestionList, readHashtagResults } from '../../redux/readPost'
 import { Link } from 'react-router-dom'
+import PageButtons from '../../components/PageButtons'
 
 import { Spinner } from '../../components/Spinner'
 import { DefaultButton } from '../../components/Button'
@@ -18,7 +19,7 @@ import {
   boxShadow,
   hoverAction,
   fontSize,
-  mediaSize
+  mediaSize,
 } from '../../lib/constants'
 
 import ErrorPage from '../../components/layout/ErrorPage'
@@ -26,9 +27,15 @@ import NoDataPage from '../../components/layout/NoDataPage'
 
 import { readPostList } from '../../redux/board'
 import { setUserPlace } from '../../redux/auth'
+import queryString from 'query-string'
 
-export default function QuestionListPage({ match }) {
-  const { category } = match.params
+export default function QuestionListPage({ match, location }) {
+  //const category = match.params.category
+  const category = location.pathname.split('/')[2].split('?')[0]
+  console.log('category: ', category)
+  const pageNumber = queryString.parse(location.search).page
+  console.log('pageNumber: ', pageNumber)
+
   const dispatch = useDispatch()
   const { postList, loading, error, postSum } = useSelector((state) => {
     return {
@@ -48,7 +55,7 @@ export default function QuestionListPage({ match }) {
     pageArray.push(i + 1)
   }
 
-  const [pageNumber, setPageNumber] = useState(1)
+  //const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     dispatch(setUserPlace(category))
@@ -120,94 +127,12 @@ export default function QuestionListPage({ match }) {
       </TwoOneMainWapper>
       <PageButtonArea>
         <PageButtonContainer>
-          {pageArray.map((ele, idx) => {
-            // 1번이랑 마지막은 무조건 렌더링을 해야함.
-            // 최소 5개는 렌더링 해야함.
-            // pageNumber -2, -1, 0 , +1, +2 를 렌더링하고 +3에선 ...을 반환하고 이후 마지막것만 렌더링.
-            // 그러나 pageNumber 가 3보다 작다면 1~5를 렌더링한다.
-
-            if (ele === 1) {
-              if (pageNumber === ele) {
-                return (
-                  <SelectedButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </SelectedButton>
-                )
-              } else {
-                return (
-                  <DefaultButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </DefaultButton>
-                )
-              }
-            }
-
-            if (ele === pageMaxNumber) {
-              if (pageNumber === ele) {
-                return (
-                  <SelectedButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </SelectedButton>
-                )
-              } else {
-                return (
-                  <DefaultButton
-                    key={idx}
-                    onClick={() => {
-                      setPageNumber(ele)
-                    }}
-                  >
-                    {ele}
-                  </DefaultButton>
-                )
-              }
-            }
-
-            if (ele === pageNumber) {
-              return (
-                <SelectedButton
-                  key={idx}
-                  onClick={() => {
-                    setPageNumber(ele)
-                  }}
-                >
-                  {ele}
-                </SelectedButton>
-              )
-            } else if (ele < pageNumber + 3 && ele > pageNumber - 3) {
-              return (
-                <DefaultButton
-                  key={idx}
-                  onClick={() => {
-                    setPageNumber(ele)
-                  }}
-                >
-                  {ele}
-                </DefaultButton>
-              )
-            } else if (ele === pageNumber + 3) {
-              return <>...</>
-            } else if (ele === pageNumber - 3) {
-              return <>...</>
-            } else {
-              return
-            }
-          })}
+          <PageButtons
+            pageNumber={pageNumber}
+            treePerPage={10}
+            postSum={postSum}
+            routingString={`board/${category}`}
+          />
         </PageButtonContainer>
       </PageButtonArea>
     </MainWrapper>
@@ -313,10 +238,9 @@ export const ContentSubstring = styled.div`
   color: #999;
   margin-bottom: 22px;
   width: calc(80px + 60vw);
-  overflow: hidden; 
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  
 `
 
 export const LikeComment = styled.div`

@@ -83,26 +83,23 @@ export default function Navbar() {
           >
             <li className="navbar-item">
               <NavLink
-                to={{ pathname: '/forest' }}
+                to={'/forest?page=1'}
                 className="navbar-item-link"
                 style={{ paddingBottom: '5px' }}
               >
                 Forest
               </NavLink>
             </li>
-            {userPlace !== 'main' ? (
-              <li className="navbar-item">
-                <NavLink
-                  to={{ pathname: `/board/${userPlace}` }}
-                  className="navbar-item-link"
-                  style={{ paddingBottom: '5px' }}
-                >
-                  게시판
-                </NavLink>
-              </li>
-            ) : (
-              ''
-            )}
+
+            <li className="navbar-item">
+              <NavLink
+                to={`/board/${userPlace}?page=1`}
+                className="navbar-item-link"
+                style={{ paddingBottom: '5px' }}
+              >
+                Board
+              </NavLink>
+            </li>
 
             {/*     <SearchContainer popup={false}>
               <div
