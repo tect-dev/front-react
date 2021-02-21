@@ -80,7 +80,7 @@ const nameSet = [
   '약학',
 ] //shuffleArray()
 
-const catchPraise1 = 'With Foresty'
+const catchPraise1 = 'With '
 const catchPraise2 = 'Grow Your Forest'
 const catchPraise3 = 'Community By Your Major'
 const catchPraise4 = 'Foresty 의 전공별 게시판'
@@ -145,11 +145,14 @@ export default function HomePage() {
       <DemoTree />
       <HomePageSection>
         <HomePageMiddle>
-          <div>
+          <MiddleSectionTextArea>
             <BigText>{catchPraise3}</BigText>
-            <StyledTitle>{catchPraise4}</StyledTitle>
-            <MediumText>{catchPraise5}</MediumText>
-          </div>
+            <LargeBoldText>{catchPraise4}</LargeBoldText>
+            <br />
+            <br />
+            <br />
+            <div style={{ fontSize: `${fontSize.xsmall}` }}>{catchPraise5}</div>
+          </MiddleSectionTextArea>
           <div>
             <img
               style={{ width: '100%', objectFit: 'cover' }}
@@ -247,14 +250,28 @@ export const HomePageMiddle = styled(HomePageSection)`
   }
 `
 
-export const BigText = styled.div`
-  font-size: ${fontSize.xxlarge};
-  line-height: 50px;
-  font-weight: 700;
-  margin: 2rem;
+export const MiddleSectionTextArea = styled.div`
+  text-align: left;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `
 
-export const MediumText = styled.div``
+export const BigText = styled.div`
+  font-size: 40px;
+  line-height: 45px;
+  font-weight: 900;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+`
+
+export const LargeBoldText = styled.div`
+  all: unset;
+  font-weight: bold;
+  color: ${colorPalette.mainGreen};
+
+  font-size: ${fontSize.large};
+`
 
 export const TreeSumText = styled.div`
   font-size: ${fontSize.xxlarge};
@@ -558,14 +575,12 @@ function OneBlock({ color, name, setIsPopUp, setselectedDepts }) {
   )
 }
 
-function ThreeBlock({ color, name }) {
+function ThreeBlock({ color, name, name2 }) {
   return (
     <WidthThreeBlock
       style={{
         backgroundColor: color,
         color: colorPalette.gray7,
-        fontSize: fontSize.xlarge,
-        fontWeight: 500,
       }}
     >
       <Link
@@ -577,7 +592,11 @@ function ThreeBlock({ color, name }) {
           alignItems: 'center',
         }}
       >
-        {name}
+        <div style={{ display: `inline` }}>
+          <span>{name}</span>
+
+          <span style={{ fontWeight: '700' }}>{name2}</span>
+        </div>
       </Link>
     </WidthThreeBlock>
   )
@@ -626,6 +645,7 @@ export const WidthThreeBlock = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  font-size: 40px;
   box-shadow: ${boxShadow.default};
   &:hover {
     ${hoverAction}
@@ -677,7 +697,11 @@ function DesktopBlocks({ onSetIsPopUp, onSetselectedDepts }) {
         setIsPopUp={onSetIsPopUp}
         setselectedDepts={onSetselectedDepts}
       ></OneBlock>
-      <ThreeBlock color={colorPalette.gray0} name={catchPraise1}></ThreeBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={catchPraise1}
+        name2={'Foresty'}
+      ></ThreeBlock>
       <OneBlock
         color={colorPalette.mainGreen}
         name={nameSet[7]}
@@ -778,7 +802,11 @@ function TabletBlocks({ onSetIsPopUp, onSetselectedDepts }) {
         setselectedDepts={onSetselectedDepts}
       ></OneBlock>
 
-      <ThreeBlock color={colorPalette.gray0} name={catchPraise1}></ThreeBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={catchPraise1}
+        name2={'Foresty'}
+      ></ThreeBlock>
       <OneBlock
         color={colorPalette.mainGreen}
         name={nameSet[4]}
@@ -894,7 +922,11 @@ function MobileBlocks({ onSetIsPopUp, onSetselectedDepts }) {
         setselectedDepts={onSetselectedDepts}
       ></OneBlock>
 
-      <ThreeBlock color={colorPalette.gray0} name={catchPraise1}></ThreeBlock>
+      <ThreeBlock
+        color={colorPalette.gray0}
+        name={catchPraise1}
+        name2={'Foresty'}
+      ></ThreeBlock>
 
       <ThreeBlock color={colorPalette.gray0} name={catchPraise2}></ThreeBlock>
 
