@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import '../../styles/layout/LoginModal.scss'
 import { Button } from '../Button'
 import { Spinner } from '../Spinner'
@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux'
 import { onClickTag } from '../../lib/functions'
 import { window } from 'd3'
 import { useSelector } from 'react-redux'
+import { firebaseInstance } from '../../lib/firebase'
+import firebase from 'firebase/app'
 
 export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
@@ -15,10 +17,11 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [displayName, setDisplayName] = useState()
   const [introduce, setIntroduce] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState()
 
   const { loading } = useSelector((state) => {
     return {
-      loading: state.auth.loading
+      loading: state.auth.loading,
     }
   })
 
@@ -74,7 +77,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
 
   const onEmailSignUp = useCallback(
     async (e) => {
-      e.preventDefault()  
+      e.preventDefault()
       await dispatch(emailSignUp(email, password, displayName, introduce))
       setEmail('')
       setPassword('')
@@ -84,16 +87,46 @@ export const LoginModal = React.memo(({ labelFor }) => {
     [dispatch, email, password, displayName, introduce]
   )
 
+  //const onClickSMSVerify = useCallback((phoneNum) => {
+  //  const phoneNumber = phoneNum
+  //  const appVerifier = window.recaptchaVerifier
+  //  firebaseInstance
+  //    .auth()
+  //    .signInWithPhoneNumber(phoneNumber, appVerifier)
+  //    .then((confirmResult) => {
+  //      // success
+  //      console.log('휴대폰 인증 성공: ', confirmResult)
+  //    })
+  //    .catch((error) => {
+  //      // error
+  //      console.log('휴대폰 인증 실패: ', error)
+  //    })
+  //}, [])
+
+  // useEffect(() => {
+  //   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+  //     'recaptcha-container',
+  //     {
+  //       size: 'invisible',
+  //       // other options
+  //     }
+  //   )
+  // }, [])
+
   return (
     <>
       <div className="login-modal">
-        {loading && <Spinner/>}
+        {loading && <Spinner />}
         <div className="login-modal-display">
-          <label 
+          <label
             className="login-modal-close-btn"
-            htmlFor={labelFor} 
-            onClick={()=>{setTimeout(()=>{setIsSignUp(false)}, 500)}}
-            />
+            htmlFor={labelFor}
+            onClick={() => {
+              setTimeout(() => {
+                setIsSignUp(false)
+              }, 500)
+            }}
+          />
 
           <div className="login-modal-display-logo">Login</div>
           <div className="login-modal-display-body">
@@ -116,6 +149,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 value={password}
                 onChange={onChangePassword}
               />
+
               {isSignUp ? (
                 <input
                   className="login-input"
@@ -170,10 +204,14 @@ export const LoginModal = React.memo(({ labelFor }) => {
             </form>
           </div>
         </div>
-        <label 
+        <label
           className="login-modal-close-area"
           htmlFor={labelFor}
-          onClick={()=>{setTimeout(()=>{setIsSignUp(false)}, 500)}}
+          onClick={() => {
+            setTimeout(() => {
+              setIsSignUp(false)
+            }, 500)
+          }}
         />
       </div>
     </>

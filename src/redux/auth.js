@@ -102,7 +102,7 @@ export const emailLogin = (email, password) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: LOG_IN_FAIL })
-    alert(e)
+    alert('잘못된 로그인 정보입니다.')
   }
 }
 
@@ -121,7 +121,11 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
-    alert(e)
+    if (
+      e.message === 'The email address is already in use by another account.'
+    ) {
+      alert('이미 회원가입한 이메일 입니다.')
+    }
   }
 }
 
