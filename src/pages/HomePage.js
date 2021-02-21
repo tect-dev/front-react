@@ -30,6 +30,7 @@ import {
 import Loader from 'react-loader-spinner'
 import MainIcon from '../assets/MainIcon.png'
 import CountUp from 'react-countup'
+import CSSTransitionGroup, { CSSTransition } from 'react-transition-group';
 
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
@@ -968,6 +969,9 @@ function MobileBlocks({ onSetIsPopUp, onSetselectedDepts }) {
 const PopupWrapper = styled.div`
   display: ${(props) => {
     return props.isPopup ? 'grid' : 'none'
+  }};
+  opacity: ${(props) => {
+    return props.isPopup ? '1' : '0'
   }};
   position: fixed;
   place-items: center;
