@@ -87,11 +87,8 @@ const AnswerContent = styled.div`
 `
 
 const Container = styled.div`
-  background: #fffef8;
-  border-radius: 22px;
-  border: 1px solid #6d9b7b;
-  padding: 20px 20px 20px 20px;
-  margin-bottom: 10px;
+  padding: 10px 0px;
+  box-sizing: border-box;
   `
 const AnswerTextarea = styled.textarea`
   all: unset;

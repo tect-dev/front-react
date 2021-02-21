@@ -104,7 +104,7 @@ export default function PostDetailPage({ match }) {
           ''
         )}
       </PostContainer>
-      <div>
+      <AnswerContainer>
         {answers?.length ? answers.map((answer, idx) => {
           return(
             <Answer
@@ -117,9 +117,8 @@ export default function PostDetailPage({ match }) {
             </Answer>
           )
         }) : null}
-        {/* 나중에 map으로 iteration 돌려야 함. */}
-
-        {user.loginState && 
+      </AnswerContainer>
+      {user.loginState && 
           <AnswerEditor
             user={user}
             postID={postID}
@@ -127,8 +126,6 @@ export default function PostDetailPage({ match }) {
             setAnswers={onSetAnswers}
           />
         }
-        
-      </div>
       <BackButton onClick={e=>{
         e.preventDefault()
         history.push(`/board/${postPlace}`)
@@ -139,6 +136,17 @@ export default function PostDetailPage({ match }) {
     </MainWrapper>
   )
 }
+
+export const AnswerContainer = styled.div`
+  border-radius: 22px;
+  border: 1px solid #6d9b7b;
+  padding: 20px 20px 0px 20px;
+  background: #fffef8;
+  margin-bottom: 10px;
+  & > div:not(div:first-child) {
+    border-top: 0.5px solid #6d9b7b;
+  }
+`
 
 const PlaceContainer = styled.div`
   padding: 40px 20px;
