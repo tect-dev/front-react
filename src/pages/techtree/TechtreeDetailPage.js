@@ -36,8 +36,8 @@ export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
   const { techtreeID } = match.params
 
-  const { loginState, userID } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userID: state.auth.userID }
+  const { userID } = useSelector((state) => {
+    return { userID: state.auth.userID }
   })
   const { loading, isSavingTechtree, isEditingTechtree } = useSelector(
     (state) => {

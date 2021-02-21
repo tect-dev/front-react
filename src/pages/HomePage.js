@@ -18,20 +18,19 @@ import {
 import DoubleSideLayout from '../wrappers/DoubleSideLayout'
 import MarkdownEditor from '../components/MarkdownEditor'
 import MarkdownRenderer from '../components/MarkdownRenderer'
-import { HalfWidthWrapper } from '../wrappers/HalfWidthWrapper'
+
 import TreeMapDemo from '../components/TreeMapDemo'
-import { Spinner } from '../components/Spinner'
+
 import { DefaultButton } from '../components/Button'
 import {
   TitleInput,
   TitleBottomLine,
   StyledTitle,
 } from '../components/TitleInput'
-import Loader from 'react-loader-spinner'
+
 import MainIcon from '../assets/MainIcon.png'
 import HomeImage from '../assets/HomeImage.png'
 import CountUp from 'react-countup'
-import CSSTransitionGroup, { CSSTransition } from 'react-transition-group';
 
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
@@ -44,21 +43,13 @@ import {
   hoverAction,
   fontSize,
 } from '../lib/constants'
-import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
-import {
-  selectNode,
-  readTechtree,
-  updateTechtree,
-  deleteTechtree,
-  changeTreeTitle,
-  startEditDocu,
-  finishEditDocu,
-} from '../redux/demo'
+//import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
+import { selectNode, changeTreeTitle, finishEditDocu } from '../redux/demo'
 import { editTechtree, finishTechtreeEdit } from '../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
 import departments from '../lib/yonseiDepartments.json'
 
-const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
+//const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
 
 const nameSet = [
   '자연대',

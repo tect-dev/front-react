@@ -1,40 +1,47 @@
 import MainWrapper from '../../wrappers/MainWrapper'
 import { Spinner } from '../../components/Spinner'
 import React, { useEffect, useState, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'  
+import { useDispatch, useSelector } from 'react-redux'
 import { readPostDetail, deletePost, likePost } from '../../redux/board'
 import { fontSize, AnonymousSVG } from '../../lib/constants'
 import { Link, useHistory } from 'react-router-dom'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
-import { AnswerEditor, AnswerTextarea } from '../../components/board/AnswerEditor'
+import { AnswerEditor } from '../../components/board/AnswerEditor'
 import { Answer } from '../../components/board/Answer'
 
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export default function PostDetailPage({ match }) {
   const { postID } = match.params
   const dispatch = useDispatch()
   const history = useHistory()
-  const { user, loading, postTitle, postContent, postCreatedAt, 
-    postAuthor, postPlace, postAnswers, postLike } = useSelector(
-    (state) => {
-      return {
-        user: state.auth,
-        loading : state.board.loading,
-        postPlace: state.auth.userPlace,
-        postTitle: state.board.postTitle,
-        postContent: state.board.postContent,
-        postCreatedAt: state.board.postCreatedAt,
-        postAuthor: state.board.postAuthor,
-        postAnswers: state.board.postAnswers,
-        postLike: state.board.postLike
-      }
+  const {
+    user,
+    loading,
+    postTitle,
+    postContent,
+    postCreatedAt,
+    postAuthor,
+    postPlace,
+    postAnswers,
+    postLike,
+  } = useSelector((state) => {
+    return {
+      user: state.auth,
+      loading: state.board.loading,
+      postPlace: state.auth.userPlace,
+      postTitle: state.board.postTitle,
+      postContent: state.board.postContent,
+      postCreatedAt: state.board.postCreatedAt,
+      postAuthor: state.board.postAuthor,
+      postAnswers: state.board.postAnswers,
+      postLike: state.board.postLike,
     }
-  )
-  const [ answers, setAnswers ] = useState(null)
-  const [ isEdit , setIsEdit ] = useState(false)
+  })
+  const [answers, setAnswers] = useState(null)
+  const [isEdit, setIsEdit] = useState(false)
 
-  const onSetIsEdit = useCallback((param)=>{
+  const onSetIsEdit = useCallback((param) => {
     setIsEdit(param)
   }, [])
 
@@ -42,11 +49,11 @@ export default function PostDetailPage({ match }) {
     dispatch(readPostDetail(postID))
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     setAnswers(postAnswers)
   }, postAnswers)
 
-  const onSetAnswers = useCallback(answers => {
+  const onSetAnswers = useCallback((answers) => {
     setAnswers(answers)
   }, [])
 
@@ -55,7 +62,7 @@ export default function PostDetailPage({ match }) {
     dispatch(deletePost(postID))
   }, [dispatch])
 
-  if (loading){
+  if (loading) {
     return (
       <MainWrapper>
         <Spinner />
@@ -71,69 +78,65 @@ export default function PostDetailPage({ match }) {
       <PostContainer>
         <PostHeader>
           <PostHeader_Left>
-            <AnonymousSVG/>
-            <AuthorName>
-              {postAuthor.displayName}
-            </AuthorName>
+            <AnonymousSVG />
+            <AuthorName>{postAuthor.displayName}</AuthorName>
           </PostHeader_Left>
           <Likes
-            onClick={()=>{
+            onClick={() => {
               dispatch(likePost(postID))
             }}
           >
-            좋아요  <span style={{color: "#6d9b7b"}}>{postLike}</span>
+            좋아요 <span style={{ color: '#6d9b7b' }}>{postLike}</span>
           </Likes>
         </PostHeader>
-        <PostTitle>
-          {postTitle}
-        </PostTitle>
+        <PostTitle>{postTitle}</PostTitle>
         <PostContent>
-          <MarkdownRenderer text={postContent} style={{padding: "0px"}}/>
+          <MarkdownRenderer text={postContent} style={{ padding: '0px' }} />
         </PostContent>
         {/* {postCreatedAt} */}
         {user.userID === postAuthor?.firebaseUid ? (
           <PostFooter>
             <Button>
-              <Link to={`edit/${postID}`}>
-                수정
-              </Link>
+              <Link to={`edit/${postID}`}>수정</Link>
             </Button>
-            <Button onClick={onDeleteQuestion}>삭제</Button> 
+            <Button onClick={onDeleteQuestion}>삭제</Button>
           </PostFooter>
         ) : (
           ''
         )}
       </PostContainer>
       <div>
-        {answers?.length ? answers.map((answer, idx) => {
-          return(
-            <Answer
-              answer={answer}
-              answers={answers}
-              setAnswers={onSetAnswers}
-              key={idx}
-              user={user}
-            >
-            </Answer>
-          )
-        }) : null}
+        {answers?.length
+          ? answers.map((answer, idx) => {
+              return (
+                <Answer
+                  answer={answer}
+                  answers={answers}
+                  setAnswers={onSetAnswers}
+                  key={idx}
+                  user={user}
+                ></Answer>
+              )
+            })
+          : null}
         {/* 나중에 map으로 iteration 돌려야 함. */}
 
-        {user.loginState && 
+        {user.loginState && (
           <AnswerEditor
             user={user}
             postID={postID}
             answers={answers}
             setAnswers={onSetAnswers}
           />
-        }
-        
+        )}
       </div>
-      <BackButton onClick={e=>{
-        e.preventDefault()
-        history.push(`/board/${postPlace}`)
-      }}>
-        <HamburgerSVG/>
+      <BackButton
+        onClick={(e) => {
+          e.preventDefault()
+          history.push(`/board/${postPlace}`)
+        }}
+      >
+        <HamburgerSVG />
         <span>목록</span>
       </BackButton>
     </MainWrapper>
@@ -161,7 +164,7 @@ export const PostHeader = styled.div`
   margin-bottom: 17px;
 `
 
-export const PostHeader_Left= styled.div`
+export const PostHeader_Left = styled.div`
   display: flex;
   /* justify-content: space-between; */
   align-items: center;
@@ -217,9 +220,8 @@ export const PostFooter = styled.div`
   flex-direction: row-reverse;
 `
 
-
 export const Button = styled.button`
-  all:unset;
+  all: unset;
   cursor: pointer;
   padding: 5px 20px;
   font-size: ${fontSize.medium};
@@ -230,19 +232,76 @@ export const Button = styled.button`
 `
 
 const HamburgerSVG = () => {
-  return(
-    <svg xmlns="http://www.w3.org/2000/svg" width="17.033" height="10.531" viewBox="0 0 17.033 10.531">
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17.033"
+      height="10.531"
+      viewBox="0 0 17.033 10.531"
+    >
       <g id="그룹_21" data-name="그룹 21" transform="translate(-319 -572)">
         <g id="그룹_12" data-name="그룹 12" transform="translate(320 573)">
           <g id="그룹_10" data-name="그룹 10" transform="translate(3.417)">
-            <line id="선_17" data-name="선 17" x2="11.616" transform="translate(0)" fill="rgba(0,0,0,0)" stroke="#b2c8b4" stroke-linecap="round" stroke-width="2"/>
-            <line id="선_18" data-name="선 18" x2="11.616" transform="translate(0 4.266)" fill="rgba(0,0,0,0)" stroke="#b2c8b4" stroke-linecap="round" stroke-width="2"/>
-            <line id="선_19" data-name="선 19" x2="11.616" transform="translate(0 8.531)" fill="rgba(0,0,0,0)" stroke="#b2c8b4" stroke-linecap="round" stroke-width="2"/>
+            <line
+              id="선_17"
+              data-name="선 17"
+              x2="11.616"
+              transform="translate(0)"
+              fill="rgba(0,0,0,0)"
+              stroke="#b2c8b4"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+            <line
+              id="선_18"
+              data-name="선 18"
+              x2="11.616"
+              transform="translate(0 4.266)"
+              fill="rgba(0,0,0,0)"
+              stroke="#b2c8b4"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+            <line
+              id="선_19"
+              data-name="선 19"
+              x2="11.616"
+              transform="translate(0 8.531)"
+              fill="rgba(0,0,0,0)"
+              stroke="#b2c8b4"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
           </g>
           <g id="그룹_11" data-name="그룹 11">
-            <line id="선_17-2" data-name="선 17" transform="translate(0.035)" fill="rgba(0,0,0,0)" stroke="#b2c8b4" stroke-linecap="round" stroke-width="2"/>
-            <line id="선_18-2" data-name="선 18" transform="translate(0 4.266)" fill="rgba(0,0,0,0)" stroke="#b2c8b4" stroke-linecap="round" stroke-width="2"/>
-            <line id="선_19-2" data-name="선 19" x2="0.001" transform="translate(0 8.531)" fill="rgba(0,0,0,0)" stroke="#b2c8b4" stroke-linecap="round" stroke-width="2"/>
+            <line
+              id="선_17-2"
+              data-name="선 17"
+              transform="translate(0.035)"
+              fill="rgba(0,0,0,0)"
+              stroke="#b2c8b4"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+            <line
+              id="선_18-2"
+              data-name="선 18"
+              transform="translate(0 4.266)"
+              fill="rgba(0,0,0,0)"
+              stroke="#b2c8b4"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+            <line
+              id="선_19-2"
+              data-name="선 19"
+              x2="0.001"
+              transform="translate(0 8.531)"
+              fill="rgba(0,0,0,0)"
+              stroke="#b2c8b4"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
           </g>
         </g>
       </g>

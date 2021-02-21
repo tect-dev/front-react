@@ -11,11 +11,7 @@ import WritePage from './pages/board/WritePage'
 import EditPage from './pages/board/EditPage'
 
 import AboutPage from './pages/AboutPage'
-import QuestionListPage from './pages/question/QuestionListPage'
-import QuestionWritePage from './pages/question/QuestionWritePage'
-import QuestionEditPage from './pages/question/QuestionEditPage'
-import QuestionDetailPage from './pages/question/QuestionDetailPage'
-import QuestionSearchResultPage from './pages/question/QuestionSearchResultPage'
+
 import ProfilePage from './pages/user/ProfilePage'
 import MyTreePage from './pages/user/MyTreePage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -65,21 +61,6 @@ function App() {
           <Route path="/user/:userID" component={ProfilePage} />
           <Route path="/forest/:userID" component={MyTreePage} />
 
-          <Route path="/question/list/:page" component={QuestionListPage} />
-          <Route
-            path="/question/write"
-            exact={true}
-            component={QuestionWritePage}
-          />
-          <Route
-            path="/question/edit/:questionID"
-            component={QuestionEditPage}
-          />
-          <Route
-            path="/searched/:searchValue/:page"
-            component={QuestionSearchResultPage}
-          />
-          <Route path="/question/:questionID" component={QuestionDetailPage} />
           <Route component={NotFoundPage} />
         </Switch>
       </ErrorBoundary>

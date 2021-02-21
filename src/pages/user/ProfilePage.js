@@ -1,23 +1,15 @@
-import React, {
-  useCallback,
-  useDebugValue,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, Link } from 'react-router-dom'
-import MainLayout from '../../components/layout/MainLayout'
+
 import '../../styles/page/user/ProfilePage.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, getUserInfo, updateProfile } from '../../redux/auth'
 import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
-// import { Button } from '../../components/Button'
-import MainWrapper from '../../wrappers/MainWrapper'
-import TechtreeThumbnail from '../../components/TechtreeThumbnail'
-import { fontSize, AnonymousSVG } from '../../lib/constants'
 
-import { sortISOByTimeStamp } from '../../lib/functions'
+import MainWrapper from '../../wrappers/MainWrapper'
+
+import { fontSize, AnonymousSVG } from '../../lib/constants'
 
 export default function ProfilePage({ match }) {
   const history = useHistory()
@@ -39,24 +31,12 @@ export default function ProfilePage({ match }) {
       loading: state.auth.loading,
     }
   })
-  //const { treeData } = useSelector((state) => {
-  //  return {
-  //    treeData: state.auth.userData.treeData.sort((a, b) => {
-  //      return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
-  //    }),
-  //  }
-  //})
 
   const [isEdit, setIsEdit] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [introduce, setIntroduce] = useState('')
 
   const dispatch = useDispatch()
-
-  const onClickLogout = useCallback(() => {
-    dispatch(logout())
-    history.push('/')
-  }, [dispatch])
 
   const onChangeDisplayName = useCallback(
     (e) => {

@@ -1,39 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useEffect } from 'react'
+
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 import PlantNewTreeCard from '../../components/PlantNewTreeCard'
 import { TreePageHeader } from './TechtreeDetailPage'
 import { Spinner } from '../../components/Spinner'
-import { Button, DefaultButton } from '../../components/Button'
-import { StyledTitle } from '../../components/TitleInput'
-import TreeIcon from '../../assets/tree.svg'
-import MainIcon from '../../assets/MainIcon.png'
+
 import { GridWrapper } from '../../wrappers/GridWrapper'
 import PageButtons from '../../components/PageButtons'
 
 import styled from 'styled-components'
 
-import { authService } from '../../lib/firebase'
-import axios from 'axios'
-import { uid } from 'uid'
-import { createTechtree, readTechtreeList } from '../../redux/techtree'
+import { readTechtreeList } from '../../redux/techtree'
 import { useDispatch, useSelector } from 'react-redux'
-import { colorPalette, boxShadow } from '../../lib/constants'
+
 import queryString from 'query-string'
 
 export default function TechtreeListPage({ match, location }) {
   const dispatch = useDispatch()
-  //const routingString = location.pathname.split('/')[2].split('?')[0]
   const { techtreeList } = useSelector((state) => {
     return { techtreeList: state.techtree.techtreeList }
   })
   const { loading, treeSum } = useSelector((state) => {
     return { loading: state.techtree.loading, treeSum: state.techtree.treeSum }
-  })
-
-  const { loginState, userID } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
 
   const pageNumber = queryString.parse(location.search).page

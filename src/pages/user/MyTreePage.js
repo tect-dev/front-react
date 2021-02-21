@@ -4,27 +4,12 @@ import { useHistory } from 'react-router-dom'
 import '../../styles/page/user/ProfilePage.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, getUserInfo } from '../../redux/auth'
-import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
-import { Button } from '../../components/Button'
-import { StyledTitle } from '../../components/TitleInput'
-import TreeIcon from '../../assets/tree.svg'
-import MainIcon from '../../assets/MainIcon.png'
 import MainWrapper from '../../wrappers/MainWrapper'
 import { GridWrapper } from '../../wrappers/GridWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
-import {
-  TechtreeThumbnailCard,
-  TechtreeInfo,
-  TechtreeThumbnailBlock,
-  TechtreeThumbnailImage,
-  TreeThumbnailHeader,
-} from '../../components/TechtreeThumbnail'
 import { TreePageHeader } from '../techtree/TechtreeDetailPage'
 import PlantNewTreeCard from '../../components/PlantNewTreeCard'
-
-import { createTechtree, readTechtreeList } from '../../redux/techtree'
-import { sortISOByTimeStamp } from '../../lib/functions'
 
 export default function MyTreePage({ match }) {
   const history = useHistory()
