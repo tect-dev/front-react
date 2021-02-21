@@ -375,8 +375,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                 initLink()
                 initNode()
                 initLabel()
-                console.log('d3.event.x: ', d3.event.x)
-                console.log('d3.event.y: ', d3.event.y)
               }
             })
             .on('end', (startNode) => {
@@ -388,12 +386,10 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                     (node.y - pointerY) * (node.y - pointerY) <
                   nodeRadius * nodeRadius
                 ) {
-                  console.log('노드:', node)
                   tempPairingNodes.endNodeID = node.id
                   tempPairingNodes.endX = node.x
                   tempPairingNodes.endY = node.y
-                  console.log('출발노드 아이디:', tempPairingNodes.startNodeID)
-                  console.log('도착노드 아이디:', tempPairingNodes.endNodeID)
+
                   // 연결된 노드를 데이터에 반영
                   if (
                     tempPairingNodes.startNodeID !==
@@ -413,7 +409,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                     linkList.push({ ...tempPairingNodes })
                     updateLink()
                     svg.select('.tempLine').style('opacity', '0')
-                    console.log('링크 업데이트:')
                   }
                   svg
                     .select('g')
