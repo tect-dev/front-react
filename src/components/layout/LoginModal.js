@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import '../../styles/layout/LoginModal.scss'
 import { Button } from '../Button'
+import { Spinner } from '../Spinner'
 import { emailLogin, emailSignUp } from '../../redux/auth'
 import { useDispatch } from 'react-redux'
 import { onClickTag } from '../../lib/functions'
 import { window } from 'd3'
+import { useSelector } from 'react-redux'
 
 export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
@@ -13,7 +15,12 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [displayName, setDisplayName] = useState()
   const [introduce, setIntroduce] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
-  const [loginResult, setLoginResult] = useState(null)
+
+  const { loading } = useSelector((state) => {
+    return {
+      loading: state.auth.loading
+    }
+  })
 
   // fancy한 방법인데
   //const onChange = (e) => {
@@ -58,7 +65,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onEmailLogin = useCallback(
     async (e) => {
       e.preventDefault()
-      dispatch(emailLogin(email, password))
+      await dispatch(emailLogin(email, password))
       setEmail('')
       setPassword('')
     },
@@ -66,9 +73,13 @@ export const LoginModal = React.memo(({ labelFor }) => {
   )
 
   const onEmailSignUp = useCallback(
-    (e) => {
-      e.preventDefault()
-      dispatch(emailSignUp(email, password, displayName, introduce))
+    async (e) => {
+      e.preventDefault()  
+      await dispatch(emailSignUp(email, password, displayName, introduce))
+      setEmail('')
+      setPassword('')
+      setDisplayName('')
+      setIntroduce('')
     },
     [dispatch, email, password, displayName, introduce]
   )
@@ -76,8 +87,13 @@ export const LoginModal = React.memo(({ labelFor }) => {
   return (
     <>
       <div className="login-modal">
+        {loading && <Spinner/>}
         <div className="login-modal-display">
-          <label className="login-modal-close-btn" htmlFor={labelFor} />
+          <label 
+            className="login-modal-close-btn"
+            htmlFor={labelFor} 
+            onClick={()=>{setTimeout(()=>{setIsSignUp(false)}, 500)}}
+            />
 
           <div className="login-modal-display-logo">Login</div>
           <div className="login-modal-display-body">
@@ -154,7 +170,11 @@ export const LoginModal = React.memo(({ labelFor }) => {
             </form>
           </div>
         </div>
-        <label className="login-modal-close-area" htmlFor={labelFor} />
+        <label 
+          className="login-modal-close-area"
+          htmlFor={labelFor}
+          onClick={()=>{setTimeout(()=>{setIsSignUp(false)}, 500)}}
+        />
       </div>
     </>
   )
