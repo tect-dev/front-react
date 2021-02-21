@@ -470,7 +470,7 @@ export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
   width: 100%;
   height: 80vh;
   @media (max-width: 650px) {
-    height: inherit;
+    height: auto;
   }
   overflow-y: scroll;
 `
