@@ -1,16 +1,11 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import MainLayout from '../../components/layout/MainLayout'
 import MainWrapper from '../../wrappers/MainWrapper'
-import { readQuestionList, readHashtagResults } from '../../redux/readPost'
 import { Link } from 'react-router-dom'
 import PageButtons from '../../components/PageButtons'
 
 import { Spinner } from '../../components/Spinner'
 import { DefaultButton } from '../../components/Button'
-
-// import { Button } from '../../components/Button'
-import { Pagination } from '../../components/Pagination'
 
 import '../../styles/page/question/QuestionListPage.scss'
 import styled from 'styled-components'
@@ -30,7 +25,6 @@ import { setUserPlace } from '../../redux/auth'
 import queryString from 'query-string'
 
 export default function QuestionListPage({ match, location }) {
-  //const category = match.params.category
   const category = location.pathname.split('/')[2].split('?')[0]
   console.log('category: ', category)
   const pageNumber = queryString.parse(location.search).page

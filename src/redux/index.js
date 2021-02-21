@@ -1,19 +1,11 @@
 import { combineReducers } from 'redux'
 import auth from './auth'
-import readPost from './readPost'
-import createPost from './createPost'
-import updatePost from './updatePost'
-import deletePost from './deletePost'
 import techtree from './techtree'
 import board from './board'
 import demo from './demo'
 
 const rootReducer = combineReducers({
   auth,
-  readPost,
-  createPost,
-  updatePost,
-  deletePost,
   techtree,
   board,
   demo,
