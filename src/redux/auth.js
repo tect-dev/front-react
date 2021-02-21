@@ -50,6 +50,7 @@ const session_login = () => {
     })
     .catch((e) => {
       console.log('getIdToken 오류', e)
+      alert('error! ', e)
     })
 }
 
@@ -69,7 +70,7 @@ const session_signup = (displayName, introduce) => {
       })
     })
     .catch((e) => {
-      console.log('getIdToken 오류', e)
+      alert('error! ', e)
     })
 }
 
@@ -102,7 +103,7 @@ export const emailLogin = (email, password) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: LOG_IN_FAIL })
-    alert(e)
+    alert('error! ', e)
   }
 }
 
@@ -135,6 +136,7 @@ export const logout = () => async (dispatch) => {
   } catch (e) {
     dispatch({ type: LOG_OUT_FAIL })
     console.log('error: ', e)
+    alert('error! ', e)
   }
 }
 
@@ -149,6 +151,7 @@ export const getUserInfo = (userID) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: GET_USER_FAIL, error: e })
+    alert('error! ', e)
   }
 }
 
@@ -169,6 +172,7 @@ export const updateProfile = (userID, displayName, introduce) => async (
     })
   } catch (e) {
     console.log('error: ', e)
+    alert('error! ', e)
   }
 }
 

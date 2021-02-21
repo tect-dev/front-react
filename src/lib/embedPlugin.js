@@ -40,6 +40,7 @@ export const embedPlugin = () => {
         children.splice(index + 1, 1)
       } catch (e) {
         console.log(e)
+        alert('error! ', e)
       }
     }
 

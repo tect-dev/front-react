@@ -25,9 +25,8 @@ import queryString from 'query-string'
 
 export default function QuestionListPage({ match, location }) {
   const category = location.pathname.split('/')[2].split('?')[0]
-  console.log('category: ', category)
+
   const pageNumber = queryString.parse(location.search).page
-  console.log('pageNumber: ', pageNumber)
 
   const dispatch = useDispatch()
   const { postList, loading, error, postSum } = useSelector((state) => {

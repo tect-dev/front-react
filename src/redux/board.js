@@ -87,6 +87,7 @@ export const readPostList = (querystring, pageNumber) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: READ_POST_LIST_FAIL, error: e })
+    alert('error! ', e)
   }
 }
 
@@ -100,6 +101,7 @@ export const readPostDetail = (uid) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: READ_POST_DETAIL_FAIL, error: e })
+    alert('error! ', e)
   }
 }
 
@@ -146,14 +148,11 @@ export const createAnswer = (data) => async (dispatch) => {
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_ANSWER_FAIL, error: e })
+    alert('error! ', e)
   }
 }
 
-export const updatePost = (data) => async (
-  dispatch,
-  getState,
-  { history }
-) => {
+export const updatePost = (data) => async (dispatch, getState, { history }) => {
   dispatch({ type: UPDATE_POST_TRY })
   try {
     //const obj = JSON.stringify(data)
@@ -174,24 +173,23 @@ export const updatePost = (data) => async (
   }
 }
 
-export const updateAnswer = (answerID, data) => async (
-    dispatch,
-  ) => {
+export const updateAnswer = (answerID, data) => async (dispatch) => {
   dispatch({ type: UPDATE_ANSWER_TRY })
   try {
-    await authService.currentUser.getIdToken(true).then( async (idToken) => {
+    await authService.currentUser.getIdToken(true).then(async (idToken) => {
       // const obj = JSON.stringify(data)
       const res = await axios({
         method: 'put',
         url: `${process.env.REACT_APP_BACKEND_URL}/answer/${answerID}`,
         headers: { 'Content-Type': 'application/json' },
-        data: {content: data, firebaseToken: idToken},
+        data: { content: data, firebaseToken: idToken },
       })
     })
     dispatch({ type: UPDATE_ANSWER_SUCCESS })
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: UPDATE_ANSWER_FAIL, error: e })
+    alert('error! ', e)
   }
 }
 
@@ -231,16 +229,14 @@ export const deleteAnswer = (answerID) => async (dispatch) => {
 
 export const likePost = (postID) => async (dispatch) => {
   dispatch({ type: LIKE_POST_TRY })
-  try{
-    await authService.currentUser.getIdToken(true).then( async (idToken) => {
+  try {
+    await authService.currentUser.getIdToken(true).then(async (idToken) => {
       const res = await axios({
         method: 'put',
-        url: `${process.env.REACT_APP_BACKEND_URL}/like/question/like/${postID}`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/like/question/${postID}`,
         headers: { 'Content-Type': 'application/json' },
-        data: {firebaseToken: idToken},
+        data: { firebaseToken: idToken },
       })
-      console.log(res)
-      console.log("뭇느 이")
     })
     await dispatch({ type: LIKE_POST_SUCCESS })
   } catch (e) {
@@ -358,7 +354,7 @@ export default function board(state = initialState, action) {
         ...state,
         loading: false,
         error: action.error,
-        }
+      }
     default:
       return { ...state }
   }

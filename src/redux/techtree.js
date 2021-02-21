@@ -109,6 +109,7 @@ export const createTechtree = () => async (dispatch, getState, { history }) => {
     })
     .catch((e) => {
       console.log('error: ', e)
+      alert('error! ', e)
     })
 }
 
@@ -125,6 +126,7 @@ export const deleteTechtree = (techtreeID) => async (
     history.push('/forest')
   } catch (e) {
     console.log('error: ', e)
+    alert('error! ', e)
   }
 }
 export const updateTechtree = (
@@ -150,6 +152,7 @@ export const updateTechtree = (
   } catch (e) {
     dispatch({ type: UPDATE_TECHTREE_DATA_FAIL })
     console.log('error: ', e)
+    alert('error! ', e)
   }
 }
 export const editTechtree = () => {
@@ -241,6 +244,7 @@ export const createLink = (nodeList, linkList, techtreeData) => async (
     dispatch({ type: CREATE_LINK, linkList: linkList })
   } catch (e) {
     console.log('error: ', e)
+    alert('error! ', e)
   }
 }
 export const deleteNode = (
@@ -316,7 +320,7 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
     })
     dispatch({ type: DELETE_LINK, newLinkList })
   } catch (e) {
-    console.log('error: ', e)
+    alert('error! ', e)
   }
 }
 
@@ -391,6 +395,7 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
     }
   } catch (e) {
     console.log('error_READ_TECHTREE_DATA_FAIL: ', e)
+    alert('error! ', e)
     dispatch({ type: READ_TECHTREE_DATA_FAIL })
   }
 }

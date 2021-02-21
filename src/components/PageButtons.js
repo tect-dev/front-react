@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { DefaultButton, SelectedButton } from './Button'
 
 const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
@@ -29,7 +29,6 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
 
         if (ele == 1) {
           if (pageNum == ele) {
-            console.log('첫번째 번호 버튼 selected:')
             return (
               <SelectedButton
                 key={idx}
@@ -41,7 +40,6 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
               </SelectedButton>
             )
           } else {
-            console.log('첫번째 번호 버튼 default:')
             return (
               <DefaultButton
                 key={idx}
@@ -55,7 +53,6 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
           }
         } else if (ele == pageMaxNumber) {
           if (pageNum == ele) {
-            console.log('마지막 번호 버튼 selected:')
             return (
               <SelectedButton
                 key={idx}
@@ -67,7 +64,6 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
               </SelectedButton>
             )
           } else {
-            console.log('마지막 번호 버튼 default:')
             return (
               <DefaultButton
                 key={idx}
@@ -81,7 +77,6 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
           }
         } else {
           if (ele == pageNum) {
-            console.log('selected:')
             return (
               <SelectedButton
                 key={idx}
@@ -93,14 +88,6 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
               </SelectedButton>
             )
           } else if (ele < pageNum + 3 && pageNum - 3 < ele) {
-            console.log(
-              'default:',
-              ele,
-              pageNum,
-              pageNum + 3,
-              pageNum - 3,
-              ele < pageNum + 3 && pageNum - 3 < ele
-            )
             return (
               <DefaultButton
                 key={idx}
@@ -112,13 +99,10 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
               </DefaultButton>
             )
           } else if (ele == pageNum - 3) {
-            console.log('... 렌더링:')
             return <>...</>
           } else if (ele == pageNum + 3) {
-            console.log('...렌더링:')
             return <>...</>
           } else {
-            console.log('아무것도 렌더링 안함:')
             return
           }
         }
