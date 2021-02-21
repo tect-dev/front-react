@@ -41,7 +41,7 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
           </AuthorName>
         </PostHeader_Left>
         <Likes>
-          좋아요 {answer.eachAnswer.like}
+          좋아요  <span style={{color: "#6d9b7b"}}>{answer.eachAnswer.like}</span>
         </Likes>
       </PostHeader>
       {isEdit 

@@ -2,7 +2,7 @@ import MainWrapper from '../../wrappers/MainWrapper'
 import { Spinner } from '../../components/Spinner'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'  
-import { readPostDetail, deletePost } from '../../redux/board'
+import { readPostDetail, deletePost, likePost } from '../../redux/board'
 import { fontSize, AnonymousSVG } from '../../lib/constants'
 import { Link, useHistory } from 'react-router-dom'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
@@ -76,8 +76,12 @@ export default function PostDetailPage({ match }) {
               {postAuthor.displayName}
             </AuthorName>
           </PostHeader_Left>
-          <Likes>
-            좋아요 {postLike}
+          <Likes
+            onClick={()=>{
+              dispatch(likePost(postID))
+            }}
+          >
+            좋아요  <span style={{color: "#6d9b7b"}}>{postLike}</span>
           </Likes>
         </PostHeader>
         <PostTitle>
@@ -184,9 +188,16 @@ export const AuthorName = styled.div`
   color: #707070;
 `
 
-export const Likes = styled.div`
+export const Likes = styled.button`
+  all: unset;
+  cursor: pointer;
   font-size: ${fontSize.small};
+  font-weight: bold;
   color: #707070;
+
+  &:hover {
+    color: #6d9b7b;
+  }
 `
 
 export const PostTitle = styled.div`

@@ -31,8 +31,9 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
 
   &-display{
     width: 400px;
-    height: 350px;
+    height: 360px;
     background: #fff;
+    border-radius: 30px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     z-index: 2;
     padding: 30px 100px;
