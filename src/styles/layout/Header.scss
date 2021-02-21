@@ -90,6 +90,7 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
   }
 
   .auth-container {
+    
     @include header-button-wrapper;
     justify-content: center;
     // width: 70px; /* header 1 */
@@ -99,6 +100,12 @@ https://www.youtube.com/watch?v=h79yJiTenEo&t=270s  (모달창 소스코드)
     }
 
     .login-container {
+      label {
+        &:hover {
+          color: #69bc69;
+          cursor: pointer;
+        }
+      }
       @include header-button-item;
 
       .login-modal-btn {
