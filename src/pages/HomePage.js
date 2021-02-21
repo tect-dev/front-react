@@ -29,6 +29,7 @@ import {
 } from '../components/TitleInput'
 import Loader from 'react-loader-spinner'
 import MainIcon from '../assets/MainIcon.png'
+import HomeImage from '../assets/HomeImage.png'
 import CountUp from 'react-countup'
 
 import React, { useState, useEffect, useCallback } from 'react'
@@ -58,29 +59,33 @@ import departments from '../lib/yonseiDepartments.json'
 
 const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
 
-const nameSet = shuffleArray([
+const nameSet = [
   '자연대',
   '공대',
   '문과대',
   '상경대',
   '경영대',
-  '생명대',
-  '신과대',
-  '사과대',
   '생과대',
+  '생명대',
+  '사과대',
+  '신과대',
+  '음대',
   '간호대',
   '의대',
   '치대',
   '언더우드',
-  '음대',
   '교육대',
   '글로벌인재',
   '연계전공',
   '약학',
-])
+] //shuffleArray()
 
 const catchPraise1 = 'With Foresty'
 const catchPraise2 = 'Grow Your Forest'
+const catchPraise3 = 'Community By Your Major'
+const catchPraise4 = 'Foresty 의 전공별 게시판'
+const catchPraise5 =
+  '같은 전공끼리 모이는 커뮤니티를 통해 다양한 정보를 공유해 보세요.'
 
 export default function HomePage() {
   const dispatch = useDispatch()
@@ -139,7 +144,19 @@ export default function HomePage() {
       </HomePageHeader>
       <DemoTree />
       <HomePageSection>
-        같은 전공으로 묶이는 커뮤니티를 통해 정보를 공유할 수 있어요
+        <HomePageMiddle>
+          <div>
+            <BigText>{catchPraise3}</BigText>
+            <StyledTitle>{catchPraise4}</StyledTitle>
+            <MediumText>{catchPraise5}</MediumText>
+          </div>
+          <div>
+            <img
+              style={{ width: '100%', objectFit: 'cover' }}
+              src={HomeImage}
+            />
+          </div>
+        </HomePageMiddle>
       </HomePageSection>
       <BlockWrapper>
         {windowSize.width > 1024 ? (
@@ -223,10 +240,26 @@ export const HomePageSection = styled.div`
 
 export const HomePageHeader = styled(HomePageSection)``
 
+export const HomePageMiddle = styled(HomePageSection)`
+  grid-template-columns: 1fr 1fr;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+export const BigText = styled.div`
+  font-size: ${fontSize.xxlarge};
+  line-height: 50px;
+  font-weight: 700;
+  margin: 2rem;
+`
+
+export const MediumText = styled.div``
+
 export const TreeSumText = styled.div`
   font-size: ${fontSize.xxlarge};
   font-weight: 500;
-  color: ${colorPalette.cyan6};
+  color: ${colorPalette.teal6};
   line-height: 42px;
 `
 
@@ -550,6 +583,55 @@ function ThreeBlock({ color, name }) {
   )
 }
 
+export const BlockWrapper = styled.div`
+  display: grid;
+  grid-gap: 25px;
+  align-items: center; // 내부요소들 세로중앙정렬
+  justify-items: center; // 가로 중앙정렬
+  grid-auto-columns: minmax(125px, auto);
+  grid-auto-rows: minmax(125px, auto);
+
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  @media (max-width: 1440px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @media (max-width: 650px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+`
+export const WidthOneBlock = styled.div`
+  grid-row-start: span 1;
+  grid-column-start: span 1;
+  border-radius: 15px;
+  text-align: center;
+  display: grid;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1; // 모바일에서는 작동을 안해!
+  box-shadow: ${boxShadow.default};
+  &:hover {
+    ${hoverAction}
+  }
+`
+export const WidthThreeBlock = styled.div`
+  grid-row-start: span 1;
+  grid-column-start: span 3;
+  text-align: center;
+  border-radius: 15px;
+  display: grid;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  box-shadow: ${boxShadow.default};
+  &:hover {
+    ${hoverAction}
+  }
+`
+
 function DesktopBlocks({ onSetIsPopUp, onSetselectedDepts }) {
   return (
     <>
@@ -667,55 +749,6 @@ function DesktopBlocks({ onSetIsPopUp, onSetselectedDepts }) {
     </>
   )
 }
-
-export const BlockWrapper = styled.div`
-  display: grid;
-  grid-gap: 25px;
-  align-items: center; // 내부요소들 세로중앙정렬
-  justify-items: center; // 가로 중앙정렬
-  grid-auto-columns: minmax(125px, auto);
-  grid-auto-rows: minmax(125px, auto);
-
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  @media (max-width: 1440px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  }
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-  @media (max-width: 650px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-`
-export const WidthOneBlock = styled.div`
-  grid-row-start: span 1;
-  grid-column-start: span 1;
-  border-radius: 35px;
-  text-align: center;
-  display: grid;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 1/1; // 모바일에서는 작동을 안해!
-  box-shadow: ${boxShadow.default};
-  &:hover {
-    ${hoverAction}
-  }
-`
-export const WidthThreeBlock = styled.div`
-  grid-row-start: span 1;
-  grid-column-start: span 3;
-  text-align: center;
-  border-radius: 35px;
-  display: grid;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  box-shadow: ${boxShadow.default};
-  &:hover {
-    ${hoverAction}
-  }
-`
 
 function TabletBlocks({ onSetIsPopUp, onSetselectedDepts }) {
   return (
