@@ -7,30 +7,26 @@ import {
   lightColors,
   darkColors,
 } from 'react-floating-action-button'
-import {
-  FaTimes,
-  FaBars,
-  FaSearch,
-  FaUserAlt,
-  FaQuestion,
-} from 'react-icons/fa'
 
 import { colorPalette } from '../lib/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { createTechtree } from '../redux/techtree'
-import { pointer } from 'd3'
 
 export default function MainWrapperDefault({ children }) {
   const dispatch = useDispatch()
-  const { loginState, userID } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userID: state.auth.userID }
+  const { loginState, userID, emailVerified } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      userID: state.auth.userID,
+      emailVerified: state.auth.emailVerified,
+    }
   })
   return (
     <MainLayout>
       <Navbar />
       <ContentWrapper>{children}</ContentWrapper>
       <Container>
-        {loginState ? (
+        {loginState && emailVerified ? (
           <Button
             tooltip="나무 심기"
             icon="fas fa-plus"
@@ -51,7 +47,7 @@ export default function MainWrapperDefault({ children }) {
               color: lightColors.white,
             }}
             icon="fas fa-plus"
-            tooltip="나무를 심으려면 로그인이 필요해요!"
+            tooltip="나무를 심으려면 이메일 인증이 필요해요!"
           ></Button>
         )}
 
@@ -126,22 +122,42 @@ export const MainWrapperWithoutFAB = ({ children }) => {
 
 export const MainWrapperInTheHomePage = ({ children }) => {
   const dispatch = useDispatch()
-  const { loginState, userID } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userID: state.auth.userID }
+  const { loginState, userID, emailVerified } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      userID: state.auth.userID,
+      emailVerified: state.auth.emailVerified,
+    }
   })
   return (
     <MainLayout>
       <NavbarInTheHomePage />
       <ContentWrapper>{children}</ContentWrapper>
       <Container>
-        <Button
-          tooltip="나무 심기"
-          icon="fa fa-sticky-note"
-          onClick={() => {
-            dispatch(createTechtree())
-          }}
-        />
-
+        {loginState && emailVerified ? (
+          <Button
+            tooltip="나무 심기"
+            icon="fas fa-plus"
+            style={{ curosr: 'pointer' }}
+            onClick={() => {
+              dispatch(createTechtree())
+            }}
+            styles={{
+              backgroundColor: colorPalette.teal5,
+              color: lightColors.white,
+              curosr: 'pointer',
+            }}
+          />
+        ) : (
+          <Button
+            styles={{
+              backgroundColor: colorPalette.teal5,
+              color: lightColors.white,
+            }}
+            icon="fas fa-plus"
+            tooltip="나무를 심으려면 이메일인증이 필요해요!"
+          ></Button>
+        )}
         {loginState ? (
           <Link
             tooltip="내 숲으로 가기"

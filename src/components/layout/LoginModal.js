@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { onClickTag } from '../../lib/functions'
 import { window } from 'd3'
 import { useSelector } from 'react-redux'
-import { firebaseInstance } from '../../lib/firebase'
+import { firebaseInstance, authService } from '../../lib/firebase'
 import firebase from 'firebase/app'
 
 export const LoginModal = React.memo(({ labelFor }) => {
@@ -17,7 +17,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [displayName, setDisplayName] = useState()
   const [introduce, setIntroduce] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
-  const [phoneNumber, setPhoneNumber] = useState()
 
   const { loading } = useSelector((state) => {
     return {
@@ -87,32 +86,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
     [dispatch, email, password, displayName, introduce]
   )
 
-  //const onClickSMSVerify = useCallback((phoneNum) => {
-  //  const phoneNumber = phoneNum
-  //  const appVerifier = window.recaptchaVerifier
-  //  firebaseInstance
-  //    .auth()
-  //    .signInWithPhoneNumber(phoneNumber, appVerifier)
-  //    .then((confirmResult) => {
-  //      // success
-  //      console.log('휴대폰 인증 성공: ', confirmResult)
-  //    })
-  //    .catch((error) => {
-  //      // error
-  //      console.log('휴대폰 인증 실패: ', error)
-  //    })
-  //}, [])
-
-  // useEffect(() => {
-  //   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-  //     'recaptcha-container',
-  //     {
-  //       size: 'invisible',
-  //       // other options
-  //     }
-  //   )
-  // }, [])
-
   return (
     <>
       <div className="login-modal">
@@ -167,7 +140,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 <input
                   className="login-input"
                   type="text"
-                  placeholder="자기 소개를 입력해주세요."
+                  placeholder="한줄 자기 소개를 입력해주세요."
                   required
                   name="introduce"
                   value={introduce}

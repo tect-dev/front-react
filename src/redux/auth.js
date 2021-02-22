@@ -6,10 +6,11 @@ const initialState = {
   loginState: false,
   userID: '000000000000000000000000', // myID 로 고쳐야함
   userNickname: '익명', // myDisplayName 으로 고쳐야함
+  emailVerified: false,
   loading: false,
-  userData: { displayName: '' },
-  userTreeData: [],
-  userPlace: 'main', //내가 어느 게시판 들어갔느냐
+  userData: { displayName: '' }, // 나의 인증정보랑 상관없음. 다른 유저의 데이터가 될수도 있음.
+  userTreeData: [], // 위와 마찬가지. 나의 트리데이터가 아니라, 누군가의 트리데이터임.
+  userPlace: 'main', //내가 어느 게시판 들어갔느냐,
 }
 
 // define ACTION type
@@ -88,6 +89,7 @@ export const checkAuth = (user) => async (dispatch) => {
       loginState: true,
       userNickname: user.displayName,
       userID: user.uid,
+      emailVerified: user.emailVerified,
     })
   }
 }
@@ -115,7 +117,11 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         session_signup(displayName, introduce)
-        //authService.currentUser.sendEmailVerification()
+        authService.currentUser
+          .sendEmailVerification()
+          .then(
+            '인증메일이 발송됐습니다! 메일함을 확인해 주세요. 메일인증이 마무리 되면 회원가입이 마무리됩니다.'
+          )
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {
@@ -224,6 +230,7 @@ export default function auth(state = initialState, action) {
         loginState: false,
         userID: '000000000000000000000000',
         displayName: '익명',
+        emailVerified: false,
       }
     case LOG_OUT_FAIL:
       return {
@@ -260,6 +267,7 @@ export default function auth(state = initialState, action) {
         loginState: action.loginState,
         userNickname: action.userNickname,
         userID: action.userID,
+        emailVerified: action.emailVerified,
       }
     case SET_USER_PLACE:
       return {

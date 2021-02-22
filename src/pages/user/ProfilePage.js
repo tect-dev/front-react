@@ -18,6 +18,7 @@ import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 import { fontSize, AnonymousSVG } from '../../lib/constants'
 
 import { sortISOByTimeStamp } from '../../lib/functions'
+import { authService } from '../../lib/firebase'
 
 export default function ProfilePage({ match }) {
   const history = useHistory()
@@ -29,6 +30,7 @@ export default function ProfilePage({ match }) {
     myDisplayName,
     myPosts,
     loading,
+    emailVerified,
   } = useSelector((state) => {
     return {
       compareID: state.auth.userData?.firebaseUid,
@@ -37,15 +39,9 @@ export default function ProfilePage({ match }) {
       myDisplayName: state.auth.userData.displayName,
       myPosts: state.auth.userData.posts?.question,
       loading: state.auth.loading,
+      emailVerified: state.auth.emailVerified,
     }
   })
-  //const { treeData } = useSelector((state) => {
-  //  return {
-  //    treeData: state.auth.userData.treeData.sort((a, b) => {
-  //      return sortISOByTimeStamp(a.createdAt, b.createdAt, 1)
-  //    }),
-  //  }
-  //})
 
   const [isEdit, setIsEdit] = useState(false)
   const [displayName, setDisplayName] = useState('')
@@ -128,6 +124,20 @@ export default function ProfilePage({ match }) {
           >
             자기소개 수정
           </Button>
+        )}
+
+        {!emailVerified ? (
+          <Button
+            onClick={() => {
+              authService.currentUser.sendEmailVerification().then(()=>{
+                alert('인증메일이 발송됐습니다! 메일함을 확인해 주세요.')
+              })
+            }}
+          >
+            인증메일 다시 보내기
+          </Button>
+        ) : (
+          ''
         )}
       </MyPageContainer>
       <BoardContainer>
