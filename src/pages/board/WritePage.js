@@ -6,7 +6,7 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 
 import { mediaSize, fontSize } from '../../lib/constants'
 
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
@@ -34,6 +34,11 @@ export default function WritePage({ match, prevPost }) {
       history.push('/')
     }
   }, [])
+
+  const previewRef = useRef()
+  useEffect(() => {
+    previewRef.current.scrollTop = previewRef.current.scrollHeight
+  }, [documentText])
 
   const changeTitle = useCallback(
     (e) => {
@@ -71,7 +76,7 @@ export default function WritePage({ match, prevPost }) {
       <DoubleSideLayout>
         <HalfWidthContainer_for_Renderer>
           <Preview> Preview </Preview>
-          <MarkdownRenderer_Container>
+          <MarkdownRenderer_Container ref={previewRef}>
             <MarkdownRenderer text={documentText} />
           </MarkdownRenderer_Container>
         </HalfWidthContainer_for_Renderer>
@@ -122,12 +127,11 @@ export const HalfWidthContainer = styled(HalfWidthWrapper)`
   width: 100%;
 `
 export const HalfWidthContainer_new = styled.div`
-  height: 80vh;
+  height: 70vh;
   width: 100%;
 `
 
 export const HalfWidthContainer_for_Renderer = styled(HalfWidthContainer_new)`
-  height: 80vh;
   ${mediaSize.small} {
     display: none;
   }
@@ -140,6 +144,7 @@ export const MarkdownRenderer_Container = styled.div`
   background: #fffef8;
   border: 1px solid #6d9b7b;
   padding: 20px;
+  height: 70vh;
 `
 
 const MarkdownEditor_Container = styled.div`
