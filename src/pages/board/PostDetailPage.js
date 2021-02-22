@@ -108,10 +108,11 @@ export default function PostDetailPage({ match }) {
           ''
         )}
       </PostContainer>
-      <AnswerContainer>
-        {answers?.length
-          ? answers.map((answer, idx) => {
-              return (
+
+      {answers?.length
+        ? answers.map((answer, idx) => {
+            return (
+              <AnswerContainer>
                 <Answer
                   answer={answer}
                   answers={answers}
@@ -119,10 +120,11 @@ export default function PostDetailPage({ match }) {
                   key={idx}
                   user={user}
                 ></Answer>
-              )
-            })
-          : null}
-      </AnswerContainer>
+              </AnswerContainer>
+            )
+          })
+        : null}
+
       {user.loginState && (
         <AnswerEditor
           user={user}
@@ -159,7 +161,7 @@ const PlaceContainer = styled.div`
   padding: 40px 20px;
   font-size: ${fontSize.xlarge};
   font-weight: bold;
-  color: #707070;
+  //color: #707070;
 `
 
 export const PostContainer = styled.div`
@@ -224,7 +226,8 @@ export const PostTitle = styled.div`
 
 export const PostContent = styled.div`
   font-size: ${fontSize.medium};
-  color: #999;
+  //color: #999;
+  padding: 1.5rem;
   margin-bottom: 66px;
 `
 export const PostFooter = styled.div`
