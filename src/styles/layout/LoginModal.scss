@@ -22,6 +22,7 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
   @media screen and (max-width: 768px) {
     .login-modal-display {
       box-sizing: border-box;
+      border-radius: 0;
       width: 100vw; height: 100vh;
       display: flex;
       flex-flow: column nowrap;
@@ -103,12 +104,15 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
 
   &-close-btn {
     @include pseudo-close-btn;
+    display: relative;
+
+    width: 50px;
   }
 
   &-close-area {
-    position: absolute;
+    position: fixed;
     top: 0; bottom: 0;
-    width: 100%; height: 100%;
+    width: 100vw; height: 100vh;
     z-index : 1;
   }
 }
