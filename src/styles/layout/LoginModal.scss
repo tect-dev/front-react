@@ -28,11 +28,14 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
       flex-flow: column nowrap;
       padding: 30px;
     }
+    .login-modal-close-btn {
+      top: 10px;
+    }
   }
 
   &-display{
     width: 400px;
-    height: 360px;
+    
     background: #fff;
     border-radius: 30px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -44,6 +47,7 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
     transform: translate(-50%, -50%);
 
     &-logo {
+      padding-top: 30px;
       font-size: 48px;
       margin: 0 0 20px 0;
       color: $primary-color;
@@ -80,7 +84,7 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
 
         .login-submit {
           height: 40px;
-          margin: 0 0 20px 0;
+          margin: 10px 0 20px 0;
         }
 
         .auth-help {
@@ -104,8 +108,7 @@ LoginModal 2. 모달창 컨테이너(.logo-modal)를 grid로 설정하면 chekcb
 
   &-close-btn {
     @include pseudo-close-btn;
-    display: relative;
-
+    right: 20px;
     width: 50px;
   }
 
