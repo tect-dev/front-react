@@ -37,8 +37,11 @@ export default function QuestionListPage({ match, location }) {
       postSum: state.board.postSum,
     }
   })
-  const { loginState } = useSelector((state) => {
-    return { loginState: state.auth.loginState }
+  const { loginState, emailVerified } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      emailVerified: state.auth.emailVerified,
+    }
   })
   const postPerPage = 10
   const pageMaxNumber = Math.floor(postSum / postPerPage) + 1
@@ -46,8 +49,6 @@ export default function QuestionListPage({ match, location }) {
   for (let i = 0; i < pageMaxNumber; i++) {
     pageArray.push(i + 1)
   }
-
-  //const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     dispatch(setUserPlace(category))
@@ -78,7 +79,7 @@ export default function QuestionListPage({ match, location }) {
                 <span>최신순</span>{' '}
               </Button2>
               <Button>
-                {loginState ? (
+                {loginState && emailVerified ? (
                   <Link to={`/write/${category}`}>새 글 쓰기</Link>
                 ) : (
                   ''

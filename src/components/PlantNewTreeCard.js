@@ -14,15 +14,20 @@ import { createTechtree } from '../redux/techtree'
 
 const PlantNewTree = () => {
   const dispatch = useDispatch()
-  const { loginState } = useSelector((state) => {
-    return { loginState: state.auth.loginState }
+  const { loginState, emailVerified } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      emailVerified: state.auth.emailVerified,
+    }
   })
   return (
     <>
       <TechtreeThumbnailCard
         onClick={() => {
-          if (loginState) {
+          if (loginState && emailVerified) {
             dispatch(createTechtree())
+          } else if (loginState && !emailVerified) {
+            alert('이메일 인증을 마무리 해주세요!')
           } else {
             alert('로그인이 필요해요')
           }
