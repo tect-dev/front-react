@@ -48,12 +48,10 @@ export default React.memo(function TechtreeMap() {
   React.useEffect(() => {
     if (containerRef.current) {
       initGraph(containerRef.current, nodeList, linkList)
-      //console.log('그래프 생성')
     }
   }, [])
   React.useEffect(() => {
     updateGraph(containerRef.current, dispatch, isEditingTechtree)
-    //console.log('useEffect를 통한 updateGraph 가 호출됨.')
   }, [
     containerRef,
     nodeList,
@@ -419,11 +417,9 @@ function updateGraph(container, dispatch, isEditingTechtree) {
                   tempPairingNodes = {}
                 }
               })
-              //updateNode()
-              //updateLink()
+
               svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
               svg.select('.tempLine').style('opacity', '0')
-              //console.log('드래그 종료: ', pointerX)
             })
         )
     }
