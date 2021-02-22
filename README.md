@@ -1,3 +1,11 @@
+### Git 관리방식
+
+Git Flow 방법을 따라 master-dev-release 브랜치를 중심으로 운영함.
+
+- dev : 코드작업의 중심이 되는 브랜치. dev 브랜치에서 특정기능 구현을 중심으로 브랜치를 만든뒤, 해당 브랜치의 기능이 완성되면 dev 브랜치와 병합한다.
+- release : dev 브랜치에서 갈라져 나와서, logger 나 console.log 같은 디버깅용 코드만 삭제하고 deploy 한다.
+- master : release 가 문제없이 이뤄졌으면 master 와 release 브랜치를 병합한다.
+
 ### 프로젝트 폴더설명
 
 - root : .env나 .prettierrc 같은 설정파일들이 위치
