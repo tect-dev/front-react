@@ -27,9 +27,7 @@ export const TypographyBlock = styled.div`
       }
     }
   }
-  /* font-family: 'Spoqa Han Sans', -apple-system, BlinkMacSystemFont,
-    -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple SD Gothic Neo',
-    arial, 나눔고딕, 'Nanum Gothic', 돋움; */
+
   a {
     color: ${colorPalette.teal7};
     text-decoration: none;
@@ -38,10 +36,7 @@ export const TypographyBlock = styled.div`
       text-decoration: underline;
     }
   }
-  code {
-    font-family: 'Noto Sans KR', 'Fira Mono', source-code-pro, Menlo, Monaco,
-      Consolas, 'Courier New', monospace;
-  }
+
   hr {
     border: none;
     height: 1px;

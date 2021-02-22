@@ -27,11 +27,39 @@ const MarkdownStyledBlock = styled.div`
     ${prismThemes['dracula']}
   }
   word-break: break-all;
+  ol,
+  ul {
+    padding-inline-start: 35px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.5;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  a {
+    color: ${colorPalette.teal7};
+    text-decoration: none;
+    &:hover {
+      color: ${colorPalette.teal6};
+      text-decoration: underline;
+    }
+  }
   pre {
     font-family: 'Noto Sans KR', 'Fira Mono', source-code-pro, Menlo, Monaco,
       Consolas, 'Courier New', monospace;
     font-size: 0.875rem;
     padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     border-radius: 4px;
     line-height: 1.7;
     overflow-x: auto;
@@ -45,8 +73,8 @@ const MarkdownStyledBlock = styled.div`
     max-width: 100%;
     height: auto;
     display: block;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
   iframe {
     width: 768px;
@@ -96,6 +124,43 @@ const MarkdownStyledBlock = styled.div`
   .katex-mathml {
     display: none;
   }
+  .math {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .math-inline {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  blockquote {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid ${colorPalette.cyan5};
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: ${colorPalette.gray0};
+    margin-left: 0;
+    margin-right: 0;
+    padding: 1rem;
+    padding-left: 2rem;
+    color: ${colorPalette.gray9};
+    ul,
+    ol,
+    li {
+    }
+    *:first-child {
+      margin-top: 5px;
+    }
+    *:last-child {
+      margin-bottom: 5px;
+    }
+  }
 `
 
 const MarkdownRenderer = React.memo(function MarkdownRenderingBlock({ text }) {
@@ -111,48 +176,50 @@ const MarkdownRenderer = React.memo(function MarkdownRenderingBlock({ text }) {
   //const exceptionLatexBlockPattern = /^($$)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
 
   useEffect(() => {
-    setHtml(
-      htmlFilter(
-        // unified()
-        remark()
-          .use(remarkParse)
-          .use(breaks)
-          .use(slug)
-          .use(prismPlugin)
-          //.use(remarkHTML)
-          .use(remark2rehype, { allowDangerousHTML: true })
-          .use(raw)
-          .use(math)
-          .use(katex)
-          .use(ryhype2string)
-          .processSync(
-            text
-              .split(codeBlockPattern) // 코드 블럭 뿐만 아니라 레이텍 블럭 기준으로도 자를수있게해야함.
-              .map((ele) => {
-                if (codeBlockPattern.test(ele)) {
-                  return `\n${ele}\n`
-                } else if (latexBlockPattern.test(ele)) {
-                  return `\n${ele}\n`
-                } else {
-                  return ele
-                    .replaceAll(`\n`, '<br />')
-                    .replaceAll(`\`\`\``, '\n```\n')
-                }
-              })
-              .join('')
-          )
-          .toString()
+    throttle(
+      25,
+      setHtml(
+        htmlFilter(
+          // unified()
+          remark()
+            .use(remarkParse)
+            .use(breaks)
+            .use(slug)
+            .use(prismPlugin)
+            //.use(remarkHTML)
+            .use(remark2rehype, { allowDangerousHTML: true })
+            .use(raw)
+            .use(math)
+            .use(katex)
+            .use(ryhype2string)
+            .processSync(
+              text
+              // 코드블럭 시작 이전에는 마크다운 렌더링이 안되는 버그있어서 주석처리함.
+              //.split(codeBlockPattern) // 코드 블럭 뿐만 아니라 레이텍 블럭 기준으로도 자를수있게해야함.
+              //.map((ele) => {
+              //  if (codeBlockPattern.test(ele)) {
+              //    return `\n${ele}\n`
+              //  } else if (latexBlockPattern.test(ele)) {
+              //    return `\n${ele}\n`
+              //  } else {
+              //    return ele
+              //      .replaceAll(`\n`, '<br />')
+              //      .replaceAll(`\`\`\``, '\n```\n')
+              //  }
+              //})
+              //.join('')
+            )
+            .toString()
+        )
       )
     )
   }, [text])
 
   return (
-    <TypographyBlock>
-      <MarkdownStyledBlock
-        className={'dracula'}
-        dangerouslySetInnerHTML={{ __html: html }}
-      ></MarkdownStyledBlock>
-    </TypographyBlock>
+    <MarkdownStyledBlock
+      className={'dracula'}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   )
 })
 

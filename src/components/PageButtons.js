@@ -20,7 +20,7 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
   )
 
   return (
-    <>
+    <div style={{ display: 'inline' }}>
       {pageArray.map((ele, idx) => {
         // 1번이랑 마지막은 무조건 렌더링을 해야함.
         // 최소 5개는 렌더링 해야함.
@@ -99,15 +99,15 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
               </DefaultButton>
             )
           } else if (ele == pageNum - 3) {
-            return <>...</>
+            return <span key={idx}>...</span>
           } else if (ele == pageNum + 3) {
-            return <>...</>
+            return <span key={idx}>...</span>
           } else {
             return
           }
         }
       })}
-    </>
+    </div>
   )
 }
 
