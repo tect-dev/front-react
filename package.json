@@ -59,7 +59,7 @@
     "eject": "react-scripts eject",
     "api": "npx json-server ./dummy.json --port 4000",
     "predeploy": "react-scripts build",
-    "deploy": "aws s3 sync ./build s3://tect-front-dev"
+    "deploy": "aws s3 sync ./build s3://tect-front-dev && aws cloudfront create-invalidation --distribution-id E36AKTZO9F9BO4 --paths '/*'"
   },
   "eslintConfig": {
     "extends": [
