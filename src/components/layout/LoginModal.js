@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { firebaseInstance, authService } from '../../lib/firebase'
 import firebase from 'firebase/app'
+import { mediaSize } from '../../lib/constants'
 
 export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
@@ -18,8 +19,8 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [displayName, setDisplayName] = useState()
   const [introduce, setIntroduce] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
-  const [ isApproved, setIsApproved ] = useState(false)
-  // const [ termsChecked, setTermsChecked ] = useState(false)
+  const termsChecked = useRef(false)
+  const [ showTerms, setShowTerms ] = useState(false)
 
   const { loading } = useSelector((state) => {
     return {
@@ -27,7 +28,6 @@ export const LoginModal = React.memo(({ labelFor }) => {
     }
   })
 
-  const termsChecked = useRef(false)
 
   // fancy한 방법인데
   //const onChange = (e) => {
@@ -81,12 +81,16 @@ export const LoginModal = React.memo(({ labelFor }) => {
 
   const onEmailSignUp = useCallback(
     async (e) => {
-      e.preventDefault()
-      await dispatch(emailSignUp(email, password, displayName, introduce))
-      setEmail('')
-      setPassword('')
-      setDisplayName('')
-      setIntroduce('')
+      if(termsChecked.current){
+        // await dispatch(emailSignUp(email, password, displayName, introduce))
+        setEmail('')
+        setPassword('')
+        setDisplayName('')
+        setIntroduce('')
+      } else {
+        alert("약관에 동의한 후에 가입하실 수 있습니다.")
+        e.preventDefault()
+      }      
     },
     [dispatch, email, password, displayName, introduce]
   )
@@ -102,9 +106,8 @@ export const LoginModal = React.memo(({ labelFor }) => {
             onClick={() => {
               setTimeout(() => {
                 setIsSignUp(false)
-                setIsApproved(false)
                 termsChecked.current = false
-              }, 0)
+              }, 300)
             }}
           />
 
@@ -115,74 +118,26 @@ export const LoginModal = React.memo(({ labelFor }) => {
           </div>
           <div className="login-modal-display-body">
             <form name="devguru-auth" className="login-form" autoComplete="off">
-              {
-                !isSignUp || (isSignUp && isApproved) ? (
-                  <>
-                    <input
-                      id="login-id-input"
-                      className="login-input"
-                      type="email"
-                      placeholder="로그인 이메일을 입력해 주세요."
-                      name="email"
-                      value={email}
-                      onChange={onChangeEmail}
-                    />
-                    <input
-                      id="login-pw-input"
-                      className="login-input"
-                      type="password"
-                      placeholder="로그인 비밀번호를 입력해 주세요."
-                      name="password"
-                      value={password}
-                      onChange={onChangePassword}
-                    />
-                  </>
-                ) : null
-              }
+              <input
+                id="login-id-input"
+                className="login-input"
+                placeholder="로그인 이메일을 입력해 주세요."
+                name="email"
+                value={email}
+                onChange={onChangeEmail}
+              />
+              <input
+                id="login-pw-input"
+                className="login-input"
+                type="password"
+                placeholder="로그인 비밀번호를 입력해 주세요."
+                name="password"
+                value={password}
+                onChange={onChangePassword}
+              />
 
-              {
-                isSignUp && !isApproved ? (
-                  <div>
-                    <Terms/>
-                    <div style={{display: "flex", alignItems: "center", marginBottom: "20px"}}>
-                      <div>
-                        <input
-                          type="checkbox"
-                          id="terms-checked"
-                          onChange={(e)=>{
-                            termsChecked.current = e.target.checked
-                          }}
-                        />
-                      </div>
-                      <span
-                        style={{fontSize: "12px", marginLeft: "5px"}}
-                      >
-                        서비스 이용약관, 개인정보 처리방침, 커뮤니티 이용규칙에 모두 동의합니다.
-                      </span>
-                    </div>
-                    <Button
-                      style={{width: "100%"}}
-                      className="login-submit"
-                      onClick={(e)=>{
-                        e.preventDefault()
-                        if(termsChecked.current){
-                          setIsApproved(true)
-                        } else {
-                          alert("약관에 동의한 후에 진행할 수 있습니다.")
-                          return true
-                        }
-                      }}
-                    >
-                      확인
-                    </Button>
-                  </div>
-                ) : (
-                  null
-                )
-              }
-              
-
-              {isSignUp && isApproved ? (
+              {isSignUp? (
+                <>
                 <input
                   className="login-input"
                   type="text"
@@ -192,11 +147,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                   value={displayName}
                   onChange={onChangedisplayName}
                 />
-              ) : (
-                ''
-              )}
-              {isSignUp && isApproved ? (
-                <input
+                  <input
                   className="login-input"
                   type="text"
                   placeholder="한줄 자기 소개를 입력해주세요."
@@ -205,6 +156,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                   value={introduce}
                   onChange={onChangeIntroduce}
                 />
+                </>
               ) : (
                 ''
               )}
@@ -231,10 +183,51 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 </>
               }
 
-              {isSignUp && isApproved ? (
+              {isSignUp ? (
+                <>
+                <div style={{display: "flex", alignItems: "center", marginBottom: "10px"}}>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id="terms-checked"
+                      value="termsChecked"
+                      required
+                      onChange={(e)=>{
+                        termsChecked.current = e.target.checked
+                      }}
+                    />
+                  </div>
+                  <span
+                    style={{fontSize: "12px", marginLeft: "10px"}}
+                  >
+                    서비스 이용약관, 개인정보 처리방침, 커뮤니티 이용규칙에 모두 동의합니다.
+                  </span>
+                </div>
+                {showTerms
+                  ? <TermsModal>
+                      <TermsButton
+                        onClick={(e)=>{
+                          e.preventDefault()
+                          setShowTerms(false)
+                        }}
+                      >
+                        서비스 이용 약관 닫기
+                      </TermsButton>
+                      <Terms/>
+                    </TermsModal>
+                  : <TermsButton
+                      onClick={(e)=>{
+                        e.preventDefault()
+                        setShowTerms(true)
+                      }}
+                    >
+                      서비스 이용 약관 보기
+                    </TermsButton>
+                }
                 <Button className="login-submit" onClick={onEmailSignUp}>
                   Sign Up
                 </Button>
+                </>
               ) : null}
             </form>
           </div>
@@ -245,9 +238,8 @@ export const LoginModal = React.memo(({ labelFor }) => {
           onClick={() => {
             setTimeout(() => {
               setIsSignUp(false)
-              setIsApproved(false)
               termsChecked.current = false
-            }, 0)
+            }, 300)
           }}
         />
       </div>
@@ -255,13 +247,47 @@ export const LoginModal = React.memo(({ labelFor }) => {
   )
 })
 
+const TermsModal = styled.div`
+  ${mediaSize.small}{
+    position: fixed;
+    z-index: 2;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: white;
+    padding: 30px 10px;
+    box-sizing: border-box;
+  }
+`
+
+const TermsButton = styled.button`
+  box-sizing: border-box;
+  all: unset;
+  font-size: 12px;
+  transition: all ease 0.3s;
+  &:hover{
+    color: #69bc69;
+    transition: all ease 0.3s;
+  }
+  ${mediaSize.small}{
+    color: #69bc69;
+  }
+`
+
 const Terms = () => {
   const Cotainer = styled.div`
+    box-sizing: border-box;
+    background: white;
     width: auto;
     box-sizing: border-box;
-    overflow-y: scroll;
-    height: 150px;
+    height: 100px;
     margin-bottom: 20px;
+    overflow-y: scroll;
+
+    ${mediaSize.small}{
+      height: 75vh;
+      overflow-y: scroll;
+  }
+    
 
     h3 {
       font-size: 18px;
