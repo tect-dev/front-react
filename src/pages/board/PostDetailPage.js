@@ -84,7 +84,7 @@ export default function PostDetailPage({ match }) {
   return (
     <MainWrapper>
       <PlaceContainer>
-        <Link to={`/board/${postPlace}`}>{postPlace}</Link>
+        <Link to={`/board/${postPlace}?page=1`}>{postPlace}</Link>
       </PlaceContainer>
       <PostContainer>
         <PostHeader>
@@ -159,7 +159,8 @@ export default function PostDetailPage({ match }) {
           setAnswers={onSetAnswers}
         />
       )}
-      <BackButton
+      {/*목록을 누르면 어느 페이지로 가야되는가?*/}
+      {/*<BackButton
         onClick={(e) => {
           e.preventDefault()
           history.push(`/board/${postPlace}`)
@@ -167,7 +168,7 @@ export default function PostDetailPage({ match }) {
       >
         <HamburgerSVG />
         <span>목록</span>
-      </BackButton>
+      </BackButton>*/}
     </MainWrapper>
   )
 }
@@ -253,7 +254,8 @@ export const PostTitle = styled.div`
 export const PostContent = styled.div`
   font-size: ${fontSize.medium};
   //color: #999;
-  padding: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   margin-bottom: 66px;
 `
 export const PostFooter = styled.div`

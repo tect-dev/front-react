@@ -17,6 +17,7 @@ const initialState = {
   postLike: 0,
   postAuthor: { firebaseUid: '', displayName: '' },
   postLikeUsers: [],
+  sortingMethod: 'time', // 'time' or 'likes'.
 }
 
 // action types
@@ -61,33 +62,76 @@ const LIKE_ANSWER_TRY = 'board/LIKE_ANSWER_TRY'
 const LIKE_ANSWER_SUCCESS = 'board/LIKE_ANSWER_SUCCESS'
 const LIKE_ANSWER_FAIL = 'board /LIKE_ANSWER_FAIL'
 
-export const readPostList = (querystring, pageNumber) => async (dispatch) => {
+const CHANGE_SORTING_METHOD = 'board/CHANGE_SORTING_METHOD'
+
+export const changeSortingMethod = (category, sortingMethod, pageNumber) => {
+  return { type: CHANGE_SORTING_METHOD, sortingMethod }
+}
+
+export const readPostList = (querystring, sortingMethod, pageNumber) => async (
+  dispatch
+) => {
   dispatch({ type: READ_POST_LIST_TRY })
   try {
-    if (querystring === 'main') {
-      const res = await axios({
-        method: 'get',
-        url: `${process.env.REACT_APP_BACKEND_URL}/question/page/${pageNumber}`,
-      })
-      dispatch({
-        type: READ_POST_LIST_SUCCESS,
-        postList: res.data.question,
-        postSum: res.data.questionSum,
-      })
-    } else {
-      const res = await axios({
-        method: 'get',
-        url: `${process.env.REACT_APP_BACKEND_URL}/search/hash?target=${querystring}&page=${pageNumber}`,
-      })
-      const res2 = await axios({
-        mathod: 'get',
-        url: `${process.env.REACT_APP_BACKEND_URL}/search/hashnum/${querystring}`,
-      })
-      dispatch({
-        type: READ_POST_LIST_SUCCESS,
-        postList: res.data.question,
-        postSum: res2.data.count,
-      })
+    switch (sortingMethod) {
+      case 'time':
+        if (querystring === 'main') {
+          const res = await axios({
+            method: 'get',
+            url: `${process.env.REACT_APP_BACKEND_URL}/question/page/${pageNumber}`,
+          })
+          dispatch({
+            type: READ_POST_LIST_SUCCESS,
+            postList: res.data.question,
+            postSum: res.data.questionSum,
+            sortingMethod,
+          })
+        } else {
+          const res = await axios({
+            method: 'get',
+            url: `${process.env.REACT_APP_BACKEND_URL}/search/hash?target=${querystring}&page=${pageNumber}`,
+          })
+          const res2 = await axios({
+            mathod: 'get',
+            url: `${process.env.REACT_APP_BACKEND_URL}/search/hashnum/${querystring}`,
+          })
+          dispatch({
+            type: READ_POST_LIST_SUCCESS,
+            postList: res.data.question,
+            postSum: res2.data.count,
+            sortingMethod,
+          })
+        }
+        return
+
+      case 'likes':
+        if (querystring === 'main') {
+          const res = await axios({
+            method: 'get',
+            url: `${process.env.REACT_APP_BACKEND_URL}/question/likepage/${pageNumber}`,
+          })
+          dispatch({
+            type: READ_POST_LIST_SUCCESS,
+            postList: res.data.question,
+            postSum: res.data.questionSum,
+            sortingMethod,
+          })
+        } else {
+          const res = await axios({
+            method: 'get',
+            url: `${process.env.REACT_APP_BACKEND_URL}/question/likepage/${pageNumber}`,
+          })
+
+          dispatch({
+            type: READ_POST_LIST_SUCCESS,
+            postList: res.data.question,
+            postSum: res.data.questionSum,
+            sortingMethod,
+          })
+        }
+        return
+      default:
+        return
     }
   } catch (e) {
     console.log('error: ', e)
@@ -264,14 +308,20 @@ export const likeAnswer = (answerID) => async (dispatch) => {
 
 export default function board(state = initialState, action) {
   switch (action.type) {
+    case CHANGE_SORTING_METHOD:
+      return {
+        ...state,
+        sortingMethod: action.sortingMethod,
+      }
     case READ_POST_LIST_TRY:
-      return { ...state, loading: true, postList: [] }
+      return { ...state, loading: true, postList: [], sortingMethod: 'time' }
     case READ_POST_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
         postList: action.postList,
         postSum: action.postSum,
+        sortingMethod: action.sortingMethod,
       }
     case READ_POST_LIST_FAIL:
       return { ...state, loading: false, error: action.error }
@@ -377,6 +427,7 @@ export default function board(state = initialState, action) {
         loading: false,
         error: action.error,
       }
+
     default:
       return { ...state }
   }

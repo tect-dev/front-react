@@ -6,6 +6,7 @@ import PageButtons from '../../components/PageButtons'
 
 import { Spinner } from '../../components/Spinner'
 import { DefaultButton } from '../../components/Button'
+import { StyledTagBlock } from '../../components/TagBlock'
 
 import '../../styles/page/question/QuestionListPage.scss'
 import styled from 'styled-components'
@@ -16,11 +17,12 @@ import {
   fontSize,
   mediaSize,
 } from '../../lib/constants'
+import { isoStringToNaturalLanguage } from '../../lib/functions'
 
 import ErrorPage from '../../components/layout/ErrorPage'
 import NoDataPage from '../../components/layout/NoDataPage'
 
-import { readPostList } from '../../redux/board'
+import { readPostList, changeSortingMethod } from '../../redux/board'
 import { setUserPlace } from '../../redux/auth'
 import queryString from 'query-string'
 
@@ -29,14 +31,17 @@ export default function QuestionListPage({ match, location }) {
 
   const pageNumber = queryString.parse(location.search).page
   const dispatch = useDispatch()
-  const { postList, loading, error, postSum } = useSelector((state) => {
-    return {
-      postList: state.board.postList,
-      loading: state.board.loading,
-      error: state.board.error,
-      postSum: state.board.postSum,
+  const { postList, loading, error, postSum, sortingMethod } = useSelector(
+    (state) => {
+      return {
+        postList: state.board.postList,
+        loading: state.board.loading,
+        error: state.board.error,
+        postSum: state.board.postSum,
+        sortingMethod: state.board.sortingMethod,
+      }
     }
-  })
+  )
   const { loginState, emailVerified } = useSelector((state) => {
     return {
       loginState: state.auth.loginState,
@@ -52,7 +57,7 @@ export default function QuestionListPage({ match, location }) {
 
   useEffect(() => {
     dispatch(setUserPlace(category))
-    dispatch(readPostList(category, pageNumber))
+    dispatch(readPostList(category, sortingMethod, pageNumber))
   }, [pageNumber])
 
   if (loading)
@@ -70,13 +75,35 @@ export default function QuestionListPage({ match, location }) {
           <BoardListHeader>
             <Category>{category === 'main' ? '전체' : category}</Category>
             <Buttons>
-              <Button2>
+              <Button2
+                onClick={async () => {
+                  dispatch(readPostList(category, 'likes', pageNumber))
+                }}
+                style={{
+                  color: () => {
+                    if (sortingMethod == 'likes') {
+                      return colorPalette.mainGreen
+                    }
+                  },
+                }}
+              >
                 {' '}
-                <span>인기순</span>{' '}
+                <span>전체 인기순</span>{' '}
               </Button2>
-              <Button2>
+              <Button2
+                onClick={async () => {
+                  dispatch(readPostList(category, 'time', pageNumber))
+                }}
+                style={{
+                  color: () => {
+                    if (sortingMethod == 'time') {
+                      return colorPalette.mainGreen
+                    }
+                  },
+                }}
+              >
                 {' '}
-                <span>최신순</span>{' '}
+                <span>카테고리 최신순</span>{' '}
               </Button2>
               <Button>
                 {loginState && emailVerified ? (
@@ -97,7 +124,15 @@ export default function QuestionListPage({ match, location }) {
                     {postData.contentSubstring}
                   </ContentSubstring>
                   {/* <div>{postData.createdAt}</div> */}
+
                   <LikeComment>
+                    <StyledTagBlock style={{ marginRight: '10px' }}>
+                      {postData.hashtags[0]}
+                    </StyledTagBlock>
+                    <div style={{ marginRight: '10px' }}>
+                      {isoStringToNaturalLanguage(postData.createdAt)}
+                    </div>
+
                     <div style={{ marginRight: '10px' }}>
                       좋아요 {postData.like}
                     </div>
