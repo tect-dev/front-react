@@ -51,6 +51,8 @@ export default function PostDetailPage({ match }) {
   })
   const [answers, setAnswers] = useState(null)
   const [isEdit, setIsEdit] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [localPostLike, setLocalPostLike] = useState()
 
   const onSetIsEdit = useCallback((param) => {
     setIsEdit(param)
@@ -61,8 +63,21 @@ export default function PostDetailPage({ match }) {
   }, [])
 
   useEffect(() => {
+    setLocalPostLike(postLike)
+    if (
+      postLikeUsers.find((ele) => {
+        return ele === myID
+      })
+    ) {
+      setIsLiked(true)
+    } else {
+      setIsLiked(false)
+    }
+  }, [myID])
+
+  useEffect(() => {
     setAnswers(postAnswers)
-  }, postAnswers)
+  }, [postAnswers])
 
   const onSetAnswers = useCallback((answers) => {
     setAnswers(answers)
@@ -92,29 +107,33 @@ export default function PostDetailPage({ match }) {
             <AnonymousSVG />
             <AuthorName>{postAuthor.displayName}</AuthorName>
           </PostHeader_Left>
-          {postLikeUsers.find((ele) => ele == myID) ? (
+          {isLiked ? (
             <Likes
               onClick={() => {
                 dispatch(likePost(postID))
+                setIsLiked(!isLiked)
+                setLocalPostLike(localPostLike - 1)
               }}
             >
               <img
                 src={LikeSproutGreen}
                 style={{ width: '24px', height: '24px' }}
               />
-              <span style={{ color: '#6d9b7b' }}>{postLike}</span> likes
+              <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
             </Likes>
           ) : (
             <Likes
               onClick={() => {
                 dispatch(likePost(postID))
+                setIsLiked(!isLiked)
+                setLocalPostLike(localPostLike + 1)
               }}
             >
               <img
                 src={LikeSproutGray}
                 style={{ width: '24px', height: '24px' }}
               />
-              <span style={{ color: '#6d9b7b' }}>{postLike}</span> likes
+              <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
             </Likes>
           )}
         </PostHeader>

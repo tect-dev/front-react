@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import {
   PostContainer,
@@ -19,8 +19,26 @@ import { deleteAnswer, updateAnswer, likeAnswer } from '../../redux/board'
 import { useHistory } from 'react-router-dom'
 
 export const Answer = ({ answer, user, answers, setAnswers }) => {
+  const { myID } = useSelector((state) => {
+    return { myID: state.auth.userID }
+  })
   const [isEdit, setIsEdit] = useState(false)
   const [content, setContent] = useState(answer.eachAnswer.content)
+  const [isLiked, setIsLiked] = useState(false)
+  const [localPostLike, setLocalPostLike] = useState(answer.eachAnswer.like)
+  //const answerID = answer.eachAnswer.author?.firebaseUid
+
+  useEffect(() => {
+    if (
+      answer.eachAnswer.like_user.find((ele) => {
+        return ele === myID
+      })
+    ) {
+      setIsLiked(true)
+    } else {
+      setIsLiked(false)
+    }
+  }, [myID])
 
   const onSetContent = useCallback((e) => {
     setContent(e.target.value)
@@ -49,31 +67,33 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
           <AuthorName>{answer.eachAnswer.author.displayName}</AuthorName>
         </PostHeader_Left>
 
-        {true ? (
+        {isLiked ? (
           <Likes
             onClick={() => {
               dispatch(likeAnswer(answer.eachAnswer._id))
+              setIsLiked(!isLiked)
+              setLocalPostLike(localPostLike - 1)
             }}
           >
             <img
               src={LikeSproutGreen}
               style={{ width: '24px', height: '24px' }}
             />
-            <span style={{ color: '#6d9b7b' }}>{answer.eachAnswer.like}</span>{' '}
-            likes
+            <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
           </Likes>
         ) : (
           <Likes
             onClick={() => {
               dispatch(likeAnswer(answer.eachAnswer._id))
+              setIsLiked(!isLiked)
+              setLocalPostLike(localPostLike + 1)
             }}
           >
             <img
               src={LikeSproutGray}
               style={{ width: '24px', height: '24px' }}
             />
-            <span style={{ color: '#6d9b7b' }}>{answer.eachAnswer.like}</span>{' '}
-            likes
+            <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
           </Likes>
         )}
       </PostHeader>
