@@ -335,7 +335,7 @@ export default function board(state = initialState, action) {
         postID: '',
         postCreatedAt: '',
         postAnswers: null,
-        postLike: 0,
+        postLike: null,
         postAuthor: { firebaseUid: '', displayName: '' },
         postLikeUsers: [],
       }
