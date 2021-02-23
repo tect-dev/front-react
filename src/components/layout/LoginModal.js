@@ -53,7 +53,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onChangePassword = useCallback(
     (e) => {
       setPassword(e.target.value)
-      console.log(password)
+
       if (passwordRegex.test(e.target.value)) {
         setPasswordCheck(true)
       } else {
