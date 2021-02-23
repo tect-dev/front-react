@@ -9,6 +9,9 @@ import {
   PostFooter,
   Button,
 } from '../../pages/board/PostDetailPage'
+import LikeSproutGray from '../../assets/LikeSproutGray.svg'
+import LikeSproutGreen from '../../assets/LikeSproutGreen.svg'
+
 import { fontSize, AnonymousSVG, colorPalette } from '../../lib/constants'
 import { setUserPlace } from '../../redux/auth'
 import { useDispatch, useSelector } from 'react-redux'
@@ -45,14 +48,34 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
           <AnonymousSVG />
           <AuthorName>{answer.eachAnswer.author.displayName}</AuthorName>
         </PostHeader_Left>
-        <Likes
-          onClick={() => {
-            dispatch(likeAnswer(answer.eachAnswer._id))
-          }}
-        >
-          좋아요
-          <span style={{ color: '#6d9b7b' }}>{answer.eachAnswer.like}</span>
-        </Likes>
+
+        {true ? (
+          <Likes
+            onClick={() => {
+              dispatch(likeAnswer(answer.eachAnswer._id))
+            }}
+          >
+            <img
+              src={LikeSproutGreen}
+              style={{ width: '24px', height: '24px' }}
+            />
+            <span style={{ color: '#6d9b7b' }}>{answer.eachAnswer.like}</span>{' '}
+            likes
+          </Likes>
+        ) : (
+          <Likes
+            onClick={() => {
+              dispatch(likeAnswer(answer.eachAnswer._id))
+            }}
+          >
+            <img
+              src={LikeSproutGray}
+              style={{ width: '24px', height: '24px' }}
+            />
+            <span style={{ color: '#6d9b7b' }}>{answer.eachAnswer.like}</span>{' '}
+            likes
+          </Likes>
+        )}
       </PostHeader>
       {isEdit ? (
         <AnswerTextarea value={content} onChange={onSetContent} />

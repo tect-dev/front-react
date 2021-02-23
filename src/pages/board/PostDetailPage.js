@@ -22,6 +22,7 @@ export default function PostDetailPage({ match }) {
   const history = useHistory()
   const {
     user,
+    myID,
     loading,
     postTitle,
     postContent,
@@ -30,9 +31,13 @@ export default function PostDetailPage({ match }) {
     postPlace,
     postAnswers,
     postLike,
+    postLikeUsers,
+    myUserInfo,
   } = useSelector((state) => {
     return {
       user: state.auth,
+      myID: state.auth.userID,
+      myUserInfo: state.auth.myUserInfo,
       loading: state.board.loading,
       postPlace: state.auth.userPlace,
       postTitle: state.board.postTitle,
@@ -41,6 +46,7 @@ export default function PostDetailPage({ match }) {
       postAuthor: state.board.postAuthor,
       postAnswers: state.board.postAnswers,
       postLike: state.board.postLike,
+      postLikeUsers: state.board.postLikeUsers,
     }
   })
   const [answers, setAnswers] = useState(null)
@@ -86,14 +92,31 @@ export default function PostDetailPage({ match }) {
             <AnonymousSVG />
             <AuthorName>{postAuthor.displayName}</AuthorName>
           </PostHeader_Left>
-          <Likes
-            onClick={() => {
-              dispatch(likePost(postID))
-            }}
-          >
-            <img src={LikeSproutGray} />
-            <span style={{ color: '#6d9b7b' }}>{postLike}</span> likes
-          </Likes>
+          {postLikeUsers.find((ele) => ele == myID) ? (
+            <Likes
+              onClick={() => {
+                dispatch(likePost(postID))
+              }}
+            >
+              <img
+                src={LikeSproutGreen}
+                style={{ width: '24px', height: '24px' }}
+              />
+              <span style={{ color: '#6d9b7b' }}>{postLike}</span> likes
+            </Likes>
+          ) : (
+            <Likes
+              onClick={() => {
+                dispatch(likePost(postID))
+              }}
+            >
+              <img
+                src={LikeSproutGray}
+                style={{ width: '24px', height: '24px' }}
+              />
+              <span style={{ color: '#6d9b7b' }}>{postLike}</span> likes
+            </Likes>
+          )}
         </PostHeader>
         <PostTitle>{postTitle}</PostTitle>
         <PostContent>

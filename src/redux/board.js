@@ -16,6 +16,7 @@ const initialState = {
   postID: '',
   postLike: 0,
   postAuthor: { firebaseUid: '', displayName: '' },
+  postLikeUsers: [],
 }
 
 // action types
@@ -284,7 +285,9 @@ export default function board(state = initialState, action) {
         postID: '',
         postCreatedAt: '',
         postAnswers: null,
+        postLike: 0,
         postAuthor: { firebaseUid: '', displayName: '' },
+        postLikeUsers: [],
       }
     case READ_POST_DETAIL_SUCCESS:
       return {
@@ -297,6 +300,7 @@ export default function board(state = initialState, action) {
         postLike: action.postData.question.like,
         postCreatedAt: action.postData.question.createdAt,
         postAuthor: action.postData.question.author,
+        postLikeUsers: action.postData.question.like_user,
       }
     case READ_POST_DETAIL_FAIL:
       return { ...state, loading: false, error: action.error }

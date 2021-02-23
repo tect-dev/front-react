@@ -20,6 +20,18 @@ export const DefaultButton = styled.button`
   }
 `
 
+export const LikeButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  font-size: ${fontSize.small};
+
+  font-weight: bold;
+  color: #707070;
+  &:hover {
+    color: #6d9b7b;
+  }
+`
+
 export const SelectedButton = styled(DefaultButton)`
   background-color: ${colorPalette.mainGreen};
 `
