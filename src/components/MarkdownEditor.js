@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useRef, useCallback, useState } from 'react'
 
 import { colorPalette, fontSize } from '../lib/constants'
 
@@ -16,6 +16,7 @@ import axios from 'axios'
 
 const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const [localText, setLocalText] = useState(bindingText)
+  const textareaRef = useRef()
 
   const onChangeText = useCallback(
     (e) => {
@@ -59,9 +60,24 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const addCodeBlock = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText}\n\`\`\`c\nint main () {\n  printf('hello world!');\n  return 0;\n}\n\`\`\``
-      setLocalText(addedContent)
-      bindingSetter(addedContent)
+
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      const newText = `${value.substring(
+        0,
+        selectionStart
+      )}\n\`\`\`c\nint main () {\n  printf('hello world!');\n  return 0;\n}\n\`\`\`\n${value.substring(
+        selectionEnd
+      )}`
+
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
     },
     [localText, bindingSetter]
   )
@@ -69,9 +85,24 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const addMathBlock = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText}\n$$-\\frac{\\hbar^{2}}{2m} \\nabla^{2} \\psi + V \\psi = E \\psi$$`
-      setLocalText(addedContent)
-      bindingSetter(addedContent)
+
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      const newText = `${value.substring(
+        0,
+        selectionStart
+      )}\n$$-\\frac{\\hbar^{2}}{2m} \\nabla^{2} \\psi + V \\psi = E \\psi$$\n${value.substring(
+        selectionEnd
+      )}`
+
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
     },
     [localText, bindingSetter]
   )
@@ -79,9 +110,21 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const addBoldText = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText} **Bold Text**`
-      setLocalText(addedContent)
-      bindingSetter(addedContent)
+
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      const newText = `${value.substring(
+        0,
+        selectionStart
+      )}**Bold Text**${value.substring(selectionEnd)}`
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
     },
     [localText, bindingSetter]
   )
@@ -89,9 +132,22 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const addItalicText = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText} *Italic Text*`
-      setLocalText(addedContent)
-      bindingSetter(addedContent)
+
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      const newText = `${value.substring(
+        0,
+        selectionStart
+      )}*Italic Text*${value.substring(selectionEnd)}`
+
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
     },
     [localText, bindingSetter]
   )
@@ -99,9 +155,21 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const addLargeTitle = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText}\n## Large Title`
-      setLocalText(addedContent)
-      bindingSetter(addedContent)
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      const newText = `${value.substring(
+        0,
+        selectionStart
+      )}## Large Title${value.substring(selectionEnd)}`
+
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
     },
     [localText, bindingSetter]
   )
@@ -109,12 +177,47 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const addLink = useCallback(
     (e) => {
       e.preventDefault()
-      const addedContent = `${localText} [오른쪽 괄호안에는 링크 주소를 적습니다](https://www.foresty.net)`
-      setLocalText(addedContent)
-      bindingSetter(addedContent)
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      const newText =
+        value.substring(0, selectionStart) +
+        '[오른쪽 괄호안에는 링크 주소를 적습니다](https://www.foresty.net)' +
+        value.substring(selectionEnd)
+
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
     },
     [localText, bindingSetter]
   )
+
+  const onKeydownTap = (e) => {
+    //e.preventDefault()
+    if (e.keyCode === 9) {
+      e.preventDefault()
+      const tab = '\t'
+      const value = e.target.value
+      const selectionStart = e.target.selectionStart
+      const selectionEnd = e.target.selectionEnd
+      const newText =
+        value.substring(0, selectionStart) +
+        '  ' +
+        value.substring(selectionEnd)
+
+      setLocalText(newText)
+      bindingSetter(newText)
+      if (textareaRef.current) {
+        textareaRef.current.value = newText
+        textareaRef.current.selectionStart = selectionStart + 2
+        textareaRef.current.selectionEnd = selectionStart + 2
+      }
+    }
+  }
 
   return (
     <div>
@@ -140,6 +243,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
       </MarkdownToolkit>
       <div>
         <StyledTextarea
+          ref={textareaRef}
           id="content"
           placeholder="본문을 적어주세요."
           value={bindingText}
@@ -147,6 +251,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
           maxLength={10000}
           onDrop={onDrop}
           style={{ width: width, height: height }}
+          onKeyDown={onKeydownTap}
         ></StyledTextarea>
       </div>
     </div>
