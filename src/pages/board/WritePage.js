@@ -3,6 +3,7 @@ import DoubleSideLayout from '../../wrappers/DoubleSideLayout'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import MarkdownEditor from '../../components/MarkdownEditor'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
+import Loader from 'react-loader-spinner'
 
 import { mediaSize, fontSize } from '../../lib/constants'
 
@@ -12,6 +13,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { createPost, updatePost } from '../../redux/board'
 import { uid } from 'uid'
+import { colorPalette } from '../../lib/constants'
 
 export default function WritePage({ match, prevPost }) {
   const { category } = match.params
@@ -26,6 +28,9 @@ export default function WritePage({ match, prevPost }) {
   const hashtags = [category]
   const { loginState } = useSelector((state) => {
     return { loginState: state.auth.loginState }
+  })
+  const { loading } = useSelector((state) => {
+    return { loading: state.board.loading }
   })
 
   useEffect(() => {
@@ -97,9 +102,18 @@ export default function WritePage({ match, prevPost }) {
           </MarkdownEditor_Container>
 
           <Hashtags_and_SubmitButton>
-            <SubmitButton onClick={submitData}>
-              {prevPost ? '수정완료' : '작성완료'}
-            </SubmitButton>
+            {loading ? (
+              <Loader
+                type="Grid"
+                color={colorPalette.teal5}
+                height={20}
+                width={20}
+              />
+            ) : (
+              <SubmitButton onClick={submitData}>
+                {prevPost ? '수정완료' : '작성완료'}
+              </SubmitButton>
+            )}
           </Hashtags_and_SubmitButton>
         </HalfWidthContainer_new>
       </DoubleSideLayout>
