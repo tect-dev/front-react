@@ -8,6 +8,7 @@ const initialState = {
   userNickname: '익명', // myDisplayName 으로 고쳐야함
   emailVerified: false,
   loading: false,
+  myUserInfo: {},
   userData: { displayName: '' }, // 나의 인증정보랑 상관없음. 다른 유저의 데이터가 될수도 있음.
   userTreeData: [], // 위와 마찬가지. 나의 트리데이터가 아니라, 누군가의 트리데이터임.
   userPlace: 'main', //내가 어느 게시판 들어갔느냐,
@@ -91,6 +92,7 @@ export const checkAuth = (user) => async (dispatch) => {
       userNickname: user.displayName,
       userID: user.uid,
       emailVerified: user.emailVerified,
+      myUserInfo: user,
     })
   }
 }
@@ -272,6 +274,7 @@ export default function auth(state = initialState, action) {
         userNickname: action.userNickname,
         userID: action.userID,
         emailVerified: action.emailVerified,
+        myUserInfo: action.myUserInfo,
       }
     case SET_USER_PLACE:
       return {

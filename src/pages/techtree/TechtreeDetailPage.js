@@ -8,14 +8,15 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
-import { DefaultButton } from '../../components/Button'
+import { DefaultButton, LikeButton } from '../../components/Button'
 import {
   TitleInput,
   TitleBottomLine,
   StyledTitle,
 } from '../../components/TitleInput'
-
 import Loader from 'react-loader-spinner'
+import LikeSproutGray from '../../assets/LikeSproutGray.svg'
+import LikeSproutGreen from '../../assets/LikeSproutGreen.svg'
 
 import styled from 'styled-components'
 
@@ -166,13 +167,17 @@ export default function TechtreeDetailPage({ match }) {
       <MainWrapper>
         <TreePageHeader>
           Tree
-          <button
+          <LikeButton
             onClick={() => {
               dispatch(likeTree(techtreeID))
             }}
           >
-            좋아요 버튼
-          </button>
+            <img
+              src={LikeSproutGreen}
+              style={{ width: '20px', height: '20px' }}
+            />
+            <span style={{ color: '#6d9b7b' }}>{techtreeData.like}</span> likes
+          </LikeButton>
         </TreePageHeader>
         <DoubleSideLayout>
           <HalfWidthContainer>

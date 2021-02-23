@@ -1,16 +1,15 @@
 import React, { useCallback, useState, useRef } from 'react'
 import '../../styles/layout/LoginModal.scss'
-import { Button } from '../Button'
+import { Button, DefaultButton } from '../Button'
 import { Spinner } from '../Spinner'
 import { emailLogin, emailSignUp } from '../../redux/auth'
 import { useDispatch } from 'react-redux'
 import { onClickTag } from '../../lib/functions'
-import { window } from 'd3'
+
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { firebaseInstance, authService } from '../../lib/firebase'
-import firebase from 'firebase/app'
-import { mediaSize } from '../../lib/constants'
+
+import { colorPalette, mediaSize } from '../../lib/constants'
 
 export const LoginModal = React.memo(({ labelFor }) => {
   const dispatch = useDispatch()
@@ -21,6 +20,10 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const [isSignUp, setIsSignUp] = useState(false)
   const termsChecked = useRef(false)
   const [showTerms, setShowTerms] = useState(false)
+  const [passwordCheck, setPasswordCheck] = useState(false)
+
+  // 6~20자리. 최소 하나이상의 숫자 또는 특수문자를 포함해야함.
+  const passwordRegex = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/
 
   const { loading } = useSelector((state) => {
     return {
@@ -50,8 +53,14 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onChangePassword = useCallback(
     (e) => {
       setPassword(e.target.value)
+      console.log(password)
+      if (passwordRegex.test(e.target.value)) {
+        setPasswordCheck(true)
+      } else {
+        setPasswordCheck(false)
+      }
     },
-    [password]
+    [password, passwordCheck]
   )
 
   const onChangedisplayName = useCallback(
@@ -132,6 +141,12 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 onChange={onChangePassword}
                 required
               />
+              {isSignUp && !passwordCheck ? (
+                <div style={{ fontSize: '12px', color: colorPalette.red3 }}>
+                  비밀번호는 영문 6~20자리 + 숫자 또는 특수문자를
+                  포함해야합니다.
+                </div>
+              ) : null}
 
               {isSignUp ? (
                 <>
@@ -228,9 +243,13 @@ export const LoginModal = React.memo(({ labelFor }) => {
                       서비스 이용 약관 보기
                     </TermsButton>
                   )}
-                  <Button className="login-submit" onClick={onEmailSignUp}>
+                  <DefaultButton
+                    className="login-submit"
+                    onClick={onEmailSignUp}
+                    disabled={!passwordCheck}
+                  >
                     Sign Up
-                  </Button>
+                  </DefaultButton>
                 </>
               ) : null}
             </form>
