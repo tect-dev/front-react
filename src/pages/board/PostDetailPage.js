@@ -11,6 +11,8 @@ import {
   AnswerTextarea,
 } from '../../components/board/AnswerEditor'
 import { Answer } from '../../components/board/Answer'
+import LikeSproutGray from '../../assets/LikeSproutGray.svg'
+import LikeSproutGreen from '../../assets/LikeSproutGreen.svg'
 
 import styled from 'styled-components'
 
@@ -89,7 +91,8 @@ export default function PostDetailPage({ match }) {
               dispatch(likePost(postID))
             }}
           >
-            좋아요 <span style={{ color: '#6d9b7b' }}>{postLike}</span>
+            <img src={LikeSproutGray} />
+            <span style={{ color: '#6d9b7b' }}>{postLike}</span> likes
           </Likes>
         </PostHeader>
         <PostTitle>{postTitle}</PostTitle>

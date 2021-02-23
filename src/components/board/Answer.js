@@ -12,7 +12,7 @@ import {
 import { fontSize, AnonymousSVG, colorPalette } from '../../lib/constants'
 import { setUserPlace } from '../../redux/auth'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteAnswer, updateAnswer } from '../../redux/board'
+import { deleteAnswer, updateAnswer, likeAnswer } from '../../redux/board'
 import { useHistory } from 'react-router-dom'
 
 export const Answer = ({ answer, user, answers, setAnswers }) => {
@@ -45,8 +45,12 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
           <AnonymousSVG />
           <AuthorName>{answer.eachAnswer.author.displayName}</AuthorName>
         </PostHeader_Left>
-        <Likes>
-          좋아요{' '}
+        <Likes
+          onClick={() => {
+            dispatch(likeAnswer(answer.eachAnswer._id))
+          }}
+        >
+          좋아요
           <span style={{ color: '#6d9b7b' }}>{answer.eachAnswer.like}</span>
         </Likes>
       </PostHeader>

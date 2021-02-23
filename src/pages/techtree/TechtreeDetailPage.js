@@ -28,6 +28,7 @@ import {
   changeTechtreeTitle,
   editTechtree,
   finishTechtreeEdit,
+  likeTree,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import { colorPalette, fontSize } from '../../lib/constants'
@@ -163,7 +164,16 @@ export default function TechtreeDetailPage({ match }) {
   } else if (!loading) {
     return (
       <MainWrapper>
-        <TreePageHeader>Tree</TreePageHeader>
+        <TreePageHeader>
+          Tree
+          <button
+            onClick={() => {
+              dispatch(likeTree(techtreeID))
+            }}
+          >
+            좋아요 버튼
+          </button>
+        </TreePageHeader>
         <DoubleSideLayout>
           <HalfWidthContainer>
             <TreeTitleArea>

@@ -52,9 +52,13 @@ const DELETE_ANSWER_TRY = 'board/DELETE_ANSWER_TRY'
 const DELETE_ANSWER_SUCCESS = 'board/DELETE_ANSWER_SUCCESS'
 const DELETE_ANSWER_FAIL = 'board /DELETE_ANSWER_FAIL'
 
-const LIKE_POST_TRY = 'board/DELETE_ANSWER_TRY'
-const LIKE_POST_SUCCESS = 'board/DELETE_ANSWER_SUCCESS'
-const LIKE_POST_FAIL = 'board /DELETE_ANSWER_FAIL'
+const LIKE_POST_TRY = 'board/LIKE_POST_TRY'
+const LIKE_POST_SUCCESS = 'board/LIKE_POST_SUCCESS'
+const LIKE_POST_FAIL = 'board /LIKE_POST_FAIL'
+
+const LIKE_ANSWER_TRY = 'board/LIKE_ANSWER_TRY'
+const LIKE_ANSWER_SUCCESS = 'board/LIKE_ANSWER_SUCCESS'
+const LIKE_ANSWER_FAIL = 'board /LIKE_ANSWER_FAIL'
 
 export const readPostList = (querystring, pageNumber) => async (dispatch) => {
   dispatch({ type: READ_POST_LIST_TRY })
@@ -239,6 +243,24 @@ export const likePost = (postID) => async (dispatch) => {
     await dispatch({ type: LIKE_POST_FAIL, error: e })
   }
 }
+
+export const likeAnswer = (answerID) => async (dispatch) => {
+  dispatch({ type: LIKE_ANSWER_TRY })
+  try {
+    await authService.currentUser.getIdToken(true).then(async (idToken) => {
+      const res = await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/like/answer/${answerID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { firebaseToken: idToken },
+      })
+    })
+    await dispatch({ type: LIKE_ANSWER_SUCCESS })
+  } catch (e) {
+    await dispatch({ type: LIKE_ANSWER_FAIL, error: e })
+  }
+}
+
 export default function board(state = initialState, action) {
   switch (action.type) {
     case READ_POST_LIST_TRY:
