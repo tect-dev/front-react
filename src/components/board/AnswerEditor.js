@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import styled from "styled-components"
+import styled from 'styled-components'
 import { fontSize } from '../../lib/constants'
 import { createAnswer } from '../../redux/board'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,23 +8,25 @@ import { Link } from 'react-router-dom'
 // answer editing 컴포넌트는 맨 밑에 있음.
 
 export const AnswerEditor = ({ postID, answers, setAnswers, user }) => {
-  const [ content, setContent ] = useState('')
+  const [content, setContent] = useState('')
   const dispatch = useDispatch()
-  const onChangeContent = useCallback(e => {
+  const onChangeContent = useCallback((e) => {
     setContent(e.target.value)
   }, [])
-  const onSubmitContent = useCallback(async e => {
+  const onSubmitContent = useCallback(async (e) => {
     e.preventDefault()
 
-    if(!content){
+    if (!content) {
       return
     }
 
-    await dispatch(createAnswer({
-      questionID: postID,
-      contentType: 'answer',
-      content: content,
-    }))
+    await dispatch(
+      createAnswer({
+        questionID: postID,
+        contentType: 'answer',
+        content: content,
+      })
+    )
     setContent('')
     const tempAnswer = {
       eachAnswer: {
@@ -34,12 +36,12 @@ export const AnswerEditor = ({ postID, answers, setAnswers, user }) => {
           //  // MongoDB에서 id를 주므로 추후 socket.io 등을 이용하여
           //  // 사후적으로 _id를 주입할 필요가 있음.
         },
-        createdAt: (new Date()).toISOString(),
+        createdAt: new Date().toISOString(),
         questionID: postID,
         contentType: 'answer',
         content: content,
-        like: 0
-      }
+        like: 0,
+      },
     }
     setAnswers([...answers, tempAnswer])
   })
@@ -52,24 +54,17 @@ export const AnswerEditor = ({ postID, answers, setAnswers, user }) => {
       />
       <AnswerEditor_Right>
         <Anonymous>
-          <span>
+          {/*<span>
             익명
-          </span>
-          <input
-            type="checkbox"
-            id="anonymousCheck"
-          />
-          <label htmlFor="anonymousCheck">
-          </label>
+          </span>*/}
+          <input type="checkbox" id="anonymousCheck" />
+          <label htmlFor="anonymousCheck"></label>
         </Anonymous>
-        <AnswerSubmit onClick={onSubmitContent}>
-          등록
-        </AnswerSubmit>
+        <AnswerSubmit onClick={onSubmitContent}>등록</AnswerSubmit>
       </AnswerEditor_Right>
     </Container>
   )
 }
-
 
 const Container = styled.div`
   padding: 20px;
@@ -90,7 +85,7 @@ const AnswerEditor_Right = styled.div`
 export const AnswerTextarea = styled.textarea`
   all: unset;
   color: #fff;
-  
+
   width: calc(100% - 150px);
 
   &::placeholder {
@@ -123,7 +118,7 @@ const Anonymous = styled.div`
 `
 
 const AnswerSubmit = styled.button`
-  all:unset;
+  all: unset;
   cursor: pointer;
   padding: 5px 20px;
   font-size: ${fontSize.medium};
