@@ -77,6 +77,10 @@ export default function TechtreeDetailPage({ match }) {
 
   const [isEditingDocument, setIsEditingDocument] = useState(false)
 
+  const [localTreeLike, setLocalTreeLike] = useState()
+  const [treeLikeUsers, setTreeLikeUsers] = useState([])
+  const [isLiked, setIsLiked] = useState(false)
+
   useEffect(() => {
     dispatch(readTechtree(techtreeID))
     window.scrollTo(0, 0)
@@ -86,6 +90,20 @@ export default function TechtreeDetailPage({ match }) {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
   }, [selectedNode, dispatch])
+
+  useEffect(() => {
+    setTreeLikeUsers(techtreeData.like_user)
+    setLocalTreeLike(techtreeData.like)
+    if (
+      treeLikeUsers?.find((ele) => {
+        return ele === userID
+      })
+    ) {
+      setIsLiked(true)
+    } else {
+      setIsLiked(false)
+    }
+  }, [techtreeData, userID])
 
   const onChangeDocumentTitle = useCallback(
     (e) => {
@@ -167,17 +185,35 @@ export default function TechtreeDetailPage({ match }) {
       <MainWrapper>
         <TreePageHeader>
           Tree
-          <LikeButton
-            onClick={() => {
-              dispatch(likeTree(techtreeID))
-            }}
-          >
-            <img
-              src={LikeSproutGreen}
-              style={{ width: '20px', height: '20px' }}
-            />
-            <span style={{ color: '#6d9b7b' }}>{techtreeData.like}</span> likes
-          </LikeButton>
+          {isLiked ? (
+            <LikeButton
+              onClick={() => {
+                dispatch(likeTree(techtreeID))
+                setIsLiked(false)
+                setLocalTreeLike(localTreeLike - 1)
+              }}
+            >
+              <img
+                src={LikeSproutGreen}
+                style={{ width: '20px', height: '20px' }}
+              />
+              <span style={{ color: '#6d9b7b' }}>{localTreeLike}</span> likes
+            </LikeButton>
+          ) : (
+            <LikeButton
+              onClick={() => {
+                dispatch(likeTree(techtreeID))
+                setIsLiked(true)
+                setLocalTreeLike(localTreeLike + 1)
+              }}
+            >
+              <img
+                src={LikeSproutGray}
+                style={{ width: '20px', height: '20px' }}
+              />
+              <span style={{ color: '#6d9b7b' }}>{localTreeLike}</span> likes
+            </LikeButton>
+          )}
         </TreePageHeader>
         <DoubleSideLayout>
           <HalfWidthContainer>
