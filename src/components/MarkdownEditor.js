@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState } from 'react'
 
-import { colorPalette, fontSize } from '../lib/constants'
+import { fontSize } from '../lib/constants'
 
 import styled from 'styled-components'
 import {
@@ -35,6 +35,9 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
     const file = e?.dataTransfer?.files[0]
     // input attribute로 accept="image/*"를 지정하지
     // 않았기 때문에 여기서 image만 access 가능하게 처리
+    const value = textareaRef.current.value
+    const selectionStart = textareaRef.current.selectionStart
+    const selectionEnd = textareaRef.current.selectionEnd
 
     if (file.type.startsWith('image/')) {
       const reader = new FileReader()
@@ -49,7 +52,10 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         data: formData,
       })
       const imageUrl = res.data
-      const result = `${localText}![${file.name}](${imageUrl})`
+      const result = `${value.substring(0, selectionStart)}![${
+        file.name
+      }](${imageUrl})${value.substring(selectionEnd)}`
+      //const result = `${localText}![${file.name}](${imageUrl})`
       setLocalText(result)
       bindingSetter(result)
     } else {

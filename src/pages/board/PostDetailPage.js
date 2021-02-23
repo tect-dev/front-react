@@ -63,7 +63,6 @@ export default function PostDetailPage({ match }) {
   }, [])
 
   useEffect(() => {
-    setLocalPostLike(postLike)
     if (
       postLikeUsers.find((ele) => {
         return ele === myID
@@ -73,7 +72,8 @@ export default function PostDetailPage({ match }) {
     } else {
       setIsLiked(false)
     }
-  }, [myID])
+    setLocalPostLike(postLike)
+  }, [myID, postLike])
 
   useEffect(() => {
     setAnswers(postAnswers)

@@ -30,7 +30,7 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
 
   useEffect(() => {
     if (
-      answer.eachAnswer.like_user.find((ele) => {
+      answer.eachAnswer.like_user?.find((ele) => {
         return ele === myID
       })
     ) {
@@ -66,12 +66,11 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
           <AnonymousSVG />
           <AuthorName>{answer.eachAnswer.author.displayName}</AuthorName>
         </PostHeader_Left>
-
-        {isLiked ? (
+        {user.userID === answer?.eachAnswer?.author?.firebaseUid && isLiked ? (
           <Likes
             onClick={() => {
               dispatch(likeAnswer(answer.eachAnswer._id))
-              setIsLiked(!isLiked)
+              setIsLiked(false)
               setLocalPostLike(localPostLike - 1)
             }}
           >
@@ -81,11 +80,12 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
             />
             <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
           </Likes>
-        ) : (
+        ) : null}
+        {user.userID === answer?.eachAnswer?.author?.firebaseUid && !isLiked ? (
           <Likes
             onClick={() => {
               dispatch(likeAnswer(answer.eachAnswer._id))
-              setIsLiked(!isLiked)
+              setIsLiked(true)
               setLocalPostLike(localPostLike + 1)
             }}
           >
@@ -95,7 +95,7 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
             />
             <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
           </Likes>
-        )}
+        ) : null}
       </PostHeader>
       {isEdit ? (
         <AnswerTextarea value={content} onChange={onSetContent} />
