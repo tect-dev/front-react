@@ -70,8 +70,29 @@ const CREATE_TECHTREE_DATA_SUCCESS = 'techtree/CREATE_TECHTREE_DATA_SUCCESS'
 const CHANGE_TECHTREE_TITLE = 'techtree/CHANGE_TECHTREE_TITLE'
 const CHANGE_DOCUMENT = 'tectree/CHANGE_DOCUMENT'
 
+const LIKE_TREE_TRY = 'techtree/LIKE_TREE_TRY'
+const LIKE_TREE_SUCCESS = 'techtree/LIKE_TREE_SUCCESS'
+const LIKE_TREE_FAIL = 'techtree/LIKE_TREE_FAIL'
+
 // updateTechtree: 백엔드에 업데이트를 갱신함.
 // changeTechtree: 클라이언트상에서의 변화.
+
+export const likeTree = (treeID) => async (dispatch) => {
+  dispatch({ type: LIKE_TREE_TRY })
+  try {
+    await authService.currentUser.getIdToken(true).then(async (idToken) => {
+      const res = await axios({
+        method: 'put',
+        url: `${process.env.REACT_APP_BACKEND_URL}/like/techtree/${treeID}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { firebaseToken: idToken },
+      })
+    })
+    await dispatch({ type: LIKE_TREE_SUCCESS })
+  } catch (e) {
+    await dispatch({ type: LIKE_TREE_FAIL, error: e })
+  }
+}
 
 export const changeDocument = (documentTitle, documentText) => {
   return { type: CHANGE_DOCUMENT, documentTitle, documentText }
