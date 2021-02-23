@@ -72,8 +72,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
     async (e) => {
       e.preventDefault()
       await dispatch(emailLogin(email, password))
-      setEmail('')
-      setPassword('')
+      
     },
     [dispatch, email, password]
   )
@@ -81,11 +80,11 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onEmailSignUp = useCallback(
     async (e) => {
       if (termsChecked.current) {
-        // await dispatch(emailSignUp(email, password, displayName, introduce))
-        setEmail('')
-        setPassword('')
-        setDisplayName('')
-        setIntroduce('')
+        dispatch(emailSignUp(email, password, displayName, introduce))
+        //setEmail('')
+        //setPassword('')
+        //setDisplayName('')
+        //setIntroduce('')
       } else {
         alert('약관에 동의한 후에 가입하실 수 있습니다.')
         e.preventDefault()
