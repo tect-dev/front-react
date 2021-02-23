@@ -71,6 +71,7 @@ const session_signup = (displayName, introduce) => {
     })
     .catch((e) => {
       console.log('getIdToken 오류', e)
+      alert('오류가 발생했습니다.')
     })
 }
 
@@ -127,10 +128,13 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
   } catch (e) {
     console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
-    if (
-      e.message === 'The email address is already in use by another account.'
-    ) {
-      alert('이미 회원가입한 이메일 입니다.')
+    switch (e.message) {
+      case 'The email address is already in use by another account.':
+        alert('이미 가입한 이메일 입니다.')
+        return
+      default:
+        alert('오류가 발생했습니다.')
+        return
     }
   }
 }
