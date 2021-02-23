@@ -33,7 +33,6 @@ function App() {
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
-        console.log('user: ', user)
         dispatch(checkAuth(user))
       } else {
         dispatch(checkAuth(user))

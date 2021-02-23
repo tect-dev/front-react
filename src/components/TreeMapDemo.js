@@ -47,12 +47,10 @@ export default React.memo(function TechtreeMap() {
   React.useEffect(() => {
     if (containerRef.current) {
       initGraph(containerRef.current, nodeList, linkList)
-      //console.log('그래프 생성')
     }
   }, [])
   React.useEffect(() => {
     updateGraph(containerRef.current, dispatch, isEditingTechtree)
-    //console.log('useEffect를 통한 updateGraph 가 호출됨.')
   }, [
     containerRef,
     nodeList,
@@ -424,35 +422,8 @@ function updateGraph(container, dispatch, isEditingTechtree) {
               //updateLink()
               svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
               svg.select('.tempLine').style('opacity', '0')
-              //console.log('드래그 종료: ', pointerX)
             })
         )
-      //.on('mouseup', (d) => {
-      //  console.log('노드 위에서 마우스 업: ', d)
-      //  tempPairingNodes.endNodeID = d.id
-      //  tempPairingNodes.endX = d.x
-      //  tempPairingNodes.endY = d.y
-      //  // 연결된 노드를 데이터에 반영
-      //  if (
-      //    tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-      //    tempPairingNodes.startX !== tempPairingNodes.endX &&
-      //    tempPairingNodes.startY !== tempPairingNodes.endY &&
-      //    !linkList.find(
-      //      (element) =>
-      //        element.startNodeID === tempPairingNodes.startNodeID &&
-      //        element.endNodeID === tempPairingNodes.endNodeID
-      //    ) &&
-      //    d3.select('.tempLine').attr('x1') > 1 &&
-      //    d3.select('.tempLine').attr('y1') > 1 &&
-      //    d3.select('.tempLine').style('opacity') != 0
-      //  ) {
-      //    tempPairingNodes.id = `link${uid(20)}`
-      //    linkList.push({ ...tempPairingNodes })
-      //    updateLink()
-      //  }
-      //  svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-      //  tempPairingNodes = {}
-      //})
     }
     // 노드 삭제용 버튼 만들기
     nodeGroup
@@ -602,7 +573,6 @@ function updateGraph(container, dispatch, isEditingTechtree) {
   function updateNode() {
     initNode()
     initLabel()
-    //console.log('노드가 갱신됨.')
   }
 
   function updateLink() {
@@ -615,6 +585,5 @@ function updateGraph(container, dispatch, isEditingTechtree) {
       )
     )
     tempPairingNodes = {}
-    //console.log('링크가 갱신됨')
   }
 }
