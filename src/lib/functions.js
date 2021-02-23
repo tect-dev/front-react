@@ -92,10 +92,13 @@ export function isoStringToNaturalLanguage(isoString) {
   if (isoString.length < 4) {
     return isoString
   } else {
-    return `${isoString.substr(0, 4)}년 ${isoString.substr(
+    return `${isoString.substr(0, 4)}. ${isoString.substr(
       5,
       2
-    )}월 ${isoString.substr(8, 2)}일`
+    )}. ${isoString.substr(8, 2)}. ${isoString.substr(
+      11,
+      2
+    )}:${isoString.substr(14, 2)} `
   }
 }
 
