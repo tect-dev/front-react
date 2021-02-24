@@ -61,16 +61,21 @@ export default function TechtreeDetailPage({ match }) {
     }
   )
 
-  const { techtreeData, nodeList, linkList, techtreeTitle } = useSelector(
-    (state) => {
-      return {
-        techtreeData: state.techtree.techtreeData,
-        nodeList: state.techtree.nodeList,
-        linkList: state.techtree.linkList,
-        techtreeTitle: state.techtree.techtreeTitle,
-      }
+  const {
+    techtreeData,
+    nodeList,
+    linkList,
+    techtreeTitle,
+    treeLikeUsers,
+  } = useSelector((state) => {
+    return {
+      techtreeData: state.techtree.techtreeData,
+      nodeList: state.techtree.nodeList,
+      linkList: state.techtree.linkList,
+      techtreeTitle: state.techtree.techtreeTitle,
+      treeLikeUsers: state.techtree.treeLikeUsers,
     }
-  )
+  })
 
   const [documentTitle, setDocumentTitle] = useState('')
   const [documentText, setDocumentText] = useState('')
@@ -78,7 +83,7 @@ export default function TechtreeDetailPage({ match }) {
   const [isEditingDocument, setIsEditingDocument] = useState(false)
 
   const [localTreeLike, setLocalTreeLike] = useState()
-  const [treeLikeUsers, setTreeLikeUsers] = useState([])
+  //const [treeLikeUsers, setTreeLikeUsers] = useState([])
   const [isLiked, setIsLiked] = useState(false)
 
   useEffect(() => {
@@ -89,10 +94,10 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
-  }, [selectedNode, dispatch])
+    //    setTreeLikeUsers(techtreeData.like_user)
+  }, [selectedNode, techtreeData])
 
   useEffect(() => {
-    setTreeLikeUsers(techtreeData.like_user)
     setLocalTreeLike(techtreeData.like)
     if (
       treeLikeUsers?.find((ele) => {
@@ -103,7 +108,7 @@ export default function TechtreeDetailPage({ match }) {
     } else {
       setIsLiked(false)
     }
-  }, [techtreeData, userID])
+  }, [techtreeData, userID, treeLikeUsers])
 
   const onChangeDocumentTitle = useCallback(
     (e) => {
@@ -188,9 +193,13 @@ export default function TechtreeDetailPage({ match }) {
           {isLiked ? (
             <LikeButton
               onClick={() => {
-                dispatch(likeTree(techtreeID))
-                setIsLiked(false)
-                setLocalTreeLike(localTreeLike - 1)
+                if (loginState) {
+                  dispatch(likeTree(techtreeID))
+                  setIsLiked(false)
+                  setLocalTreeLike(localTreeLike - 1)
+                } else {
+                  alert('로그인이 필요해요!')
+                }
               }}
             >
               <img
@@ -202,9 +211,13 @@ export default function TechtreeDetailPage({ match }) {
           ) : (
             <LikeButton
               onClick={() => {
-                dispatch(likeTree(techtreeID))
-                setIsLiked(true)
-                setLocalTreeLike(localTreeLike + 1)
+                if (loginState) {
+                  dispatch(likeTree(techtreeID))
+                  setIsLiked(true)
+                  setLocalTreeLike(localTreeLike + 1)
+                } else {
+                  alert('로그인이 필요해요!')
+                }
               }}
             >
               <img
@@ -218,7 +231,7 @@ export default function TechtreeDetailPage({ match }) {
         <DoubleSideLayout>
           <HalfWidthContainer>
             <TreeTitleArea>
-              {techtreeData.author.firebaseUid === userID ? (
+              {techtreeData.author?.firebaseUid === userID ? (
                 <TitleInput
                   value={techtreeTitle}
                   placeholder="트리의 주제를 적어주세요!"

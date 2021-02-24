@@ -73,7 +73,11 @@ export default function QuestionListPage({ match, location }) {
       <TwoOneMainWapper>
         <BoardListWrapper>
           <BoardListHeader>
-            <Category>{category === 'main' ? '전체' : category}</Category>
+            <Category>
+              {category !== 'main' && sortingMethod === 'time'
+                ? category
+                : '전체'}
+            </Category>
             <Buttons>
               <Button2
                 onClick={async () => {
@@ -103,7 +107,9 @@ export default function QuestionListPage({ match, location }) {
                 }}
               >
                 {' '}
-                <span>카테고리 최신순</span>{' '}
+                <span>
+                  {category === 'main' ? '전체' : category} 최신순
+                </span>{' '}
               </Button2>
               <Button>
                 {loginState && emailVerified ? (

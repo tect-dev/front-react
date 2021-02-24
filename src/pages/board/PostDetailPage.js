@@ -33,6 +33,7 @@ export default function PostDetailPage({ match }) {
     postLike,
     postLikeUsers,
     myUserInfo,
+    loginState,
   } = useSelector((state) => {
     return {
       user: state.auth,
@@ -47,6 +48,7 @@ export default function PostDetailPage({ match }) {
       postAnswers: state.board.postAnswers,
       postLike: state.board.postLike,
       postLikeUsers: state.board.postLikeUsers,
+      loginState: state.auth.loginState,
     }
   })
   const [answers, setAnswers] = useState(null)
@@ -99,20 +101,28 @@ export default function PostDetailPage({ match }) {
   return (
     <MainWrapper>
       <PlaceContainer>
-        <Link to={`/board/${postPlace}?page=1`}>{postPlace}</Link>
+        {/* <Link to={`/board/${postPlace}?page=1`}>{postPlace}</Link>*/}
       </PlaceContainer>
       <PostContainer>
         <PostHeader>
           <PostHeader_Left>
             <AnonymousSVG />
-            <AuthorName>{postAuthor.displayName}</AuthorName>
+            <AuthorName>
+              <Link to={`/user/${postAuthor.firebaseUid}`}>
+                {postAuthor.displayName}
+              </Link>
+            </AuthorName>
           </PostHeader_Left>
           {isLiked ? (
             <Likes
               onClick={() => {
-                dispatch(likePost(postID))
-                setIsLiked(!isLiked)
-                setLocalPostLike(localPostLike - 1)
+                if (loginState) {
+                  dispatch(likePost(postID))
+                  setIsLiked(!isLiked)
+                  setLocalPostLike(localPostLike - 1)
+                } else {
+                  alert('로그인이 필요해요!')
+                }
               }}
             >
               <img
@@ -124,9 +134,13 @@ export default function PostDetailPage({ match }) {
           ) : (
             <Likes
               onClick={() => {
-                dispatch(likePost(postID))
-                setIsLiked(!isLiked)
-                setLocalPostLike(localPostLike + 1)
+                if (loginState) {
+                  dispatch(likePost(postID))
+                  setIsLiked(!isLiked)
+                  setLocalPostLike(localPostLike + 1)
+                } else {
+                  alert('로그인이 필요해요!')
+                }
               }}
             >
               <img
