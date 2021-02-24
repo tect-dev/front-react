@@ -71,7 +71,7 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
             </Link>
           </AuthorName>
         </PostHeader_Left>
-        {user.userID === answer?.eachAnswer?.author?.firebaseUid && isLiked ? (
+        {answer?.eachAnswer?.author?.firebaseUid && isLiked ? (
           <Likes
             onClick={() => {
               if (loginState) {
@@ -90,7 +90,7 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
             <span style={{ color: '#6d9b7b' }}>{localPostLike}</span> likes
           </Likes>
         ) : null}
-        {user.userID === answer?.eachAnswer?.author?.firebaseUid && !isLiked ? (
+        {answer?.eachAnswer?.author?.firebaseUid && !isLiked ? (
           <Likes
             onClick={() => {
               if (loginState) {
