@@ -22,6 +22,7 @@ const initialState = {
   nodeList: [{}],
   linkList: [{}],
   techtreeTitle: '',
+  treeLikeUsers: [],
   techtreeData: {
     title: 'empty',
     nodeList: [{}],
@@ -526,6 +527,7 @@ export default function techtree(state = initialState, action) {
           name: '',
           body: nodePlaceholder,
         },
+        treeLikeUsers: [],
       }
     case READ_TECHTREE_DATA_SUCCESS:
       return {
@@ -535,6 +537,7 @@ export default function techtree(state = initialState, action) {
         techtreeTitle: action.techtreeData.title,
         nodeList: action.techtreeData.nodeList,
         linkList: action.techtreeData.linkList,
+        treeLikeUsers: action.techtreeData.like_user,
       }
     case READ_TECHTREE_DATA_FAIL:
       return {

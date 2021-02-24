@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 import {
   PostContainer,
   PostHeader,
@@ -19,8 +20,8 @@ import { deleteAnswer, updateAnswer, likeAnswer } from '../../redux/board'
 import { useHistory } from 'react-router-dom'
 
 export const Answer = ({ answer, user, answers, setAnswers }) => {
-  const { myID } = useSelector((state) => {
-    return { myID: state.auth.userID }
+  const { myID, loginState } = useSelector((state) => {
+    return { myID: state.auth.userID, loginState: state.auth.loginState }
   })
   const [isEdit, setIsEdit] = useState(false)
   const [content, setContent] = useState(answer.eachAnswer.content)
@@ -64,14 +65,22 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
       <PostHeader>
         <PostHeader_Left>
           <AnonymousSVG />
-          <AuthorName>{answer.eachAnswer.author.displayName}</AuthorName>
+          <AuthorName>
+            <Link to={`/user/${answer.eachAnswer.author.firebaseUid}`}>
+              {answer.eachAnswer.author.displayName}
+            </Link>
+          </AuthorName>
         </PostHeader_Left>
         {user.userID === answer?.eachAnswer?.author?.firebaseUid && isLiked ? (
           <Likes
             onClick={() => {
-              dispatch(likeAnswer(answer.eachAnswer._id))
-              setIsLiked(false)
-              setLocalPostLike(localPostLike - 1)
+              if (loginState) {
+                dispatch(likeAnswer(answer.eachAnswer._id))
+                setIsLiked(false)
+                setLocalPostLike(localPostLike - 1)
+              } else {
+                alert('로그인이 필요해요!')
+              }
             }}
           >
             <img
@@ -84,9 +93,13 @@ export const Answer = ({ answer, user, answers, setAnswers }) => {
         {user.userID === answer?.eachAnswer?.author?.firebaseUid && !isLiked ? (
           <Likes
             onClick={() => {
-              dispatch(likeAnswer(answer.eachAnswer._id))
-              setIsLiked(true)
-              setLocalPostLike(localPostLike + 1)
+              if (loginState) {
+                dispatch(likeAnswer(answer.eachAnswer._id))
+                setIsLiked(true)
+                setLocalPostLike(localPostLike + 1)
+              } else {
+                alert('로그인이 필요해요!')
+              }
             }}
           >
             <img
