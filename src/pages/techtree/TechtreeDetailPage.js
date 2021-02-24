@@ -243,7 +243,7 @@ export default function TechtreeDetailPage({ match }) {
                   <StyledTitle>{techtreeTitle}</StyledTitle>
 
                   <StyledDisplayName>
-                    <Link to={`/user/${techtreeData.author.firebaseUid}`}>
+                    <Link to={`/forest/${techtreeData.author.firebaseUid}`}>
                       {techtreeData.author.displayName}
                     </Link>
                   </StyledDisplayName>

@@ -548,24 +548,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         svg.select('.tempLine').style('opacity', '0')
       })
   }
-  function preventDefault(e) {
-    e.preventDefault()
-  }
-  var supportsPassive = false
-  try {
-    window.addEventListener(
-      'test',
-      null,
-      Object.defineProperty({}, 'passive', {
-        get: function () {
-          supportsPassive = true
-        },
-      })
-    )
-  } catch (e) {}
-  var wheelOpt = supportsPassive ? { passive: false } : false
-  var wheelEvent =
-    'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel'
+
   initLink()
   initNode()
   initLabel()
