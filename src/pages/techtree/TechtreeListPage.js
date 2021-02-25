@@ -59,12 +59,12 @@ export default function TechtreeListPage({ match, location }) {
         {techtreeList?.map((techtreeData, index) => {
           return (
             <TechtreeThumbnail
+              key={index}
               nodeList={techtreeData.nodeList}
               linkList={techtreeData.linkList}
               techtreeTitle={techtreeData.title}
               techtreeID={techtreeData._id}
               techtreeData={techtreeData}
-              key={index}
             />
           )
         })}

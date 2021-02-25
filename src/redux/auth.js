@@ -51,7 +51,8 @@ const session_login = () => {
       })
     })
     .catch((e) => {
-      console.log('getIdToken 오류', e)
+      //console.log('getIdToken 오류', e)
+      alert('오류가 발생했습니다.')
     })
 }
 
@@ -71,7 +72,7 @@ const session_signup = (displayName, introduce) => {
       })
     })
     .catch((e) => {
-      console.log('getIdToken 오류', e)
+      //console.log('getIdToken 오류', e)
       alert('오류가 발생했습니다.')
     })
 }
@@ -105,7 +106,7 @@ export const emailLogin = (email, password) => async (dispatch) => {
       //session_login()
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: LOG_IN_FAIL })
     alert('잘못된 로그인 정보입니다.')
   }
@@ -128,7 +129,7 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: CREATE_USER_FAIL })
     switch (e.message) {
       case 'The email address is already in use by another account.':
@@ -146,11 +147,10 @@ export const logout = () => async (dispatch) => {
 
   try {
     authService.signOut()
-
     dispatch({ type: LOG_OUT_SUCCESS })
   } catch (e) {
     dispatch({ type: LOG_OUT_FAIL })
-    console.log('error: ', e)
+    //console.log('error: ', e)
   }
 }
 
@@ -163,7 +163,7 @@ export const getUserInfo = (userID) => async (dispatch) => {
     )
     dispatch({ type: GET_USER_SUCCESS, userData: { ...res.data } })
   } catch (e) {
-    console.log('error: ', e)
+    // console.log('error: ', e)
     dispatch({ type: GET_USER_FAIL, error: e })
   }
 }
@@ -184,7 +184,7 @@ export const updateProfile = (userID, displayName, introduce) => async (
       })
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
   }
 }
 

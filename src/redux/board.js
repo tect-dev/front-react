@@ -134,8 +134,9 @@ export const readPostList = (querystring, sortingMethod, pageNumber) => async (
         return
     }
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: READ_POST_LIST_FAIL, error: e })
+    alert('글목록 불러오기 과정에서 오류가 발생했습니다.')
   }
 }
 
@@ -147,8 +148,9 @@ export const readPostDetail = (uid) => async (dispatch) => {
     )
     dispatch({ type: READ_POST_DETAIL_SUCCESS, postData: res.data })
   } catch (e) {
-    console.log('error: ', e)
+    // console.log('error: ', e)
     dispatch({ type: READ_POST_DETAIL_FAIL, error: e })
+    alert('불러오기 과정에서 오류가 발생했습니다.')
   }
 }
 
@@ -193,8 +195,9 @@ export const createAnswer = (data) => async (dispatch) => {
       dispatch({ type: CREATE_ANSWER_SUCCESS })
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: CREATE_ANSWER_FAIL, error: e })
+    alert('답변 생성 과정에서 오류가 발생했습니다.')
   }
 }
 
@@ -233,8 +236,9 @@ export const updateAnswer = (answerID, data) => async (dispatch) => {
     })
     dispatch({ type: UPDATE_ANSWER_SUCCESS })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: UPDATE_ANSWER_FAIL, error: e })
+    alert('답변 업데이트 과정에서 오류가 발생했습니다.')
   }
 }
 
@@ -252,7 +256,7 @@ export const deletePost = (postID) => async (
     await dispatch({ type: DELETE_POST_SUCCESS })
     history.push('/board/main')
   } catch (e) {
-    console.log('error: ', e)
+    // console.log('error: ', e)
     dispatch({ type: DELETE_POST_FAIL, error: e })
     alert('게시글을 삭제하는데 오류가 발생했습니다.')
   }
@@ -266,7 +270,7 @@ export const deleteAnswer = (answerID) => async (dispatch) => {
     })
     dispatch({ type: DELETE_ANSWER_SUCCESS })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: DELETE_ANSWER_FAIL, error: e })
     alert('게시글을 삭제하는데 오류가 발생했습니다.')
   }

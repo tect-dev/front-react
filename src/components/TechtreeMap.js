@@ -25,7 +25,7 @@ const TechtreeThumbnailBlock = styled.div`
   border: 1px solid ${colorPalette.mainGreen};
 `
 
-export default React.memo(function TechtreeMap() {
+const TreeMap = React.memo(function TechtreeMap() {
   const dispatch = useDispatch()
   const containerRef = React.useRef(null)
 
@@ -579,3 +579,5 @@ function updateGraph(container, dispatch, isEditingTechtree) {
     tempPairingNodes = {}
   }
 }
+
+export default TreeMap

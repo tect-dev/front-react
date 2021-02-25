@@ -39,7 +39,7 @@ export const embedPlugin = () => {
         childNode.value = converters[type](label)
         children.splice(index + 1, 1)
       } catch (e) {
-        console.log(e)
+        //console.log(e)
       }
     }
 

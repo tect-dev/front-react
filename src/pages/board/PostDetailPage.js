@@ -156,7 +156,8 @@ export default function PostDetailPage({ match }) {
           <MarkdownRenderer text={postContent} style={{ padding: '0px' }} />
         </PostContent>
         {/* {postCreatedAt} */}
-        {user.userID === postAuthor?.firebaseUid ? (
+        {user.userID === postAuthor?.firebaseUid &&
+        postAnswers?.length < 1 ? (
           <PostFooter>
             <Button>
               <Link to={`edit/${postID}`}>수정</Link>
@@ -225,7 +226,7 @@ const PlaceContainer = styled.div`
 `
 
 export const PostContainer = styled.div`
-  background: #fffef8;
+  background: #ffffff;
   border-radius: 22px;
   border: 0.7px solid #6d9b7b;
   padding: 20px 40px 20px 20px;

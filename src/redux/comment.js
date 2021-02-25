@@ -48,7 +48,7 @@ export const createQuestionComment = (data) => async (dispatch) => {
       await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: CREATE_QUESTION_COMMENT_FAIL, error: e })
   }
 }
@@ -67,7 +67,7 @@ export const createAnswerComment = (data) => async (dispatch) => {
       await dispatch({ type: CREATE_ANSWER_COMMENT_SUCCESS })
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: CREATE_ANSWER_COMMENT_FAIL, error: e })
   }
 }
@@ -82,7 +82,7 @@ export const deleteQuestionComment = (commentID) => async (dispatch) => {
     })
     await dispatch({ type: DELETE_QUESTION_COMMENT_SUCCESS })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: DELETE_QUESTION_COMMENT_FAIL, error: e })
   }
 }
@@ -97,7 +97,7 @@ export const deleteAnswerComment = (commentID) => async (dispatch) => {
     })
     await dispatch({ type: DELETE_ANSWER_COMMENT_SUCCESS })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: DELETE_ANSWER_COMMENT_FAIL, error: e })
   }
 }
@@ -118,7 +118,7 @@ export const updateQuestionComment = (commentContent, commentID) => async (
       await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: CREATE_QUESTION_COMMENT_FAIL, error: e })
   }
 }
@@ -139,7 +139,7 @@ export const updateAnswerComment = (commentContent, commentID) => async (
       await dispatch({ type: CREATE_QUESTION_COMMENT_SUCCESS })
     })
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
     dispatch({ type: CREATE_QUESTION_COMMENT_FAIL, error: e })
   }
 }

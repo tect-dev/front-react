@@ -114,7 +114,7 @@ export default function ProfilePage({ match }) {
           <Introduce>{introduce}</Introduce>
         )}
 
-        {isEdit ? (
+{/*    {isEdit ? (
           <Button onClick={submitProfile}>수정완료</Button>
         ) : (
           <Button
@@ -124,7 +124,8 @@ export default function ProfilePage({ match }) {
           >
             자기소개 수정
           </Button>
-        )}
+        )}*/}
+    
 
         {!emailVerified ? (
           <Button

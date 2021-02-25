@@ -54,7 +54,7 @@ export default React.memo(function MarkdownEditorBlock({
       setLocalContent(result)
       onChangeContentProps(result)
     } else {
-      console.log('no image file')
+      //console.log('no image file')
     }
   })
 
