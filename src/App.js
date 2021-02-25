@@ -49,7 +49,7 @@ function App() {
         <title>Foresty</title>
         <meta
           name="description"
-          content="Foresty와 함께 지식의 숲을 가꿔나가요."
+          content="노트테이킹 서비스 Foresty와 함께 지식의 숲을 가꿔나가요."
         />
 
         <meta
