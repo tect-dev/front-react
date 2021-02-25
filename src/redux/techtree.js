@@ -144,9 +144,6 @@ export const forkTree = (
   myID,
   thumbnailURL
 ) => async (dispatch, getState, { history }) => {
-  console.log('treeData: ', treeData)
-  console.log('nodeList: ', nodeList)
-  console.log('linkList: ', linkList)
   const techtreeID = uid(24)
   const forkedTreeData = {
     ...treeData,
@@ -180,7 +177,6 @@ export const forkTree = (
       })
       .then(() => {
         history.push(`/tree/${techtreeID}`)
-        console.log('푸시됨')
       })
   } catch (e) {
     dispatch({ type: FORK_TREE_FAIL })
