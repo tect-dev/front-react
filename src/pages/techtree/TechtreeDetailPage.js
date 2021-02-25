@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import MainWrapper from '../../wrappers/MainWrapper'
 import DoubleSideLayout from '../../wrappers/DoubleSideLayout'
@@ -37,6 +37,7 @@ import { colorPalette, fontSize } from '../../lib/constants'
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { techtreeID } = match.params
 
   const { loginState, userID } = useSelector((state) => {
@@ -80,11 +81,9 @@ export default function TechtreeDetailPage({ match }) {
 
   const [documentTitle, setDocumentTitle] = useState('')
   const [documentText, setDocumentText] = useState('')
-
   const [isEditingDocument, setIsEditingDocument] = useState(false)
 
   const [localTreeLike, setLocalTreeLike] = useState()
-  //const [treeLikeUsers, setTreeLikeUsers] = useState([])
   const [isLiked, setIsLiked] = useState(false)
 
   useEffect(() => {
@@ -95,7 +94,6 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
-    //    setTreeLikeUsers(techtreeData.like_user)
   }, [selectedNode, techtreeData])
 
   useEffect(() => {
@@ -154,31 +152,34 @@ export default function TechtreeDetailPage({ match }) {
     }
   }, [dispatch, isEditingTechtree])
 
-  const onClickTechtreeCommit = useCallback(
-    async (e) => {
-      e.preventDefault()
-      const svgDOM = document.getElementById('techtreeContainer')
-      const source = new XMLSerializer().serializeToString(svgDOM)
-      var decoded = unescape(encodeURIComponent(source))
-      // Now we can use btoa to convert the svg to base64
-      const base64 = btoa(decoded)
-      const thumbnailURL = `data:image/svg+xml;base64,${base64}`
-
-      // 이제 put 메소드 이용해서 imgSource를 첨부해 보내면 됨.
-      // 나중에 이걸 썸네일로 렌더링 하면 되는거고.
-
-      dispatch(
-        updateTechtree(
-          nodeList,
-          linkList,
-          techtreeID,
-          techtreeTitle,
-          thumbnailURL
-        )
+  const onClickTechtreeCommit = useCallback(async () => {
+    //e.preventDefault()
+    const svgDOM = document.getElementById('techtreeContainer')
+    const source = new XMLSerializer().serializeToString(svgDOM)
+    var decoded = unescape(encodeURIComponent(source))
+    // Now we can use btoa to convert the svg to base64
+    const base64 = btoa(decoded)
+    const thumbnailURL = `data:image/svg+xml;base64,${base64}`
+    dispatch(
+      updateTechtree(
+        nodeList,
+        linkList,
+        techtreeID,
+        techtreeTitle,
+        thumbnailURL
       )
-    },
-    [dispatch, nodeList, linkList, techtreeID, techtreeTitle]
-  )
+    )
+  }, [dispatch, nodeList, linkList, techtreeID, techtreeTitle])
+
+  const onClickForkTree = useCallback(() => {
+    const svgDOM = document.getElementById('techtreeContainer')
+    const source = new XMLSerializer().serializeToString(svgDOM)
+    var decoded = unescape(encodeURIComponent(source))
+    // Now we can use btoa to convert the svg to base64
+    const base64 = btoa(decoded)
+    const thumbnailURL = `data:image/svg+xml;base64,${base64}`
+    dispatch(forkTree(techtreeData, nodeList, linkList, userID, thumbnailURL))
+  }, [dispatch, nodeList, linkList, techtreeID, techtreeData, userID])
 
   if (loading) {
     return (
@@ -232,7 +233,7 @@ export default function TechtreeDetailPage({ match }) {
         <DoubleSideLayout>
           <HalfWidthContainer>
             <TreeTitleArea>
-              {techtreeData.author?.firebaseUid === userID ? (
+              {techtreeData?.author?.firebaseUid === userID ? (
                 <TitleInput
                   value={techtreeTitle}
                   placeholder="트리의 주제를 적어주세요!"
@@ -259,13 +260,16 @@ export default function TechtreeDetailPage({ match }) {
             </TreeEditorArea>
 
             <TreeEditButtonArea>
+              <DefaultButton onClick={onClickForkTree}>
+                트리 분양받기
+              </DefaultButton>
               {!isEditingDocument &&
-              userID === techtreeData.author?.firebaseUid ? (
+              userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton
                   onClick={() => {
                     const deleteOK = window.confirm(`정말 삭제하시나요?`)
                     if (deleteOK) {
-                      dispatch(deleteTechtree(techtreeData._id))
+                      dispatch(deleteTechtree(techtreeData?._id))
                     } else {
                       return
                     }
@@ -277,7 +281,7 @@ export default function TechtreeDetailPage({ match }) {
                 ''
               )}
               {!isEditingDocument &&
-              userID === techtreeData.author?.firebaseUid ? (
+              userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeEdit}>
                   수정모드
                 </DefaultButton>
@@ -286,7 +290,7 @@ export default function TechtreeDetailPage({ match }) {
               )}
               {!isEditingDocument &&
               !isSavingTechtree &&
-              userID === techtreeData.author?.firebaseUid ? (
+              userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeCommit}>
                   변경사항 저장
                 </DefaultButton>
@@ -305,13 +309,6 @@ export default function TechtreeDetailPage({ match }) {
               ) : (
                 ''
               )}
-              <DefaultButton
-                onClick={() => {
-                  dispatch(forkTree())
-                }}
-              >
-                트리 분양받기
-              </DefaultButton>
             </TreeEditButtonArea>
           </HalfWidthContainer>
 
@@ -341,7 +338,7 @@ export default function TechtreeDetailPage({ match }) {
                   )}
                   {typeof selectedNode.id !== 'undefined' &&
                   !isEditingDocument &&
-                  userID === techtreeData.author?.firebaseUid ? (
+                  userID === techtreeData?.author?.firebaseUid ? (
                     <DefaultButton
                       onClick={() => {
                         setIsEditingDocument(true)

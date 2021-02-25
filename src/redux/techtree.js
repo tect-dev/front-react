@@ -137,35 +137,55 @@ export const createTechtree = () => async (dispatch, getState, { history }) => {
     })
 }
 
-export const forkTree = () => async (dispatch, getState, { history }) => {
-  dispatch({ type: FORK_TREE_TRY })
+export const forkTree = (
+  treeData,
+  nodeList,
+  linkList,
+  myID,
+  thumbnailURL
+) => async (dispatch, getState, { history }) => {
+  console.log('treeData: ', treeData)
+  console.log('nodeList: ', nodeList)
+  console.log('linkList: ', linkList)
   const techtreeID = uid(24)
-  authService.currentUser
-    .getIdToken(true)
-    .then(async (idToken) => {
-      await axios({
-        method: 'post',
-        url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
-        headers: { 'Content-Type': 'application/json' },
-        data: {
-          title: '',
-          _id: techtreeID,
-          hashtags: [],
-          nodeList: `[]`,
-          linkList: `[]`,
-          thumbnail: whiteURL,
-          firebaseToken: idToken,
-        },
+  const forkedTreeData = {
+    ...treeData,
+    _id: techtreeID,
+    nodeList: nodeList,
+    linkList: linkList,
+    author: { ...treeData.author, firebaseUid: myID },
+  }
+  dispatch({ type: FORK_TREE_TRY })
+  try {
+    authService.currentUser
+      .getIdToken(true)
+      .then(async (idToken) => {
+        await axios({
+          method: 'post',
+          url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
+          headers: { 'Content-Type': 'application/json' },
+          data: {
+            title: treeData.title,
+            _id: techtreeID,
+            hashtags: [],
+            nodeList: JSON.stringify(nodeList),
+            linkList: JSON.stringify(linkList),
+            thumbnail: thumbnailURL,
+            firebaseToken: idToken,
+          },
+        })
       })
-    })
-    .then(() => {
-      dispatch({ type: FORK_TREE_SUCCESS })
-      history.push(`/tree/${techtreeID}`)
-    })
-    .catch((e) => {
-      dispatch({ type: FORK_TREE_FAIL })
-      //console.log('error: ', e)
-    })
+      .then(() => {
+        dispatch({ type: FORK_TREE_SUCCESS, treeData: forkedTreeData })
+      })
+      .then(() => {
+        history.push(`/tree/${techtreeID}`)
+        console.log('푸시됨')
+      })
+  } catch (e) {
+    dispatch({ type: FORK_TREE_FAIL })
+    //console.log('error: ', e)
+  }
 }
 
 export const deleteTechtree = (techtreeID) => async (
@@ -624,12 +644,38 @@ export default function techtree(state = initialState, action) {
     case FORK_TREE_TRY:
       return {
         ...state,
+        isEditingTechtree: false,
+        isEditingDocument: false,
         loading: true,
+        techtreeData: {},
+        nodeList: [],
+        linkList: [],
+        previousNodeList: [],
+        nextNodeList: [],
+        techtreeTitle: [],
+        selectedNode: {
+          name: '',
+          body: nodePlaceholder,
+        },
+        treeLikeUsers: [],
       }
     case FORK_TREE_SUCCESS:
       return {
         ...state,
         loading: false,
+        isEditingTechtree: false,
+        isEditingDocument: false,
+        techtreeData: action.treeData,
+        nodeList: action.treeData.nodeList,
+        linkList: action.treeData.linkList,
+        previousNodeList: [],
+        nextNodeList: [],
+        techtreeTitle: action.treeData.title,
+        selectedNode: {
+          name: '',
+          body: nodePlaceholder,
+        },
+        treeLikeUsers: [],
       }
     case FORK_TREE_FAIL:
       return {

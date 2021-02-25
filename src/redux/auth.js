@@ -247,6 +247,8 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         loading: true,
+        userData: {},
+        userTreeData: [],
       }
     case GET_USER_SUCCESS:
       return {

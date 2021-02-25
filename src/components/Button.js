@@ -18,6 +18,12 @@ export const DefaultButton = styled.button`
     background: ${colorPalette.mainGreen};
     color: white;
   }
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 `
 
 export const LikeButton = styled.button`
@@ -30,10 +36,22 @@ export const LikeButton = styled.button`
   &:hover {
     color: #6d9b7b;
   }
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 `
 
 export const SelectedButton = styled(DefaultButton)`
   background-color: ${colorPalette.mainGreen};
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 `
 
 const STYLES = ['btn--primary', 'btn--outline']
