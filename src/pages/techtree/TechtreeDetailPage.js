@@ -30,6 +30,7 @@ import {
   editTechtree,
   finishTechtreeEdit,
   likeTree,
+  forkTree,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import { colorPalette, fontSize } from '../../lib/constants'
@@ -236,15 +237,15 @@ export default function TechtreeDetailPage({ match }) {
                   value={techtreeTitle}
                   placeholder="트리의 주제를 적어주세요!"
                   onChange={onChangeTechtreeTitle}
-                  maxLength="30"
+                  maxLength="60"
                 />
               ) : (
                 <>
                   <StyledTitle>{techtreeTitle}</StyledTitle>
 
                   <StyledDisplayName>
-                    <Link to={`/forest/${techtreeData.author.firebaseUid}`}>
-                      {techtreeData.author.displayName}
+                    <Link to={`/forest/${techtreeData?.author?.firebaseUid}`}>
+                      {techtreeData?.author?.displayName}
                     </Link>
                   </StyledDisplayName>
                 </>
@@ -304,6 +305,13 @@ export default function TechtreeDetailPage({ match }) {
               ) : (
                 ''
               )}
+              <DefaultButton
+                onClick={() => {
+                  dispatch(forkTree())
+                }}
+              >
+                트리 분양받기
+              </DefaultButton>
             </TreeEditButtonArea>
           </HalfWidthContainer>
 
@@ -478,7 +486,7 @@ export const TreeEditorArea = styled.div``
 
 export const TreeEditButtonArea = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-content: space-between;
   justify-items: center;
   padding: 20px;

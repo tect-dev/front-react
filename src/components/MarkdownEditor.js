@@ -1,3 +1,5 @@
+import { Spinner } from './Spinner'
+
 import React, { useRef, useCallback, useState } from 'react'
 
 import { fontSize } from '../lib/constants'
@@ -16,6 +18,7 @@ import axios from 'axios'
 
 const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   const [localText, setLocalText] = useState(bindingText)
+  const [loading, setLoading] = useState(false)
   const textareaRef = useRef()
 
   const onChangeText = useCallback(
@@ -45,12 +48,16 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
 
       let formData = new FormData()
       formData.append('image', file)
-
+      await setLoading(true)
+      await console.log('사진결과값이 나오기전 loading: ', loading)
       const res = await axios({
         url: `${process.env.REACT_APP_BACKEND_URL}/image`,
         method: 'POST',
         data: formData,
       })
+      await console.log(res.data)
+      //await setLoading(false)
+      await console.log('결과값 이후 loading: ', loading)
       const imageUrl = res.data
       const result = `${value.substring(0, selectionStart)}![${
         file.name
@@ -59,7 +66,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
       setLocalText(result)
       bindingSetter(result)
     } else {
-      console.log('no image file')
+      //console.log('no image file')
     }
   })
 
@@ -256,7 +263,17 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
           onChange={onChangeText}
           maxLength={10000}
           onDrop={onDrop}
-          style={{ width: width, height: height }}
+          style={{
+            width: width,
+            height: height,
+            backgroundColor: () => {
+              if (loading) {
+                return '#999999'
+              } else {
+                return '#000000'
+              }
+            },
+          }}
           onKeyDown={onKeydownTap}
         ></StyledTextarea>
       </div>

@@ -75,6 +75,10 @@ const LIKE_TREE_TRY = 'techtree/LIKE_TREE_TRY'
 const LIKE_TREE_SUCCESS = 'techtree/LIKE_TREE_SUCCESS'
 const LIKE_TREE_FAIL = 'techtree/LIKE_TREE_FAIL'
 
+const FORK_TREE_TRY = 'techtree/FORK_TREE_TRY'
+const FORK_TREE_SUCCESS = 'techtree/FORK_TREE_SUCCESS'
+const FORK_TREE_FAIL = 'techtree/FORK_TREE_FAIL'
+
 // updateTechtree: 백엔드에 업데이트를 갱신함.
 // changeTechtree: 클라이언트상에서의 변화.
 
@@ -106,7 +110,6 @@ export const changeTechtreeTitle = (techtreeTitle) => {
 export const createTechtree = () => async (dispatch, getState, { history }) => {
   dispatch({ type: CREATE_TECHTREE_DATA_TRY })
   const techtreeID = uid(24)
-
   authService.currentUser
     .getIdToken(true)
     .then(async (idToken) => {
@@ -130,7 +133,38 @@ export const createTechtree = () => async (dispatch, getState, { history }) => {
       history.push(`/tree/${techtreeID}`)
     })
     .catch((e) => {
-      console.log('error: ', e)
+      //console.log('error: ', e)
+    })
+}
+
+export const forkTree = () => async (dispatch, getState, { history }) => {
+  dispatch({ type: FORK_TREE_TRY })
+  const techtreeID = uid(24)
+  authService.currentUser
+    .getIdToken(true)
+    .then(async (idToken) => {
+      await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          title: '',
+          _id: techtreeID,
+          hashtags: [],
+          nodeList: `[]`,
+          linkList: `[]`,
+          thumbnail: whiteURL,
+          firebaseToken: idToken,
+        },
+      })
+    })
+    .then(() => {
+      dispatch({ type: FORK_TREE_SUCCESS })
+      history.push(`/tree/${techtreeID}`)
+    })
+    .catch((e) => {
+      dispatch({ type: FORK_TREE_FAIL })
+      //console.log('error: ', e)
     })
 }
 
@@ -139,14 +173,17 @@ export const deleteTechtree = (techtreeID) => async (
   getState,
   { history }
 ) => {
+  dispatch({ type: DELETE_TECHTREE_DATA_TRY })
   try {
     await axios({
       method: 'delete',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
     })
-    history.push('/forest')
+    dispatch({ type: DELETE_TECHTREE_DATA_SUCCESS })
+    history.push('/forest?page=1')
   } catch (e) {
-    console.log('error: ', e)
+    //console.log('error: ', e)
+    dispatch({ type: DELETE_TECHTREE_DATA_FAIL })
   }
 }
 export const updateTechtree = (
@@ -171,7 +208,7 @@ export const updateTechtree = (
     dispatch({ type: UPDATE_TECHTREE_DATA_SUCCESS, techtreeTitle })
   } catch (e) {
     dispatch({ type: UPDATE_TECHTREE_DATA_FAIL })
-    console.log('error: ', e)
+    //console.log('error: ', e)
   }
 }
 export const editTechtree = () => {
@@ -262,7 +299,7 @@ export const createLink = (nodeList, linkList, techtreeData) => async (
     })
     dispatch({ type: CREATE_LINK, linkList: linkList })
   } catch (e) {
-    console.log('error: ', e)
+    // console.log('error: ', e)
   }
 }
 export const deleteNode = (
@@ -338,7 +375,7 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
     })
     dispatch({ type: DELETE_LINK, newLinkList })
   } catch (e) {
-    console.log('error: ', e)
+    // console.log('error: ', e)
   }
 }
 
@@ -412,13 +449,29 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
       })
     }
   } catch (e) {
-    console.log('error_READ_TECHTREE_DATA_FAIL: ', e)
+    // console.log('error_READ_TECHTREE_DATA_FAIL: ', e)
     dispatch({ type: READ_TECHTREE_DATA_FAIL })
   }
 }
 
 export default function techtree(state = initialState, action) {
   switch (action.type) {
+    case DELETE_TECHTREE_DATA_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case DELETE_TECHTREE_DATA_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      }
+    case DELETE_TECHTREE_DATA_FAIL:
+      return {
+        ...state,
+        loading: false,
+      }
+
     case CREATE_LINK:
       return {
         ...state,
@@ -548,12 +601,42 @@ export default function techtree(state = initialState, action) {
       return {
         ...state,
         loading: true,
+        isEditingTechtree: false,
+        isEditingDocument: false,
+        techtreeData: {},
+        nodeList: [],
+        linkList: [],
+        previousNodeList: [],
+        nextNodeList: [],
+        techtreeTitle: '',
+        selectedNode: {
+          name: '',
+          body: nodePlaceholder,
+        },
+        treeLikeUsers: [],
       }
     case CREATE_TECHTREE_DATA_SUCCESS:
       return {
         ...state,
         loading: false,
       }
+
+    case FORK_TREE_TRY:
+      return {
+        ...state,
+        loading: true,
+      }
+    case FORK_TREE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      }
+    case FORK_TREE_FAIL:
+      return {
+        ...state,
+        loading: false,
+      }
+
     case CHANGE_TECHTREE_TITLE:
       return {
         ...state,
