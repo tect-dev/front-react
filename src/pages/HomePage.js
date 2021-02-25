@@ -31,7 +31,7 @@ import Loader from 'react-loader-spinner'
 import MainIcon from '../assets/MainIcon.png'
 import HomeImage from '../assets/HomeImage.png'
 import CountUp from 'react-countup'
-import CSSTransitionGroup, { CSSTransition } from 'react-transition-group';
+import CSSTransitionGroup, { CSSTransition } from 'react-transition-group'
 
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
@@ -389,7 +389,18 @@ function DemoTree() {
           <TreeEditButtonArea>
             <DefaultButton
               onClick={() => {
-                const deleteOK = window.confirm(`트리 전체가 삭제됩니다!`)
+                alert(
+                  '마음에 드는 트리를 복사해 자신의 forest 에 추가할 수 있어요!'
+                )
+              }}
+            >
+              트리 분양받기
+            </DefaultButton>
+            <DefaultButton
+              onClick={() => {
+                const deleteOK = window.confirm(
+                  `조심하세요! 이 버튼을 누르면 트리 전체가 삭제돼요!`
+                )
                 if (deleteOK) {
                   //alert('')
                 } else {
@@ -404,7 +415,11 @@ function DemoTree() {
               수정모드
             </DefaultButton>
 
-            <DefaultButton onClick={onClickTechtreeCommit}>
+            <DefaultButton
+              onClick={() => {
+                alert('이 버튼을 누르면 트리에서의 변경사항이 저장돼요!')
+              }}
+            >
               변경사항 저장
             </DefaultButton>
           </TreeEditButtonArea>
