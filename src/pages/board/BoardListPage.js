@@ -25,6 +25,7 @@ import NoDataPage from '../../components/layout/NoDataPage'
 import { readPostList, changeSortingMethod } from '../../redux/board'
 import { setUserPlace } from '../../redux/auth'
 import queryString from 'query-string'
+import { authService } from '../../lib/firebase'
 
 export default function QuestionListPage({ match, location }) {
   const category = location.pathname.split('/')[2].split('?')[0]
@@ -112,7 +113,7 @@ export default function QuestionListPage({ match, location }) {
                 </span>{' '}
               </Button2>
               <Button>
-                {loginState && emailVerified ? (
+                {loginState && authService.currentUser.emailVerified ? (
                   <Link to={`/write/${category}`}>새 글 쓰기</Link>
                 ) : (
                   ''

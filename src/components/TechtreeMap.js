@@ -339,24 +339,29 @@ function updateGraph(container, dispatch, isEditingTechtree) {
           d3
             .drag()
             .on('start', (d) => {
-              svg
-                .select('g')
-                .select('.tempLine')
-                .attr('x1', d.x)
-                .attr('y1', d.y)
-              svg
-                .select('g')
-                .select('.tempLine')
-                .attr('x2', d3.event.x)
-                .attr('y2', d3.event.y)
-              svg
-                .select('g')
-                .select('.tempLine')
-                .style('opacity', '1')
-                .attr('display', 'inline')
-              tempPairingNodes.startNodeID = d.id
-              tempPairingNodes.startX = d.x
-              tempPairingNodes.startY = d.y
+              if (
+                reduxStore.getState().techtree.techtreeData.author
+                  ?.firebaseUid === reduxStore.getState().auth.userID
+              ) {
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .attr('x1', d.x)
+                  .attr('y1', d.y)
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .attr('x2', d3.event.x)
+                  .attr('y2', d3.event.y)
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .style('opacity', '1')
+                  .attr('display', 'inline')
+                tempPairingNodes.startNodeID = d.id
+                tempPairingNodes.startX = d.x
+                tempPairingNodes.startY = d.y
+              }
             })
             .on('drag', (node) => {
               if (

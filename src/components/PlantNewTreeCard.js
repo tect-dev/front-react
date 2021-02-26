@@ -11,6 +11,7 @@ import MainIcon from '../assets/MainIcon.png'
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createTechtree } from '../redux/techtree'
+import { authService } from '../lib/firebase'
 
 const PlantNewTree = () => {
   const dispatch = useDispatch()
@@ -28,9 +29,9 @@ const PlantNewTree = () => {
     <>
       <TechtreeThumbnailCard
         onClick={() => {
-          if (loginState && emailVerified) {
+          if (loginState && authService.currentUser.emailVerified) {
             dispatch(createTechtree(userInfo))
-          } else if (loginState && !emailVerified) {
+          } else if (loginState && !authService.currentUser.emailVerified) {
             alert('이메일 인증을 마무리 해주세요!')
           } else {
             alert('로그인이 필요해요')

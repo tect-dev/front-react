@@ -11,6 +11,7 @@ import {
 import { colorPalette } from '../lib/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { createTechtree } from '../redux/techtree'
+import { authService } from '../lib/firebase'
 
 export default function MainWrapperDefault({ children }) {
   const dispatch = useDispatch()
@@ -33,7 +34,7 @@ export default function MainWrapperDefault({ children }) {
       <Navbar />
       <ContentWrapper>{children}</ContentWrapper>
       <Container>
-        {loginState && emailVerified ? (
+        {loginState && authService.currentUser.emailVerified ? (
           <Button
             tooltip="나무 심기"
             icon="fas fa-plus"
@@ -144,7 +145,7 @@ export const MainWrapperInTheHomePage = ({ children }) => {
       <NavbarInTheHomePage />
       <ContentWrapper>{children}</ContentWrapper>
       <Container>
-        {loginState && emailVerified ? (
+        {loginState && authService.currentUser.emailVerified ? (
           <Button
             tooltip="나무 심기"
             icon="fas fa-plus"
