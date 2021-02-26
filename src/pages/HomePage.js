@@ -31,7 +31,6 @@ import Loader from 'react-loader-spinner'
 import MainIcon from '../assets/MainIcon.png'
 import HomeImage from '../assets/HomeImage.png'
 import CountUp from 'react-countup'
-import CSSTransitionGroup, { CSSTransition } from 'react-transition-group'
 
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
@@ -45,19 +44,11 @@ import {
   hoverAction,
   fontSize,
 } from '../lib/constants'
-import { shuffleArray, getRandomNumberInArray } from '../lib/functions'
-import {
-  selectNode,
-  readTechtree,
-  updateTechtree,
-  deleteTechtree,
-  changeTreeTitle,
-  startEditDocu,
-  finishEditDocu,
-} from '../redux/demo'
+import { selectNode, changeTreeTitle, finishEditDocu } from '../redux/demo'
 import { editTechtree, finishTechtreeEdit } from '../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
 import departments from '../lib/yonseiDepartments.json'
+import { authService } from '../lib/firebase'
 
 const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
 
@@ -113,6 +104,7 @@ export default function HomePage() {
   })
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(setUserPlace('main'))
     if (!isClient) {
       return false

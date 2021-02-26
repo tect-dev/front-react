@@ -39,6 +39,7 @@ export default function TechtreeListPage({ match, location }) {
   const pageNumber = queryString.parse(location.search).page
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(readTechtreeList(pageNumber))
   }, [dispatch, pageNumber])
 

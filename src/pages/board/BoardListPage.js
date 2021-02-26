@@ -57,6 +57,7 @@ export default function QuestionListPage({ match, location }) {
   }
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(setUserPlace(category))
     dispatch(readPostList(category, sortingMethod, pageNumber))
   }, [pageNumber])
