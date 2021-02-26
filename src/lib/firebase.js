@@ -1,4 +1,4 @@
-import firebase from 'firebase/app'
+import firebase from 'firebase'
 import 'firebase/auth'
 
 const firebaseConfig = {
@@ -16,4 +16,5 @@ firebase.initializeApp(firebaseConfig)
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
 export const firebaseInstance = firebase
+export const db = firebase.firestore()
 export const authService = firebase.auth()

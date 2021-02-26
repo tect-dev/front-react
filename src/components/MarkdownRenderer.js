@@ -73,8 +73,8 @@ const MarkdownStyledBlock = styled.div`
     max-width: 100%;
     height: auto;
     display: block;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
   iframe {
     width: 768px;
