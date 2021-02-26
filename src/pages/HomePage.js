@@ -38,6 +38,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserPlace } from '../redux/auth'
+import { changeSortingMethod } from '../redux/board'
 import {
   boxShadow,
   colorPalette,
@@ -207,6 +208,8 @@ export default function HomePage() {
               <PopupDept
                 onClick={(e) => {
                   e.preventDefault()
+
+                  dispatch(changeSortingMethod(dept, 'time', 1))
                 }}
               >
                 <Link

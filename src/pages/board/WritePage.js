@@ -42,7 +42,8 @@ export default function WritePage({ match, prevPost }) {
 
   const previewRef = useRef()
   useEffect(() => {
-    previewRef.current.scrollTop = previewRef.current.scrollHeight
+    // previewRef.current.scrollTop = previewRef.current.scrollHeight
+    // 글 중간을 수정할때도 계속 스크롤이 아래로 꽂히는 버그가 있어서, 일단 각주 처리.
   }, [documentText])
 
   const changeTitle = useCallback(

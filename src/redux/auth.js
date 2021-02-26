@@ -124,7 +124,9 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
         authService.currentUser
           .sendEmailVerification()
           .then(
-            '인증메일이 발송됐습니다! 메일함을 확인해 주세요. 메일인증이 마무리 되면 회원가입이 마무리됩니다.'
+            alert(
+              '인증메일이 발송됐습니다! 메일함을 확인해 주세요. 메일인증 후 새로고침 해주세요.'
+            )
           )
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })

@@ -14,13 +14,20 @@ import { createTechtree } from '../redux/techtree'
 
 export default function MainWrapperDefault({ children }) {
   const dispatch = useDispatch()
-  const { loginState, userID, emailVerified } = useSelector((state) => {
-    return {
-      loginState: state.auth.loginState,
-      userID: state.auth.userID,
-      emailVerified: state.auth.emailVerified,
+  const { loginState, userID, emailVerified, userInfo } = useSelector(
+    (state) => {
+      return {
+        loginState: state.auth.loginState,
+        userID: state.auth.userID,
+        emailVerified: state.auth.emailVerified,
+
+        userInfo: {
+          firebaseUid: state.auth.userID,
+          displayName: state.auth.userNickname,
+        },
+      }
     }
-  })
+  )
   return (
     <MainLayout>
       <Navbar />
@@ -32,7 +39,7 @@ export default function MainWrapperDefault({ children }) {
             icon="fas fa-plus"
             style={{ curosr: 'pointer' }}
             onClick={() => {
-              dispatch(createTechtree())
+              dispatch(createTechtree(userInfo))
             }}
             styles={{
               backgroundColor: colorPalette.teal5,
@@ -109,9 +116,6 @@ export const ContentWrapper = styled.main`
 `
 
 export const MainWrapperWithoutFAB = ({ children }) => {
-  const { loginState, userID } = useSelector((state) => {
-    return { loginState: state.auth.loginState, userID: state.auth.userID }
-  })
   return (
     <MainLayout>
       <Navbar />
@@ -122,13 +126,19 @@ export const MainWrapperWithoutFAB = ({ children }) => {
 
 export const MainWrapperInTheHomePage = ({ children }) => {
   const dispatch = useDispatch()
-  const { loginState, userID, emailVerified } = useSelector((state) => {
-    return {
-      loginState: state.auth.loginState,
-      userID: state.auth.userID,
-      emailVerified: state.auth.emailVerified,
+  const { loginState, userID, emailVerified, userInfo } = useSelector(
+    (state) => {
+      return {
+        loginState: state.auth.loginState,
+        userID: state.auth.userID,
+        emailVerified: state.auth.emailVerified,
+        userInfo: {
+          firebaseUid: state.auth.userID,
+          displayName: state.auth.userNickname,
+        },
+      }
     }
-  })
+  )
   return (
     <MainLayout>
       <NavbarInTheHomePage />
@@ -140,7 +150,7 @@ export const MainWrapperInTheHomePage = ({ children }) => {
             icon="fas fa-plus"
             style={{ curosr: 'pointer' }}
             onClick={() => {
-              dispatch(createTechtree())
+              dispatch(createTechtree(userInfo))
             }}
             styles={{
               backgroundColor: colorPalette.teal5,
