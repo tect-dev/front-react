@@ -78,6 +78,7 @@ export default function ProfilePage({ match }) {
   )
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(getUserInfo(userID))
   }, [dispatch, userID])
 

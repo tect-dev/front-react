@@ -20,6 +20,7 @@ import LikeSproutGreen from '../../assets/LikeSproutGreen.svg'
 
 import styled from 'styled-components'
 
+import { authService } from '../../lib/firebase'
 import {
   finishDocuEdit,
   selectNode,
@@ -87,6 +88,7 @@ export default function TechtreeDetailPage({ match }) {
   const [isLiked, setIsLiked] = useState(false)
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(readTechtree(techtreeID))
     window.scrollTo(0, 0)
   }, [dispatch])

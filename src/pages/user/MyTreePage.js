@@ -14,6 +14,8 @@ import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 import { TreePageHeader } from '../techtree/TechtreeDetailPage'
 import PlantNewTreeCard from '../../components/PlantNewTreeCard'
 
+import { authService } from '../../lib/firebase'
+
 export default function MyTreePage({ match }) {
   const history = useHistory()
   const { userID } = match.params
@@ -43,6 +45,7 @@ export default function MyTreePage({ match }) {
   }, [dispatch])
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(getUserInfo(userID))
   }, [dispatch])
 

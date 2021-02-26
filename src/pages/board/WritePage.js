@@ -14,6 +14,7 @@ import styled from 'styled-components'
 import { createPost, updatePost } from '../../redux/board'
 import { uid } from 'uid'
 import { colorPalette } from '../../lib/constants'
+import { authService } from '../../lib/firebase'
 
 export default function WritePage({ match, prevPost }) {
   const { category } = match.params
@@ -34,6 +35,7 @@ export default function WritePage({ match, prevPost }) {
   })
 
   useEffect(() => {
+    authService.currentUser?.reload()
     if (!loginState) {
       alert('로그인이 필요합니다')
       history.push('/')

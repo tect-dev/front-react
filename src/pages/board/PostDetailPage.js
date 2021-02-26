@@ -15,6 +15,7 @@ import LikeSproutGray from '../../assets/LikeSproutGray.svg'
 import LikeSproutGreen from '../../assets/LikeSproutGreen.svg'
 
 import styled from 'styled-components'
+import { authService } from '../../lib/firebase'
 
 export default function PostDetailPage({ match }) {
   const { postID } = match.params
@@ -61,8 +62,9 @@ export default function PostDetailPage({ match }) {
   }, [])
 
   useEffect(() => {
+    authService.currentUser?.reload()
     dispatch(readPostDetail(postID))
-  }, [])
+  }, [dispatch, postID])
 
   useEffect(() => {
     if (
@@ -156,8 +158,7 @@ export default function PostDetailPage({ match }) {
           <MarkdownRenderer text={postContent} style={{ padding: '0px' }} />
         </PostContent>
         {/* {postCreatedAt} */}
-        {user.userID === postAuthor?.firebaseUid &&
-        postAnswers?.length < 1 ? (
+        {user.userID === postAuthor?.firebaseUid && postAnswers?.length < 1 ? (
           <PostFooter>
             <Button>
               <Link to={`edit/${postID}`}>수정</Link>
