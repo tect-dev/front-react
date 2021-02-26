@@ -119,49 +119,49 @@ export const createTechtree = (userInfo) => async (
   dispatch({ type: CREATE_TECHTREE_DATA_TRY })
   const techtreeID = uid(24)
 
-  db.collection('trees')
-    .doc(techtreeID)
-    .set({
-      title: '',
-      _id: techtreeID,
-      hashtags: [],
-      nodeList: `[]`,
-      linkList: `[]`,
-      thumbnail: whiteURL,
-      author: userInfo,
-      createdAt: firebaseInstance.firestore.FieldValue.serverTimestamp(),
-      like_user: [],
-    })
-    .then(() => {
-      dispatch({ type: CREATE_TECHTREE_DATA_SUCCESS })
-      history.push(`/tree/${techtreeID}`)
-    })
-    .catch((error) => {})
-  //authService.currentUser
-  //  .getIdToken(true)
-  //  .then(async (idToken) => {
-  //    await axios({
-  //      method: 'post',
-  //      url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
-  //      headers: { 'Content-Type': 'application/json' },
-  //      data: {
-  //        title: '',
-  //        _id: techtreeID,
-  //        hashtags: [],
-  //        nodeList: `[]`,
-  //        linkList: `[]`,
-  //        thumbnail: whiteURL,
-  //        firebaseToken: idToken,
-  //      },
-  //    })
+  //db.collection('trees')
+  //  .doc(techtreeID)
+  //  .set({
+  //    title: '',
+  //    _id: techtreeID,
+  //    hashtags: [],
+  //    nodeList: `[]`,
+  //    linkList: `[]`,
+  //    thumbnail: whiteURL,
+  //    author: userInfo,
+  //    createdAt: firebaseInstance.firestore.FieldValue.serverTimestamp(),
+  //    like_user: [],
   //  })
   //  .then(() => {
   //    dispatch({ type: CREATE_TECHTREE_DATA_SUCCESS })
   //    history.push(`/tree/${techtreeID}`)
   //  })
-  //  .catch((e) => {
-  //    //console.log('error: ', e)
-  //  })
+  //  .catch((error) => {})
+  authService.currentUser
+    .getIdToken(true)
+    .then(async (idToken) => {
+      await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          title: '',
+          _id: techtreeID,
+          hashtags: [],
+          nodeList: `[]`,
+          linkList: `[]`,
+          thumbnail: whiteURL,
+          firebaseToken: idToken,
+        },
+      })
+    })
+    .then(() => {
+      dispatch({ type: CREATE_TECHTREE_DATA_SUCCESS })
+      history.push(`/tree/${techtreeID}`)
+    })
+    .catch((e) => {
+      //console.log('error: ', e)
+    })
 }
 
 export const forkTree = (
@@ -514,7 +514,7 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
       })
     }
   } catch (e) {
-    console.log('error_READ_TECHTREE_DATA_FAIL: ', e)
+    //console.log('error_READ_TECHTREE_DATA_FAIL: ', e)
     dispatch({ type: READ_TECHTREE_DATA_FAIL })
   }
 }
