@@ -32,6 +32,7 @@ function App() {
   })
 
   useEffect(() => {
+    authService.currentUser?.reload()
     authService.onAuthStateChanged((user) => {
       if (user) {
         dispatch(checkAuth(user))
