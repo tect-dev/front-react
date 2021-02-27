@@ -45,7 +45,7 @@ export default React.memo(function ({
             alt="treeThumbnail"
           />
         </TechtreeThumbnailBlock>
-        <TreeThumbnailFooter></TreeThumbnailFooter>
+        {/* <TreeThumbnailFooter>여기 좋아요 갯수가 들어가야함</TreeThumbnailFooter>*/}
       </Link>
     </TechtreeThumbnailCard>
   )
@@ -60,7 +60,7 @@ export const TechtreeThumbnailImage = styled.img`
   height: 250px;
   //height: 250px;
   object-fit: fill;
-  border-radius: 22px;
+  border-radius: 3px;
   //border: 1px solid ${colorPalette.gray1};
   background-color: #ffffff;
 `
@@ -89,7 +89,7 @@ export const TechtreeInfo = styled.div`
 `
 
 export const TechtreeThumbnailCard = styled.div`
-  border-radius: 10px;
+  border-radius: 3px;
   grid-row-start: span 1;
   grid-column-start: span 1;
   display: grid;
@@ -97,6 +97,7 @@ export const TechtreeThumbnailCard = styled.div`
   height: 375px;
   justify-items: center;
   justify-content: center;
+  border: 1px solid ${colorPalette.gray3};
   //align-items: center;
   //width: 290px;
   //height: '300px';

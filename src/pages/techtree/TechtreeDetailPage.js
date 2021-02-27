@@ -8,7 +8,11 @@ import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
-import { DefaultButton, LikeButton } from '../../components/Button'
+import {
+  DangerButton,
+  DefaultButton,
+  LikeButton,
+} from '../../components/Button'
 import {
   TitleInput,
   TitleBottomLine,
@@ -34,7 +38,7 @@ import {
   forkTree,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
-import { colorPalette, fontSize } from '../../lib/constants'
+import { boxShadow, colorPalette, fontSize } from '../../lib/constants'
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
@@ -86,6 +90,16 @@ export default function TechtreeDetailPage({ match }) {
 
   const [localTreeLike, setLocalTreeLike] = useState()
   const [isLiked, setIsLiked] = useState(false)
+  const [dataStr, setDataStr] = useState(
+    'data:text/json;charset=utf-8,' +
+      encodeURIComponent(
+        JSON.stringify({
+          title: techtreeData.title,
+          nodeList: nodeList,
+          linkList: linkList,
+        })
+      )
+  )
 
   useEffect(() => {
     authService.currentUser?.reload()
@@ -97,6 +111,17 @@ export default function TechtreeDetailPage({ match }) {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
   }, [selectedNode, techtreeData])
+
+  useEffect(() => {
+    const tempData = { title: techtreeData.title, linkList: linkList }
+    nodeList.forEach((ele, index) => {
+      tempData[`node${index}`] = ele
+    })
+    setDataStr(
+      'data:text/json;charset=utf-8,' +
+        encodeURIComponent(JSON.stringify(tempData))
+    )
+  }, [techtreeData, nodeList, linkList])
 
   useEffect(() => {
     setLocalTreeLike(techtreeData.like)
@@ -265,23 +290,12 @@ export default function TechtreeDetailPage({ match }) {
               <DefaultButton onClick={onClickForkTree}>
                 트리 분양받기
               </DefaultButton>
-              {!isEditingDocument &&
-              userID === techtreeData?.author?.firebaseUid ? (
-                <DefaultButton
-                  onClick={() => {
-                    const deleteOK = window.confirm(`정말 삭제하시나요?`)
-                    if (deleteOK) {
-                      dispatch(deleteTechtree(techtreeData?._id))
-                    } else {
-                      return
-                    }
-                  }}
-                >
-                  트리 전체 삭제
-                </DefaultButton>
-              ) : (
-                ''
-              )}
+              <DefaultButton>
+                <a href={dataStr} download={`${techtreeData.title}.json`}>
+                  트리 다운로드
+                </a>
+              </DefaultButton>
+
               {!isEditingDocument &&
               userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeEdit}>
@@ -308,6 +322,25 @@ export default function TechtreeDetailPage({ match }) {
                     width={20}
                   />
                 </div>
+              ) : (
+                ''
+              )}
+              {!isEditingDocument &&
+              userID === techtreeData?.author?.firebaseUid ? (
+                <DangerButton
+                  onClick={() => {
+                    const deleteOK = window.confirm(
+                      `트리 자체가 사라져 버려요!`
+                    )
+                    if (deleteOK) {
+                      dispatch(deleteTechtree(techtreeData?._id))
+                    } else {
+                      return
+                    }
+                  }}
+                >
+                  트리 삭제
+                </DangerButton>
               ) : (
                 ''
               )}
@@ -492,11 +525,12 @@ export const TreeEditButtonArea = styled.div`
 `
 
 export const DocuWrapper = styled.div`
-  border-radius: 22px;
+  border-radius: 3px;
   background: #ffffff;
-  border: 0.5px solid #6d9b7b;
+  border: 0.5px solid ${colorPalette.gray3};
   box-sizing: border-box;
   padding: 10px;
+  box-shadow: ${boxShadow.default};
 `
 
 export const DocuHeaderArea = styled.div`

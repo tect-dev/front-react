@@ -26,6 +26,14 @@ export const DefaultButton = styled.button`
   user-select: none;
 `
 
+export const DangerButton = styled(DefaultButton)`
+  border: 1px solid ${colorPalette.mainGreen};
+  &:hover {
+    background: ${colorPalette.mainGreen};
+    color: ${colorPalette.red7};
+  }
+`
+
 export const LikeButton = styled.button`
   all: unset;
   cursor: pointer;

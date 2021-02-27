@@ -295,7 +295,7 @@ const MarkdownButton = styled.button`
   border-radius: 3px;
   display: inline-flex;
   padding: 8px 10px;
-  border-radius: 5px;
+
   color: '#ffffff';
   background-color: transparent;
   outline: 0;

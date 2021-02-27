@@ -15,11 +15,11 @@ export const TitleInput = styled.input`
 `
 export const TitleBottomLine = styled.div`
   width: 90%;
-  height: 3px;
+  height: 1px;
   margin-left: 10px;
   margin-bottom: 14px;
   background: ${colorPalette.mainGreen};
-  border-radius: 1.5px;
+  border-radius: 1px;
 `
 export const StyledTitle = styled.div`
   all: unset;
