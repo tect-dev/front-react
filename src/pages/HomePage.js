@@ -21,7 +21,7 @@ import MarkdownRenderer from '../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../wrappers/HalfWidthWrapper'
 import TreeMapDemo from '../components/TreeMapDemo'
 import { Spinner } from '../components/Spinner'
-import { DefaultButton } from '../components/Button'
+import { DangerButton, DefaultButton } from '../components/Button'
 import {
   TitleInput,
   TitleBottomLine,
@@ -393,17 +393,10 @@ function DemoTree() {
             </DefaultButton>
             <DefaultButton
               onClick={() => {
-                const deleteOK = window.confirm(
-                  `조심하세요! 이 버튼을 누르면 트리 전체가 삭제돼요!`
-                )
-                if (deleteOK) {
-                  //alert('')
-                } else {
-                  return
-                }
+                alert('작성한 트리를 json 형태로 다운받을 수 있어요.')
               }}
             >
-              트리 전체 삭제
+              트리 다운로드
             </DefaultButton>
 
             <DefaultButton onClick={onClickTechtreeEdit}>
@@ -417,6 +410,20 @@ function DemoTree() {
             >
               변경사항 저장
             </DefaultButton>
+            <DangerButton
+              onClick={() => {
+                const deleteOK = window.confirm(
+                  `조심하세요! 이 버튼을 누르면 트리 전체가 삭제돼요!`
+                )
+                if (deleteOK) {
+                  //alert('')
+                } else {
+                  return
+                }
+              }}
+            >
+              트리 삭제
+            </DangerButton>
           </TreeEditButtonArea>
         </HalfWidthContainer>
 
@@ -635,7 +642,7 @@ export const BlockWrapper = styled.div`
 export const WidthOneBlock = styled.div`
   grid-row-start: span 1;
   grid-column-start: span 1;
-  border-radius: 15px;
+  border-radius: 5px;
   text-align: center;
   display: grid;
   align-items: center;
@@ -651,7 +658,7 @@ export const WidthThreeBlock = styled.div`
   grid-row-start: span 1;
   grid-column-start: span 3;
   text-align: center;
-  border-radius: 15px;
+  border-radius: 5px;
   display: grid;
   align-items: center;
   width: 100%;
@@ -1066,7 +1073,7 @@ const PopupGridContainer = styled.div`
 `
 
 const PopupDept = styled.div`
-  border-radius: 35px;
+  border-radius: 15px;
   color: white;
   font-weight: bold;
   background: ${colorPalette.mainGreen};

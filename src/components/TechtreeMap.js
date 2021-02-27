@@ -2,7 +2,7 @@ import React from 'react'
 import * as d3 from 'd3'
 import { uid } from 'uid'
 
-import { colorPalette, fontSize } from '../lib/constants'
+import { boxShadow, colorPalette, fontSize } from '../lib/constants'
 import styled from 'styled-components'
 import xCircle from '../assets/xCircle.svg'
 import grayX from '../assets/xCircle.svg'
@@ -21,8 +21,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { reduxStore } from '../index'
 
 const TechtreeThumbnailBlock = styled.div`
-  border-radius: 22px;
-  border: 1px solid ${colorPalette.mainGreen};
+  border-radius: 3px;
+  border: 1px solid ${colorPalette.gray3};
+  background-color: #ffffff;
+  box-shadow: ${boxShadow.default};
 `
 
 const TreeMap = React.memo(function TechtreeMap() {
@@ -63,10 +65,7 @@ const TreeMap = React.memo(function TechtreeMap() {
 
   return (
     <>
-      <TechtreeThumbnailBlock
-        style={{ backgroundColor: '#ffffff' }}
-        ref={containerRef}
-      />
+      <TechtreeThumbnailBlock ref={containerRef} />
     </>
   )
 })

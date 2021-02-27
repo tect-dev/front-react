@@ -125,7 +125,7 @@ export default function WritePage({ match, prevPost }) {
 }
 
 export const Preview = styled.div`
-  border-radius: 22px;
+  border-radius: 3px;
   background: #fffef8;
   border: 1px solid #6d9b7b;
   font-size: ${fontSize.large};
@@ -157,7 +157,7 @@ export const HalfWidthContainer_for_Renderer = styled(HalfWidthContainer_new)`
 export const MarkdownRenderer_Container = styled.div`
   overflow: scroll;
   height: 584px;
-  border-radius: 22px;
+  border-radius: 3px;
   background: #fffef8;
   border: 1px solid #6d9b7b;
   padding: 20px;
@@ -165,7 +165,7 @@ export const MarkdownRenderer_Container = styled.div`
 `
 
 const MarkdownEditor_Container = styled.div`
-  border-radius: 22px;
+  border-radius: 3px;
   background: #fffef8;
   border: 1px solid #6d9b7b;
   box-sizing: border-box;
