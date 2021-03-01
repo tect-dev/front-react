@@ -22,14 +22,14 @@ import { isoStringToNaturalLanguage } from '../../lib/functions'
 import ErrorPage from '../../components/layout/ErrorPage'
 import NoDataPage from '../../components/layout/NoDataPage'
 
-import { readPostList, changeSortingMethod } from '../../redux/board'
+import { searchPostList, changeSortingMethod } from '../../redux/board'
 import { setUserPlace } from '../../redux/auth'
 import queryString from 'query-string'
 import { authService } from '../../lib/firebase'
 import { Search } from '../../components/Search'
 
-export default function QuestionListPage({ match, location }) {
-  const category = location.pathname.split('/')[2].split('?')[0]
+export default function SearchedPage({ match, location }) {
+  const target = location.pathname.split('/')[2].split('?')[0]
 
   const pageNumber = queryString.parse(location.search).page
   const dispatch = useDispatch()
@@ -56,11 +56,12 @@ export default function QuestionListPage({ match, location }) {
   for (let i = 0; i < pageMaxNumber; i++) {
     pageArray.push(i + 1)
   }
+
   useEffect(() => {
     authService.currentUser?.reload()
-    dispatch(setUserPlace(category))
-    dispatch(readPostList(category, sortingMethod, pageNumber))
-  }, [pageNumber])
+    dispatch(setUserPlace('main'))
+    dispatch(searchPostList(target, pageNumber))
+  }, [target, pageNumber])
 
   if (loading)
     return (
@@ -75,49 +76,17 @@ export default function QuestionListPage({ match, location }) {
       <TwoOneMainWapper>
         <BoardListWrapper>
           <BoardListHeader>
-            <Category>
-              {category !== 'main' && sortingMethod === 'time'
-                ? category
+            <Target>
+              검색결과: {target !== 'main' && sortingMethod === 'time'
+                ? target
                 : '전체'}
-            </Category>
+            </Target>
             <Menuline>
               <Search />
               <Buttons>
-                <Button2
-                  onClick={async () => {
-                    dispatch(readPostList(category, 'likes', pageNumber))
-                  }}
-                  style={{
-                    color: () => {
-                      if (sortingMethod == 'likes') {
-                        return colorPalette.mainGreen
-                      }
-                    },
-                  }}
-                >
-                  {' '}
-                  <span>전체 인기순</span>{' '}
-                </Button2>
-                <Button2
-                  onClick={async () => {
-                    dispatch(readPostList(category, 'time', pageNumber))
-                  }}
-                  style={{
-                    color: () => {
-                      if (sortingMethod == 'time') {
-                        return colorPalette.mainGreen
-                      }
-                    },
-                  }}
-                >
-                  {' '}
-                  <span>
-                    {category === 'main' ? '전체' : category} 최신순
-                  </span>{' '}
-                </Button2>
                 <Button>
                   {loginState && authService.currentUser.emailVerified ? (
-                    <Link to={`/write/${category}`}>새 글 쓰기</Link>
+                    <Link to={`/write/${target}`}>새 글 쓰기</Link>
                   ) : (
                     ''
                   )}
@@ -156,13 +125,6 @@ export default function QuestionListPage({ match, location }) {
             )
           })}
         </BoardListWrapper>
-        {/* <BoardSideBarWrapper>
-          <CategoryCard>{category}</CategoryCard>
-          <TrendingListCard>
-            <div>다른게시판 링크</div>
-            <div>또는 트렌딩 게시글 링크</div>
-          </TrendingListCard>
-        </BoardSideBarWrapper> */}
       </TwoOneMainWapper>
       <PageButtonArea>
         <PageButtonContainer>
@@ -170,7 +132,7 @@ export default function QuestionListPage({ match, location }) {
             pageNumber={pageNumber}
             treePerPage={10}
             postSum={postSum}
-            routingString={`board/${category}`}
+            routingString={`board/${target}`}
           />
         </PageButtonContainer>
       </PageButtonArea>
@@ -260,7 +222,7 @@ export const Button2 = styled(Button)`
   }
 `
 
-export const Category = styled.div`
+export const Target = styled.div`
   font-size: ${fontSize.xlarge};
   color: #707070;
   font-weight: bold;
@@ -316,13 +278,6 @@ export const PostCard = styled.div`
   &:hover {
     ${hoverAction}
   }
-`
-export const CategoryCard = styled.div`
-  padding: 25px;
-  width: 80%;
-
-  background-color: #ffffff;
-  box-shadow: ${boxShadow.default};
 `
 export const TrendingListCard = styled.div`
   padding: 25px;

@@ -6,6 +6,8 @@ import HomePage from './pages/HomePage'
 import TechtreeDetailPage from './pages/techtree/TechtreeDetailPage'
 import TechtreeListPage from './pages/techtree/TechtreeListPage'
 
+import SearchedPage from './pages/board/SearchedPage'
+
 import BoardListPage from './pages/board/BoardListPage'
 import PostDetailPage from './pages/board/PostDetailPage'
 import WritePage from './pages/board/WritePage'
@@ -64,6 +66,8 @@ function App() {
           <Route path="/" exact={true} component={HomePage} />
           <Route path="/forest" exact component={TechtreeListPage} />
           <Route path="/tree/:techtreeID" component={TechtreeDetailPage} />
+
+          <Route path="/searched/:input" exact component={SearchedPage} />
 
           <Route path="/board/:category" exact component={BoardListPage} />
           <Route path="/post/edit/:postID" exact component={EditPage} />
