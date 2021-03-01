@@ -62,6 +62,10 @@ const LIKE_ANSWER_TRY = 'board/LIKE_ANSWER_TRY'
 const LIKE_ANSWER_SUCCESS = 'board/LIKE_ANSWER_SUCCESS'
 const LIKE_ANSWER_FAIL = 'board /LIKE_ANSWER_FAIL'
 
+const SEARCH_POST_LIST_TRY = 'board/SEARCH_POST_LIST_TRY'
+const SEARCH_POST_LIST_SUCCESS = 'board/SEARCH_POST_LIST_SUCCESS'
+const SEARCH_POST_LIST_FAIL = 'board/SEARCH_POST_LIST_FAIL'
+
 const CHANGE_SORTING_METHOD = 'board/CHANGE_SORTING_METHOD'
 
 export const changeSortingMethod = (category, sortingMethod, pageNumber) => {
@@ -310,6 +314,38 @@ export const likeAnswer = (answerID) => async (dispatch) => {
   }
 }
 
+export const searchPostList = (querystring, pageNumber) => async (dispatch) => {
+  dispatch({ type: SEARCH_POST_LIST_TRY })
+  // 해당 검색어와 일치하는 post가 없으면 백엔드에서 404를 뱉기 때문에
+  // 임시로 이렇게 설계함.
+  let res = null
+  try {
+    setTimeout(()=>{
+      if(!res){
+        dispatch({
+          type: SEARCH_POST_LIST_SUCCESS,
+          postList: [],
+          postSum: 0
+        })
+        res = true
+      }
+    }, 5000)
+    res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_BACKEND_URL}/search/?target=${querystring}&page=${pageNumber}`,
+    })
+    dispatch({
+      type: SEARCH_POST_LIST_SUCCESS,
+      postList: res.data.question,
+      postSum: res.data.qeustionSum
+    })
+  } catch (e) {
+    if(!res){
+      await dispatch({ type: SEARCH_POST_LIST_FAIL, error: e })
+    }
+  }
+}
+
 export default function board(state = initialState, action) {
   switch (action.type) {
     case CHANGE_SORTING_METHOD:
@@ -426,6 +462,26 @@ export default function board(state = initialState, action) {
         isUpdated: true,
       }
     case UPDATE_ANSWER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      }
+    case SEARCH_POST_LIST_TRY:
+      return {
+        ...state,
+        loading: true,
+        postList: [],
+        sortingMethod: 'time'
+      }
+    case SEARCH_POST_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        postList: action.postList,
+        postSum: action.postSum,
+      }
+    case SEARCH_POST_LIST_FAIL:
       return {
         ...state,
         loading: false,
