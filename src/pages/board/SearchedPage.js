@@ -77,9 +77,8 @@ export default function SearchedPage({ match, location }) {
         <BoardListWrapper>
           <BoardListHeader>
             <Target>
-              검색결과: {target !== 'main' && sortingMethod === 'time'
-                ? target
-                : '전체'}
+              검색결과:{' '}
+              {target !== 'main' && sortingMethod === 'time' ? target : '전체'}
             </Target>
             <Menuline>
               <Search />
@@ -132,7 +131,7 @@ export default function SearchedPage({ match, location }) {
             pageNumber={pageNumber}
             treePerPage={10}
             postSum={postSum}
-            routingString={`board/${target}`}
+            routingString={`searched/${target}`}
           />
         </PageButtonContainer>
       </PageButtonArea>
@@ -193,7 +192,6 @@ export const Menuline = styled.div`
 const Buttons = styled.div`
   display: flex;
   max-width: 100%;
-  
 `
 
 export const Button = styled.button`

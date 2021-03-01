@@ -53,7 +53,7 @@ import { authService } from '../lib/firebase'
 const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
 
 const nameSet = [
-  '자연대',
+  '이과대',
   '공대',
   '문과대',
   '상경대',
