@@ -36,6 +36,7 @@ const initialState = {
     },
   },
   treeSum: null,
+  tempThumbnailURL: '',
 }
 
 // define ACTION types
@@ -83,8 +84,36 @@ const FORK_TREE_TRY = 'techtree/FORK_TREE_TRY'
 const FORK_TREE_SUCCESS = 'techtree/FORK_TREE_SUCCESS'
 const FORK_TREE_FAIL = 'techtree/FORK_TREE_FAIL'
 
+const UPDATE_THUMBNAIL_TRY = 'techtree/UPDATE_THUMBNAIL_TRY'
+const UPDATE_THUMBNAIL_SUCCESS = 'techtree/UPDATE_THUMBNAIL_SUCCESS'
+const UPDATE_THUMBNAIL_FAIL = 'techtree/UPDATE_THUMBNAIL_FAIL'
+
+const CHANGE_THUMBNAIL = 'techtree/CHANGE_THUMBNAIL'
 // updateTechtree: 백엔드에 업데이트를 갱신함.
 // changeTechtree: 클라이언트상에서의 변화.
+
+export const changeThumbnail = (thumbnailURL) => {
+  return { type: CHANGE_THUMBNAIL, thumbnailURL }
+}
+
+export const updateThumbnail = (techtreeID, thumbnailURL) => async (
+  dispatch
+) => {
+  console.log('update thumbnail 호출됨')
+  dispatch({ type: UPDATE_THUMBNAIL_TRY })
+  try {
+    await axios({
+      method: 'put',
+      url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+      data: {
+        thumbnail: thumbnailURL,
+      },
+    })
+    dispatch({ type: UPDATE_THUMBNAIL_SUCCESS })
+  } catch (e) {
+    dispatch({ type: UPDATE_THUMBNAIL_FAIL })
+  }
+}
 
 export const likeTree = (treeID) => async (dispatch) => {
   dispatch({ type: LIKE_TREE_TRY })
@@ -521,6 +550,11 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
 
 export default function techtree(state = initialState, action) {
   switch (action.type) {
+    case CHANGE_THUMBNAIL:
+      return {
+        ...state,
+        tempThumbnailURL: action.thumbnailURL,
+      }
     case DELETE_TECHTREE_DATA_TRY:
       return {
         ...state,
@@ -565,6 +599,10 @@ export default function techtree(state = initialState, action) {
           nodeList: action.newNodeList,
           linkList: action.newLinkList,
         },
+        //selectedNode: {
+        //  name: '',
+        //  body: '',
+        //},
       }
     case DELETE_LINK:
       return {

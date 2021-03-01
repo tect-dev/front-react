@@ -36,6 +36,8 @@ import {
   finishTechtreeEdit,
   likeTree,
   forkTree,
+  changeThumbnail,
+  updateThumbnail,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import { boxShadow, colorPalette, fontSize } from '../../lib/constants'
@@ -84,6 +86,10 @@ export default function TechtreeDetailPage({ match }) {
     }
   })
 
+  const { reduxThumbnailURL } = useSelector((state) => {
+    return { reduxThumbnailURL: state.techtree.tempThumbnailURL }
+  })
+
   const [documentTitle, setDocumentTitle] = useState('')
   const [documentText, setDocumentText] = useState('')
   const [isEditingDocument, setIsEditingDocument] = useState(false)
@@ -100,6 +106,27 @@ export default function TechtreeDetailPage({ match }) {
         })
       )
   )
+  //const [thumbnailURL, setThumbnailURL] = useState()
+
+  useEffect(() => {
+    return () => {
+      //console.log('컴포넌트가 화면에서 사라짐.')
+      // 이 로직대로 라면 매번 화면을 들어갔다 나갔다 할때마다 썸네일이 갱신되는거니까 서버 부하가 심하겠네;
+      // dispatch(updateThumbnail(techtreeData._id, reduxThumbnailURL))
+    }
+  }, [])
+
+  useEffect(() => {
+    const svgDOM = document.getElementById('techtreeContainer')
+    if (svgDOM) {
+      const source = new XMLSerializer().serializeToString(svgDOM)
+      var decoded = unescape(encodeURIComponent(source))
+      // Now we can use btoa to convert the svg to base64
+      const base64 = btoa(decoded)
+      const thumbnailURL = `data:image/svg+xml;base64,${base64}`
+      dispatch(changeThumbnail(thumbnailURL))
+    }
+  }, [nodeList, linkList])
 
   useEffect(() => {
     authService.currentUser?.reload()
@@ -288,18 +315,18 @@ export default function TechtreeDetailPage({ match }) {
 
             <TreeEditButtonArea>
               <DefaultButton onClick={onClickForkTree}>
-                트리 분양받기
+                Add To My Forest
               </DefaultButton>
               <DefaultButton>
                 <a href={dataStr} download={`${techtreeData.title}.json`}>
-                  트리 다운로드
+                  Download
                 </a>
               </DefaultButton>
 
               {!isEditingDocument &&
               userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeEdit}>
-                  수정모드
+                  Edit Tree
                 </DefaultButton>
               ) : (
                 ''
@@ -308,7 +335,7 @@ export default function TechtreeDetailPage({ match }) {
               !isSavingTechtree &&
               userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeCommit}>
-                  변경사항 저장
+                  Save Tree
                 </DefaultButton>
               ) : (
                 ''
@@ -339,7 +366,7 @@ export default function TechtreeDetailPage({ match }) {
                     }
                   }}
                 >
-                  트리 삭제
+                  Delete All
                 </DangerButton>
               ) : (
                 ''
