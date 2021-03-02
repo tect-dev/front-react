@@ -53,7 +53,7 @@ export default function TechtreeListPage({ match, location }) {
 
   return (
     <MainWrapper>
-      <TreePageHeader>모두의 Forest</TreePageHeader>
+      <TreePageHeader>Forest</TreePageHeader>
       <GridWrapper>
         {pageNumber == 1 ? <PlantNewTreeCard /> : ''}
 

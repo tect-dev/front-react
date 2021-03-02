@@ -15,7 +15,7 @@ import { Spinner } from '../../components/Spinner'
 // import { Button } from '../../components/Button'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
-import { fontSize, AnonymousSVG } from '../../lib/constants'
+import { fontSize, AnonymousSVG, colorPalette } from '../../lib/constants'
 
 import { sortISOByTimeStamp } from '../../lib/functions'
 import { authService } from '../../lib/firebase'
@@ -160,7 +160,7 @@ export default function ProfilePage({ match }) {
             history.push(`/forest/${compareID}`)
           }}
         >
-          {displayName}의 Forest
+          {displayName}'s Forest
         </Tree_Button>
         {myID === compareID ? (
           <Logout_Button
@@ -169,7 +169,7 @@ export default function ProfilePage({ match }) {
               history.push('/')
             }}
           >
-            로그아웃
+            Logout
           </Logout_Button>
         ) : (
           ''
@@ -233,7 +233,7 @@ const DisplayName = styled.div`
 
 const Introduce = styled.div`
   font-size: ${fontSize.small};
-  color: #6d9b7b;
+  color: ${colorPalette.gray8};
   font-weight: lighter;
   margin-bottom: 30px;
 `

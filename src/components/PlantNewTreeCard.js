@@ -40,7 +40,7 @@ const PlantNewTree = () => {
         style={{ cursor: 'pointer' }}
       >
         <TreeThumbnailHeader>
-          <StyledTitle>새 나무 심기</StyledTitle>
+          <StyledTitle>Plant New Tree!</StyledTitle>
         </TreeThumbnailHeader>
         <TechtreeThumbnailBlock>
           <TechtreeThumbnailImage
