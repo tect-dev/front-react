@@ -31,14 +31,37 @@ const TreeMap = React.memo(function TechtreeMap() {
   const dispatch = useDispatch()
   const containerRef = React.useRef(null)
 
+  const {
+    selectedNode,
+    nodeList,
+    linkList,
+    loginState,
+    isEditingTechtree,
+  } = useSelector((state) => {
+    return {
+      selectedNode: state.techtree.selectedNode,
+      nodeList: state.techtree.nodeList,
+      linkList: state.techtree.linkList,
+      loginState: state.auth.loginState,
+      isEditingTechtree: state.techtree.isEditingTechtree,
+    }
+  })
+
   React.useEffect(() => {
     if (containerRef.current) {
-      initGraph(containerRef.current)
+      initGraph(containerRef.current, nodeList, linkList)
     }
-  }, [containerRef])
+  }, [])
   React.useEffect(() => {
-    updateGraph(containerRef.current, dispatch)
-  }, [containerRef, dispatch])
+    updateGraph(containerRef.current, dispatch, isEditingTechtree)
+  }, [
+    containerRef,
+    nodeList,
+    linkList,
+    dispatch,
+    loginState,
+    isEditingTechtree,
+  ])
 
   return (
     <>
@@ -47,16 +70,29 @@ const TreeMap = React.memo(function TechtreeMap() {
   )
 })
 
-function initGraph(container) {
+function initGraph(container, originalNodeList, originalLinkList) {
+  // 데이터 저장 원칙 : navbar 높이때문에 Y좌표는 보정이 필요함.
+  // 하지만 보정을 가한 좌표를 저장하지 않는다. 순수한 좌표를 저장해야함.
+  // 그 좌표에 대해 렌더링하는 시점에만 보정을 가한다.
+  // 그래야지 navbar 높이가 변해도 문제없이 렌더링 할 수 있음.
+
+  const nodeRadius = 15
+  const navbarHeight = 85
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
+
   const width = 700
   const height = 700
+
+  let nodeList = originalNodeList
+  let linkList = originalLinkList
 
   const svg = d3
     .select(container)
     .append('svg')
     .attr('id', 'techtreeContainer')
+    //  .attr('width', width)
+    //  .attr('height', height)
     .attr('viewBox', `0 0 ${width} ${height}`)
 
   // 마우스 드래그할때 나타나는 임시 라인 만들어두기.
@@ -73,12 +109,19 @@ function initGraph(container) {
   const linkGroup = svg.append('g').attr('class', 'links')
   const nodeGroup = svg.append('g').attr('class', 'nodes')
   const labelGroup = svg.append('g').attr('class', 'labels')
+
+  const offsetElement = document.getElementById('techtreeContainer')
+
+  const clientRect = offsetElement.getBoundingClientRect()
+  const relativeTop = clientRect.top
+  const scrolledTopLength = window.pageYOffset
+  const absoluteYPosition = scrolledTopLength + relativeTop
 }
 
 // reduxStore 이용해서 id 랑 매칭시키는거 제대로 작동 안할때가 많음.
 
 // 그래프가 갱신될때 호출되는 함수
-function updateGraph(container, dispatch) {
+function updateGraph(container, dispatch, isEditingTechtree) {
   const nodeRadius = 20
   const nodeColor = colorPalette.mainGreen
 
@@ -86,7 +129,6 @@ function updateGraph(container, dispatch) {
   const selectedNodeStrokeWidth = '2px'
 
   const labelSize = fontSize.medium
-  const deleteButtonLength = 15
 
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray4}`
@@ -104,7 +146,6 @@ function updateGraph(container, dispatch) {
 
   let nodeList = reduxStore.getState().techtree.nodeList
   let linkList = reduxStore.getState().techtree.linkList
-
   let tempPairingNodes = {
     startNodeID: null,
     startX: null,
@@ -116,7 +157,6 @@ function updateGraph(container, dispatch) {
   }
 
   reduxStore.subscribe(updateNode)
-  reduxStore.subscribe(initLink)
   //reduxStore.subscribe(updateLink)
   // 리덕스 스토어가 갱신될때마다 node랑 link 둘다 업데이트하면 무한호출로 에러발생.
 
@@ -141,7 +181,7 @@ function updateGraph(container, dispatch) {
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')
   const labelGroup = svg.select('.labels')
-
+  const deleteButtonLength = 15
   const techtreeID = reduxStore.getState().techtree.techtreeData._id
 
   function initLink() {
@@ -162,8 +202,10 @@ function updateGraph(container, dispatch) {
     // 링크 삭제용 버튼
     linkGroup
       .selectAll('image')
+      //.selectAll('rect')
       .data(linkList)
       .join('image')
+      //.join('rect')
       .attr('href', grayX)
       .attr('width', deleteButtonLength)
       .attr('height', deleteButtonLength)
@@ -189,7 +231,6 @@ function updateGraph(container, dispatch) {
         const deleteOK = window.confirm('정말 연결을 삭제하시나요?')
         if (deleteOK) {
           dispatch(deleteLink(nodeList, linkList, techtreeData, link))
-          updateLink()
         } else {
           return
         }
@@ -200,7 +241,7 @@ function updateGraph(container, dispatch) {
   // 노드 생성
   function initNode() {
     nodeGroup.selectAll('*').remove()
-    if (reduxStore.getState().techtree.isEditingTechtree) {
+    if (isEditingTechtree) {
       nodeGroup
         .selectAll('circle')
         .data(nodeList)
@@ -380,6 +421,8 @@ function updateGraph(container, dispatch) {
                   tempPairingNodes = {}
                 }
               })
+              //updateNode()
+              //updateLink()
               svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
               svg.select('.tempLine').style('opacity', '0')
             })
@@ -457,32 +500,55 @@ function updateGraph(container, dispatch) {
       )
   }
 
-  svg.on('dblclick', () => {
-    if (
-      reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-      reduxStore.getState().auth.userID
-    ) {
-      const ratioFactor = width / clientRect.width
-      const createdNode = {
-        id: `node${uid(20)}`,
-        name: '새로운 노드',
-        x: d3.event.offsetX * ratioFactor,
-        y: d3.event.offsetY * ratioFactor,
-        radius: nodeRadius,
-        body: '새로운 내용',
-        hashtags: [],
-        fillColor: '#69bc69',
-        parentNodeID: [],
-        childNodeID: [],
+  if (isEditingTechtree) {
+    svg.on('dblclick', () => {
+      if (
+        reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+        reduxStore.getState().auth.userID
+      ) {
+        const ratioFactor = width / clientRect.width
+        const createdNode = {
+          id: `node${uid(20)}`,
+          name: '새로운 노드',
+          x: d3.event.offsetX * ratioFactor,
+          y: d3.event.offsetY * ratioFactor,
+          radius: nodeRadius,
+          body: '새로운 내용',
+          hashtags: [],
+          fillColor: '#69bc69',
+          parentNodeID: [],
+          childNodeID: [],
+        }
+        nodeList = [...nodeList, createdNode]
+        reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
+        updateNode()
       }
-      nodeList = [...nodeList, createdNode]
-      reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
-      updateNode()
-    }
-  })
-  if (reduxStore.getState().techtree.isEditingTechtree) {
+    })
   } else {
     svg
+      .on('dblclick', () => {
+        if (
+          reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
+          reduxStore.getState().auth.userID
+        ) {
+          const ratioFactor = width / clientRect.width
+          const createdNode = {
+            id: `node${uid(20)}`,
+            name: '새로운 노드',
+            x: d3.event.offsetX * ratioFactor,
+            y: d3.event.offsetY * ratioFactor,
+            radius: nodeRadius,
+            body: '새로운 내용',
+            hashtags: [],
+            fillColor: '#69bc69',
+            parentNodeID: [],
+            childNodeID: [],
+          }
+          nodeList = [...nodeList, createdNode]
+          reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
+          updateNode()
+        }
+      })
       .on('mousemove', (d) => {
         svg
           .select('g')
