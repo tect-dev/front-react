@@ -753,7 +753,7 @@ export default function techtree(state = initialState, action) {
         linkList: action.treeData.linkList,
         previousNodeList: [],
         nextNodeList: [],
-        techtreeTitle: action.treeData.title,
+        techtreeTitle: `${action.treeData.title} (forked)`,
         selectedNode: {
           name: '',
           body: nodePlaceholder,
