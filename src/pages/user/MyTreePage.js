@@ -58,7 +58,7 @@ export default function MyTreePage({ match }) {
   }
   return (
     <MainWrapper>
-      <TreePageHeader>{forestOwnerDisplayName}의 Forest</TreePageHeader>
+      <TreePageHeader>{forestOwnerDisplayName}'s Forest</TreePageHeader>
       <GridWrapper>
         {loginState && userID === myID ? <PlantNewTreeCard /> : ''}
 

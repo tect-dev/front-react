@@ -73,6 +73,12 @@ const nameSet = [
   '약학',
 ] //shuffleArray()
 
+//const topCatchPraise1 = 'Foresty와 함께 지식의 숲을 가꿔나가요.'
+//const topCatchPraise2 = '지금까지 Foresty에 심어진 나무'
+
+const topCatchPraise1 = 'Grow Your Knowledge Tree With Foresty'
+const topCatchPraise2 = 'Trees planted by Foresty users'
+
 const catchPraise1 = 'With '
 const catchPraise2 = 'Grow Your Forest'
 const catchPraise3 = 'Community By Your Major'
@@ -126,9 +132,9 @@ export default function HomePage() {
           <br />
           <div>
             <br />
-            <div>Foresty와 함께 지식의 숲을 가꿔나가요.</div>
+            <div>{topCatchPraise1}</div>
             <br />
-            <div>지금까지 Foresty에 심어진 나무</div>
+            <div>{topCatchPraise2}</div>
             <br />
             <TreeSumText>
               {treeSum ? <CountUp end={treeSum} duration={2.5} /> : ''}
@@ -389,26 +395,30 @@ function DemoTree() {
                 )
               }}
             >
-              트리 분양받기
+              Fork This Tree
             </DefaultButton>
             <DefaultButton
               onClick={() => {
                 alert('작성한 트리를 json 형태로 다운받을 수 있어요.')
               }}
             >
-              트리 다운로드
+              Download Tree
             </DefaultButton>
 
-            <DefaultButton onClick={onClickTechtreeEdit}>
-              수정모드
-            </DefaultButton>
+            {isEditingTechtree ? (
+              <DefaultButton onClick={onClickTechtreeEdit}>Done</DefaultButton>
+            ) : (
+              <DefaultButton onClick={onClickTechtreeEdit}>
+                Edit Tree
+              </DefaultButton>
+            )}
 
             <DefaultButton
               onClick={() => {
                 alert('이 버튼을 누르면 트리에서의 변경사항이 저장돼요!')
               }}
             >
-              변경사항 저장
+              Save Changes
             </DefaultButton>
             <DangerButton
               onClick={() => {
@@ -422,7 +432,7 @@ function DemoTree() {
                 }
               }}
             >
-              트리 삭제
+              Delete All
             </DangerButton>
           </TreeEditButtonArea>
         </HalfWidthContainer>

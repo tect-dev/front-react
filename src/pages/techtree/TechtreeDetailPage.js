@@ -111,22 +111,16 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     return () => {
       //console.log('컴포넌트가 화면에서 사라짐.')
-      // 이 로직대로 라면 매번 화면을 들어갔다 나갔다 할때마다 썸네일이 갱신되는거니까 서버 부하가 심하겠네;
-      // dispatch(updateThumbnail(techtreeData._id, reduxThumbnailURL))
+      if (
+        //userID === techtreeData.author?.firebaseUid &&
+        techtreeData.thumbnail !== reduxThumbnailURL
+      ) {
+        //dispatch(updateThumbnail(techtreeData._id, reduxThumbnailURL))
+        //alert('변경사항이 있습니다! 변경사항을 저장 하셨나요?')
+        // console.log('썸네일이 변경됨')
+      }
     }
   }, [])
-
-  useEffect(() => {
-    const svgDOM = document.getElementById('techtreeContainer')
-    if (svgDOM) {
-      const source = new XMLSerializer().serializeToString(svgDOM)
-      var decoded = unescape(encodeURIComponent(source))
-      // Now we can use btoa to convert the svg to base64
-      const base64 = btoa(decoded)
-      const thumbnailURL = `data:image/svg+xml;base64,${base64}`
-      dispatch(changeThumbnail(thumbnailURL))
-    }
-  }, [nodeList, linkList])
 
   useEffect(() => {
     authService.currentUser?.reload()
@@ -315,16 +309,17 @@ export default function TechtreeDetailPage({ match }) {
 
             <TreeEditButtonArea>
               <DefaultButton onClick={onClickForkTree}>
-                Add To My Forest
+                Fork This Tree
               </DefaultButton>
               <DefaultButton>
                 <a href={dataStr} download={`${techtreeData.title}.json`}>
-                  Download
+                  Download Tree
                 </a>
               </DefaultButton>
 
               {!isEditingDocument &&
-              userID === techtreeData?.author?.firebaseUid ? (
+              userID === techtreeData?.author?.firebaseUid &&
+              !isEditingTechtree ? (
                 <DefaultButton onClick={onClickTechtreeEdit}>
                   Edit Tree
                 </DefaultButton>
@@ -332,10 +327,20 @@ export default function TechtreeDetailPage({ match }) {
                 ''
               )}
               {!isEditingDocument &&
+              userID === techtreeData?.author?.firebaseUid &&
+              isEditingTechtree ? (
+                <DefaultButton onClick={onClickTechtreeEdit}>
+                  Done
+                </DefaultButton>
+              ) : (
+                ''
+              )}
+
+              {!isEditingDocument &&
               !isSavingTechtree &&
               userID === techtreeData?.author?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeCommit}>
-                  Save Tree
+                  Save Changes
                 </DefaultButton>
               ) : (
                 ''

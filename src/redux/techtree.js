@@ -93,6 +93,7 @@ const CHANGE_THUMBNAIL = 'techtree/CHANGE_THUMBNAIL'
 // changeTechtree: 클라이언트상에서의 변화.
 
 export const changeThumbnail = (thumbnailURL) => {
+  console.log('CHANGE_THUMBNAIL 호출됨')
   return { type: CHANGE_THUMBNAIL, thumbnailURL }
 }
 
@@ -218,7 +219,7 @@ export const forkTree = (
           url: `${process.env.REACT_APP_BACKEND_URL}/techtree`,
           headers: { 'Content-Type': 'application/json' },
           data: {
-            title: treeData.title,
+            title: `${treeData.title} (forked)`,
             _id: techtreeID,
             hashtags: [],
             nodeList: JSON.stringify(nodeList),
