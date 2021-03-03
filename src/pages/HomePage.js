@@ -43,6 +43,7 @@ import {
   colorPalette,
   hoverAction,
   fontSize,
+  fontWeight,
 } from '../lib/constants'
 import { selectNode, changeTreeTitle, finishEditDocu } from '../redux/demo'
 import { editTechtree, finishTechtreeEdit } from '../redux/techtree'
@@ -132,7 +133,14 @@ export default function HomePage() {
           <br />
           <div>
             <br />
-            <div>{topCatchPraise1}</div>
+            <div
+              style={{
+                fontSize: fontSize.large,
+                fontWeight: fontWeight.semibold,
+              }}
+            >
+              {topCatchPraise1}
+            </div>
             <br />
             <div>{topCatchPraise2}</div>
             <br />
@@ -365,24 +373,22 @@ function DemoTree() {
   const onClickTechtreeCommit = useCallback(
     async (e) => {
       e.preventDefault()
-
-      //dispatch(updateTechtree(nodeList, linkList, techtreeTitle))
     },
     [dispatch, nodeList, linkList, techtreeTitle]
   )
 
   return (
     <>
+      <TreeTitleArea>
+        <TitleInput
+          value={techtreeTitle}
+          placeholder="트리의 주제를 적어주세요!"
+          onChange={onChangeTechtreeTitle}
+          maxLength="30"
+        />
+      </TreeTitleArea>
       <DoubleSideLayout>
         <HalfWidthContainer>
-          <TreeTitleArea>
-            <TitleInput
-              value={techtreeTitle}
-              placeholder="트리의 주제를 적어주세요!"
-              onChange={onChangeTechtreeTitle}
-              maxLength="30"
-            />
-          </TreeTitleArea>
           <TreeEditorArea>
             <TreeMapDemo />
           </TreeEditorArea>

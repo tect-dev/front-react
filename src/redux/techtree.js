@@ -89,11 +89,23 @@ const UPDATE_THUMBNAIL_SUCCESS = 'techtree/UPDATE_THUMBNAIL_SUCCESS'
 const UPDATE_THUMBNAIL_FAIL = 'techtree/UPDATE_THUMBNAIL_FAIL'
 
 const CHANGE_THUMBNAIL = 'techtree/CHANGE_THUMBNAIL'
+
+const CHANGE_NODECOLOR = 'techtree/CHANGE_NODECOLOR'
+
 // updateTechtree: 백엔드에 업데이트를 갱신함.
 // changeTechtree: 클라이언트상에서의 변화.
 
+export const changeNodeColor = (nodeList, coloredNode) => {
+  const changingIndex = nodeList.findIndex(
+    (element) => coloredNode.id === element.id
+  )
+  const newNodeList = nodeList
+  newNodeList[changingIndex] = coloredNode
+
+  return { type: CHANGE_NODECOLOR, newNodeList }
+}
+
 export const changeThumbnail = (thumbnailURL) => {
-  console.log('CHANGE_THUMBNAIL 호출됨')
   return { type: CHANGE_THUMBNAIL, thumbnailURL }
 }
 
@@ -551,6 +563,12 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
 
 export default function techtree(state = initialState, action) {
   switch (action.type) {
+    case CHANGE_NODECOLOR:
+      return {
+        ...state,
+        nodeList: action.newNodeList,
+        techtreeData: { ...state.techtreeData, nodeList: action.newNodeList },
+      }
     case CHANGE_THUMBNAIL:
       return {
         ...state,

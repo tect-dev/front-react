@@ -15,6 +15,7 @@ import {
   deleteNode,
   deleteLink,
   changeThumbnail,
+  updateThumbnail,
 } from '../redux/techtree'
 import { useDispatch, useSelector } from 'react-redux'
 import { reduxStore } from '../index'
@@ -30,6 +31,12 @@ const TreeMap = React.memo(function TechtreeMap() {
   const dispatch = useDispatch()
   const containerRef = React.useRef(null)
 
+  const { treeData } = useSelector((state) => {
+    return {
+      treeData: state.techtree.techtreeData,
+    }
+  })
+
   React.useEffect(() => {
     if (containerRef.current) {
       initGraph(containerRef.current)
@@ -37,7 +44,7 @@ const TreeMap = React.memo(function TechtreeMap() {
   }, [containerRef])
   React.useEffect(() => {
     updateGraph(containerRef.current, dispatch)
-  }, [containerRef, dispatch])
+  }, [containerRef, dispatch, treeData])
 
   return (
     <>
@@ -186,12 +193,13 @@ function updateGraph(container, dispatch) {
       .attr('class', (d) => {
         return `delete${d.id}`
       })
-      .on('click', (link) => {
+      .on('click', async (link) => {
         const deleteOK = window.confirm('정말 연결을 삭제하시나요?')
         if (deleteOK) {
-          dispatch(deleteLink(nodeList, linkList, techtreeData, link))
-          dispatch(changeThumbnail(tempThumbnailURL))
-          updateLink()
+          await dispatch(deleteLink(nodeList, linkList, techtreeData, link))
+          await updateLink()
+          await changeTreeThumbnail()
+          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
         } else {
           return
         }
@@ -215,7 +223,7 @@ function updateGraph(container, dispatch) {
       .data(nodeList)
       .join('circle')
       .attr('r', (d) => nodeRadius)
-      .style('fill', (d) => nodeColor) // 나중에 d.fillColor 로 변경
+      .style('fill', (d) => d.fillColor)
       .style('stroke', (d) => {
         if (d.id === reduxStore.getState().techtree.selectedNode.id) {
           return selectedColor
@@ -266,21 +274,22 @@ function updateGraph(container, dispatch) {
             initNode()
             initLabel()
           })
-          .on('end', function (node) {
+          .on('end', async (node) => {
             d3.select(this).classed('active', false)
             node.x = d3.event.x
             node.y = d3.event.y
 
-            dispatch(
+            await dispatch(
               createLink(
                 nodeList,
                 linkList,
                 reduxStore.getState().techtree.techtreeData
               )
             )
-            dispatch(changeThumbnail(tempThumbnailURL))
-            updateLink()
-            updateLink()
+            await updateNode()
+            await updateLink()
+            await changeTreeThumbnail()
+            await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
           })
       )
     } else {
@@ -329,10 +338,10 @@ function updateGraph(container, dispatch) {
               initLabel()
             }
           })
-          .on('end', (startNode) => {
+          .on('end', async (startNode) => {
             const pointerX = d3.event.x
             const pointerY = d3.event.y
-            nodeList.map((node) => {
+            nodeList.map(async (node) => {
               if (
                 (node.x - pointerX) * (node.x - pointerX) +
                   (node.y - pointerY) * (node.y - pointerY) <
@@ -358,14 +367,21 @@ function updateGraph(container, dispatch) {
                 ) {
                   tempPairingNodes.id = `link${uid(20)}`
                   linkList.push({ ...tempPairingNodes })
-                  dispatch(
+
+                  await dispatch(
                     createLink(
                       nodeList,
                       linkList,
                       reduxStore.getState().techtree.techtreeData
                     )
                   )
-                  updateLink()
+
+                  await updateLink()
+                  await changeTreeThumbnail()
+                  await dispatch(
+                    updateThumbnail(techtreeData._id, tempThumbnailURL)
+                  )
+
                   svg.select('.tempLine').style('opacity', '0')
                 }
                 svg
@@ -392,7 +408,7 @@ function updateGraph(container, dispatch) {
       .attr('href', grayX)
       .attr('width', deleteButtonLength)
       .attr('height', deleteButtonLength)
-      .style('fill', (d) => nodeColor)
+      .style('fill', (d) => d.fillColor)
       .attr('x', (d) => {
         return d.x - nodeRadius * 1.7
       })
@@ -409,10 +425,10 @@ function updateGraph(container, dispatch) {
           return 'none'
         }
       })
-      .on('click', (d) => {
+      .on('click', async (d) => {
         const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
         if (deleteOK) {
-          dispatch(
+          await dispatch(
             deleteNode(
               nodeList,
               linkList,
@@ -421,9 +437,10 @@ function updateGraph(container, dispatch) {
               reduxStore.getState().techtree.techtreeData
             )
           )
-          dispatch(changeThumbnail(tempThumbnailURL))
-          updateNode()
-          updateLink()
+          await updateNode()
+          await updateLink()
+          await changeTreeThumbnail()
+          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
         } else {
           return
         }
@@ -458,7 +475,7 @@ function updateGraph(container, dispatch) {
       )
   }
 
-  svg.on('dblclick', () => {
+  svg.on('dblclick', async () => {
     if (
       reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
       reduxStore.getState().auth.userID
@@ -477,9 +494,10 @@ function updateGraph(container, dispatch) {
         childNodeID: [],
       }
       nodeList = [...nodeList, createdNode]
-      reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
-      dispatch(changeThumbnail(tempThumbnailURL))
-      updateNode()
+      await reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
+      await updateNode()
+      await changeTreeThumbnail()
+      await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
     }
   })
   if (reduxStore.getState().techtree.isEditingTechtree) {
