@@ -5,7 +5,7 @@ import { colorPalette, fontSize } from '../lib/constants'
 export const TitleInput = styled.input`
   all: unset;
   font-weight: bold;
-  color: ${colorPalette.mainGreen};
+  color: ${colorPalette.gray8};
   padding: 10px 0 20px 10px;
   width: 100%;
   font-size: ${fontSize.large};
@@ -24,7 +24,7 @@ export const TitleBottomLine = styled.div`
 export const StyledTitle = styled.div`
   all: unset;
   font-weight: bold;
-  color: ${colorPalette.mainGreen};
+  color: ${colorPalette.gray8};
   padding: 10px 0 20px 10px;
   font-size: ${fontSize.large};
 `

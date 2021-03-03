@@ -19,6 +19,13 @@ export const mediaSize = {
 
 export const userDefaultID = '000000000000000000000000'
 
+export const fontWeight = {
+  thin: 100,
+  semibold: 500,
+  bold: 700,
+  heavybold: 900,
+}
+
 export const fontSize = {
   xsmall: '12px',
   small: '14px',
@@ -38,6 +45,18 @@ export const hoverAction = {
 }
 
 export const colorPalette = {
+  /* violet */
+  violet0: '#f3f0ff',
+  violet1: '#e5dbff',
+  violet2: '#d0bfff',
+  violet3: '#b197fc',
+  violet4: '#9775fa',
+  violet5: '#845ef7',
+  violet6: '#7950f2',
+  violet7: '#7048e8',
+  violet8: '#6741d9',
+  violet9: '#5f3dc4',
+
   // Indigo
   indigo0: '#edf2ff',
   indigo1: '#dbe4ff',
@@ -116,6 +135,17 @@ export const colorPalette = {
   gray7: '#495057',
   gray8: '#343A40',
   gray9: '#212529',
+  /* yellow */
+  yellow0: '#fff9db',
+  yellow1: '#fff3bf',
+  yellow2: '#ffec99',
+  yellow3: '#ffe066',
+  yellow4: '#ffd43b',
+  yellow5: '#fcc419',
+  yellow6: '#fab005',
+  yellow7: '#f59f00',
+  yellow8: '#f08c00',
+  yellow9: '#e67700',
   /* red */
   red0: '#fff5f5',
   red1: '#ffe3e3',

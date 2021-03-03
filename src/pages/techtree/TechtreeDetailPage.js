@@ -36,8 +36,7 @@ import {
   finishTechtreeEdit,
   likeTree,
   forkTree,
-  changeThumbnail,
-  updateThumbnail,
+  changeNodeColor,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import { boxShadow, colorPalette, fontSize } from '../../lib/constants'
@@ -229,6 +228,15 @@ export default function TechtreeDetailPage({ match }) {
     dispatch(forkTree(techtreeData, nodeList, linkList, userID, thumbnailURL))
   }, [dispatch, nodeList, linkList, techtreeID, techtreeData, userID])
 
+  const onChangeNodeColor = useCallback(
+    (selectedColor) => {
+      // 새로운 테크트리 데이터 객체를 만들어서 인자로 건내줘야 하나.
+      const coloredNode = { ...selectedNode, fillColor: selectedColor }
+      dispatch(changeNodeColor(nodeList, coloredNode))
+    },
+    [nodeList, selectedNode]
+  )
+
   if (loading) {
     return (
       <MainWrapper>
@@ -278,33 +286,30 @@ export default function TechtreeDetailPage({ match }) {
             </LikeButton>
           )}
         </TreePageHeader>
+        <TreeTitleArea>
+          {techtreeData?.author?.firebaseUid === userID ? (
+            <TitleInput
+              value={techtreeTitle}
+              placeholder="트리의 주제를 적어주세요!"
+              onChange={onChangeTechtreeTitle}
+              maxLength="60"
+            />
+          ) : (
+            <>
+              <StyledTitle>{techtreeTitle}</StyledTitle>
+
+              <StyledDisplayName>
+                <Link to={`/forest/${techtreeData?.author?.firebaseUid}`}>
+                  {techtreeData?.author?.displayName}
+                </Link>
+              </StyledDisplayName>
+            </>
+          )}
+        </TreeTitleArea>
         <DoubleSideLayout>
           <HalfWidthContainer>
-            <TreeTitleArea>
-              {techtreeData?.author?.firebaseUid === userID ? (
-                <TitleInput
-                  value={techtreeTitle}
-                  placeholder="트리의 주제를 적어주세요!"
-                  onChange={onChangeTechtreeTitle}
-                  maxLength="60"
-                />
-              ) : (
-                <>
-                  <StyledTitle>{techtreeTitle}</StyledTitle>
-
-                  <StyledDisplayName>
-                    <Link to={`/forest/${techtreeData?.author?.firebaseUid}`}>
-                      {techtreeData?.author?.displayName}
-                    </Link>
-                  </StyledDisplayName>
-                </>
-              )}
-            </TreeTitleArea>
             <TreeEditorArea>
-              <TechtreeMap
-              //techtreeTitle={techtreeTitle}
-              //techtreeID={techtreeID}
-              />
+              <TechtreeMap />
             </TreeEditorArea>
 
             <TreeEditButtonArea>
@@ -418,6 +423,42 @@ export default function TechtreeDetailPage({ match }) {
                   )}
                 </EditDocuButtonArea>
               </DocuHeaderArea>
+              {typeof selectedNode.id !== 'undefined' &&
+              isEditingDocument &&
+              userID === techtreeData?.author?.firebaseUid ? (
+                <NodeColorButtonArea>
+                  <NodeColorButton
+                    style={{ background: colorPalette.red7 }}
+                    onClick={() => {
+                      onChangeNodeColor(colorPalette.red7)
+                    }}
+                  ></NodeColorButton>
+                  <NodeColorButton
+                    style={{ background: colorPalette.yellow5 }}
+                    onClick={() => {
+                      onChangeNodeColor(colorPalette.yellow5)
+                    }}
+                  ></NodeColorButton>
+                  <NodeColorButton
+                    style={{ background: colorPalette.green5 }}
+                    onClick={() => {
+                      onChangeNodeColor(colorPalette.green5)
+                    }}
+                  ></NodeColorButton>
+                  <NodeColorButton
+                    style={{ background: colorPalette.blue5 }}
+                    onClick={() => {
+                      onChangeNodeColor(colorPalette.blue5)
+                    }}
+                  ></NodeColorButton>
+                  <NodeColorButton
+                    style={{ background: colorPalette.violet5 }}
+                    onClick={() => {
+                      onChangeNodeColor(colorPalette.violet5)
+                    }}
+                  ></NodeColorButton>
+                </NodeColorButtonArea>
+              ) : null}
               <TitleBottomLine />
               <DocuBodyArea>
                 {isEditingDocument ? (
@@ -567,8 +608,24 @@ export const DocuWrapper = styled.div`
 
 export const DocuHeaderArea = styled.div`
   display: grid;
-  //justify-content: space-between;
+  padding: 10px;
+  justify-content: space-between;
   grid-template-columns: 2fr 1fr;
+`
+
+export const NodeColorButtonArea = styled.div`
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+`
+
+export const NodeColorButton = styled.button`
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border: none;
+  margin-left: 3px;
+  margin-right: 3px;
 `
 
 export const EditDocuButtonArea = styled.div`
@@ -605,7 +662,7 @@ export const HalfWidthContainer = styled.div`
 
 export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
   width: 100%;
-  height: 80vh;
+  height: 90vh;
   @media (max-width: 650px) {
     height: auto;
   }
