@@ -15,7 +15,7 @@ export const TitleInput = styled.input`
 `
 export const TitleBottomLine = styled.div`
   width: 90%;
-  height: 1px;
+  height: 0.5px;
   margin-left: 10px;
   margin-bottom: 14px;
   background: ${colorPalette.mainGreen};

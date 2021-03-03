@@ -9,6 +9,7 @@ import {
   testURL,
   fontSize,
 } from '../lib/constants'
+import { isoStringToNaturalLanguage } from '../lib/functions'
 import styled from 'styled-components'
 
 export default React.memo(function ({
@@ -18,34 +19,29 @@ export default React.memo(function ({
   techtreeID,
   techtreeData,
 }) {
-  const containerRef = React.useRef(null)
-  const imgRef = React.useRef(null)
-
-  React.useEffect(() => {
-    //if (containerRef.current) {
-    //  runForceGraph(containerRef.current, nodeList, linkList, techtreeID)
-    //}
-  }, [])
-
   return (
     <TechtreeThumbnailCard>
       <Link to={`/tree/${techtreeID}`}>
-        <TreeThumbnailHeader>
-          <StyledTitle>{techtreeTitle}</StyledTitle>
-          <StyledTitle
-            style={{ fontSize: fontSize.xsmall, color: colorPalette.gray7 }}
-          >
-            {techtreeData.author[0]?.displayName}
-          </StyledTitle>
-        </TreeThumbnailHeader>
-
         <TechtreeThumbnailBlock>
           <TechtreeThumbnailImage
             src={techtreeData.thumbnail}
             alt="treeThumbnail"
           />
         </TechtreeThumbnailBlock>
-        {/* <TreeThumbnailFooter>여기 좋아요 갯수가 들어가야함</TreeThumbnailFooter>*/}
+        <ThumbnailBottomLine />
+        <TreeInfoArea>
+          <TreeThumbnailHeader>
+            <StyledTitle>{techtreeTitle}</StyledTitle>
+            <StyledTitle
+              style={{ fontSize: fontSize.xsmall, color: colorPalette.gray7 }}
+            >
+              {techtreeData.author[0]?.displayName}
+            </StyledTitle>
+          </TreeThumbnailHeader>
+          <TreeThumbnailFooter>
+            {isoStringToNaturalLanguage(techtreeData.createdAt).substr(0, 12)}
+          </TreeThumbnailFooter>
+        </TreeInfoArea>
       </Link>
     </TechtreeThumbnailCard>
   )
@@ -54,6 +50,14 @@ export default React.memo(function ({
 export const TechtreeThumbnailBlock = styled.div`
   padding: 5px;
 `
+export const ThumbnailBottomLine = styled.div`
+  width: 90%;
+  height: 0.5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  background: ${colorPalette.gray3};
+  border-radius: 1px;
+`
 
 export const TechtreeThumbnailImage = styled.img`
   width: 250px;
@@ -61,21 +65,23 @@ export const TechtreeThumbnailImage = styled.img`
   //height: 250px;
   object-fit: fill;
   border-radius: 3px;
-  //border: 1px solid ${colorPalette.gray1};
-  background-color: #ffffff;
+`
+
+export const TreeInfoArea = styled.div`
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
 `
 
 export const TreeThumbnailHeader = styled.div`
-  padding-left: 1rem;
-  padding-right: 1rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
 `
 
 export const TreeThumbnailFooter = styled.div`
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: ${fontSize.small};
+  text-align: center;
+  font-size: ${fontSize.xsmall};
+  color: ${colorPalette.gray7};
 `
 
 export const TechtreeInfo = styled.div`
