@@ -49,15 +49,19 @@ export default function TechtreeDetailPage({ match }) {
   const { loginState, userID } = useSelector((state) => {
     return { loginState: state.auth.loginState, userID: state.auth.userID }
   })
-  const { loading, isSavingTechtree, isEditingTechtree } = useSelector(
-    (state) => {
-      return {
-        loading: state.techtree.loading,
-        isSavingTechtree: state.techtree.isSavingTechtree,
-        isEditingTechtree: state.techtree.isEditingTechtree,
-      }
+  const {
+    loading,
+    isSavingTechtree,
+    isEditingTechtree,
+    treeAuthor,
+  } = useSelector((state) => {
+    return {
+      loading: state.techtree.loading,
+      isSavingTechtree: state.techtree.isSavingTechtree,
+      isEditingTechtree: state.techtree.isEditingTechtree,
+      treeAuthor: state.techtree.treeAuthor,
     }
-  )
+  })
 
   const { selectedNode, previousNodeList, nextNodeList } = useSelector(
     (state) => {
@@ -130,7 +134,7 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
-  }, [selectedNode, techtreeData])
+  }, [selectedNode])
 
   useEffect(() => {
     const tempData = { title: techtreeData.title, linkList: linkList }
@@ -287,7 +291,7 @@ export default function TechtreeDetailPage({ match }) {
           )}
         </TreePageHeader>
         <TreeTitleArea>
-          {techtreeData?.author?.firebaseUid === userID ? (
+          {treeAuthor?.firebaseUid === userID ? (
             <TitleInput
               value={techtreeTitle}
               placeholder="트리의 주제를 적어주세요!"
@@ -299,8 +303,8 @@ export default function TechtreeDetailPage({ match }) {
               <StyledTitle>{techtreeTitle}</StyledTitle>
 
               <StyledDisplayName>
-                <Link to={`/forest/${techtreeData?.author?.firebaseUid}`}>
-                  {techtreeData?.author?.displayName}
+                <Link to={`/forest/${treeAuthor?.firebaseUid}`}>
+                  {treeAuthor?.displayName}
                 </Link>
               </StyledDisplayName>
             </>
@@ -323,7 +327,7 @@ export default function TechtreeDetailPage({ match }) {
               </DefaultButton>
 
               {!isEditingDocument &&
-              userID === techtreeData?.author?.firebaseUid &&
+              userID === treeAuthor?.firebaseUid &&
               !isEditingTechtree ? (
                 <DefaultButton onClick={onClickTechtreeEdit}>
                   Edit Tree
@@ -332,7 +336,7 @@ export default function TechtreeDetailPage({ match }) {
                 ''
               )}
               {!isEditingDocument &&
-              userID === techtreeData?.author?.firebaseUid &&
+              userID === treeAuthor?.firebaseUid &&
               isEditingTechtree ? (
                 <DefaultButton onClick={onClickTechtreeEdit}>
                   Done
@@ -343,7 +347,7 @@ export default function TechtreeDetailPage({ match }) {
 
               {!isEditingDocument &&
               !isSavingTechtree &&
-              userID === techtreeData?.author?.firebaseUid ? (
+              userID === treeAuthor?.firebaseUid ? (
                 <DefaultButton onClick={onClickTechtreeCommit}>
                   Save Changes
                 </DefaultButton>
@@ -362,13 +366,10 @@ export default function TechtreeDetailPage({ match }) {
               ) : (
                 ''
               )}
-              {!isEditingDocument &&
-              userID === techtreeData?.author?.firebaseUid ? (
+              {!isEditingDocument && userID === treeAuthor?.firebaseUid ? (
                 <DangerButton
                   onClick={() => {
-                    const deleteOK = window.confirm(
-                      `트리 자체가 사라져 버려요!`
-                    )
+                    const deleteOK = window.confirm(`정말 삭제하시나요?`)
                     if (deleteOK) {
                       dispatch(deleteTechtree(techtreeData?._id))
                     } else {
@@ -410,7 +411,7 @@ export default function TechtreeDetailPage({ match }) {
                   )}
                   {typeof selectedNode.id !== 'undefined' &&
                   !isEditingDocument &&
-                  userID === techtreeData?.author?.firebaseUid ? (
+                  userID === treeAuthor?.firebaseUid ? (
                     <DefaultButton
                       onClick={() => {
                         setIsEditingDocument(true)
@@ -425,7 +426,7 @@ export default function TechtreeDetailPage({ match }) {
               </DocuHeaderArea>
               {typeof selectedNode.id !== 'undefined' &&
               isEditingDocument &&
-              userID === techtreeData?.author?.firebaseUid ? (
+              userID === treeAuthor?.firebaseUid ? (
                 <NodeColorButtonArea>
                   <NodeColorButton
                     style={{ background: colorPalette.red7 }}

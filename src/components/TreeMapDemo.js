@@ -247,7 +247,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .data(nodeList)
         .join('circle')
         .attr('r', (d) => nodeRadius)
-        .style('fill', (d) => nodeColor) // 나중에 d.fillColor 로 변경
+        .style('fill', (d) => d.fillColor) // 나중에 d.fillColor 로 변경
         .style('stroke', (d) => {
           if (d.id === reduxStore.getState().demo.selectedNode.id) {
             return selectedColor
@@ -309,7 +309,7 @@ function updateGraph(container, dispatch, isEditingTechtree) {
         .data(nodeList)
         .join('circle')
         .attr('r', (d) => nodeRadius)
-        .style('fill', (d) => nodeColor)
+        .style('fill', (d) => d.fillColor)
         .style('stroke', (d) => {
           if (d.id === reduxStore.getState().demo.selectedNode.id) {
             return selectedColor

@@ -49,7 +49,9 @@ import { selectNode, changeTreeTitle, finishEditDocu } from '../redux/demo'
 import { editTechtree, finishTechtreeEdit } from '../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
 import departments from '../lib/yonseiDepartments.json'
+import translationText from '../lib/translation.json'
 import { authService } from '../lib/firebase'
+import Swal from 'sweetalert2'
 
 const colorSet = [colorPalette.teal1, colorPalette.green1, colorPalette.lime1]
 
@@ -77,8 +79,8 @@ const nameSet = [
 //const topCatchPraise1 = 'Foresty와 함께 지식의 숲을 가꿔나가요.'
 //const topCatchPraise2 = '지금까지 Foresty에 심어진 나무'
 
-const topCatchPraise1 = 'Grow Your Knowledge Tree With Foresty'
-const topCatchPraise2 = 'Trees planted by Foresty users'
+const topCatchPraise1 = translationText.en.topCatchPraise1
+const topCatchPraise2 = translationText.en.topCatchPraise2
 
 const catchPraise1 = 'With '
 const catchPraise2 = 'Grow Your Forest'
@@ -396,16 +398,21 @@ function DemoTree() {
           <TreeEditButtonArea>
             <DefaultButton
               onClick={() => {
-                alert(
-                  '마음에 드는 트리를 복사해 자신의 forest 에 추가할 수 있어요!'
-                )
+                Swal.fire('Fork Other Tree', 'You can add tree to your Forest!')
+                // alert(
+                //   '마음에 드는 트리를 복사해 자신의 forest 에 추가할 수 있어요!'
+                // )
               }}
             >
               Fork This Tree
             </DefaultButton>
             <DefaultButton
               onClick={() => {
-                alert('작성한 트리를 json 형태로 다운받을 수 있어요.')
+                Swal.fire(
+                  'Easy Backup',
+                  'You can download tree as a json format!'
+                )
+                //alert('작성한 트리를 json 형태로 다운받을 수 있어요.')
               }}
             >
               Download Tree
@@ -421,21 +428,26 @@ function DemoTree() {
 
             <DefaultButton
               onClick={() => {
-                alert('이 버튼을 누르면 트리에서의 변경사항이 저장돼요!')
+                Swal.fire(
+                  'Update Tree',
+                  'When it is clicked, changes are saved!'
+                )
+                //alert('이 버튼을 누르면 트리에서의 변경사항이 저장돼요!')
               }}
             >
               Save Changes
             </DefaultButton>
             <DangerButton
               onClick={() => {
-                const deleteOK = window.confirm(
-                  `조심하세요! 이 버튼을 누르면 트리 전체가 삭제돼요!`
-                )
-                if (deleteOK) {
-                  //alert('')
-                } else {
-                  return
-                }
+                Swal.fire('Watch Out!', 'This button delete tree totally!')
+                //const deleteOK = window.confirm(
+                //  `조심하세요! 이 버튼을 누르면 트리 전체가 삭제돼요!`
+                //)
+                //if (deleteOK) {
+                //  //alert('')
+                //} else {
+                //  return
+                //}
               }}
             >
               Delete All

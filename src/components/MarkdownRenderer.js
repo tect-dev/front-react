@@ -43,8 +43,8 @@ const MarkdownStyledBlock = styled.div`
   h3,
   h4 {
     line-height: 1.5;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.3rem;
   }
   a {
     color: ${colorPalette.teal7};
@@ -69,6 +69,15 @@ const MarkdownStyledBlock = styled.div`
       font-size: 0.75rem;
       padding: 0.75rem;
     }
+  }
+  code {
+    background: ${colorPalette.gray1};
+    font-family: 'Noto Sans KR', 'Fira Mono', source-code-pro, Menlo, Monaco,
+      Consolas, 'Courier New', monospace;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-left: 2px;
   }
   img {
     max-width: 100%;
