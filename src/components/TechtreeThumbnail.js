@@ -31,7 +31,9 @@ export default React.memo(function ({
         <ThumbnailBottomLine />
         <TreeInfoArea>
           <TreeThumbnailHeader>
-            <StyledTitle>{techtreeTitle}</StyledTitle>
+            <StyledTitle style={{ fontSize: fontSize.medium }}>
+              {techtreeTitle}
+            </StyledTitle>
             <StyledTitle
               style={{ fontSize: fontSize.xsmall, color: colorPalette.gray7 }}
             >
@@ -100,7 +102,8 @@ export const TechtreeThumbnailCard = styled.div`
   grid-column-start: span 1;
   display: grid;
   width: 100%;
-  height: 375px;
+  //height: 375px;
+  height: 100%auto;
   justify-items: center;
   justify-content: center;
   border: 1px solid ${colorPalette.gray3};

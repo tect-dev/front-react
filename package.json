@@ -47,6 +47,7 @@
     "sanitize-html": "^2.3.0",
     "sass": "^1.32.0",
     "styled-components": "^5.2.1",
+    "sweetalert2": "^10.15.5",
     "throttle-debounce": "^3.0.1",
     "uid": "^2.0.0",
     "unified": "^9.2.0",

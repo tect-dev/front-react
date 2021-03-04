@@ -3,7 +3,8 @@ import { authService } from '../lib/firebase'
 import { uid } from 'uid'
 import { sortISOByTimeStamp } from '../lib/functions'
 import { whiteURL } from '../lib/constants'
-import { db, firebaseInstance } from '../lib/firebase'
+import Swal from 'sweetalert2'
+//import { db, firebaseInstance } from '../lib/firebase'
 
 const nodePlaceholder =
   '\n1. 캔버스 위에서 더블 클릭하면, 노드가 만들어져요. \n\n2. 노드를 클릭하면 문서를 작성할 수 있어요.\n\n3. 노드에서 다른 노드로 마우스 드래그를 하면 연결관계를 표현할 수 있어요.\n\n4. 수정모드에서는 노드나 링크를 삭제하거나, 노드를 드래그해서 위치를 바꿀 수 있어요.\n\n5. 코드블럭과 레이텍 문법을 지원합니다.\n\n6. 문서 에디터에 이미지를 드래그 드롭하면 사진을 첨부할 수 있어요.'
@@ -27,6 +28,7 @@ const initialState = {
   linkList: [{}],
   techtreeTitle: '',
   treeLikeUsers: [],
+  treeAuthor: {},
   techtreeData: {
     title: 'empty',
     nodeList: [{}],
@@ -299,6 +301,13 @@ export const updateTechtree = (
       },
     })
     dispatch({ type: UPDATE_TECHTREE_DATA_SUCCESS, techtreeTitle })
+    Swal.fire({
+      position: 'bottom-end',
+      icon: 'success',
+      title: 'Your work has been saved',
+      showConfirmButton: false,
+      timer: 1500,
+    })
   } catch (e) {
     dispatch({ type: UPDATE_TECHTREE_DATA_FAIL })
     //console.log('error: ', e)
@@ -698,6 +707,7 @@ export default function techtree(state = initialState, action) {
         previousNodeList: [],
         nextNodeList: [],
         techtreeTitle: '',
+        treeAuthor: {},
         selectedNode: {
           name: '',
           body: nodePlaceholder,
@@ -709,6 +719,7 @@ export default function techtree(state = initialState, action) {
         ...state,
         loading: false,
         techtreeData: action.techtreeData,
+        treeAuthor: action.techtreeData.author,
         techtreeTitle: action.techtreeData.title,
         nodeList: action.techtreeData.nodeList,
         linkList: action.techtreeData.linkList,
