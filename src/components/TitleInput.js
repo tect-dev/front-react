@@ -10,7 +10,7 @@ export const TitleInput = styled.input`
   width: 100%;
   font-size: ${fontSize.large};
   &::placeholder {
-    color: ${colorPalette.mainGreen};
+    color: ${colorPalette.gray5};
   }
 `
 export const TitleBottomLine = styled.div`

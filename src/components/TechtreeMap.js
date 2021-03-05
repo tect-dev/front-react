@@ -445,6 +445,46 @@ function updateGraph(container, dispatch) {
           return
         }
       })
+      .on('click', async (d) => {
+        const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
+        if (deleteOK) {
+          await dispatch(
+            deleteNode(
+              nodeList,
+              linkList,
+              techtreeID,
+              d,
+              reduxStore.getState().techtree.techtreeData
+            )
+          )
+          await updateNode()
+          await updateLink()
+          await changeTreeThumbnail()
+          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
+        } else {
+          return
+        }
+      })
+      .on('touch', async (d) => {
+        const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
+        if (deleteOK) {
+          await dispatch(
+            deleteNode(
+              nodeList,
+              linkList,
+              techtreeID,
+              d,
+              reduxStore.getState().techtree.techtreeData
+            )
+          )
+          await updateNode()
+          await updateLink()
+          await changeTreeThumbnail()
+          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
+        } else {
+          return
+        }
+      })
       .style('cursor', 'pointer')
   }
 
@@ -524,7 +564,6 @@ function updateGraph(container, dispatch) {
     nodeList = reduxStore.getState().techtree.nodeList
     initNode()
     initLabel()
-    console.log('UPDATENODE 호출됨')
   }
 
   function updateLink() {

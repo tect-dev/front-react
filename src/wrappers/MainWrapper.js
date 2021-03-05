@@ -13,6 +13,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createTechtree } from '../redux/techtree'
 import { authService } from '../lib/firebase'
 
+const buttonPraise1 = 'Plant tree'
+const buttonPraise2 =
+  'To Plant tree, email verification is required! please check your email.'
+const buttonPraise3 = 'My Forest'
+const buttonPraise4 = 'To get to your own forest, login is required!'
+
 export default function MainWrapperDefault({ children }) {
   const dispatch = useDispatch()
   const { loginState, userID, emailVerified, userInfo } = useSelector(
@@ -36,7 +42,7 @@ export default function MainWrapperDefault({ children }) {
       <Container>
         {loginState && authService.currentUser.emailVerified ? (
           <Button
-            tooltip="나무 심기"
+            tooltip={buttonPraise1}
             icon="fas fa-plus"
             style={{ curosr: 'pointer' }}
             onClick={() => {
@@ -55,13 +61,13 @@ export default function MainWrapperDefault({ children }) {
               color: lightColors.white,
             }}
             icon="fas fa-plus"
-            tooltip="나무를 심으려면 이메일 인증이 필요해요!"
+            tooltip={buttonPraise2}
           ></Button>
         )}
 
         {loginState ? (
           <Link
-            tooltip="내 숲으로 가기"
+            tooltip={buttonPraise3}
             icon="fas fa-tree"
             //rotate={true}
             href={`/forest/${userID}`}
@@ -72,7 +78,7 @@ export default function MainWrapperDefault({ children }) {
           />
         ) : (
           <Button
-            tooltip="내 숲으로 가려면 로그인이 필요해요!"
+            tooltip={buttonPraise4}
             icon="fas fa-tree"
             styles={{
               backgroundColor: colorPalette.teal5,
@@ -147,7 +153,7 @@ export const MainWrapperInTheHomePage = ({ children }) => {
       <Container>
         {loginState && authService.currentUser.emailVerified ? (
           <Button
-            tooltip="나무 심기"
+            tooltip={buttonPraise1}
             icon="fas fa-plus"
             style={{ curosr: 'pointer' }}
             onClick={() => {
@@ -166,18 +172,18 @@ export const MainWrapperInTheHomePage = ({ children }) => {
               color: lightColors.white,
             }}
             icon="fas fa-plus"
-            tooltip="나무를 심으려면 이메일인증이 필요해요!"
+            tooltip={buttonPraise2}
           ></Button>
         )}
         {loginState ? (
           <Link
-            tooltip="내 숲으로 가기"
+            tooltip={buttonPraise3}
             icon="fa fa-plus"
             rotate={true}
             href={`/forest/${userID}`}
           />
         ) : (
-          <Button tooltip="로그인이 필요해요!"></Button>
+          <Button tooltip={buttonPraise4}></Button>
         )}
       </Container>
     </MainLayout>

@@ -1,5 +1,7 @@
 import { authService, firebaseInstance } from '../lib/firebase'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+import translationText from '../lib/translation.json'
 import { sortISOByTimeStamp } from '../lib/functions'
 
 const initialState = {
@@ -52,7 +54,7 @@ const session_login = () => {
     })
     .catch((e) => {
       //console.log('getIdToken 오류', e)
-      alert('오류가 발생했습니다.')
+      //alert('오류가 발생했습니다.')
     })
 }
 
@@ -73,7 +75,8 @@ const session_signup = (displayName, introduce) => {
     })
     .catch((e) => {
       //console.log('getIdToken 오류', e)
-      alert('오류가 발생했습니다.')
+      Swal.fire('Sorry!', 'Some Error Happened')
+      // alert('오류가 발생했습니다.')
     })
 }
 
@@ -108,7 +111,8 @@ export const emailLogin = (email, password) => async (dispatch) => {
   } catch (e) {
     //console.log('error: ', e)
     dispatch({ type: LOG_IN_FAIL })
-    alert('잘못된 로그인 정보입니다.')
+    Swal.fire('Error!', 'Wrong Login Information')
+    //alert('잘못된 로그인 정보입니다.')
   }
 }
 
@@ -123,11 +127,7 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
         session_signup(displayName, introduce)
         authService.currentUser
           .sendEmailVerification()
-          .then(
-            alert(
-              '인증메일이 발송됐습니다! 메일함을 확인해 주세요. 메일인증 후 새로고침 해주세요.'
-            )
-          )
+          .then(Swal.fire('Check Your Mail Box', translationText.en.emailAlert))
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {
@@ -135,10 +135,15 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
     dispatch({ type: CREATE_USER_FAIL })
     switch (e.message) {
       case 'The email address is already in use by another account.':
-        alert('이미 가입한 이메일 입니다.')
+        //alert('이미 가입한 이메일 입니다.')
+        Swal.fire(
+          'error',
+          'The email address is already in use by another account.'
+        )
         return
       default:
-        alert('오류가 발생했습니다.')
+        Swal.fire('Sorry!', 'Some Error Happened')
+        // alert('오류가 발생했습니다.')
         return
     }
   }

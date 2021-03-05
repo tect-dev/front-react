@@ -32,9 +32,9 @@ const PlantNewTree = () => {
           if (loginState && authService.currentUser.emailVerified) {
             dispatch(createTechtree(userInfo))
           } else if (loginState && !authService.currentUser.emailVerified) {
-            alert('이메일 인증을 마무리 해주세요!')
+            alert('Please finish email verification!')
           } else {
-            alert('로그인이 필요해요')
+            alert('Login is required!')
           }
         }}
         style={{ cursor: 'pointer' }}

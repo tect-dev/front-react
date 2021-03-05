@@ -88,7 +88,8 @@ export const LoginModal = React.memo(({ labelFor }) => {
   const onEmailSignUp = useCallback(
     async (e) => {
       e.preventDefault()
-      if (termsChecked.current) {
+      if (true) {
+        //termsChecked.current) {
         dispatch(emailSignUp(email, password, displayName, introduce))
         //setEmail('')
         //setPassword('')
@@ -125,7 +126,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
               <input
                 id="login-id-input"
                 className="login-input"
-                placeholder="로그인 이메일을 입력해 주세요."
+                placeholder="Email..."
                 name="email"
                 value={email}
                 onChange={onChangeEmail}
@@ -135,7 +136,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                 id="login-pw-input"
                 className="login-input"
                 type="password"
-                placeholder="로그인 비밀번호를 입력해 주세요."
+                placeholder="password..."
                 name="password"
                 value={password}
                 onChange={onChangePassword}
@@ -143,8 +144,8 @@ export const LoginModal = React.memo(({ labelFor }) => {
               />
               {isSignUp && !passwordCheck ? (
                 <div style={{ fontSize: '12px', color: colorPalette.red3 }}>
-                  비밀번호는 영문 6~20자리 + 숫자 또는 특수문자를
-                  포함해야합니다.
+                  The password must contain a mix of letters, numbers, and/or
+                  special characters. 6~20 characters.
                 </div>
               ) : null}
 
@@ -153,7 +154,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                   <input
                     className="login-input"
                     type="text"
-                    placeholder="표시될 닉네임을 입력해주세요."
+                    placeholder="Your Nickname"
                     name="displayName"
                     value={displayName}
                     onChange={onChangedisplayName}
@@ -162,7 +163,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                   <input
                     className="login-input"
                     type="text"
-                    placeholder="한줄 자기 소개를 입력해주세요."
+                    placeholder="one-line profile"
                     required
                     name="introduce"
                     value={introduce}
@@ -195,8 +196,7 @@ export const LoginModal = React.memo(({ labelFor }) => {
                   </Button>
                 </>
               )}
-
-              {isSignUp ? (
+              {/* {isSignUp ? (
                 <>
                   <div
                     style={{
@@ -251,6 +251,15 @@ export const LoginModal = React.memo(({ labelFor }) => {
                     Sign Up
                   </DefaultButton>
                 </>
+              ) : null}*/}
+              {isSignUp ? (
+                <DefaultButton
+                  className="login-submit"
+                  onClick={onEmailSignUp}
+                  disabled={!passwordCheck}
+                >
+                  Sign Up
+                </DefaultButton>
               ) : null}
             </form>
           </div>

@@ -6,6 +6,7 @@ import DoubleSideLayout from '../../wrappers/DoubleSideLayout'
 import MarkdownEditor from '../../components/MarkdownEditor'
 import MarkdownRenderer from '../../components/MarkdownRenderer'
 import { HalfWidthWrapper } from '../../wrappers/HalfWidthWrapper'
+import { Preview } from '../board/WritePage'
 import TechtreeMap from '../../components/TechtreeMap'
 import { Spinner } from '../../components/Spinner'
 import {
@@ -109,21 +110,6 @@ export default function TechtreeDetailPage({ match }) {
         })
       )
   )
-  //const [thumbnailURL, setThumbnailURL] = useState()
-
-  useEffect(() => {
-    return () => {
-      //console.log('컴포넌트가 화면에서 사라짐.')
-      if (
-        //userID === techtreeData.author?.firebaseUid &&
-        techtreeData.thumbnail !== reduxThumbnailURL
-      ) {
-        //dispatch(updateThumbnail(techtreeData._id, reduxThumbnailURL))
-        //alert('변경사항이 있습니다! 변경사항을 저장 하셨나요?')
-        // console.log('썸네일이 변경됨')
-      }
-    }
-  }, [])
 
   useEffect(() => {
     authService.currentUser?.reload()
@@ -260,7 +246,7 @@ export default function TechtreeDetailPage({ match }) {
                   setIsLiked(false)
                   setLocalTreeLike(localTreeLike - 1)
                 } else {
-                  alert('로그인이 필요해요!')
+                  alert('Login is required!')
                 }
               }}
             >
@@ -278,7 +264,7 @@ export default function TechtreeDetailPage({ match }) {
                   setIsLiked(true)
                   setLocalTreeLike(localTreeLike + 1)
                 } else {
-                  alert('로그인이 필요해요!')
+                  alert('Login is required!')
                 }
               }}
             >
@@ -294,7 +280,7 @@ export default function TechtreeDetailPage({ match }) {
           {treeAuthor?.firebaseUid === userID ? (
             <TitleInput
               value={techtreeTitle}
-              placeholder="트리의 주제를 적어주세요!"
+              placeholder="Title Of The Tree..."
               onChange={onChangeTechtreeTitle}
               maxLength="60"
             />
@@ -311,79 +297,86 @@ export default function TechtreeDetailPage({ match }) {
           )}
         </TreeTitleArea>
         <DoubleSideLayout>
-          <HalfWidthContainer>
-            <TreeEditorArea>
-              <TechtreeMap />
-            </TreeEditorArea>
+          {isEditingDocument ? (
+            <HalfWidthContainer>
+              <Preview>Doc Preview</Preview>
+              <MarkdownRenderer text={documentText} />
+            </HalfWidthContainer>
+          ) : (
+            <HalfWidthContainer>
+              <TreeEditorArea>
+                <TechtreeMap />
+              </TreeEditorArea>
 
-            <TreeEditButtonArea>
-              <DefaultButton onClick={onClickForkTree}>
-                Fork This Tree
-              </DefaultButton>
-              <DefaultButton>
-                <a href={dataStr} download={`${techtreeData.title}.json`}>
-                  Download Tree
-                </a>
-              </DefaultButton>
+              <TreeEditButtonArea>
+                <DefaultButton onClick={onClickForkTree}>
+                  Fork This Tree
+                </DefaultButton>
+                <DefaultButton>
+                  <a href={dataStr} download={`${techtreeData.title}.json`}>
+                    Download Tree
+                  </a>
+                </DefaultButton>
 
-              {!isEditingDocument &&
-              userID === treeAuthor?.firebaseUid &&
-              !isEditingTechtree ? (
-                <DefaultButton onClick={onClickTechtreeEdit}>
-                  Edit Tree
-                </DefaultButton>
-              ) : (
-                ''
-              )}
-              {!isEditingDocument &&
-              userID === treeAuthor?.firebaseUid &&
-              isEditingTechtree ? (
-                <DefaultButton onClick={onClickTechtreeEdit}>
-                  Done
-                </DefaultButton>
-              ) : (
-                ''
-              )}
+                {!isEditingDocument &&
+                userID === treeAuthor?.firebaseUid &&
+                !isEditingTechtree ? (
+                  <DefaultButton onClick={onClickTechtreeEdit}>
+                    Edit Tree
+                  </DefaultButton>
+                ) : (
+                  ''
+                )}
+                {!isEditingDocument &&
+                userID === treeAuthor?.firebaseUid &&
+                isEditingTechtree ? (
+                  <DefaultButton onClick={onClickTechtreeEdit}>
+                    Done
+                  </DefaultButton>
+                ) : (
+                  ''
+                )}
 
-              {!isEditingDocument &&
-              !isSavingTechtree &&
-              userID === treeAuthor?.firebaseUid ? (
-                <DefaultButton onClick={onClickTechtreeCommit}>
-                  Save Changes
-                </DefaultButton>
-              ) : (
-                ''
-              )}
-              {isSavingTechtree ? (
-                <div>
-                  <Loader
-                    type="Grid"
-                    color={colorPalette.teal5}
-                    height={20}
-                    width={20}
-                  />
-                </div>
-              ) : (
-                ''
-              )}
-              {!isEditingDocument && userID === treeAuthor?.firebaseUid ? (
-                <DangerButton
-                  onClick={() => {
-                    const deleteOK = window.confirm(`정말 삭제하시나요?`)
-                    if (deleteOK) {
-                      dispatch(deleteTechtree(techtreeData?._id))
-                    } else {
-                      return
-                    }
-                  }}
-                >
-                  Delete All
-                </DangerButton>
-              ) : (
-                ''
-              )}
-            </TreeEditButtonArea>
-          </HalfWidthContainer>
+                {!isEditingDocument &&
+                !isSavingTechtree &&
+                userID === treeAuthor?.firebaseUid ? (
+                  <DefaultButton onClick={onClickTechtreeCommit}>
+                    Save Changes
+                  </DefaultButton>
+                ) : (
+                  ''
+                )}
+                {isSavingTechtree ? (
+                  <div>
+                    <Loader
+                      type="Grid"
+                      color={colorPalette.teal5}
+                      height={20}
+                      width={20}
+                    />
+                  </div>
+                ) : (
+                  ''
+                )}
+                {!isEditingDocument && userID === treeAuthor?.firebaseUid ? (
+                  <DangerButton
+                    onClick={() => {
+                      const deleteOK = window.confirm(`YOU REALLY DELETE ALL?`)
+                      if (deleteOK) {
+                        dispatch(deleteTechtree(techtreeData?._id))
+                      } else {
+                        return
+                      }
+                    }}
+                  >
+                    Delete All
+                  </DangerButton>
+                ) : (
+                  ''
+                )}
+              </TreeEditButtonArea>
+            </HalfWidthContainer>
+          )}
 
           <HalfWidthDocumentContainer>
             <DocuWrapper id="docuWrapper">
@@ -417,7 +410,7 @@ export default function TechtreeDetailPage({ match }) {
                         setIsEditingDocument(true)
                       }}
                     >
-                      문서 수정
+                      Edit
                     </DefaultButton>
                   ) : (
                     ''
@@ -473,90 +466,92 @@ export default function TechtreeDetailPage({ match }) {
                 )}
               </DocuBodyArea>
             </DocuWrapper>
-            <NodeButtonArea>
-              <PrevNodeArea>
-                {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
-                {previousNodeList.map((node, index) => {
-                  return (
-                    <div key={index}>
-                      <DefaultButton
-                        onClick={() => {
-                          const newPreviousNodeList = returnPreviousNodeList(
-                            linkList,
-                            nodeList,
-                            node
-                          )
-                          const newNextNodeList = returnNextNodeList(
-                            linkList,
-                            nodeList,
-                            node
-                          )
-                          dispatch(
-                            selectNode(
-                              newPreviousNodeList,
-                              newNextNodeList,
+            {isEditingDocument ? null : (
+              <NodeButtonArea>
+                <PrevNodeArea>
+                  {previousNodeList.length > 0 ? <div>Previous</div> : ''}
+                  {previousNodeList.map((node, index) => {
+                    return (
+                      <div key={index}>
+                        <DefaultButton
+                          onClick={() => {
+                            const newPreviousNodeList = returnPreviousNodeList(
+                              linkList,
+                              nodeList,
                               node
                             )
-                          )
-                          const offsetElement = document.getElementById(
-                            'docuWrapper'
-                          )
-                          const clientRect = offsetElement.getBoundingClientRect()
-                          const relativeTop = clientRect.top
-                          const scrolledTopLength = window.pageYOffset
-                          const absoluteYPosition =
-                            scrolledTopLength + relativeTop
-                          window.scrollTo(0, absoluteYPosition - 80)
-                        }}
-                      >
-                        {node?.name}
-                      </DefaultButton>
-                    </div>
-                  )
-                })}
-              </PrevNodeArea>
-              <NextNodeArea>
-                {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
-                {nextNodeList.map((node, index) => {
-                  return (
-                    <div key={index}>
-                      <DefaultButton
-                        onClick={() => {
-                          const newPreviousNodeList = returnPreviousNodeList(
-                            linkList,
-                            nodeList,
-                            node
-                          )
-                          const newNextNodeList = returnNextNodeList(
-                            linkList,
-                            nodeList,
-                            node
-                          )
-                          dispatch(
-                            selectNode(
-                              newPreviousNodeList,
-                              newNextNodeList,
+                            const newNextNodeList = returnNextNodeList(
+                              linkList,
+                              nodeList,
                               node
                             )
-                          )
-                          const offsetElement = document.getElementById(
-                            'docuWrapper'
-                          )
-                          const clientRect = offsetElement.getBoundingClientRect()
-                          const relativeTop = clientRect.top
-                          const scrolledTopLength = window.pageYOffset
-                          const absoluteYPosition =
-                            scrolledTopLength + relativeTop
-                          window.scrollTo(0, absoluteYPosition - 80)
-                        }}
-                      >
-                        {node?.name}
-                      </DefaultButton>
-                    </div>
-                  )
-                })}
-              </NextNodeArea>
-            </NodeButtonArea>
+                            dispatch(
+                              selectNode(
+                                newPreviousNodeList,
+                                newNextNodeList,
+                                node
+                              )
+                            )
+                            const offsetElement = document.getElementById(
+                              'docuWrapper'
+                            )
+                            const clientRect = offsetElement.getBoundingClientRect()
+                            const relativeTop = clientRect.top
+                            const scrolledTopLength = window.pageYOffset
+                            const absoluteYPosition =
+                              scrolledTopLength + relativeTop
+                            window.scrollTo(0, absoluteYPosition - 80)
+                          }}
+                        >
+                          {node?.name}
+                        </DefaultButton>
+                      </div>
+                    )
+                  })}
+                </PrevNodeArea>
+                <NextNodeArea>
+                  {nextNodeList.length > 0 ? <div>Next</div> : ''}
+                  {nextNodeList.map((node, index) => {
+                    return (
+                      <div key={index}>
+                        <DefaultButton
+                          onClick={() => {
+                            const newPreviousNodeList = returnPreviousNodeList(
+                              linkList,
+                              nodeList,
+                              node
+                            )
+                            const newNextNodeList = returnNextNodeList(
+                              linkList,
+                              nodeList,
+                              node
+                            )
+                            dispatch(
+                              selectNode(
+                                newPreviousNodeList,
+                                newNextNodeList,
+                                node
+                              )
+                            )
+                            const offsetElement = document.getElementById(
+                              'docuWrapper'
+                            )
+                            const clientRect = offsetElement.getBoundingClientRect()
+                            const relativeTop = clientRect.top
+                            const scrolledTopLength = window.pageYOffset
+                            const absoluteYPosition =
+                              scrolledTopLength + relativeTop
+                            window.scrollTo(0, absoluteYPosition - 80)
+                          }}
+                        >
+                          {node?.name}
+                        </DefaultButton>
+                      </div>
+                    )
+                  })}
+                </NextNodeArea>
+              </NodeButtonArea>
+            )}
           </HalfWidthDocumentContainer>
         </DoubleSideLayout>
       </MainWrapper>

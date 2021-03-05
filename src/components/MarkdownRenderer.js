@@ -10,14 +10,12 @@ import ryhype2string from 'rehype-stringify'
 import raw from 'rehype-raw'
 import breaks from 'remark-breaks'
 import slug from 'remark-slug'
-import unified from 'unified'
 import { throttle } from 'throttle-debounce'
 import { htmlFilter } from '../lib/functions'
 import { prismPlugin } from '../lib/prismPlugin'
 import { embedPlugin } from '../lib/embedPlugin'
 import { prismThemes } from '../lib/prismThemes'
 import { colorPalette, mediaSize } from '../lib/constants'
-import { TypographyBlock } from '../wrappers/Typography'
 
 const MarkdownStyledBlock = styled.div`
   &.monokai {
@@ -80,7 +78,7 @@ const MarkdownStyledBlock = styled.div`
     padding-left: 2px;
   }
   img {
-    max-width: 100%;
+    max-width: 90%;
     height: auto;
     display: block;
     margin-top: 1rem;

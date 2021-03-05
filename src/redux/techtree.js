@@ -4,10 +4,10 @@ import { uid } from 'uid'
 import { sortISOByTimeStamp } from '../lib/functions'
 import { whiteURL } from '../lib/constants'
 import Swal from 'sweetalert2'
-//import { db, firebaseInstance } from '../lib/firebase'
+import translationText from '../lib/translation.json'
 
-const nodePlaceholder =
-  '\n1. 캔버스 위에서 더블 클릭하면, 노드가 만들어져요. \n\n2. 노드를 클릭하면 문서를 작성할 수 있어요.\n\n3. 노드에서 다른 노드로 마우스 드래그를 하면 연결관계를 표현할 수 있어요.\n\n4. 수정모드에서는 노드나 링크를 삭제하거나, 노드를 드래그해서 위치를 바꿀 수 있어요.\n\n5. 코드블럭과 레이텍 문법을 지원합니다.\n\n6. 문서 에디터에 이미지를 드래그 드롭하면 사진을 첨부할 수 있어요.'
+const nodePlaceholder = translationText.en.tutorialNode
+// '\n1. 캔버스 위에서 더블 클릭하면, 노드가 만들어져요. \n\n2. 노드를 클릭하면 문서를 작성할 수 있어요.\n\n3. 노드에서 다른 노드로 마우스 드래그를 하면 연결관계를 표현할 수 있어요.\n\n4. 수정모드에서는 노드나 링크를 삭제하거나, 노드를 드래그해서 위치를 바꿀 수 있어요.\n\n5. 코드블럭과 레이텍 문법을 지원합니다.\n\n6. 문서 에디터에 이미지를 드래그 드롭하면 사진을 첨부할 수 있어요.'
 
 const testNodeList =
   '[{"id":"nodee72742ae83f80a1185c8","name":"어떻게 사용하나요?","x":466.3125,"y":159.0851058959961,"radius":15,"body":"캔버스 위를 더블클릭하면 노드가 생겨나요.\\n\\n![1.gif](https://tectimage.s3.ap-northeast-2.amazonaws.com/481613567677406.gif)\\n\\n하나의 노드에는 하나의 문서가 연결돼 있어요.\\n\\n노드를 클릭하면 연결된 문서를 열람하고 편집할 수 있어요.","hashtags":[],"fillColor":"#00bebe","parentNodeID":[],"childNodeID":[]},{"id":"node72742ae83f80a1185c8d","name":"문서 작성법을 알려주세요!","x":270.4685363769531,"y":256.3616943359375,"radius":15,"body":"드래그 드롭으로 사진을 올릴 수 있어요.\\n![2.gif](https://tectimage.s3.ap-northeast-2.amazonaws.com/9091613567728867.gif)\\n코드블록 기능과 \\nLaTeX 수식입력 기능을 지원해요. \\n\\n```c\\nprintf(\'hello, foresty!\')\\n```\\n\\n\\n\\n\\n$$\\n-\\\\frac{\\\\hbar^{2}}{2m} \\\\nabla^{2} \\\\psi + V \\\\psi = E \\\\psi\\n$$\\n\\n\\n## 마크다운\\n\\n*마크다운 문법* 과 [외부링크](https://www.foresty.net)를 삽입하는 기능도 지원해요. \\n","hashtags":[],"fillColor":"#00bebe","parentNodeID":[],"childNodeID":[]},{"id":"node2742ae83f80a1185c8d0","name":"노드와 노드를 연결하세요!","x":471.5678253173828,"y":366.2057189941406,"radius":15,"body":"![3.gif](https://tectimage.s3.ap-northeast-2.amazonaws.com/9961613567854484.gif)\\n\\n노드에서 다른 노드로 드래그를 해서 링크를 연결할 수 있어요. \\n\\n링크가 연결되면 문서 하단에 자동으로 연관 링크 버튼이 나타나요.\\n\\n문서간의 연결관계를 한눈에 볼 수 있답니다!\\n","hashtags":[],"fillColor":"#00bebe","parentNodeID":[],"childNodeID":[]},{"id":"nodee83f80a1185c8d0b7a21","name":"Contact Here!","x":511.0713195800781,"y":617.1347961425781,"radius":15,"body":"\\n\\nemail: contact@foresty.net\\n\\n","hashtags":[],"fillColor":"#00bebe","parentNodeID":[],"childNodeID":[]},{"id":"node243f78ce5cae6f8f5017","name":"Click Me!","x":248.95333862304688,"y":57.75886154174805,"radius":15,"body":"Foresty 는 지식을 가꾸고 공유하는 노트테이킹&블로깅 커뮤니티입니다. \\n\\n","hashtags":[],"fillColor":"#00bebe","parentNodeID":[],"childNodeID":[]},{"id":"node3f78ce5cae6f8f5017f9","name":"전공별 게시판","x":184.93206787109375,"y":634.8865356445312,"radius":15,"body":"전공별 게시판을 통해 전공끼리 통하는 정보를 공유할 수 있어요","hashtags":[],"fillColor":"#00bebe","parentNodeID":[],"childNodeID":[]},{"id":"node1404f55e439124249a1e","name":"트리의 모양을 마음껏 수정하세요!","x":342.10028076171875,"y":483.4468078613281,"radius":15,"body":"\\n![4.gif](https://tectimage.s3.ap-northeast-2.amazonaws.com/1011613567929412.gif)\\n수정모드에서 노드를 드래그해서 위치를 바꿀수 있어요. \\n\\n노드나 링크를 삭제할 수도 있구요.","hashtags":[],"fillColor":"#69bc69","parentNodeID":[],"childNodeID":[]}]'
@@ -114,7 +114,6 @@ export const changeThumbnail = (thumbnailURL) => {
 export const updateThumbnail = (techtreeID, thumbnailURL) => async (
   dispatch
 ) => {
-  console.log('update thumbnail 호출됨')
   dispatch({ type: UPDATE_THUMBNAIL_TRY })
   try {
     await axios({

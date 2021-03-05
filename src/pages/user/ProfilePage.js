@@ -14,11 +14,11 @@ import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
 // import { Button } from '../../components/Button'
 import MainWrapper from '../../wrappers/MainWrapper'
-import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 import { fontSize, AnonymousSVG, colorPalette } from '../../lib/constants'
 
-import { sortISOByTimeStamp } from '../../lib/functions'
 import { authService } from '../../lib/firebase'
+import Swal from 'sweetalert2'
+import translationText from '../../lib/translation.json'
 
 export default function ProfilePage({ match }) {
   const history = useHistory()
@@ -131,11 +131,11 @@ export default function ProfilePage({ match }) {
           <Button
             onClick={() => {
               authService.currentUser.sendEmailVerification().then(() => {
-                alert('인증메일이 발송됐습니다! 메일함을 확인해 주세요.')
+                Swal.fire('Check Your Mail Box', translationText.en.emailAlert)
               })
             }}
           >
-            인증메일 다시 보내기
+            re-send verification email
           </Button>
         ) : (
           ''

@@ -487,7 +487,7 @@ function DemoTree() {
                       setIsEditingDocument(true)
                     }}
                   >
-                    문서 수정
+                    Edit
                   </DefaultButton>
                 ) : (
                   ''
@@ -509,7 +509,7 @@ function DemoTree() {
           </DocuWrapper>
           <NodeButtonArea>
             <PrevNodeArea>
-              {previousNodeList.length > 0 ? <div>이전 노드</div> : ''}
+              {previousNodeList.length > 0 ? <div>Previous</div> : ''}
               {previousNodeList.map((node, idx) => {
                 return (
                   <div key={idx}>
@@ -546,7 +546,7 @@ function DemoTree() {
               })}
             </PrevNodeArea>
             <NextNodeArea>
-              {nextNodeList.length > 0 ? <div>다음 노드</div> : ''}
+              {nextNodeList.length > 0 ? <div>Next</div> : ''}
               {nextNodeList.map((node, idx) => {
                 return (
                   <div key={idx}>

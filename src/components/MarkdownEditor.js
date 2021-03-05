@@ -49,15 +49,13 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
       let formData = new FormData()
       formData.append('image', file)
       await setLoading(true)
-      //await console.log('사진결과값이 나오기전 loading: ', loading)
+
       const res = await axios({
         url: `${process.env.REACT_APP_BACKEND_URL}/image`,
         method: 'POST',
         data: formData,
       })
-      //await console.log(res.data)
-      //await setLoading(false)
-      //await console.log('결과값 이후 loading: ', loading)
+
       const imageUrl = res.data
       const result = `${value.substring(0, selectionStart)}![${
         file.name
