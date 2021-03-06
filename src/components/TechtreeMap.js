@@ -194,7 +194,7 @@ function updateGraph(container, dispatch) {
         return `delete${d.id}`
       })
       .on('click', async (link) => {
-        const deleteOK = window.confirm('정말 연결을 삭제하시나요?')
+        const deleteOK = window.confirm('Delete Connection?')
         if (deleteOK) {
           await dispatch(deleteLink(nodeList, linkList, techtreeData, link))
           await updateLink()
@@ -426,7 +426,7 @@ function updateGraph(container, dispatch) {
         }
       })
       .on('click', async (d) => {
-        const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
+        const deleteOK = window.confirm(`Delete ${d.name} Node?`)
         if (deleteOK) {
           await dispatch(
             deleteNode(
@@ -446,7 +446,7 @@ function updateGraph(container, dispatch) {
         }
       })
       .on('click', async (d) => {
-        const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
+        const deleteOK = window.confirm(`Delete ${d.name} Node?`)
         if (deleteOK) {
           await dispatch(
             deleteNode(
@@ -466,7 +466,7 @@ function updateGraph(container, dispatch) {
         }
       })
       .on('touch', async (d) => {
-        const deleteOK = window.confirm(`${d.name} 노드를 삭제하시나요?`)
+        const deleteOK = window.confirm(`Delete ${d.name} Node?`)
         if (deleteOK) {
           await dispatch(
             deleteNode(
@@ -523,11 +523,11 @@ function updateGraph(container, dispatch) {
       const ratioFactor = width / clientRect.width
       const createdNode = {
         id: `node${uid(20)}`,
-        name: '새로운 노드',
+        name: 'New Node',
         x: d3.event.offsetX * ratioFactor,
         y: d3.event.offsetY * ratioFactor,
         radius: nodeRadius,
-        body: '새로운 내용',
+        body: 'New Document',
         hashtags: [],
         fillColor: '#69bc69',
         parentNodeID: [],
