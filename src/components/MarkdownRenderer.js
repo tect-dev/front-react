@@ -28,8 +28,8 @@ const MarkdownStyledBlock = styled.div`
   ol,
   ul {
     padding-inline-start: 35px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    //padding-top: 12px;
+    //padding-bottom: 12px;
   }
   p {
     margin-top: 1rem;
