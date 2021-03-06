@@ -298,10 +298,10 @@ export default function TechtreeDetailPage({ match }) {
         </TreeTitleArea>
         <DoubleSideLayout>
           {isEditingDocument ? (
-            <HalfWidthContainer>
+            <HalfWidthDocumentContainer>
               <Preview>Doc Preview</Preview>
               <MarkdownRenderer text={documentText} />
-            </HalfWidthContainer>
+            </HalfWidthDocumentContainer>
           ) : (
             <HalfWidthContainer>
               <TreeEditorArea>
