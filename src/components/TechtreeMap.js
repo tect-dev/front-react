@@ -27,6 +27,9 @@ const TechtreeThumbnailBlock = styled.div`
   box-shadow: ${boxShadow.default};
 `
 
+const MapWidth = 1200
+const MapHeight = 700
+
 const TreeMap = React.memo(function TechtreeMap() {
   const dispatch = useDispatch()
   const containerRef = React.useRef(null)
@@ -56,8 +59,8 @@ const TreeMap = React.memo(function TechtreeMap() {
 function initGraph(container) {
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray5}`
-  const width = 700
-  const height = 700
+  const width = MapWidth
+  const height = MapHeight
 
   const svg = d3
     .select(container)
@@ -89,7 +92,7 @@ function updateGraph(container, dispatch) {
   const nodeColor = colorPalette.mainGreen
 
   const selectedColor = colorPalette.gray8
-  const selectedNodeStrokeWidth = '2px'
+  const selectedNodeStrokeWidth = '8px'
 
   const labelSize = fontSize.medium
   const deleteButtonLength = 15
@@ -97,8 +100,8 @@ function updateGraph(container, dispatch) {
   const linkWidth = '2.5px'
   const linkColor = `${colorPalette.gray4}`
 
-  const width = 700
-  const height = 700
+  const width = MapWidth
+  //const height = 700
 
   const offsetElement = document.getElementById('techtreeContainer')
   const clientRect = offsetElement.getBoundingClientRect()
