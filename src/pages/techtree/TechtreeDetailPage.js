@@ -41,10 +41,28 @@ import {
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import { boxShadow, colorPalette, fontSize } from '../../lib/constants'
+import Modal from 'react-modal'
+
+const customStyles = {
+  overlay: {
+    backgroundColor: 'none',
+  },
+  content: {
+    left: '50%',
+    top: '20%',
+    //left: '50%',
+    //right: 'auto',
+    //bottom: 'auto',
+    // marginRight: '-50%',
+    //transform: 'translate(-50%, -50%)',
+  },
+}
+
+Modal.setAppElement(document.getElementById('root'))
 
 export default function TechtreeDetailPage({ match }) {
   const dispatch = useDispatch()
-  const history = useHistory()
+
   const { techtreeID } = match.params
 
   const { loginState, userID } = useSelector((state) => {
@@ -120,6 +138,7 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
+    setModalOpend(true)
   }, [selectedNode])
 
   useEffect(() => {
@@ -227,6 +246,204 @@ export default function TechtreeDetailPage({ match }) {
     [nodeList, selectedNode]
   )
 
+  const [modalOpend, setModalOpend] = useState(false)
+
+  const NodeModal = () => {
+    return (
+      <Modal
+        isOpen={modalOpend}
+        //onAfterOpen={}
+
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        {!isEditingDocument ? (
+          <DefaultButton
+            onClick={() => {
+              setModalOpend(false)
+            }}
+          >
+            close
+          </DefaultButton>
+        ) : null}
+
+        <HalfWidthDocumentContainer>
+          <DocuWrapper id="docuWrapper">
+            <DocuHeaderArea>
+              <div className="docuTitle">
+                {isEditingDocument ? (
+                  <div>
+                    <TitleInput
+                      value={documentTitle}
+                      onChange={onChangeDocumentTitle}
+                    />
+                  </div>
+                ) : (
+                  <StyledTitle>{selectedNode.name}</StyledTitle>
+                )}
+              </div>
+
+              <EditDocuButtonArea>
+                {isEditingDocument ? (
+                  <DefaultButton onClick={onFinishEdit}>done</DefaultButton>
+                ) : (
+                  ''
+                )}
+                {typeof selectedNode.id !== 'undefined' &&
+                !isEditingDocument &&
+                userID === treeAuthor?.firebaseUid ? (
+                  <DefaultButton
+                    onClick={() => {
+                      setIsEditingDocument(true)
+                    }}
+                  >
+                    Edit
+                  </DefaultButton>
+                ) : (
+                  ''
+                )}
+              </EditDocuButtonArea>
+            </DocuHeaderArea>
+            {typeof selectedNode.id !== 'undefined' &&
+            isEditingDocument &&
+            userID === treeAuthor?.firebaseUid ? (
+              <NodeColorButtonArea>
+                <NodeColorButton
+                  style={{ background: colorPalette.red7 }}
+                  onClick={() => {
+                    onChangeNodeColor(colorPalette.red7)
+                  }}
+                ></NodeColorButton>
+                <NodeColorButton
+                  style={{ background: colorPalette.yellow5 }}
+                  onClick={() => {
+                    onChangeNodeColor(colorPalette.yellow5)
+                  }}
+                ></NodeColorButton>
+                <NodeColorButton
+                  style={{ background: colorPalette.green5 }}
+                  onClick={() => {
+                    onChangeNodeColor(colorPalette.green5)
+                  }}
+                ></NodeColorButton>
+                <NodeColorButton
+                  style={{ background: colorPalette.blue5 }}
+                  onClick={() => {
+                    onChangeNodeColor(colorPalette.blue5)
+                  }}
+                ></NodeColorButton>
+                <NodeColorButton
+                  style={{ background: colorPalette.violet5 }}
+                  onClick={() => {
+                    onChangeNodeColor(colorPalette.violet5)
+                  }}
+                ></NodeColorButton>
+              </NodeColorButtonArea>
+            ) : null}
+            <TitleBottomLine />
+            <DocuBodyArea>
+              {isEditingDocument ? (
+                <MarkdownEditor
+                  bindingText={documentText}
+                  bindingSetter={setDocumentText}
+                  width="100%"
+                />
+              ) : (
+                <MarkdownRenderer text={selectedNode.body} />
+              )}
+            </DocuBodyArea>
+          </DocuWrapper>
+          {isEditingDocument ? null : (
+            <NodeButtonArea>
+              <PrevNodeArea>
+                {previousNodeList.length > 0 ? <div>Previous</div> : ''}
+                {previousNodeList.map((node, index) => {
+                  return (
+                    <div key={index}>
+                      <DefaultButton
+                        onClick={() => {
+                          const newPreviousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          const newNextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          dispatch(
+                            selectNode(
+                              newPreviousNodeList,
+                              newNextNodeList,
+                              node
+                            )
+                          )
+                          const offsetElement = document.getElementById(
+                            'docuWrapper'
+                          )
+                          const clientRect = offsetElement.getBoundingClientRect()
+                          const relativeTop = clientRect.top
+                          const scrolledTopLength = window.pageYOffset
+                          const absoluteYPosition =
+                            scrolledTopLength + relativeTop
+                          //window.scrollTo(0, absoluteYPosition - 80)
+                        }}
+                      >
+                        {node?.name}
+                      </DefaultButton>
+                    </div>
+                  )
+                })}
+              </PrevNodeArea>
+              <NextNodeArea>
+                {nextNodeList.length > 0 ? <div>Next</div> : ''}
+                {nextNodeList.map((node, index) => {
+                  return (
+                    <div key={index}>
+                      <DefaultButton
+                        onClick={() => {
+                          const newPreviousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          const newNextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            node
+                          )
+                          dispatch(
+                            selectNode(
+                              newPreviousNodeList,
+                              newNextNodeList,
+                              node
+                            )
+                          )
+                          const offsetElement = document.getElementById(
+                            'docuWrapper'
+                          )
+                          const clientRect = offsetElement.getBoundingClientRect()
+                          const relativeTop = clientRect.top
+                          const scrolledTopLength = window.pageYOffset
+                          const absoluteYPosition =
+                            scrolledTopLength + relativeTop
+                          // window.scrollTo(0, absoluteYPosition - 80)
+                        }}
+                      >
+                        {node?.name}
+                      </DefaultButton>
+                    </div>
+                  )
+                })}
+              </NextNodeArea>
+            </NodeButtonArea>
+          )}
+        </HalfWidthDocumentContainer>
+      </Modal>
+    )
+  }
+
   if (loading) {
     return (
       <MainWrapper>
@@ -236,46 +453,7 @@ export default function TechtreeDetailPage({ match }) {
   } else if (!loading) {
     return (
       <MainWrapper>
-        <TreePageHeader>
-          Tree
-          {isLiked ? (
-            <LikeButton
-              onClick={() => {
-                if (loginState) {
-                  dispatch(likeTree(techtreeID))
-                  setIsLiked(false)
-                  setLocalTreeLike(localTreeLike - 1)
-                } else {
-                  alert('Login is required!')
-                }
-              }}
-            >
-              <img
-                src={LikeSproutGreen}
-                style={{ width: '20px', height: '20px' }}
-              />
-              <span style={{ color: '#6d9b7b' }}>{localTreeLike}</span> likes
-            </LikeButton>
-          ) : (
-            <LikeButton
-              onClick={() => {
-                if (loginState) {
-                  dispatch(likeTree(techtreeID))
-                  setIsLiked(true)
-                  setLocalTreeLike(localTreeLike + 1)
-                } else {
-                  alert('Login is required!')
-                }
-              }}
-            >
-              <img
-                src={LikeSproutGray}
-                style={{ width: '20px', height: '20px' }}
-              />
-              <span style={{ color: '#6d9b7b' }}>{localTreeLike}</span> likes
-            </LikeButton>
-          )}
-        </TreePageHeader>
+        <NodeModal />
         <TreeTitleArea>
           {treeAuthor?.firebaseUid === userID ? (
             <TitleInput
@@ -296,264 +474,73 @@ export default function TechtreeDetailPage({ match }) {
             </>
           )}
         </TreeTitleArea>
-        <DoubleSideLayout>
-          {isEditingDocument ? (
-            <HalfWidthDocumentContainer>
-              <Preview>Doc Preview</Preview>
-              <MarkdownRenderer text={documentText} />
-            </HalfWidthDocumentContainer>
+
+        <TechtreeMap />
+        <TreeEditButtonArea>
+          <DefaultButton onClick={onClickForkTree}>
+            Fork This Tree
+          </DefaultButton>
+          <DefaultButton>
+            <a href={dataStr} download={`${techtreeData.title}.json`}>
+              Download Tree
+            </a>
+          </DefaultButton>
+
+          {!isEditingDocument &&
+          userID === treeAuthor?.firebaseUid &&
+          !isEditingTechtree ? (
+            <DefaultButton onClick={onClickTechtreeEdit}>
+              Edit Tree
+            </DefaultButton>
           ) : (
-            <HalfWidthContainer>
-              <TreeEditorArea>
-                <TechtreeMap />
-              </TreeEditorArea>
-
-              <TreeEditButtonArea>
-                <DefaultButton onClick={onClickForkTree}>
-                  Fork This Tree
-                </DefaultButton>
-                <DefaultButton>
-                  <a href={dataStr} download={`${techtreeData.title}.json`}>
-                    Download Tree
-                  </a>
-                </DefaultButton>
-
-                {!isEditingDocument &&
-                userID === treeAuthor?.firebaseUid &&
-                !isEditingTechtree ? (
-                  <DefaultButton onClick={onClickTechtreeEdit}>
-                    Edit Tree
-                  </DefaultButton>
-                ) : (
-                  ''
-                )}
-                {!isEditingDocument &&
-                userID === treeAuthor?.firebaseUid &&
-                isEditingTechtree ? (
-                  <DefaultButton onClick={onClickTechtreeEdit}>
-                    Done
-                  </DefaultButton>
-                ) : (
-                  ''
-                )}
-
-                {!isEditingDocument &&
-                !isSavingTechtree &&
-                userID === treeAuthor?.firebaseUid ? (
-                  <DefaultButton onClick={onClickTechtreeCommit}>
-                    Save Changes
-                  </DefaultButton>
-                ) : (
-                  ''
-                )}
-                {isSavingTechtree ? (
-                  <div>
-                    <Loader
-                      type="Grid"
-                      color={colorPalette.teal5}
-                      height={20}
-                      width={20}
-                    />
-                  </div>
-                ) : (
-                  ''
-                )}
-                {!isEditingDocument && userID === treeAuthor?.firebaseUid ? (
-                  <DangerButton
-                    onClick={() => {
-                      const deleteOK = window.confirm(`YOU REALLY DELETE ALL?`)
-                      if (deleteOK) {
-                        dispatch(deleteTechtree(techtreeData?._id))
-                      } else {
-                        return
-                      }
-                    }}
-                  >
-                    Delete All
-                  </DangerButton>
-                ) : (
-                  ''
-                )}
-              </TreeEditButtonArea>
-            </HalfWidthContainer>
+            ''
+          )}
+          {!isEditingDocument &&
+          userID === treeAuthor?.firebaseUid &&
+          isEditingTechtree ? (
+            <DefaultButton onClick={onClickTechtreeEdit}>Done</DefaultButton>
+          ) : (
+            ''
           )}
 
-          <HalfWidthDocumentContainer>
-            <DocuWrapper id="docuWrapper">
-              <DocuHeaderArea>
-                <div className="docuTitle">
-                  {isEditingDocument ? (
-                    <div>
-                      <TitleInput
-                        value={documentTitle}
-                        onChange={onChangeDocumentTitle}
-                      />
-                    </div>
-                  ) : (
-                    <StyledTitle>{selectedNode.name}</StyledTitle>
-                  )}
-                </div>
-
-                <EditDocuButtonArea>
-                  {isEditingDocument ? (
-                    <DefaultButton onClick={onFinishEdit}>
-                      수정완료
-                    </DefaultButton>
-                  ) : (
-                    ''
-                  )}
-                  {typeof selectedNode.id !== 'undefined' &&
-                  !isEditingDocument &&
-                  userID === treeAuthor?.firebaseUid ? (
-                    <DefaultButton
-                      onClick={() => {
-                        setIsEditingDocument(true)
-                      }}
-                    >
-                      Edit
-                    </DefaultButton>
-                  ) : (
-                    ''
-                  )}
-                </EditDocuButtonArea>
-              </DocuHeaderArea>
-              {typeof selectedNode.id !== 'undefined' &&
-              isEditingDocument &&
-              userID === treeAuthor?.firebaseUid ? (
-                <NodeColorButtonArea>
-                  <NodeColorButton
-                    style={{ background: colorPalette.red7 }}
-                    onClick={() => {
-                      onChangeNodeColor(colorPalette.red7)
-                    }}
-                  ></NodeColorButton>
-                  <NodeColorButton
-                    style={{ background: colorPalette.yellow5 }}
-                    onClick={() => {
-                      onChangeNodeColor(colorPalette.yellow5)
-                    }}
-                  ></NodeColorButton>
-                  <NodeColorButton
-                    style={{ background: colorPalette.green5 }}
-                    onClick={() => {
-                      onChangeNodeColor(colorPalette.green5)
-                    }}
-                  ></NodeColorButton>
-                  <NodeColorButton
-                    style={{ background: colorPalette.blue5 }}
-                    onClick={() => {
-                      onChangeNodeColor(colorPalette.blue5)
-                    }}
-                  ></NodeColorButton>
-                  <NodeColorButton
-                    style={{ background: colorPalette.violet5 }}
-                    onClick={() => {
-                      onChangeNodeColor(colorPalette.violet5)
-                    }}
-                  ></NodeColorButton>
-                </NodeColorButtonArea>
-              ) : null}
-              <TitleBottomLine />
-              <DocuBodyArea>
-                {isEditingDocument ? (
-                  <MarkdownEditor
-                    bindingText={documentText}
-                    bindingSetter={setDocumentText}
-                    width="100%"
-                  />
-                ) : (
-                  <MarkdownRenderer text={selectedNode.body} />
-                )}
-              </DocuBodyArea>
-            </DocuWrapper>
-            {isEditingDocument ? null : (
-              <NodeButtonArea>
-                <PrevNodeArea>
-                  {previousNodeList.length > 0 ? <div>Previous</div> : ''}
-                  {previousNodeList.map((node, index) => {
-                    return (
-                      <div key={index}>
-                        <DefaultButton
-                          onClick={() => {
-                            const newPreviousNodeList = returnPreviousNodeList(
-                              linkList,
-                              nodeList,
-                              node
-                            )
-                            const newNextNodeList = returnNextNodeList(
-                              linkList,
-                              nodeList,
-                              node
-                            )
-                            dispatch(
-                              selectNode(
-                                newPreviousNodeList,
-                                newNextNodeList,
-                                node
-                              )
-                            )
-                            const offsetElement = document.getElementById(
-                              'docuWrapper'
-                            )
-                            const clientRect = offsetElement.getBoundingClientRect()
-                            const relativeTop = clientRect.top
-                            const scrolledTopLength = window.pageYOffset
-                            const absoluteYPosition =
-                              scrolledTopLength + relativeTop
-                            window.scrollTo(0, absoluteYPosition - 80)
-                          }}
-                        >
-                          {node?.name}
-                        </DefaultButton>
-                      </div>
-                    )
-                  })}
-                </PrevNodeArea>
-                <NextNodeArea>
-                  {nextNodeList.length > 0 ? <div>Next</div> : ''}
-                  {nextNodeList.map((node, index) => {
-                    return (
-                      <div key={index}>
-                        <DefaultButton
-                          onClick={() => {
-                            const newPreviousNodeList = returnPreviousNodeList(
-                              linkList,
-                              nodeList,
-                              node
-                            )
-                            const newNextNodeList = returnNextNodeList(
-                              linkList,
-                              nodeList,
-                              node
-                            )
-                            dispatch(
-                              selectNode(
-                                newPreviousNodeList,
-                                newNextNodeList,
-                                node
-                              )
-                            )
-                            const offsetElement = document.getElementById(
-                              'docuWrapper'
-                            )
-                            const clientRect = offsetElement.getBoundingClientRect()
-                            const relativeTop = clientRect.top
-                            const scrolledTopLength = window.pageYOffset
-                            const absoluteYPosition =
-                              scrolledTopLength + relativeTop
-                            window.scrollTo(0, absoluteYPosition - 80)
-                          }}
-                        >
-                          {node?.name}
-                        </DefaultButton>
-                      </div>
-                    )
-                  })}
-                </NextNodeArea>
-              </NodeButtonArea>
-            )}
-          </HalfWidthDocumentContainer>
-        </DoubleSideLayout>
+          {!isEditingDocument &&
+          !isSavingTechtree &&
+          userID === treeAuthor?.firebaseUid ? (
+            <DefaultButton onClick={onClickTechtreeCommit}>
+              Save Changes
+            </DefaultButton>
+          ) : (
+            ''
+          )}
+          {isSavingTechtree ? (
+            <div>
+              <Loader
+                type="Grid"
+                color={colorPalette.teal5}
+                height={20}
+                width={20}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+          {!isEditingDocument && userID === treeAuthor?.firebaseUid ? (
+            <DangerButton
+              onClick={() => {
+                const deleteOK = window.confirm(`YOU REALLY DELETE ALL?`)
+                if (deleteOK) {
+                  dispatch(deleteTechtree(techtreeData?._id))
+                } else {
+                  return
+                }
+              }}
+            >
+              Delete All
+            </DangerButton>
+          ) : (
+            ''
+          )}
+        </TreeEditButtonArea>
       </MainWrapper>
     )
   }
@@ -587,7 +574,7 @@ export const TreeEditorArea = styled.div``
 
 export const TreeEditButtonArea = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-content: space-between;
   justify-items: center;
   padding: 20px;
