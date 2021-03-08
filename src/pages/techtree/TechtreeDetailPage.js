@@ -477,14 +477,16 @@ export default function TechtreeDetailPage({ match }) {
 
         <TechtreeMap />
         <TreeEditButtonArea>
-          <DefaultButton onClick={onClickForkTree}>
-            Fork This Tree
-          </DefaultButton>
           <DefaultButton>
             <a href={dataStr} download={`${techtreeData.title}.json`}>
               Download Tree
             </a>
           </DefaultButton>
+          {loginState ? (
+            <DefaultButton onClick={onClickForkTree}>
+              Fork This Tree
+            </DefaultButton>
+          ) : null}
 
           {!isEditingDocument &&
           userID === treeAuthor?.firebaseUid &&
