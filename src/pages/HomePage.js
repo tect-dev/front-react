@@ -111,7 +111,6 @@ export default function HomePage() {
   const onSetselectedDepts = useCallback((param) => {
     setselectedDepts(param)
   })
-
   useEffect(() => {
     authService.currentUser?.reload()
     dispatch(setUserPlace('main'))

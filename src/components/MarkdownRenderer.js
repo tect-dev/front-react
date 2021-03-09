@@ -57,8 +57,8 @@ const MarkdownStyledBlock = styled.div`
       Consolas, 'Courier New', monospace;
     font-size: 0.875rem;
     padding: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: 1rem;
+
     border-radius: 4px;
     line-height: 1.7;
     overflow-x: auto;

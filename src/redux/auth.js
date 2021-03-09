@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import translationText from '../lib/translation.json'
 import { sortISOByTimeStamp } from '../lib/functions'
 
+// 유저 설정 같은항목도 추가해야될듯. auth 라고 하니까 헷갈린다.
 const initialState = {
   loginState: false,
   userID: '000000000000000000000000', // myID 로 고쳐야함
