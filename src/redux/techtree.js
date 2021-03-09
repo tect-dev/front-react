@@ -49,6 +49,7 @@ const FINISH_TECHTREE_EDIT = 'techtree/FINISH_TECHTREE_EDIT'
 const FINISH_DOCU_EDIT = 'techtree/FINISH_DOCU_EDIT'
 
 const SELECT_NODE = 'techtree/SELECT_NODE'
+const UNSELECT_NODE = 'techtree/UNSELECT_NODE'
 
 const CREATE_NODE = 'techtree/CREATE_NODE'
 const DELETE_NODE = 'techtree/DELETE_NODE'
@@ -358,7 +359,12 @@ export const finishDocuEdit = (
 }
 
 export const selectNode = (previousNodeList, nextNodeList, node) => {
+  // 동일한 노드를 다시 클릭했을때도 모달을 띄우고 싶다.
   return { type: SELECT_NODE, previousNodeList, nextNodeList, node }
+}
+
+export const unselectNode = () => {
+  return { type: UNSELECT_NODE }
 }
 
 export const createNode = (nodeList, linkList, techtreeData) => {
@@ -674,6 +680,11 @@ export default function techtree(state = initialState, action) {
         selectedNode: action.node,
         previousNodeList: action.previousNodeList,
         nextNodeList: action.nextNodeList,
+      }
+    case UNSELECT_NODE:
+      return {
+        ...state,
+        selectedNode: {},
       }
     case READ_TECHTREE_LIST_TRY:
       return {

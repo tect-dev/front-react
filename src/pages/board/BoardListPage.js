@@ -231,7 +231,6 @@ export const Menuline = styled.div`
 const Buttons = styled.div`
   display: flex;
   max-width: 100%;
-  
 `
 
 export const Button = styled.button`

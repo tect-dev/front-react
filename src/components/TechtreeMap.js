@@ -91,14 +91,14 @@ function updateGraph(container, dispatch) {
   const nodeRadius = 20
   const nodeColor = colorPalette.mainGreen
 
-  const selectedColor = colorPalette.gray8
+  const selectedColor = colorPalette.green2
   const selectedNodeStrokeWidth = '8px'
 
   const labelSize = fontSize.medium
   const deleteButtonLength = 15
 
   const linkWidth = '2.5px'
-  const linkColor = `${colorPalette.gray4}`
+  const linkColor = `${colorPalette.gray3}`
 
   const width = MapWidth
   //const height = 700

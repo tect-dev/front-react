@@ -14,6 +14,7 @@ import {
   DefaultButton,
   LikeButton,
 } from '../../components/Button'
+
 import {
   TitleInput,
   TitleBottomLine,
@@ -38,18 +39,24 @@ import {
   likeTree,
   forkTree,
   changeNodeColor,
+  unselectNode,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
-import { boxShadow, colorPalette, fontSize } from '../../lib/constants'
+import {
+  boxShadow,
+  colorPalette,
+  fontSize,
+  hoverAction,
+} from '../../lib/constants'
 import Modal from 'react-modal'
 
 const customStyles = {
   overlay: {
-    backgroundColor: 'none',
+    background: 'none',
   },
   content: {
     left: '50%',
-    top: '20%',
+    top: '15%',
     //left: '50%',
     //right: 'auto',
     //bottom: 'auto',
@@ -138,7 +145,9 @@ export default function TechtreeDetailPage({ match }) {
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
     setDocumentText(selectedNode.body)
-    setModalOpend(true)
+    if (typeof selectedNode.id !== 'undefined') {
+      setModalOpend(true)
+    }
   }, [selectedNode])
 
   useEffect(() => {
@@ -246,6 +255,47 @@ export default function TechtreeDetailPage({ match }) {
     [nodeList, selectedNode]
   )
 
+  const [searchValue, setSearchValue] = useState('')
+  const [searchResultList, setSearchResultList] = useState([])
+  const searchInTree = useCallback(
+    (e) => {
+      setSearchResultList()
+      if (e.code === 'Enter' && searchValue !== '') {
+        const searchedTextRegex = new RegExp(searchValue.toLowerCase())
+        const tempResult1 = nodeList.map((ele) => {
+          if (searchedTextRegex.test(ele.name.toLowerCase())) {
+            const trimmed = { ...ele, body: `${ele.body.substr(0, 50)}...` }
+            return trimmed
+          } else if (searchedTextRegex.test(ele.body.toLowerCase())) {
+            const cutNumber = ele.body
+              .toLowerCase()
+              .search(searchValue.toLowerCase())
+
+            const trimmed = {
+              ...ele,
+              body:
+                '...' +
+                ele.body.substring(cutNumber - 30, cutNumber) +
+                ele.body.substring(cutNumber, cutNumber + 30) +
+                '...',
+            }
+
+            return trimmed
+          } else {
+            return null
+          }
+        })
+
+        const tempResult = tempResult1.filter((ele) => {
+          return ele !== null
+        })
+
+        setSearchResultList(tempResult)
+      }
+    },
+    [searchValue, searchResultList]
+  )
+
   const [modalOpend, setModalOpend] = useState(false)
 
   const NodeModal = () => {
@@ -261,6 +311,7 @@ export default function TechtreeDetailPage({ match }) {
           <DefaultButton
             onClick={() => {
               setModalOpend(false)
+              dispatch(unselectNode())
             }}
           >
             close
@@ -454,6 +505,7 @@ export default function TechtreeDetailPage({ match }) {
     return (
       <MainWrapper>
         <NodeModal />
+
         <TreeTitleArea>
           {treeAuthor?.firebaseUid === userID ? (
             <TitleInput
@@ -474,6 +526,69 @@ export default function TechtreeDetailPage({ match }) {
             </>
           )}
         </TreeTitleArea>
+        <SearchArea>
+          <div style={{ display: 'inline-flex' }}>
+            <StyledSearchInput
+              placeholder="Search In Tree..."
+              value={searchValue}
+              type="search"
+              onKeyPress={(e) => {
+                searchInTree(e)
+              }}
+              onChange={(e) => {
+                setSearchValue(e.target.value)
+              }}
+            />
+          </div>
+
+          {searchValue === '' ? (
+            ''
+          ) : (
+            <div>
+              {searchResultList?.map((ele, idx) => {
+                return (
+                  <SearchNodeCard
+                    key={idx}
+                    onClick={() => {
+                      const previousNodeList = returnPreviousNodeList(
+                        linkList,
+                        nodeList,
+                        nodeList.find((origin) => {
+                          return ele.id === origin.id
+                        })
+                      )
+                      const nextNodeList = returnNextNodeList(
+                        linkList,
+                        nodeList,
+                        nodeList.find((origin) => {
+                          return ele.id === origin.id
+                        })
+                      )
+                      dispatch(
+                        selectNode(
+                          previousNodeList,
+                          nextNodeList,
+                          nodeList.find((origin) => {
+                            return ele.id === origin.id
+                          })
+                        )
+                      )
+                    }}
+                  >
+                    <div style={{ display: 'flex', marginBottom: '10px' }}>
+                      {' '}
+                      <NodeColorSymbol
+                        style={{ background: ele.fillColor }}
+                      ></NodeColorSymbol>
+                      <div>{ele.name}</div>
+                    </div>
+                    <div>{ele.body}</div>
+                  </SearchNodeCard>
+                )
+              })}
+            </div>
+          )}
+        </SearchArea>
 
         <TechtreeMap />
         <TreeEditButtonArea>
@@ -652,4 +767,33 @@ export const HalfWidthDocumentContainer = styled(HalfWidthWrapper)`
     height: auto;
   }
   overflow-y: scroll;
+`
+
+export const SearchArea = styled.div`
+  padding-bottom: 10px;
+`
+
+export const StyledSearchInput = styled(TitleInput)``
+
+export const NodeColorSymbol = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border: none;
+  margin-left: 10px;
+  margin-right: 10px;
+`
+
+export const SearchNodeCard = styled.div`
+  background: #ffffff;
+  //display: flex;
+  cursor: pointer;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid ${colorPalette.gray2};
+  box-shadow: ${boxShadow.default};
+  &:hover {
+    ${hoverAction};
+  }
 `
