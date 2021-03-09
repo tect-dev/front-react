@@ -15,6 +15,7 @@ import { TreePageHeader } from '../techtree/TechtreeDetailPage'
 import PlantNewTreeCard from '../../components/PlantNewTreeCard'
 
 import { authService } from '../../lib/firebase'
+import { createTechtree } from '../../redux/techtree'
 
 export default function MyTreePage({ match }) {
   const history = useHistory()
