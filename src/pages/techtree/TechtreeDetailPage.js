@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import MainWrapper from '../../wrappers/MainWrapper'
 import DoubleSideLayout from '../../wrappers/DoubleSideLayout'
@@ -107,7 +107,7 @@ export default function TechtreeDetailPage({ match }) {
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [getSize, isClient])
 
   const { techtreeID } = match.params
 
@@ -154,10 +154,6 @@ export default function TechtreeDetailPage({ match }) {
     }
   })
 
-  const { reduxThumbnailURL } = useSelector((state) => {
-    return { reduxThumbnailURL: state.techtree.tempThumbnailURL }
-  })
-
   const [documentTitle, setDocumentTitle] = useState('')
   const [documentText, setDocumentText] = useState('')
   const [isEditingDocument, setIsEditingDocument] = useState(false)
@@ -179,7 +175,7 @@ export default function TechtreeDetailPage({ match }) {
     authService.currentUser?.reload()
     dispatch(readTechtree(techtreeID))
     window.scrollTo(0, 0)
-  }, [dispatch])
+  }, [dispatch, techtreeID])
 
   useEffect(() => {
     setDocumentTitle(selectedNode.name)
@@ -220,13 +216,10 @@ export default function TechtreeDetailPage({ match }) {
     }
   }, [techtreeData, userID, treeLikeUsers])
 
-  const onChangeDocumentTitle = useCallback(
-    (e) => {
-      e.preventDefault()
-      setDocumentTitle(e.target.value)
-    },
-    [documentTitle]
-  )
+  const onChangeDocumentTitle = useCallback((e) => {
+    e.preventDefault()
+    setDocumentTitle(e.target.value)
+  }, [])
 
   const onChangeTechtreeTitle = useCallback((e) => {
     e.preventDefault()
@@ -246,13 +239,13 @@ export default function TechtreeDetailPage({ match }) {
     )
     setIsEditingDocument(false)
   }, [
-    isEditingDocument,
     selectedNode,
     documentTitle,
     documentText,
     nodeList,
     linkList,
     techtreeData,
+    dispatch,
   ])
 
   const onClickTechtreeEdit = useCallback(() => {
@@ -290,7 +283,7 @@ export default function TechtreeDetailPage({ match }) {
     const base64 = btoa(decoded)
     const thumbnailURL = `data:image/svg+xml;base64,${base64}`
     dispatch(forkTree(techtreeData, nodeList, linkList, userID, thumbnailURL))
-  }, [dispatch, nodeList, linkList, techtreeID, techtreeData, userID])
+  }, [dispatch, nodeList, linkList, techtreeData, userID])
 
   const [changedColor, setChangedColor] = useState()
   const onChangeNodeColor = useCallback(
@@ -300,7 +293,7 @@ export default function TechtreeDetailPage({ match }) {
       const coloredNode = { ...selectedNode, fillColor: selectedColor }
       dispatch(changeNodeColor(nodeList, coloredNode))
     },
-    [nodeList, selectedNode]
+    [dispatch, nodeList, selectedNode]
   )
 
   const [searchValue, setSearchValue] = useState('')
@@ -333,15 +326,13 @@ export default function TechtreeDetailPage({ match }) {
             return null
           }
         })
-
         const tempResult = tempResult1.filter((ele) => {
           return ele !== null
         })
-
         setSearchResultList(tempResult)
       }
     },
-    [searchValue, searchResultList]
+    [nodeList, searchValue, searchResultList]
   )
 
   const [modalOpend, setModalOpend] = useState(false)
@@ -371,12 +362,10 @@ export default function TechtreeDetailPage({ match }) {
             <DocuHeaderArea>
               <div className="docuTitle">
                 {isEditingDocument ? (
-                  <div>
-                    <TitleInput
-                      value={documentTitle}
-                      onChange={onChangeDocumentTitle}
-                    />
-                  </div>
+                  <TitleInput
+                    value={documentTitle}
+                    onChange={onChangeDocumentTitle}
+                  />
                 ) : (
                   <StyledTitle>{documentTitle}</StyledTitle>
                 )}
@@ -481,11 +470,11 @@ export default function TechtreeDetailPage({ match }) {
                           const offsetElement = document.getElementById(
                             'docuWrapper'
                           )
-                          const clientRect = offsetElement.getBoundingClientRect()
-                          const relativeTop = clientRect.top
-                          const scrolledTopLength = window.pageYOffset
-                          const absoluteYPosition =
-                            scrolledTopLength + relativeTop
+                          // const clientRect = offsetElement.getBoundingClientRect()
+                          // const relativeTop = clientRect.top
+                          // const scrolledTopLength = window.pageYOffset
+                          // const absoluteYPosition =
+                          //   scrolledTopLength + relativeTop
                           //window.scrollTo(0, absoluteYPosition - 80)
                         }}
                       >
@@ -522,11 +511,11 @@ export default function TechtreeDetailPage({ match }) {
                           const offsetElement = document.getElementById(
                             'docuWrapper'
                           )
-                          const clientRect = offsetElement.getBoundingClientRect()
-                          const relativeTop = clientRect.top
-                          const scrolledTopLength = window.pageYOffset
-                          const absoluteYPosition =
-                            scrolledTopLength + relativeTop
+                          //const clientRect = offsetElement.getBoundingClientRect()
+                          //const relativeTop = clientRect.top
+                          //const scrolledTopLength = window.pageYOffset
+                          //const absoluteYPosition =
+                          //  scrolledTopLength + relativeTop
                           // window.scrollTo(0, absoluteYPosition - 80)
                         }}
                       >
@@ -563,6 +552,7 @@ export default function TechtreeDetailPage({ match }) {
                     placeholder="Title Of The Tree..."
                     onChange={onChangeTechtreeTitle}
                     maxLength="60"
+                    size="60"
                   />
                 ) : (
                   <>
@@ -729,12 +719,10 @@ export default function TechtreeDetailPage({ match }) {
                 <DocuHeaderArea>
                   <div className="docuTitle">
                     {isEditingDocument ? (
-                      <div>
-                        <TitleInput
-                          value={documentTitle}
-                          onChange={onChangeDocumentTitle}
-                        />
-                      </div>
+                      <TitleInput
+                        value={documentTitle}
+                        onChange={onChangeDocumentTitle}
+                      />
                     ) : (
                       <StyledTitle>{selectedNode.name}</StyledTitle>
                     )}
@@ -880,11 +868,11 @@ export default function TechtreeDetailPage({ match }) {
                               const offsetElement = document.getElementById(
                                 'docuWrapper'
                               )
-                              const clientRect = offsetElement.getBoundingClientRect()
-                              const relativeTop = clientRect.top
-                              const scrolledTopLength = window.pageYOffset
-                              const absoluteYPosition =
-                                scrolledTopLength + relativeTop
+                              //   const clientRect = offsetElement.getBoundingClientRect()
+                              //   const relativeTop = clientRect.top
+                              //   const scrolledTopLength = window.pageYOffset
+                              //   const absoluteYPosition =
+                              //     scrolledTopLength + relativeTop
                               // window.scrollTo(0, absoluteYPosition - 80)
                             }}
                           >

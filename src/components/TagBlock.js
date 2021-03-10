@@ -25,6 +25,6 @@ export const StyledTagBlock = styled.div`
 export const TagBlock = React.memo(({ text, functionProps }) => {
   const onClickTag = useCallback((e) => {
     alert('tag is clicked!')
-  })
+  }, [])
   return <StyledTagBlock onClick={onClickTag}>{text}</StyledTagBlock>
 })

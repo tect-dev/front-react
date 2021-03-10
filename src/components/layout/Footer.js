@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import '../../styles/layout/Footer.scss'
 import styled from 'styled-components'
 import { layout, colorPalette } from '../../lib/constants'

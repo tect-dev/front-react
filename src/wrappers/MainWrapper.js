@@ -5,7 +5,6 @@ import {
   Button,
   Link,
   lightColors,
-  darkColors,
 } from 'react-floating-action-button'
 
 import { colorPalette } from '../lib/constants'
@@ -21,72 +20,21 @@ const buttonPraise4 = 'To get to your own forest, login is required!'
 
 export default function MainWrapperDefault({ children }) {
   const dispatch = useDispatch()
-  const { loginState, userID, emailVerified, userInfo } = useSelector(
-    (state) => {
-      return {
-        loginState: state.auth.loginState,
-        userID: state.auth.userID,
-        emailVerified: state.auth.emailVerified,
+  const { loginState, userID, userInfo } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      userID: state.auth.userID,
 
-        userInfo: {
-          firebaseUid: state.auth.userID,
-          displayName: state.auth.userNickname,
-        },
-      }
+      userInfo: {
+        firebaseUid: state.auth.userID,
+        displayName: state.auth.userNickname,
+      },
     }
-  )
+  })
   return (
     <MainLayout>
       <Navbar />
       <ContentWrapper>{children}</ContentWrapper>
-      <Container>
-        {loginState && authService.currentUser.emailVerified ? (
-          <Button
-            tooltip={buttonPraise1}
-            icon="fas fa-plus"
-            style={{ curosr: 'pointer' }}
-            onClick={() => {
-              dispatch(createTechtree(userInfo))
-            }}
-            styles={{
-              backgroundColor: colorPalette.teal5,
-              color: lightColors.white,
-              curosr: 'pointer',
-            }}
-          />
-        ) : (
-          <Button
-            styles={{
-              backgroundColor: colorPalette.teal5,
-              color: lightColors.white,
-            }}
-            icon="fas fa-plus"
-            tooltip={buttonPraise2}
-          ></Button>
-        )}
-
-        {loginState ? (
-          <Link
-            tooltip={buttonPraise3}
-            icon="fas fa-tree"
-            //rotate={true}
-            href={`/forest/${userID}`}
-            styles={{
-              backgroundColor: colorPalette.teal5,
-              color: lightColors.white,
-            }}
-          />
-        ) : (
-          <Button
-            tooltip={buttonPraise4}
-            icon="fas fa-tree"
-            styles={{
-              backgroundColor: colorPalette.teal5,
-              color: lightColors.white,
-            }}
-          ></Button>
-        )}
-      </Container>
     </MainLayout>
   )
 }
@@ -133,19 +81,17 @@ export const MainWrapperWithoutFAB = ({ children }) => {
 
 export const MainWrapperInTheHomePage = ({ children }) => {
   const dispatch = useDispatch()
-  const { loginState, userID, emailVerified, userInfo } = useSelector(
-    (state) => {
-      return {
-        loginState: state.auth.loginState,
-        userID: state.auth.userID,
-        emailVerified: state.auth.emailVerified,
-        userInfo: {
-          firebaseUid: state.auth.userID,
-          displayName: state.auth.userNickname,
-        },
-      }
+  const { loginState, userID, userInfo } = useSelector((state) => {
+    return {
+      loginState: state.auth.loginState,
+      userID: state.auth.userID,
+
+      userInfo: {
+        firebaseUid: state.auth.userID,
+        displayName: state.auth.userNickname,
+      },
     }
-  )
+  })
   return (
     <MainLayout>
       <NavbarInTheHomePage />

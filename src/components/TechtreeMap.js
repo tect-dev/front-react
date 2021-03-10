@@ -4,7 +4,6 @@ import { uid } from 'uid'
 
 import { boxShadow, colorPalette, fontSize } from '../lib/constants'
 import styled from 'styled-components'
-import xCircle from '../assets/xCircle.svg'
 import grayX from '../assets/xCircle.svg'
 
 import { returnPreviousNodeList, returnNextNodeList } from '../lib/functions'
@@ -14,7 +13,6 @@ import {
   createLink,
   deleteNode,
   deleteLink,
-  changeThumbnail,
   updateThumbnail,
 } from '../redux/techtree'
 import { useDispatch, useSelector } from 'react-redux'
@@ -79,9 +77,9 @@ function initGraph(container) {
     .style('opacity', '0')
     .attr('display', 'none')
 
-  const linkGroup = svg.append('g').attr('class', 'links')
-  const nodeGroup = svg.append('g').attr('class', 'nodes')
-  const labelGroup = svg.append('g').attr('class', 'labels')
+  svg.append('g').attr('class', 'links')
+  svg.append('g').attr('class', 'nodes')
+  svg.append('g').attr('class', 'labels')
 }
 
 // reduxStore 이용해서 id 랑 매칭시키는거 제대로 작동 안할때가 많음.
@@ -89,7 +87,6 @@ function initGraph(container) {
 // 그래프가 갱신될때 호출되는 함수
 function updateGraph(container, dispatch) {
   const nodeRadius = 20
-  const nodeColor = colorPalette.mainGreen
 
   const selectedColor = colorPalette.green2
   const selectedNodeStrokeWidth = '8px'
@@ -113,8 +110,7 @@ function updateGraph(container, dispatch) {
 
   let nodeList = reduxStore.getState().techtree.nodeList
   let linkList = reduxStore.getState().techtree.linkList
-  let originalThumbnailURL = reduxStore.getState().techtree.techtreeData
-    .thumbnail
+
   let tempThumbnailURL = reduxStore.getState().techtree.techtreeData.thumbnail
   let tempPairingNodes = {
     startNodeID: null,
@@ -254,7 +250,7 @@ function updateGraph(container, dispatch) {
 
       .style('cursor', 'pointer')
   }
-  const nodeTranstion = d3.transition().duration(2500).ease(d3.easeLinear)
+
   // 노드 생성
   function initNode() {
     nodeGroup.selectAll('*').remove()

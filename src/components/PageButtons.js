@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { DefaultButton, SelectedButton } from './Button'
 
 const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
@@ -16,7 +16,7 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
       setPageNum(ele)
       history.push(`/${routingString}?page=${ele}`)
     },
-    [pageNum, history, routingString]
+    [history, routingString]
   )
 
   return (
@@ -27,8 +27,8 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
         // pageNumber -2, -1, 0 , +1, +2 를 렌더링하고 +3에선 ...을 반환하고 이후 마지막것만 렌더링.
         // 그러나 pageNumber 가 3보다 작다면 1~5를 렌더링한다.
 
-        if (ele == 1) {
-          if (pageNum == ele) {
+        if (ele === 1) {
+          if (pageNum === ele) {
             return (
               <SelectedButton
                 key={idx}
@@ -51,8 +51,8 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
               </DefaultButton>
             )
           }
-        } else if (ele == pageMaxNumber) {
-          if (pageNum == ele) {
+        } else if (ele === pageMaxNumber) {
+          if (pageNum === ele) {
             return (
               <SelectedButton
                 key={idx}
@@ -76,7 +76,7 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
             )
           }
         } else {
-          if (ele == pageNum) {
+          if (ele === pageNum) {
             return (
               <SelectedButton
                 key={idx}
@@ -98,9 +98,9 @@ const PageButtons = ({ pageNumber, treePerPage, postSum, routingString }) => {
                 {ele}
               </DefaultButton>
             )
-          } else if (ele == pageNum - 3) {
+          } else if (ele === pageNum - 3) {
             return <span key={idx}>...</span>
-          } else if (ele == pageNum + 3) {
+          } else if (ele === pageNum + 3) {
             return <span key={idx}>...</span>
           } else {
             return

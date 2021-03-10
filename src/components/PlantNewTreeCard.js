@@ -16,10 +16,9 @@ import { DefaultButton } from '../components/Button'
 
 export const PlantNewTreeButton = () => {
   const dispatch = useDispatch()
-  const { loginState, emailVerified, userInfo } = useSelector((state) => {
+  const { loginState, userInfo } = useSelector((state) => {
     return {
       loginState: state.auth.loginState,
-      emailVerified: state.auth.emailVerified,
       userInfo: {
         firebaseUid: state.auth.userID,
         displayName: state.auth.userNickname,
@@ -48,10 +47,9 @@ export const PlantNewTreeButton = () => {
 
 const PlantNewTree = () => {
   const dispatch = useDispatch()
-  const { loginState, emailVerified, userInfo } = useSelector((state) => {
+  const { loginState, userInfo } = useSelector((state) => {
     return {
       loginState: state.auth.loginState,
-      emailVerified: state.auth.emailVerified,
       userInfo: {
         firebaseUid: state.auth.userID,
         displayName: state.auth.userNickname,

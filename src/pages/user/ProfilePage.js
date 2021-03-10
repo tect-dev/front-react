@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useDebugValue,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, Link } from 'react-router-dom'
 import MainLayout from '../../components/layout/MainLayout'
 import '../../styles/page/user/ProfilePage.scss'
@@ -14,7 +8,13 @@ import styled from 'styled-components'
 import { Spinner } from '../../components/Spinner'
 // import { Button } from '../../components/Button'
 import MainWrapper from '../../wrappers/MainWrapper'
+import { GridWrapper } from '../../wrappers/GridWrapper'
 import { fontSize, AnonymousSVG, colorPalette } from '../../lib/constants'
+import TechtreeThumbnail from '../../components/TechtreeThumbnail'
+import { TreePageHeader } from '../techtree/TechtreeDetailPage'
+import { PlantNewTreeButton } from '../../components/PlantNewTreeCard'
+
+import { createTechtree } from '../../redux/techtree'
 
 import { authService } from '../../lib/firebase'
 import Swal from 'sweetalert2'
@@ -40,6 +40,17 @@ export default function ProfilePage({ match }) {
       myPosts: state.auth.userData.posts?.question,
       loading: state.auth.loading,
       emailVerified: state.auth.emailVerified,
+    }
+  })
+
+  const { treeData } = useSelector((state) => {
+    return {
+      treeData: state.auth.userTreeData,
+    }
+  })
+  const { forestOwnerDisplayName } = useSelector((state) => {
+    return {
+      forestOwnerDisplayName: state.auth.userData?.displayName,
     }
   })
 
@@ -96,6 +107,29 @@ export default function ProfilePage({ match }) {
   }
   return (
     <MainWrapper>
+      <TreePageHeader>
+        <div>{forestOwnerDisplayName}'s Forest</div>
+        <PlantNewTreeButton />
+      </TreePageHeader>
+      <GridWrapper>
+        {treeData?.map((techtreeData, index) => {
+          if (techtreeData) {
+            const parsedNodeList = JSON.parse(techtreeData.nodeList)
+            const parsedLinkList = JSON.parse(techtreeData.linkList)
+            return (
+              <TechtreeThumbnail
+                nodeList={parsedNodeList}
+                linkList={parsedLinkList}
+                techtreeTitle={techtreeData?.title}
+                techtreeID={techtreeData?._id}
+                techtreeData={techtreeData}
+                key={index}
+              />
+            )
+          }
+        })}
+      </GridWrapper>
+
       <MyPageContainer>
         <Title>MyPage</Title>
         <MyPageHead>
@@ -144,9 +178,9 @@ export default function ProfilePage({ match }) {
       <BoardContainer>
         <BoardTitle>작성게시물</BoardTitle>
         <PostsContainer>
-          {myPosts?.map((post) => {
+          {myPosts?.map((post, idx) => {
             return (
-              <Link to={`/post/${post._id}`}>
+              <Link key={idx} to={`/post/${post._id}`}>
                 <PostTitle>{post.title}</PostTitle>
               </Link>
             )

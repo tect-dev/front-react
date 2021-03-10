@@ -21,17 +21,13 @@ import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './ErrorBoundary'
 import './App.css'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { readTechtreeList } from './redux/techtree'
 import { checkAuth } from './redux/auth'
 import { authService } from './lib/firebase'
 
 function App() {
   const dispatch = useDispatch()
-
-  const { loginState } = useSelector((state) => {
-    return { loginState: state.auth.loginState }
-  })
 
   useEffect(() => {
     authService.currentUser?.reload()

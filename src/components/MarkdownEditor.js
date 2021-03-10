@@ -1,4 +1,4 @@
-import { Spinner } from './Spinner'
+//import { Spinner } from './Spinner'
 
 import React, { useRef, useCallback, useState } from 'react'
 
@@ -17,7 +17,7 @@ import {
 import axios from 'axios'
 
 const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
-  const [localText, setLocalText] = useState(bindingText)
+  //const [localText, setLocalText] = useState(bindingText)
   const [loading, setLoading] = useState(false)
   const textareaRef = useRef()
 
@@ -25,48 +25,46 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
     (e) => {
       // e.target.value 에서 \n을 <br /> 으로 치환한뒤 이걸 넣어주자.
 
-      setLocalText(e.target.value)
+      //  setLocalText(e.target.value)
       bindingSetter(e.target.value)
     },
     [bindingSetter]
   )
 
-  const onDrop = useCallback(async (e) => {
-    e.preventDefault()
-    // 여러 이미지를 드래그해도 하나만 선택
-
-    const file = e?.dataTransfer?.files[0]
-    // input attribute로 accept="image/*"를 지정하지
-    // 않았기 때문에 여기서 image만 access 가능하게 처리
-    const value = textareaRef.current.value
-    const selectionStart = textareaRef.current.selectionStart
-    const selectionEnd = textareaRef.current.selectionEnd
-
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-
-      let formData = new FormData()
-      formData.append('image', file)
-      await setLoading(true)
-
-      const res = await axios({
-        url: `${process.env.REACT_APP_BACKEND_URL}/image`,
-        method: 'POST',
-        data: formData,
-      })
-
-      const imageUrl = res.data
-      const result = `${value.substring(0, selectionStart)}![${
-        file.name
-      }](${imageUrl})${value.substring(selectionEnd)}`
-      //const result = `${localText}![${file.name}](${imageUrl})`
-      setLocalText(result)
-      bindingSetter(result)
-    } else {
-      //console.log('no image file')
-    }
-  })
+  const onDrop = useCallback(
+    async (e) => {
+      e.preventDefault()
+      // 여러 이미지를 드래그해도 하나만 선택
+      const file = e?.dataTransfer?.files[0]
+      // input attribute로 accept="image/*"를 지정하지
+      // 않았기 때문에 여기서 image만 access 가능하게 처리
+      const value = textareaRef.current.value
+      const selectionStart = textareaRef.current.selectionStart
+      const selectionEnd = textareaRef.current.selectionEnd
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        let formData = new FormData()
+        formData.append('image', file)
+        await setLoading(true)
+        const res = await axios({
+          url: `${process.env.REACT_APP_BACKEND_URL}/image`,
+          method: 'POST',
+          data: formData,
+        })
+        const imageUrl = res.data
+        const result = `${value.substring(0, selectionStart)}![${
+          file.name
+        }](${imageUrl})${value.substring(selectionEnd)}`
+        //const result = `${localText}![${file.name}](${imageUrl})`
+        // setLocalText(result)
+        bindingSetter(result)
+      } else {
+        //console.log('no image file')
+      }
+    },
+    [bindingSetter]
+  )
 
   const addCodeBlock = useCallback(
     (e) => {
@@ -82,7 +80,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         selectionEnd
       )}`
 
-      setLocalText(newText)
+      //setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText
@@ -90,7 +88,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         textareaRef.current.selectionEnd = selectionStart + 2
       }
     },
-    [localText, bindingSetter]
+    [bindingSetter]
   )
 
   const addMathBlock = useCallback(
@@ -107,7 +105,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         selectionEnd
       )}`
 
-      setLocalText(newText)
+      //setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText
@@ -115,7 +113,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         textareaRef.current.selectionEnd = selectionStart + 2
       }
     },
-    [localText, bindingSetter]
+    [bindingSetter]
   )
 
   const addBoldText = useCallback(
@@ -129,7 +127,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         0,
         selectionStart
       )}**Bold Text**${value.substring(selectionEnd)}`
-      setLocalText(newText)
+      // setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText
@@ -137,7 +135,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         textareaRef.current.selectionEnd = selectionStart + 2
       }
     },
-    [localText, bindingSetter]
+    [bindingSetter]
   )
 
   const addItalicText = useCallback(
@@ -152,7 +150,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         selectionStart
       )}*Italic Text*${value.substring(selectionEnd)}`
 
-      setLocalText(newText)
+      //  setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText
@@ -160,7 +158,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         textareaRef.current.selectionEnd = selectionStart + 2
       }
     },
-    [localText, bindingSetter]
+    [bindingSetter]
   )
 
   const addLargeTitle = useCallback(
@@ -173,8 +171,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         0,
         selectionStart
       )}## Large Title${value.substring(selectionEnd)}`
-
-      setLocalText(newText)
+      // setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText
@@ -182,7 +179,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         textareaRef.current.selectionEnd = selectionStart + 2
       }
     },
-    [localText, bindingSetter]
+    [bindingSetter]
   )
 
   const addLink = useCallback(
@@ -196,7 +193,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         '[오른쪽 괄호안에는 링크 주소를 적습니다](https://www.foresty.net)' +
         value.substring(selectionEnd)
 
-      setLocalText(newText)
+      // setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText
@@ -204,14 +201,14 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         textareaRef.current.selectionEnd = selectionStart + 2
       }
     },
-    [localText, bindingSetter]
+    [bindingSetter]
   )
 
   const onKeydownTap = (e) => {
     //e.preventDefault()
     if (e.keyCode === 9) {
       e.preventDefault()
-      const tab = '\t'
+      //const tab = '\t'
       const value = e.target.value
       const selectionStart = e.target.selectionStart
       const selectionEnd = e.target.selectionEnd
@@ -220,7 +217,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         '  ' +
         value.substring(selectionEnd)
 
-      setLocalText(newText)
+      //setLocalText(newText)
       bindingSetter(newText)
       if (textareaRef.current) {
         textareaRef.current.value = newText

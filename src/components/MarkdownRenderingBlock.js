@@ -12,7 +12,7 @@ import slug from 'remark-slug'
 import { htmlFilter } from '../lib/functions'
 import { prismPlugin } from '../lib/prismPlugin'
 import { prismThemes } from '../lib/prismThemes'
-import { colorPalette, mediaQuery, mediaSize } from '../lib/constants'
+import { colorPalette, mediaSize } from '../lib/constants'
 
 // deprecated. MarkdownRenderer 사용을 권장.
 

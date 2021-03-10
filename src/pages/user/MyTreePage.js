@@ -42,11 +42,6 @@ export default function MyTreePage({ match }) {
 
   const dispatch = useDispatch()
 
-  const onClickLogout = useCallback(() => {
-    dispatch(logout())
-    history.push('/')
-  }, [dispatch])
-
   useEffect(() => {
     authService.currentUser?.reload()
     dispatch(getUserInfo(userID))

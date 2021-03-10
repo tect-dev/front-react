@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import remark from 'remark'
 import remarkParse from 'remark-parse'
-import remarkHTML from 'remark-html'
+
 import math from 'remark-math'
 import remark2rehype from 'remark-rehype'
 import katex from 'rehype-katex'
@@ -13,7 +13,6 @@ import slug from 'remark-slug'
 import { throttle } from 'throttle-debounce'
 import { htmlFilter } from '../lib/functions'
 import { prismPlugin } from '../lib/prismPlugin'
-import { embedPlugin } from '../lib/embedPlugin'
 import { prismThemes } from '../lib/prismThemes'
 import { colorPalette, mediaSize } from '../lib/constants'
 
@@ -28,8 +27,6 @@ const MarkdownStyledBlock = styled.div`
   ol,
   ul {
     padding-inline-start: 35px;
-    //padding-top: 12px;
-    //padding-bottom: 12px;
   }
   p {
     margin-top: 1rem;
@@ -174,9 +171,8 @@ const MarkdownStyledBlock = styled.div`
 const MarkdownRenderer = React.memo(function MarkdownRenderingBlock({ text }) {
   const [html, setHtml] = useState('')
 
-  const codeBlockPattern = /(```[\s\S]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
-  //const codeBlockPattern = /(```)([ㄱ-ㅎ가-핳a-zA-Z0-9\n\s\"\'\!\?\_\-\@\%\^\&\*\(\)\=\+\;\:\/\,\.\<\>\|\[\{\]\}]+)\1/gi
-  const latexBlockPattern = /(\$\$[\s\S]*[\s\S]*?\$\$)/g
+  //const codeBlockPattern = /(```[\s\S]*\n[\s\S]*?\n```)/g // 이걸로 쓰면 통으로 잘라버리네.
+  //const latexBlockPattern = /(\$\$[\s\S]*[\s\S]*?\$\$)/g
 
   //const exceptionPattern = /(\$\$[\s\S]*[\s\S]*?\$\$)|(```[\s\S]*\n[\s\S]*?\n```)/g
 
