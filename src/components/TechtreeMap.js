@@ -58,7 +58,7 @@ const TreeMap = React.memo(function TechtreeMap() {
 
 function initGraph(container) {
   const linkWidth = '2.5px'
-  const linkColor = `${colorPalette.gray5}`
+  const linkColor = `${colorPalette.gray3}`
   const width = MapWidth
   const height = MapHeight
 
@@ -75,7 +75,7 @@ function initGraph(container) {
     .attr('class', 'tempLine')
     .style('stroke', linkColor)
     .style('stroke-width', linkWidth)
-    .attr('marker-end', 'url(#end-arrow)')
+    .attr('marker-end', 'url(#temp-end-arrow)')
     .style('opacity', '0')
     .attr('display', 'none')
 
@@ -153,6 +153,20 @@ function updateGraph(container, dispatch) {
     .attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', linkColor)
 
+  // tempLine만을 위한 화살표 마커
+  svg
+    .append('svg:defs')
+    .append('svg:marker')
+    .attr('id', 'temp-end-arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 9)
+    .attr('markerWidth', 6)
+    .attr('markerHeight', nodeRadius * 1.5)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', linkColor)
+
   const linkGroup = svg.select('.links')
   const nodeGroup = svg.select('.nodes')
   const labelGroup = svg.select('.labels')
@@ -164,7 +178,7 @@ function updateGraph(container, dispatch) {
     linkGroup.selectAll('*').remove()
 
     // create new line dom in linkGroup
-    linkGroup
+    const createdLinkGroup = linkGroup
       .selectAll('line')
       .data(linkList)
       .join('line')
@@ -176,6 +190,29 @@ function updateGraph(container, dispatch) {
       .style('stroke', linkColor)
       .style('stroke-width', linkWidth)
       .attr('marker-end', 'url(#end-arrow)')
+
+    if (reduxStore.getState().techtree.isEditingTechtree) {
+      createdLinkGroup
+        .transition()
+        .duration(150)
+        .ease(d3.easeLinear)
+        .on('start', function repeat() {
+          d3.active(this)
+            .attr('cx', (d) => {
+              return d.x - 0.7
+            })
+            .transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .attr('cx', (d) => {
+              return d.x + 0.7
+            })
+            .transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .on('start', repeat)
+        })
+    }
 
     // create link delete button in linkGroup
     linkGroup
@@ -217,7 +254,7 @@ function updateGraph(container, dispatch) {
 
       .style('cursor', 'pointer')
   }
-
+  const nodeTranstion = d3.transition().duration(2500).ease(d3.easeLinear)
   // 노드 생성
   function initNode() {
     nodeGroup.selectAll('*').remove()
@@ -234,7 +271,6 @@ function updateGraph(container, dispatch) {
           return
         }
       })
-      .style('stroke-width', selectedNodeStrokeWidth)
       .attr('cx', (d) => {
         return d.x
       })
@@ -245,6 +281,7 @@ function updateGraph(container, dispatch) {
         return d.id
       })
       .style('cursor', 'pointer')
+
       .on('click', (d) => {
         const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
         const nextNodeList = returnNextNodeList(linkList, nodeList, d)
@@ -253,154 +290,185 @@ function updateGraph(container, dispatch) {
 
     if (reduxStore.getState().techtree.isEditingTechtree) {
       // drag node
-      createdNodeGroup.call(
-        d3
-          .drag()
-          .on('start', (d) => {
-            d3.select(this).raise().classed('active', true)
-          })
-          .on('drag', (node) => {
-            const newLinkList = linkList.map((link) => {
-              if (link.startNodeID === node.id) {
-                return { ...link, startX: d3.event.x, startY: d3.event.y }
-              } else if (link.endNodeID === node.id) {
-                return { ...link, endX: d3.event.x, endY: d3.event.y }
-              } else {
-                return link
-              }
+      createdNodeGroup
+        .call(
+          d3
+            .drag()
+            .on('start', (d) => {
+              d3.select(this).raise().classed('active', true)
             })
-            linkList = newLinkList
-            initLink()
-            d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y)
-            node.x = d3.event.x
-            node.y = d3.event.y
-            initNode()
-            initLabel()
-          })
-          .on('end', async (node) => {
-            d3.select(this).classed('active', false)
-            node.x = d3.event.x
-            node.y = d3.event.y
-
-            await dispatch(
-              createLink(
-                nodeList,
-                linkList,
-                reduxStore.getState().techtree.techtreeData
-              )
-            )
-            await updateNode()
-            await updateLink()
-            await changeTreeThumbnail()
-            await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
-          })
-      )
-    } else {
-      // connect nodes by link
-      createdNodeGroup.call(
-        d3
-          .drag()
-          .on('start', (d) => {
-            if (
-              reduxStore.getState().techtree.techtreeData.author
-                ?.firebaseUid === reduxStore.getState().auth.userID
-            ) {
-              svg
-                .select('g')
-                .select('.tempLine')
-                .attr('x1', d.x)
-                .attr('y1', d.y)
-              svg
-                .select('g')
-                .select('.tempLine')
-                .attr('x2', d3.event.x)
-                .attr('y2', d3.event.y)
-              svg
-                .select('g')
-                .select('.tempLine')
-                .style('opacity', '1')
-                .attr('display', 'inline')
-              tempPairingNodes.startNodeID = d.id
-              tempPairingNodes.startX = d.x
-              tempPairingNodes.startY = d.y
-            }
-          })
-          .on('drag', (node) => {
-            if (
-              d3.select('.tempLine').attr('x1') > 1 &&
-              d3.select('.tempLine').attr('y1') > 1 &&
-              d3.select('.tempLine').style('opacity') != 0
-            ) {
-              svg
-                .select('g')
-                .select('.tempLine')
-                .attr('x2', d3.event.x)
-                .attr('y2', d3.event.y)
+            .on('drag', (node) => {
+              const newLinkList = linkList.map((link) => {
+                if (link.startNodeID === node.id) {
+                  return { ...link, startX: d3.event.x, startY: d3.event.y }
+                } else if (link.endNodeID === node.id) {
+                  return { ...link, endX: d3.event.x, endY: d3.event.y }
+                } else {
+                  return link
+                }
+              })
+              linkList = newLinkList
               initLink()
+              d3.select(this).attr('cx', d3.event.x).attr('cy', d3.event.y)
+              node.x = d3.event.x
+              node.y = d3.event.y
               initNode()
               initLabel()
-            }
-          })
-          .on('end', async (startNode) => {
-            const pointerX = d3.event.x
-            const pointerY = d3.event.y
-            nodeList.map(async (node) => {
+            })
+            .on('end', async (node) => {
+              d3.select(this).classed('active', false)
+              node.x = d3.event.x
+              node.y = d3.event.y
+
+              await dispatch(
+                createLink(
+                  nodeList,
+                  linkList,
+                  reduxStore.getState().techtree.techtreeData
+                )
+              )
+              await updateNode()
+              await updateLink()
+              await changeTreeThumbnail()
+              await dispatch(
+                updateThumbnail(techtreeData._id, tempThumbnailURL)
+              )
+            })
+        )
+        .attr('cx', (d) => {
+          return d.x
+        })
+        .transition()
+        .duration(130)
+        .ease(d3.easeLinear)
+        .on('start', function repeat() {
+          d3.active(this)
+            .attr('cx', (d) => {
+              return d.x - 0.9
+            })
+            .transition()
+            .duration(130)
+            .ease(d3.easeLinear)
+            .attr('cx', (d) => {
+              return d.x + 0.9
+            })
+            .transition()
+            .duration(130)
+            .ease(d3.easeLinear)
+            .on('start', repeat)
+        })
+    } else {
+      // connect nodes by link
+      createdNodeGroup
+        .call(
+          d3
+            .drag()
+            .on('start', (d) => {
               if (
-                (node.x - pointerX) * (node.x - pointerX) +
-                  (node.y - pointerY) * (node.y - pointerY) <
-                nodeRadius * nodeRadius
+                reduxStore.getState().techtree.techtreeData.author
+                  ?.firebaseUid === reduxStore.getState().auth.userID
               ) {
-                tempPairingNodes.endNodeID = node.id
-                tempPairingNodes.endX = node.x
-                tempPairingNodes.endY = node.y
-
-                // 연결된 노드를 데이터에 반영
-                if (
-                  tempPairingNodes.startNodeID !== tempPairingNodes.endNodeID &&
-                  tempPairingNodes.startX !== tempPairingNodes.endX &&
-                  tempPairingNodes.startY !== tempPairingNodes.endY &&
-                  !linkList.find(
-                    (element) =>
-                      element.startNodeID === tempPairingNodes.startNodeID &&
-                      element.endNodeID === tempPairingNodes.endNodeID
-                  ) &&
-                  d3.select('.tempLine').attr('x1') > 1 &&
-                  d3.select('.tempLine').attr('y1') > 1 &&
-                  d3.select('.tempLine').style('opacity') != 0
-                ) {
-                  tempPairingNodes.id = `link${uid(20)}`
-                  linkList.push({ ...tempPairingNodes })
-
-                  await dispatch(
-                    createLink(
-                      nodeList,
-                      linkList,
-                      reduxStore.getState().techtree.techtreeData
-                    )
-                  )
-
-                  await updateLink()
-                  await changeTreeThumbnail()
-                  await dispatch(
-                    updateThumbnail(techtreeData._id, tempThumbnailURL)
-                  )
-
-                  svg.select('.tempLine').style('opacity', '0')
-                }
                 svg
                   .select('g')
                   .select('.tempLine')
-                  .attr('x1', 0)
-                  .attr('y1', 0)
-                  .attr('x2', 0)
-                  .attr('y2', 0)
-                tempPairingNodes = {}
+                  .attr('x1', d.x)
+                  .attr('y1', d.y)
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .attr('x2', d3.event.x)
+                  .attr('y2', d3.event.y)
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .style('opacity', '1')
+                  .attr('display', 'inline')
+                tempPairingNodes.startNodeID = d.id
+                tempPairingNodes.startX = d.x
+                tempPairingNodes.startY = d.y
               }
             })
-            svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
-            svg.select('.tempLine').style('opacity', '0')
-          })
-      )
+            .on('drag', (node) => {
+              if (
+                d3.select('.tempLine').attr('x1') > 1 &&
+                d3.select('.tempLine').attr('y1') > 1 &&
+                d3.select('.tempLine').style('opacity') != 0
+              ) {
+                svg
+                  .select('g')
+                  .select('.tempLine')
+                  .attr('x2', d3.event.x)
+                  .attr('y2', d3.event.y)
+                initLink()
+                initNode()
+                initLabel()
+              }
+            })
+            .on('end', async (startNode) => {
+              const pointerX = d3.event.x
+              const pointerY = d3.event.y
+              nodeList.map(async (node) => {
+                if (
+                  (node.x - pointerX) * (node.x - pointerX) +
+                    (node.y - pointerY) * (node.y - pointerY) <
+                  nodeRadius * nodeRadius
+                ) {
+                  tempPairingNodes.endNodeID = node.id
+                  tempPairingNodes.endX = node.x
+                  tempPairingNodes.endY = node.y
+
+                  // 연결된 노드를 데이터에 반영
+                  if (
+                    tempPairingNodes.startNodeID !==
+                      tempPairingNodes.endNodeID &&
+                    tempPairingNodes.startX !== tempPairingNodes.endX &&
+                    tempPairingNodes.startY !== tempPairingNodes.endY &&
+                    !linkList.find(
+                      (element) =>
+                        element.startNodeID === tempPairingNodes.startNodeID &&
+                        element.endNodeID === tempPairingNodes.endNodeID
+                    ) &&
+                    d3.select('.tempLine').attr('x1') > 1 &&
+                    d3.select('.tempLine').attr('y1') > 1 &&
+                    d3.select('.tempLine').style('opacity') != 0
+                  ) {
+                    tempPairingNodes.id = `link${uid(20)}`
+                    linkList.push({ ...tempPairingNodes })
+
+                    await dispatch(
+                      createLink(
+                        nodeList,
+                        linkList,
+                        reduxStore.getState().techtree.techtreeData
+                      )
+                    )
+
+                    await updateLink()
+                    await changeTreeThumbnail()
+                    await dispatch(
+                      updateThumbnail(techtreeData._id, tempThumbnailURL)
+                    )
+                    svg.select('.tempLine').style('opacity', '0')
+                  }
+                  svg
+                    .select('g')
+                    .select('.tempLine')
+                    .attr('x1', 0)
+                    .attr('y1', 0)
+                    .attr('x2', 0)
+                    .attr('y2', 0)
+                  tempPairingNodes = {}
+                }
+              })
+              svg.select('g').select('.tempLine').attr('x1', 0).attr('y1', 0)
+              svg.select('.tempLine').style('opacity', '0')
+            })
+        )
+        .style('stroke-width', 0)
+        .transition()
+        .duration(500)
+        .ease(d3.easeLinear)
+        .style('stroke-width', selectedNodeStrokeWidth)
     }
 
     // 노드 삭제용 버튼 만들기
