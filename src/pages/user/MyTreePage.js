@@ -12,7 +12,9 @@ import { GridWrapper } from '../../wrappers/GridWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
 
 import { TreePageHeader } from '../techtree/TechtreeDetailPage'
-import PlantNewTreeCard from '../../components/PlantNewTreeCard'
+import PlantNewTreeCard, {
+  PlantNewTreeButton,
+} from '../../components/PlantNewTreeCard'
 
 import { authService } from '../../lib/firebase'
 import { createTechtree } from '../../redux/techtree'
@@ -59,10 +61,11 @@ export default function MyTreePage({ match }) {
   }
   return (
     <MainWrapper>
-      <TreePageHeader>{forestOwnerDisplayName}'s Forest</TreePageHeader>
+      <TreePageHeader>
+        <div>{forestOwnerDisplayName}'s Forest</div>
+        <PlantNewTreeButton />
+      </TreePageHeader>
       <GridWrapper>
-        {loginState && userID === myID ? <PlantNewTreeCard /> : ''}
-
         {treeData?.map((techtreeData, index) => {
           if (techtreeData) {
             const parsedNodeList = JSON.parse(techtreeData.nodeList)

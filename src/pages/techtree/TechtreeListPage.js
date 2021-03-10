@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import MainWrapper from '../../wrappers/MainWrapper'
 import TechtreeThumbnail from '../../components/TechtreeThumbnail'
-import PlantNewTreeCard from '../../components/PlantNewTreeCard'
+import { PlantNewTreeButton } from '../../components/PlantNewTreeCard'
 import { TreePageHeader } from './TechtreeDetailPage'
 import { Spinner } from '../../components/Spinner'
 import { Button, DefaultButton } from '../../components/Button'
@@ -53,10 +53,11 @@ export default function TechtreeListPage({ match, location }) {
 
   return (
     <MainWrapper>
-      <TreePageHeader>Forest</TreePageHeader>
+      <TreePageHeader>
+        <div>Forest</div>
+        <PlantNewTreeButton />
+      </TreePageHeader>
       <GridWrapper>
-        {pageNumber == 1 ? <PlantNewTreeCard /> : ''}
-
         {techtreeList?.map((techtreeData, index) => {
           return (
             <TechtreeThumbnail

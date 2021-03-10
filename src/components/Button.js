@@ -6,7 +6,8 @@ import styled from 'styled-components'
 
 export const DefaultButton = styled.button`
   font-size: ${fontSize.xsmall};
-  padding: 6px 8px;
+  padding: 7px;
+  text-align: center;
   margin: 2px;
   border: 1px solid ${colorPalette.mainGreen};
   border-radius: 5px;
