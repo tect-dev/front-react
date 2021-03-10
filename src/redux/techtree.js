@@ -6,7 +6,8 @@ import { whiteURL } from '../lib/constants'
 import Swal from 'sweetalert2'
 import translationText from '../lib/translation.json'
 
-const nodePlaceholder = translationText.en.tutorialNode
+const nodeTutorialName = translationText.en.userGuide.body
+const nodePlaceholder = translationText.en.userGuide.body
 // '\n1. 캔버스 위에서 더블 클릭하면, 노드가 만들어져요. \n\n2. 노드를 클릭하면 문서를 작성할 수 있어요.\n\n3. 노드에서 다른 노드로 마우스 드래그를 하면 연결관계를 표현할 수 있어요.\n\n4. 수정모드에서는 노드나 링크를 삭제하거나, 노드를 드래그해서 위치를 바꿀 수 있어요.\n\n5. 코드블럭과 레이텍 문법을 지원합니다.\n\n6. 문서 에디터에 이미지를 드래그 드롭하면 사진을 첨부할 수 있어요.'
 
 const testNodeList =
@@ -18,7 +19,7 @@ const initialState = {
   previousNodeList: [],
   nextNodeList: [],
   selectedNode: {
-    name: '',
+    name: nodeTutorialName,
     body: nodePlaceholder,
   },
   isEditingDocument: false,
@@ -50,6 +51,7 @@ const FINISH_DOCU_EDIT = 'techtree/FINISH_DOCU_EDIT'
 
 const SELECT_NODE = 'techtree/SELECT_NODE'
 const UNSELECT_NODE = 'techtree/UNSELECT_NODE'
+const OPEN_USER_GUIDE = 'techtree/OPEN_USER_GUIDE'
 
 const CREATE_NODE = 'techtree/CREATE_NODE'
 const DELETE_NODE = 'techtree/DELETE_NODE'
@@ -575,8 +577,18 @@ export const readTechtree = (techtreeID) => async (dispatch) => {
   }
 }
 
+export const openUserGuide = () => {
+  return { type: OPEN_USER_GUIDE }
+}
+
 export default function techtree(state = initialState, action) {
   switch (action.type) {
+    case OPEN_USER_GUIDE:
+      return {
+        ...state,
+        previousNodeList: [],
+        nextNodeList: [],
+      }
     case CHANGE_NODECOLOR:
       return {
         ...state,
@@ -720,7 +732,7 @@ export default function techtree(state = initialState, action) {
         treeAuthor: {},
         selectedNode: {
           name: '',
-          body: nodePlaceholder,
+          body: '',
         },
         treeLikeUsers: [],
       }

@@ -40,6 +40,7 @@ import {
   forkTree,
   changeNodeColor,
   unselectNode,
+  openUserGuide,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
 import {
@@ -49,6 +50,10 @@ import {
   hoverAction,
 } from '../../lib/constants'
 import Modal from 'react-modal'
+import translationText from '../../lib/translation.json'
+
+const userGuideName = translationText.en.userGuide.name
+const userGuideBody = translationText.en.userGuide.body
 
 const rightHalfModal = {
   overlay: {
@@ -183,6 +188,13 @@ export default function TechtreeDetailPage({ match }) {
       setModalOpend(true)
     }
   }, [selectedNode])
+
+  const openUserGuideModal = useCallback(() => {
+    dispatch(openUserGuide())
+    setDocumentTitle(userGuideName)
+    setDocumentText(userGuideBody)
+    setModalOpend(true)
+  }, [dispatch])
 
   useEffect(() => {
     const tempData = { title: techtreeData.title, linkList: linkList }
@@ -366,7 +378,7 @@ export default function TechtreeDetailPage({ match }) {
                     />
                   </div>
                 ) : (
-                  <StyledTitle>{selectedNode.name}</StyledTitle>
+                  <StyledTitle>{documentTitle}</StyledTitle>
                 )}
               </div>
 
@@ -436,7 +448,7 @@ export default function TechtreeDetailPage({ match }) {
                   width="100%"
                 />
               ) : (
-                <MarkdownRenderer text={selectedNode.body} />
+                <MarkdownRenderer text={documentText} />
               )}
             </DocuBodyArea>
           </DocuWrapper>
@@ -544,90 +556,33 @@ export default function TechtreeDetailPage({ match }) {
         {!isEditingDocument ? (
           <>
             <TreeTitleArea>
-              {treeAuthor?.firebaseUid === userID ? (
-                <TitleInput
-                  value={techtreeTitle}
-                  placeholder="Title Of The Tree..."
-                  onChange={onChangeTechtreeTitle}
-                  maxLength="60"
-                />
-              ) : (
-                <>
-                  <StyledTitle>{techtreeTitle}</StyledTitle>
+              <div>
+                {treeAuthor?.firebaseUid === userID ? (
+                  <TitleInput
+                    value={techtreeTitle}
+                    placeholder="Title Of The Tree..."
+                    onChange={onChangeTechtreeTitle}
+                    maxLength="60"
+                  />
+                ) : (
+                  <>
+                    <StyledTitle>{techtreeTitle}</StyledTitle>
 
-                  <StyledDisplayName>
-                    <Link to={`/forest/${treeAuthor?.firebaseUid}`}>
-                      {treeAuthor?.displayName}
-                    </Link>
-                  </StyledDisplayName>
-                </>
-              )}
-            </TreeTitleArea>
-            <SearchArea>
-              <div style={{ display: 'inline-flex' }}>
-                <StyledSearchInput
-                  placeholder="Search In Tree..."
-                  value={searchValue}
-                  type="search"
-                  onKeyPress={(e) => {
-                    searchInTree(e)
-                  }}
-                  onChange={(e) => {
-                    setSearchValue(e.target.value)
-                  }}
-                />
+                    <StyledDisplayName>
+                      <Link to={`/forest/${treeAuthor?.firebaseUid}`}>
+                        {treeAuthor?.displayName}
+                      </Link>
+                    </StyledDisplayName>
+                  </>
+                )}
               </div>
-
-              {searchValue === '' ? (
-                ''
-              ) : (
-                <div>
-                  {searchResultList?.map((ele, idx) => {
-                    return (
-                      <SearchNodeCard
-                        key={idx}
-                        onClick={() => {
-                          const previousNodeList = returnPreviousNodeList(
-                            linkList,
-                            nodeList,
-                            nodeList.find((origin) => {
-                              return ele.id === origin.id
-                            })
-                          )
-                          const nextNodeList = returnNextNodeList(
-                            linkList,
-                            nodeList,
-                            nodeList.find((origin) => {
-                              return ele.id === origin.id
-                            })
-                          )
-                          dispatch(
-                            selectNode(
-                              previousNodeList,
-                              nextNodeList,
-                              nodeList.find((origin) => {
-                                return ele.id === origin.id
-                              })
-                            )
-                          )
-                        }}
-                      >
-                        <div style={{ display: 'flex', marginBottom: '10px' }}>
-                          {' '}
-                          <NodeColorSymbol
-                            style={{ background: ele.fillColor }}
-                          ></NodeColorSymbol>
-                          <div>{ele.name}</div>
-                        </div>
-                        <div>{ele.body}</div>
-                      </SearchNodeCard>
-                    )
-                  })}
-                </div>
-              )}
-            </SearchArea>
+              <DefaultButton onClick={openUserGuideModal}>
+                How To Use It?
+              </DefaultButton>
+            </TreeTitleArea>
 
             <TechtreeMap />
+
             <TreeEditButtonArea>
               <DefaultButton>
                 <a href={dataStr} download={`${techtreeData.title}.json`}>
@@ -697,6 +652,69 @@ export default function TechtreeDetailPage({ match }) {
                 ''
               )}
             </TreeEditButtonArea>
+            <SearchArea>
+              <div style={{ display: 'inline-flex' }}>
+                <StyledSearchInput
+                  placeholder="Search In Tree..."
+                  value={searchValue}
+                  type="search"
+                  onKeyPress={(e) => {
+                    searchInTree(e)
+                  }}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value)
+                  }}
+                />
+              </div>
+
+              {searchValue === '' ? (
+                ''
+              ) : (
+                <div>
+                  {searchResultList?.map((ele, idx) => {
+                    return (
+                      <SearchNodeCard
+                        key={idx}
+                        onClick={() => {
+                          const previousNodeList = returnPreviousNodeList(
+                            linkList,
+                            nodeList,
+                            nodeList.find((origin) => {
+                              return ele.id === origin.id
+                            })
+                          )
+                          const nextNodeList = returnNextNodeList(
+                            linkList,
+                            nodeList,
+                            nodeList.find((origin) => {
+                              return ele.id === origin.id
+                            })
+                          )
+                          dispatch(
+                            selectNode(
+                              previousNodeList,
+                              nextNodeList,
+                              nodeList.find((origin) => {
+                                return ele.id === origin.id
+                              })
+                            )
+                          )
+                        }}
+                      >
+                        <div style={{ display: 'flex', marginBottom: '10px' }}>
+                          {' '}
+                          <NodeColorSymbol
+                            style={{ background: ele.fillColor }}
+                          ></NodeColorSymbol>
+                          <div>{ele.name}</div>
+                        </div>
+                        <div>{ele.body}</div>
+                      </SearchNodeCard>
+                    )
+                  })}
+                </div>
+              )}
+            </SearchArea>
           </>
         ) : null}
         {isEditingDocument ? (
@@ -889,7 +907,8 @@ export default function TechtreeDetailPage({ match }) {
 export const TreePageHeader = styled.div`
   width: inherit;
   padding-left: 10px;
-  display: grid;
+  display: flex;
+  justify-content: space-between;
   //border: 1px solid ${colorPalette.mainGreen};
   font-size: ${fontSize.xlarge};
   color: ${colorPalette.gray7};
@@ -899,10 +918,10 @@ export const TreePageHeader = styled.div`
 `
 
 export const TreeTitleArea = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
+  //grid-template-columns: 2fr 1fr;
   width: 100%;
-  justify-items: space-between;
+  justify-content: space-between;
   align-items: center;
 `
 
@@ -913,8 +932,8 @@ export const StyledDisplayName = styled(StyledTitle)`
 export const TreeEditorArea = styled.div``
 
 export const TreeEditButtonArea = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  display: flex;
+  //grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-content: space-between;
   justify-items: center;
   padding: 20px;
@@ -930,10 +949,10 @@ export const DocuWrapper = styled.div`
 `
 
 export const DocuHeaderArea = styled.div`
-  display: grid;
+  display: flex;
   padding: 10px;
+  width: 90%;
   justify-content: space-between;
-  grid-template-columns: 2fr 1fr;
 `
 
 export const NodeColorButtonArea = styled.div`
