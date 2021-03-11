@@ -29,10 +29,11 @@ export const PlantNewTreeButton = () => {
     <>
       <DefaultButton
         onClick={() => {
-          if (loginState && authService.currentUser.emailVerified) {
+          if (loginState) {
+            //&& authService.currentUser.emailVerified) {
             dispatch(createTechtree(userInfo))
-          } else if (loginState && !authService.currentUser.emailVerified) {
-            alert('Please finish email verification!')
+            //} else if (loginState && !authService.currentUser.emailVerified) {
+            //  alert('Please finish email verification!')
           } else {
             alert('Login is required!')
           }

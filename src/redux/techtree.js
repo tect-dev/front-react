@@ -369,15 +369,12 @@ export const unselectNode = () => {
   return { type: UNSELECT_NODE }
 }
 
-export const createNode = (nodeList, linkList, techtreeData) => {
-  const techtreeID = techtreeData._id
-  const techtreeTitle = techtreeData.title
+export const createNode = (nodeList, linkList, techtreeID) => {
   authService.currentUser.getIdToken(true).then(async (idToken) => {
     axios({
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -387,21 +384,16 @@ export const createNode = (nodeList, linkList, techtreeData) => {
   })
   return { type: CREATE_NODE, nodeList: nodeList }
 }
-export const createLink = (nodeList, linkList, techtreeData) => async (
-  dispatch
-) => {
-  const techtreeID = techtreeData._id
-  const techtreeTitle = techtreeData.title
+export const createLink = (nodeList, linkList, treeID) => async (dispatch) => {
   try {
     authService.currentUser.getIdToken(true).then(async (idToken) => {
       axios({
         method: 'put',
-        url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${treeID}`,
         data: {
-          title: techtreeTitle,
           nodeList: JSON.stringify(nodeList),
           linkList: JSON.stringify(linkList),
-          _id: techtreeID,
+          _id: treeID,
           firebaseToken: idToken,
         },
       })
@@ -411,13 +403,10 @@ export const createLink = (nodeList, linkList, techtreeData) => async (
     // console.log('error: ', e)
   }
 }
-export const deleteNode = (
-  nodeList,
-  linkList,
-  techtreeID,
-  node,
-  techtreeData
-) => async (dispatch) => {
+
+export const deleteNode = (nodeList, linkList, techtreeID, node) => async (
+  dispatch
+) => {
   const deletionBinaryList = linkList.map((link) => {
     if (link.startNodeID === node.id) {
       return 0
@@ -431,9 +420,7 @@ export const deleteNode = (
   const newLinkList = linkList.filter((link, index) => {
     return deletionBinaryList[index] === 1
   })
-  const deleteNodeIndex = nodeList.findIndex((ele) => {
-    return ele.id === node.id
-  })
+
   const newNodeList = nodeList.filter((ele, index) => {
     return ele.id !== node.id
   })
@@ -446,8 +433,7 @@ export const deleteNode = (
         url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-          title: techtreeData.title,
-          _id: uid(24),
+          _id: techtreeID,
           hashtags: [],
           nodeList: stringifiedNodeList,
           linkList: stringifiedLinkList,
@@ -457,18 +443,16 @@ export const deleteNode = (
     })
     dispatch({ type: DELETE_NODE, newNodeList, newLinkList })
   } catch (e) {
-    alert('error: ', e)
+    alert('delete node error: ', e)
     //dispatch({ type: CREATE_QUESTION_FAIL, error: e })
   }
   // .splice 는 원본배열을 조작하는것. 반환값은 원본배열에서 잘라낸것만 반환한다.
   //nodeList.splice(deleteNodeIndex, 1)
 }
 
-export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
+export const deleteLink = (nodeList, linkList, techtreeID, link) => async (
   dispatch
 ) => {
-  const techtreeID = techtreeData._id
-  const techtreeTitle = techtreeData.title
   const newLinkList = linkList.filter((ele) => {
     return ele.id !== link.id
   })
@@ -477,7 +461,6 @@ export const deleteLink = (nodeList, linkList, techtreeData, link) => async (
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(newLinkList),
       },
@@ -822,10 +805,6 @@ export default function techtree(state = initialState, action) {
       return {
         ...state,
         techtreeTitle: action.techtreeTitle,
-        techtreeData: {
-          ...state.techtreeData,
-          techtreeTitle: action.techtreeTitle,
-        },
       }
     case CHANGE_DOCUMENT:
       return {

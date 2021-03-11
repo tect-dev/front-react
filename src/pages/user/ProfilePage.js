@@ -30,7 +30,6 @@ export default function ProfilePage({ match }) {
     myDisplayName,
     myPosts,
     loading,
-    emailVerified,
   } = useSelector((state) => {
     return {
       compareID: state.auth.userData?.firebaseUid,
@@ -39,7 +38,6 @@ export default function ProfilePage({ match }) {
       myDisplayName: state.auth.userData.displayName,
       myPosts: state.auth.userData.posts?.question,
       loading: state.auth.loading,
-      emailVerified: state.auth.emailVerified,
     }
   })
 
@@ -129,9 +127,11 @@ export default function ProfilePage({ match }) {
           }
         })}
       </GridWrapper>
+      <br />
+      <br />
 
       <MyPageContainer>
-        <Title>MyPage</Title>
+        <Title>Profile</Title>
         <MyPageHead>
           <AnonymousSVG />
           {isEdit ? (
@@ -161,7 +161,7 @@ export default function ProfilePage({ match }) {
           </Button>
         )}*/}
 
-        {!authService.currentUser?.emailVerified ? (
+        {/*{!authService.currentUser?.emailVerified ? (
           <Button
             onClick={() => {
               authService.currentUser.sendEmailVerification().then(() => {
@@ -171,6 +171,18 @@ export default function ProfilePage({ match }) {
           >
             re-send verification email
           </Button>
+        ) : (
+          ''
+        )} */}
+        {myID === compareID ? (
+          <Logout_Button
+            onClick={() => {
+              dispatch(logout())
+              history.push('/')
+            }}
+          >
+            Logout
+          </Logout_Button>
         ) : (
           ''
         )}
@@ -196,18 +208,6 @@ export default function ProfilePage({ match }) {
         >
           {displayName}'s Forest
         </Tree_Button>
-        {myID === compareID ? (
-          <Logout_Button
-            onClick={() => {
-              dispatch(logout())
-              history.push('/')
-            }}
-          >
-            Logout
-          </Logout_Button>
-        ) : (
-          ''
-        )}
       </ButtonContainer>
     </MainWrapper>
   )

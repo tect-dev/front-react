@@ -126,9 +126,9 @@ export const emailSignUp = (email, password, displayName, introduce) => async (
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         session_signup(displayName, introduce)
-        authService.currentUser
-          .sendEmailVerification()
-          .then(Swal.fire('Check Your Mail Box', translationText.en.emailAlert))
+        //authService.currentUser
+        //  .sendEmailVerification()
+        //  .then(Swal.fire('Check Your Mail Box', translationText.en.emailAlert))
       })
     dispatch({ type: CREATE_USER_SUCCESS, displayName })
   } catch (e) {

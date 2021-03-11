@@ -31,6 +31,8 @@ import Loader from 'react-loader-spinner'
 import MainIcon from '../assets/MainIcon.png'
 import HomeImage from '../assets/HomeImage.png'
 import CountUp from 'react-countup'
+import { LoginModal } from '../components/layout/LoginModal'
+import '../styles/layout/Header.scss'
 
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
@@ -94,6 +96,9 @@ export default function HomePage() {
   const { treeSum } = useSelector((state) => {
     return { treeSum: state.techtree.treeSum }
   })
+  const { loginState } = useSelector((state) => {
+    return { loginState: state.auth.loginState }
+  })
   const isClient = typeof window === 'object'
   function getSize() {
     return {
@@ -149,6 +154,18 @@ export default function HomePage() {
               {treeSum ? <CountUp end={treeSum} duration={2.5} /> : ''}
             </TreeSumText>
           </div>
+
+          <br />
+
+          <DefaultButton>
+            {loginState ? (
+              <Link to={`/forest?page=1`}>Let's Start!</Link>
+            ) : (
+              <Link to={`/login`}>Let's Start!</Link>
+            )}
+          </DefaultButton>
+
+          <LoginModal labelFor="login-popup" />
         </div>
       </HomePageHeader>
       <DemoTree />
@@ -170,74 +187,6 @@ export default function HomePage() {
           </div>
         </HomePageMiddle>
       </HomePageSection>
-      <BlockWrapper>
-        {windowSize.width > 1024 ? (
-          <DesktopBlocks
-            onSetIsPopUp={setIsPopUp}
-            onSetselectedDepts={onSetselectedDepts}
-          />
-        ) : (
-          ''
-        )}
-        {1024 > windowSize.width && windowSize.width > 650 ? (
-          <TabletBlocks
-            onSetIsPopUp={setIsPopUp}
-            onSetselectedDepts={onSetselectedDepts}
-          />
-        ) : (
-          ''
-        )}
-        {650 > windowSize.width ? (
-          <MobileBlocks
-            onSetIsPopUp={setIsPopUp}
-            onSetselectedDepts={onSetselectedDepts}
-          />
-        ) : (
-          ''
-        )}
-      </BlockWrapper>
-
-      {/* popup modal에 대한 코드 시작 */}
-      <PopupWrapper
-        isPopup={isPopup}
-        onClick={(e) => {
-          setIsPopUp(false)
-          setselectedDepts(null)
-        }}
-      >
-        <PopupGridContainer
-          onClick={(e) => {
-            e.preventDefault()
-          }}
-        >
-          {selectedDepts?.map((dept) => {
-            return (
-              <PopupDept
-                onClick={(e) => {
-                  e.preventDefault()
-
-                  dispatch(changeSortingMethod(dept, 'time', 1))
-                }}
-              >
-                <Link
-                  style={{
-                    cursor: 'pointer',
-                    display: 'grid',
-                    boxSizing: 'border-box',
-                    padding: '20px 10px',
-                    placeItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                  }}
-                  to={`/board/${dept}?page=1`}
-                >
-                  {dept}
-                </Link>
-              </PopupDept>
-            )
-          })}
-        </PopupGridContainer>
-      </PopupWrapper>
     </MainWrapperDefault>
   )
 }

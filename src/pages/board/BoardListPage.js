@@ -44,10 +44,9 @@ export default function QuestionListPage({ match, location }) {
       }
     }
   )
-  const { loginState, emailVerified } = useSelector((state) => {
+  const { loginState } = useSelector((state) => {
     return {
       loginState: state.auth.loginState,
-      emailVerified: state.auth.emailVerified,
     }
   })
   const postPerPage = 10
@@ -116,7 +115,7 @@ export default function QuestionListPage({ match, location }) {
                   </span>{' '}
                 </Button2>
                 <Button>
-                  {loginState && authService.currentUser.emailVerified ? (
+                  {loginState ? ( //&& authService.currentUser.emailVerified ? (
                     <Link to={`/write/${category}`}>새 글 쓰기</Link>
                   ) : (
                     ''

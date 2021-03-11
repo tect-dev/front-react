@@ -14,6 +14,7 @@ import WritePage from './pages/board/WritePage'
 import EditPage from './pages/board/EditPage'
 
 import AboutPage from './pages/AboutPage'
+import LoginPage from './pages/LoginPage'
 
 import ProfilePage from './pages/user/ProfilePage'
 import MyTreePage from './pages/user/MyTreePage'
@@ -64,6 +65,7 @@ function App() {
           <Route path="/post/:postID" exact component={PostDetailPage} />
           <Route path="/write/:category" exact component={WritePage} />
 
+          <Route path="/login" exact={true} component={LoginPage} />
           <Route path="/about" exact={true} component={AboutPage} />
           <Route path="/user/:userID" component={ProfilePage} />
           <Route path="/forest/:userID" component={MyTreePage} />

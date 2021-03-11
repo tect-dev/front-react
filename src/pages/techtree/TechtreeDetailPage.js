@@ -221,12 +221,7 @@ export default function TechtreeDetailPage({ match }) {
     setDocumentTitle(e.target.value)
   }, [])
 
-  const onChangeTechtreeTitle = useCallback((e) => {
-    e.preventDefault()
-    dispatch(changeTechtreeTitle(e.target.value))
-  }, [])
-
-  const onFinishEdit = useCallback(() => {
+  const onFinishDocuEdit = useCallback(() => {
     dispatch(
       finishDocuEdit(
         selectedNode.id,
@@ -257,11 +252,10 @@ export default function TechtreeDetailPage({ match }) {
   }, [dispatch, isEditingTechtree])
 
   const onClickTechtreeCommit = useCallback(async () => {
-    //e.preventDefault()
     const svgDOM = document.getElementById('techtreeContainer')
     const source = new XMLSerializer().serializeToString(svgDOM)
     var decoded = unescape(encodeURIComponent(source))
-    // Now we can use btoa to convert the svg to base64
+    // use btoa to convert the svg to base64
     const base64 = btoa(decoded)
     const thumbnailURL = `data:image/svg+xml;base64,${base64}`
     dispatch(
@@ -288,7 +282,6 @@ export default function TechtreeDetailPage({ match }) {
   const [changedColor, setChangedColor] = useState()
   const onChangeNodeColor = useCallback(
     (selectedColor) => {
-      // 새로운 테크트리 데이터 객체를 만들어서 인자로 건내줘야 하나.
       setChangedColor(selectedColor)
       const coloredNode = { ...selectedNode, fillColor: selectedColor }
       dispatch(changeNodeColor(nodeList, coloredNode))
@@ -311,7 +304,6 @@ export default function TechtreeDetailPage({ match }) {
             const cutNumber = ele.body
               .toLowerCase()
               .search(searchValue.toLowerCase())
-
             const trimmed = {
               ...ele,
               body:
@@ -320,7 +312,6 @@ export default function TechtreeDetailPage({ match }) {
                 ele.body.substring(cutNumber, cutNumber + 30) +
                 '...',
             }
-
             return trimmed
           } else {
             return null
@@ -373,7 +364,7 @@ export default function TechtreeDetailPage({ match }) {
 
               <EditDocuButtonArea>
                 {isEditingDocument ? (
-                  <DefaultButton onClick={onFinishEdit}>done</DefaultButton>
+                  <DefaultButton onClick={onFinishDocuEdit}>done</DefaultButton>
                 ) : (
                   ''
                 )}
@@ -467,9 +458,9 @@ export default function TechtreeDetailPage({ match }) {
                               node
                             )
                           )
-                          const offsetElement = document.getElementById(
-                            'docuWrapper'
-                          )
+                          //const offsetElement = document.getElementById(
+                          //  'docuWrapper'
+                          //)
                           // const clientRect = offsetElement.getBoundingClientRect()
                           // const relativeTop = clientRect.top
                           // const scrolledTopLength = window.pageYOffset
@@ -508,9 +499,9 @@ export default function TechtreeDetailPage({ match }) {
                               node
                             )
                           )
-                          const offsetElement = document.getElementById(
-                            'docuWrapper'
-                          )
+                          //const offsetElement = document.getElementById(
+                          //  'docuWrapper'
+                          //)
                           //const clientRect = offsetElement.getBoundingClientRect()
                           //const relativeTop = clientRect.top
                           //const scrolledTopLength = window.pageYOffset
@@ -550,7 +541,10 @@ export default function TechtreeDetailPage({ match }) {
                   <TitleInput
                     value={techtreeTitle}
                     placeholder="Title Of The Tree..."
-                    onChange={onChangeTechtreeTitle}
+                    onChange={(e) => {
+                      e.preventDefault()
+                      dispatch(changeTechtreeTitle(e.target.value))
+                    }}
                     maxLength="60"
                     size="60"
                   />
@@ -575,7 +569,7 @@ export default function TechtreeDetailPage({ match }) {
 
             <TreeEditButtonArea>
               <DefaultButton>
-                <a href={dataStr} download={`${techtreeData.title}.json`}>
+                <a href={dataStr} download={`${techtreeData.title}.txt`}>
                   Download Tree
                 </a>
               </DefaultButton>
@@ -730,7 +724,9 @@ export default function TechtreeDetailPage({ match }) {
 
                   <EditDocuButtonArea>
                     {isEditingDocument ? (
-                      <DefaultButton onClick={onFinishEdit}>done</DefaultButton>
+                      <DefaultButton onClick={onFinishDocuEdit}>
+                        done
+                      </DefaultButton>
                     ) : (
                       ''
                     )}

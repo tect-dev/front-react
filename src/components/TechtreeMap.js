@@ -45,6 +45,7 @@ const TreeMap = React.memo(function TechtreeMap() {
   }, [containerRef])
   React.useEffect(() => {
     updateGraph(containerRef.current, dispatch)
+    // node 색깔변경시 새로 그려주기 위해 treeData 항목을 deps 에 넣음.
   }, [containerRef, dispatch, treeData])
 
   return (
@@ -122,6 +123,8 @@ function updateGraph(container, dispatch) {
     endY: null,
   }
 
+  const treeAuthor = reduxStore.getState().techtree.treeAuthor
+
   reduxStore.subscribe(initNode)
   //reduxStore.subscribe(updateLink)
 
@@ -130,8 +133,6 @@ function updateGraph(container, dispatch) {
   reduxStore.subscribe(toggleEdit)
   //reduxStore.subscribe(updateLink)
   // 리덕스 스토어가 갱신될때마다 node랑 link 둘다 업데이트하면 무한호출로 에러발생.
-
-  const techtreeData = reduxStore.getState().techtree.techtreeData
 
   const svg = d3.select(container).select('svg')
 
@@ -232,10 +233,10 @@ function updateGraph(container, dispatch) {
       .on('click', async (link) => {
         const deleteOK = window.confirm('Delete Connection?')
         if (deleteOK) {
-          await dispatch(deleteLink(nodeList, linkList, techtreeData, link))
+          await dispatch(deleteLink(nodeList, linkList, techtreeID, link))
           await updateLink()
           await changeTreeThumbnail()
-          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
+          await dispatch(updateThumbnail(techtreeID, tempThumbnailURL))
         } else {
           return
         }
@@ -316,19 +317,11 @@ function updateGraph(container, dispatch) {
               node.x = d3.event.x
               node.y = d3.event.y
 
-              await dispatch(
-                createLink(
-                  nodeList,
-                  linkList,
-                  reduxStore.getState().techtree.techtreeData
-                )
-              )
+              await dispatch(createLink(nodeList, linkList, techtreeID))
               await updateNode()
               await updateLink()
               await changeTreeThumbnail()
-              await dispatch(
-                updateThumbnail(techtreeData._id, tempThumbnailURL)
-              )
+              await dispatch(updateThumbnail(techtreeID, tempThumbnailURL))
             })
         )
         .attr('cx', (d) => {
@@ -340,13 +333,13 @@ function updateGraph(container, dispatch) {
         .on('start', function repeat() {
           d3.active(this)
             .attr('cx', (d) => {
-              return d.x - 0.9
+              return d.x - 1
             })
             .transition()
             .duration(130)
             .ease(d3.easeLinear)
             .attr('cx', (d) => {
-              return d.x + 0.9
+              return d.x + 1
             })
             .transition()
             .duration(130)
@@ -361,8 +354,7 @@ function updateGraph(container, dispatch) {
             .drag()
             .on('start', (d) => {
               if (
-                reduxStore.getState().techtree.techtreeData.author
-                  ?.firebaseUid === reduxStore.getState().auth.userID
+                treeAuthor?.firebaseUid === reduxStore.getState().auth.userID
               ) {
                 svg
                   .select('g')
@@ -431,18 +423,11 @@ function updateGraph(container, dispatch) {
                     tempPairingNodes.id = `link${uid(20)}`
                     linkList.push({ ...tempPairingNodes })
 
-                    await dispatch(
-                      createLink(
-                        nodeList,
-                        linkList,
-                        reduxStore.getState().techtree.techtreeData
-                      )
-                    )
-
+                    await dispatch(createLink(nodeList, linkList, techtreeID))
                     await updateLink()
                     await changeTreeThumbnail()
                     await dispatch(
-                      updateThumbnail(techtreeData._id, tempThumbnailURL)
+                      updateThumbnail(techtreeID, tempThumbnailURL)
                     )
                     svg.select('.tempLine').style('opacity', '0')
                   }
@@ -495,39 +480,11 @@ function updateGraph(container, dispatch) {
       .on('click', async (d) => {
         const deleteOK = window.confirm(`Delete ${d.name} Node?`)
         if (deleteOK) {
-          await dispatch(
-            deleteNode(
-              nodeList,
-              linkList,
-              techtreeID,
-              d,
-              reduxStore.getState().techtree.techtreeData
-            )
-          )
+          await dispatch(deleteNode(nodeList, linkList, techtreeID, d))
           await updateNode()
           await updateLink()
           await changeTreeThumbnail()
-          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
-        } else {
-          return
-        }
-      })
-      .on('click', async (d) => {
-        const deleteOK = window.confirm(`Delete ${d.name} Node?`)
-        if (deleteOK) {
-          await dispatch(
-            deleteNode(
-              nodeList,
-              linkList,
-              techtreeID,
-              d,
-              reduxStore.getState().techtree.techtreeData
-            )
-          )
-          await updateNode()
-          await updateLink()
-          await changeTreeThumbnail()
-          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
+          await dispatch(updateThumbnail(techtreeID, tempThumbnailURL))
         } else {
           return
         }
@@ -535,19 +492,11 @@ function updateGraph(container, dispatch) {
       .on('touch', async (d) => {
         const deleteOK = window.confirm(`Delete ${d.name} Node?`)
         if (deleteOK) {
-          await dispatch(
-            deleteNode(
-              nodeList,
-              linkList,
-              techtreeID,
-              d,
-              reduxStore.getState().techtree.techtreeData
-            )
-          )
+          await dispatch(deleteNode(nodeList, linkList, techtreeID, d))
           await updateNode()
           await updateLink()
           await changeTreeThumbnail()
-          await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
+          await dispatch(updateThumbnail(techtreeID, tempThumbnailURL))
         } else {
           return
         }
@@ -583,10 +532,7 @@ function updateGraph(container, dispatch) {
   }
 
   svg.on('dblclick', async () => {
-    if (
-      reduxStore.getState().techtree.techtreeData.author?.firebaseUid ===
-      reduxStore.getState().auth.userID
-    ) {
+    if (treeAuthor?.firebaseUid === reduxStore.getState().auth.userID) {
       const ratioFactor = width / clientRect.width
       const createdNode = {
         id: `node${uid(20)}`,
@@ -601,10 +547,10 @@ function updateGraph(container, dispatch) {
         childNodeID: [],
       }
       nodeList = [...nodeList, createdNode]
-      await reduxStore.dispatch(createNode(nodeList, linkList, techtreeData))
+      await reduxStore.dispatch(createNode(nodeList, linkList, techtreeID))
       await updateNode()
       await changeTreeThumbnail()
-      await dispatch(updateThumbnail(techtreeData._id, tempThumbnailURL))
+      await dispatch(updateThumbnail(techtreeID, tempThumbnailURL))
     }
   })
   if (reduxStore.getState().techtree.isEditingTechtree) {
