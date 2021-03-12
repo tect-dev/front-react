@@ -39,7 +39,7 @@ import {
   likeTree,
   forkTree,
   changeNodeColor,
-  unselectNode,
+  closeNode,
   openUserGuide,
 } from '../../redux/techtree'
 import { returnPreviousNodeList, returnNextNodeList } from '../../lib/functions'
@@ -282,20 +282,12 @@ export default function TechtreeDetailPage({ match }) {
     posX = event.pageX
     posY = event.pageY
     distX = event.target.offsetLeft - posX
-    distY = event.target.offsetTop + posY
+    distY = event.target.offsetTop - posY
     console.log('EVENT START: ', event.target)
   }
   function dragging(event) {
     event.stopPropagation()
     event.preventDefault()
-
-    let offsetElement = document.getElementById('techtreeContainer')
-    let clientRect = offsetElement.getBoundingClientRect()
-    let relativeTop = clientRect.top
-    let relativeLeft = clientRect.left
-    let scrolledTopLength = window.pageYOffset
-    let absoluteYPosition = scrolledTopLength + relativeTop
-    let absoluteXPosition = relativeLeft
 
     posX = event.pageX
     posY = event.pageY
@@ -308,7 +300,7 @@ export default function TechtreeDetailPage({ match }) {
     event.stopPropagation()
     event.preventDefault()
 
-    let offsetElement = document.getElementById('techtreeContainer')
+    let offsetElement = document.getElementById('root')
     let clientRect = offsetElement.getBoundingClientRect()
     let relativeTop = clientRect.top
     let relativeLeft = clientRect.left
@@ -318,10 +310,11 @@ export default function TechtreeDetailPage({ match }) {
 
     posX = event.pageX
     posY = event.pageY
+
     // console.log('DRAG END: ', event.target)
     //console.log(posX, posY, distX, distY)
     event.target.style.marginLeft = posX + distX + 'px'
-    event.target.style.marginTop = posY + distY + 'px'
+    event.target.style.marginTop = posY + distY + 'px' //window.pageYOffset + 'px'
   }
   const openUserGuideModal = useCallback(() => {
     dispatch(openUserGuide())
@@ -340,32 +333,29 @@ export default function TechtreeDetailPage({ match }) {
     }
   }, [dispatch, isEditingTechtree])
 
-  const NodeModal = () => {
-    const [documentTitle, setDocumentTitle] = useState('')
-    const [documentText, setDocumentText] = useState('')
+  const NodeModal = ({ node }) => {
+    const [documentTitle, setDocumentTitle] = useState(node.name)
+    const [documentText, setDocumentText] = useState(node.body)
     const [isEditingDocument, setIsEditingDocument] = useState(false)
 
     useEffect(() => {
-      setDocumentTitle(selectedNode.name)
-      setDocumentText(selectedNode.body)
+      //setDocumentTitle(selectedNode.name)
+      //setDocumentText(selectedNode.body)
       if (typeof selectedNode.id !== 'undefined') {
         setModalDisplay('inline')
       }
     }, [selectedNode])
-    const onChangeDocumentTitle = useCallback((e) => {
-      e.preventDefault()
-      setDocumentTitle(e.target.value)
-    }, [])
 
     const onFinishDocuEdit = useCallback(() => {
+      console.log('docu text: ', documentText)
       dispatch(
         finishDocuEdit(
-          selectedNode.id,
+          node.id,
           documentTitle,
           documentText,
           nodeList,
           linkList,
-          techtreeData
+          techtreeID
         )
       )
       setIsEditingDocument(false)
@@ -395,7 +385,10 @@ export default function TechtreeDetailPage({ match }) {
                 {isEditingDocument ? (
                   <TitleInput
                     value={documentTitle}
-                    onChange={onChangeDocumentTitle}
+                    onChange={(e) => {
+                      e.preventDefault()
+                      setDocumentTitle(e.target.value)
+                    }}
                   />
                 ) : (
                   <StyledTitle>{documentTitle}</StyledTitle>
@@ -408,25 +401,26 @@ export default function TechtreeDetailPage({ match }) {
                 ) : (
                   ''
                 )}
-                {typeof selectedNode.id !== 'undefined' &&
-                !isEditingDocument &&
-                userID === treeAuthor?.firebaseUid ? (
-                  <DefaultButton
-                    onClick={() => {
-                      setIsEditingDocument(true)
-                    }}
-                  >
-                    Edit
-                  </DefaultButton>
-                ) : (
-                  ''
-                )}
+                {
+                  //typeof selectedNode.id !== 'undefined' &&
+                  !isEditingDocument && userID === treeAuthor?.firebaseUid ? (
+                    <DefaultButton
+                      onClick={() => {
+                        setIsEditingDocument(true)
+                      }}
+                    >
+                      Edit
+                    </DefaultButton>
+                  ) : (
+                    ''
+                  )
+                }
                 {!isEditingDocument ? (
                   <DefaultButton
                     onClick={() => {
-                      setModalDisplay('none')
+                      // setModalDisplay('none')
 
-                      dispatch(unselectNode())
+                      dispatch(closeNode(node.id))
                     }}
                   >
                     close
@@ -557,6 +551,11 @@ export default function TechtreeDetailPage({ match }) {
     )
   }
 
+  const selectedNodeList = useSelector((state) => {
+    return state.techtree.selectedNodeList || []
+  })
+
+  const tempArray = [1, 2]
   if (loading) {
     return (
       <MainWrapper>
@@ -566,7 +565,10 @@ export default function TechtreeDetailPage({ match }) {
   } else if (!loading) {
     return (
       <>
-        <NodeModal />
+        {selectedNodeList.map((ele, idx) => {
+          return <NodeModal key={idx} node={ele} />
+        })}
+
         <MainWrapper style={{ zIndex: '0' }}>
           <TreeTitleArea>
             <div>
@@ -593,9 +595,9 @@ export default function TechtreeDetailPage({ match }) {
                 </>
               )}
             </div>
-            <DefaultButton draggable="true" onClick={openUserGuideModal}>
+            {/*<DefaultButton draggable="true" onClick={openUserGuideModal}>
               How To Use It?
-            </DefaultButton>
+            </DefaultButton>*/}
           </TreeTitleArea>
           <TechtreeMap />
           <TreeEditButtonArea>
@@ -757,6 +759,9 @@ export const ModalWrapper = styled.div`
   border-radius: 3px;
   position: absolute;
   width: 50vw;
+  @media (max-width: 650px) {
+    width: 90vw;
+  }
 `
 export const TreeTitleArea = styled.div`
   display: flex;

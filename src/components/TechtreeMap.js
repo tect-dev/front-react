@@ -282,7 +282,14 @@ function updateGraph(container, dispatch) {
       .on('click', (d) => {
         const previousNodeList = returnPreviousNodeList(linkList, nodeList, d)
         const nextNodeList = returnNextNodeList(linkList, nodeList, d)
-        dispatch(selectNode(previousNodeList, nextNodeList, d))
+        dispatch(
+          selectNode(
+            previousNodeList,
+            nextNodeList,
+            d,
+            reduxStore.getState().techtree.selectedNodeList
+          )
+        )
       })
 
     if (reduxStore.getState().techtree.isEditingTechtree) {

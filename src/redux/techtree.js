@@ -40,6 +40,7 @@ const initialState = {
   },
   treeSum: null,
   tempThumbnailURL: '',
+  selectedNodeList: [],
 }
 
 // define ACTION types
@@ -50,7 +51,7 @@ const FINISH_TECHTREE_EDIT = 'techtree/FINISH_TECHTREE_EDIT'
 const FINISH_DOCU_EDIT = 'techtree/FINISH_DOCU_EDIT'
 
 const SELECT_NODE = 'techtree/SELECT_NODE'
-const UNSELECT_NODE = 'techtree/UNSELECT_NODE'
+const CLOSE_NODE = 'techtree/CLOSE_NODE'
 const OPEN_USER_GUIDE = 'techtree/OPEN_USER_GUIDE'
 
 const CREATE_NODE = 'techtree/CREATE_NODE'
@@ -330,10 +331,8 @@ export const finishDocuEdit = (
   nodeBody,
   nodeList,
   linkList,
-  techtreeData
+  techtreeID
 ) => {
-  const techtreeID = techtreeData._id
-  const techtreeTitle = techtreeData.title
   const changingIndex = nodeList.findIndex((element) => nodeID === element.id)
   const changingNode = nodeList[changingIndex]
   const newNodeList = nodeList
@@ -348,7 +347,6 @@ export const finishDocuEdit = (
       method: 'put',
       url: `${process.env.REACT_APP_BACKEND_URL}/techtree/${techtreeID}`,
       data: {
-        title: techtreeTitle,
         nodeList: JSON.stringify(nodeList),
         linkList: JSON.stringify(linkList),
         _id: techtreeID,
@@ -357,16 +355,34 @@ export const finishDocuEdit = (
     })
   })
 
-  return { type: FINISH_DOCU_EDIT, newNodeList, nodeName, nodeBody }
+  return {
+    type: FINISH_DOCU_EDIT,
+    newNodeList,
+    nodeName,
+    nodeBody,
+    changingNode,
+  }
 }
 
-export const selectNode = (previousNodeList, nextNodeList, node) => {
+export const selectNode = (
+  previousNodeList,
+  nextNodeList,
+  node,
+  selectedNodeList
+) => {
   // 동일한 노드를 다시 클릭했을때도 모달을 띄우고 싶다.
-  return { type: SELECT_NODE, previousNodeList, nextNodeList, node }
+  selectedNodeList.push(node)
+  return {
+    type: SELECT_NODE,
+    previousNodeList,
+    nextNodeList,
+    node,
+    newSelectedNodeList: selectedNodeList,
+  }
 }
 
-export const unselectNode = () => {
-  return { type: UNSELECT_NODE }
+export const closeNode = (nodeID) => {
+  return { type: CLOSE_NODE, nodeID }
 }
 
 export const createNode = (nodeList, linkList, techtreeID) => {
@@ -668,18 +684,30 @@ export default function techtree(state = initialState, action) {
           name: action.nodeName,
           body: action.nodeBody,
         },
+        selectedNodeList: state.selectedNodeList.map((ele) => {
+          if (action.changingNode.id === ele.id) {
+            return action.changingNode
+          } else {
+            return ele
+          }
+        }),
       }
     case SELECT_NODE:
+      console.log('new in redux: ', action.newSelectedNodeList)
       return {
         ...state,
         selectedNode: action.node,
         previousNodeList: action.previousNodeList,
         nextNodeList: action.nextNodeList,
+        selectedNodeList: action.newSelectedNodeList,
       }
-    case UNSELECT_NODE:
+    case CLOSE_NODE:
       return {
         ...state,
         selectedNode: {},
+        selectedNodeList: state.selectedNodeList.filter((ele) => {
+          return ele.id !== action.nodeID
+        }),
       }
     case READ_TECHTREE_LIST_TRY:
       return {
@@ -718,6 +746,7 @@ export default function techtree(state = initialState, action) {
           body: '',
         },
         treeLikeUsers: [],
+        selectedNodeList: [],
       }
     case READ_TECHTREE_DATA_SUCCESS:
       return {
