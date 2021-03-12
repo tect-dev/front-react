@@ -187,6 +187,10 @@ const Container = styled.div`
     margin-left: 10vw;
     margin-right: 10vw;
   }
+  @media (max-width: 650px) {
+    margin-left: 5vw;
+    margin-right: 5vw;
+  }
 `
 const StyledInput = styled(TitleInput)`
   width: 90%;

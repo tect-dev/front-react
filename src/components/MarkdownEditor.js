@@ -190,7 +190,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
       const selectionEnd = textareaRef.current.selectionEnd
       const newText =
         value.substring(0, selectionStart) +
-        '[오른쪽 괄호안에는 링크 주소를 적습니다](https://www.foresty.net)' +
+        '[Foresty external link!](https://www.foresty.net)' +
         value.substring(selectionEnd)
 
       // setLocalText(newText)
@@ -230,22 +230,22 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
   return (
     <div>
       <MarkdownToolkit>
-        <MarkdownButton onClick={addCodeBlock}>
+        <MarkdownButton onClick={addCodeBlock} title="add code block">
           <FaCode />
         </MarkdownButton>
-        <MarkdownButton onClick={addMathBlock}>
+        <MarkdownButton onClick={addMathBlock} title="add LaTeX">
           <FaSuperscript />
         </MarkdownButton>
-        <MarkdownButton onClick={addBoldText}>
+        <MarkdownButton onClick={addBoldText} title="add bold text">
           <FaBold />
         </MarkdownButton>
-        <MarkdownButton onClick={addLargeTitle}>
+        <MarkdownButton onClick={addLargeTitle} title="add large title">
           <FaHeading />
         </MarkdownButton>
-        <MarkdownButton onClick={addItalicText}>
+        <MarkdownButton onClick={addItalicText} title="add italic text">
           <FaItalic />
         </MarkdownButton>
-        <MarkdownButton onClick={addLink}>
+        <MarkdownButton onClick={addLink} title="add external link">
           <FaLink />
         </MarkdownButton>
       </MarkdownToolkit>
@@ -253,7 +253,7 @@ const MarkdownEditor = ({ bindingText, bindingSetter, width, height }) => {
         <StyledTextarea
           ref={textareaRef}
           id="content"
-          placeholder="본문을 적어주세요."
+          placeholder="..."
           value={bindingText}
           onChange={onChangeText}
           maxLength={10000}

@@ -86,10 +86,10 @@ const topCatchPraise2 = translationText.en.topCatchPraise2
 
 const catchPraise1 = 'With '
 const catchPraise2 = 'Grow Your Forest'
-const catchPraise3 = 'Community By Your Major'
-const catchPraise4 = 'Foresty 의 전공별 게시판'
-const catchPraise5 =
-  '같은 전공끼리 모이는 커뮤니티를 통해 다양한 정보를 공유해 보세요.'
+const catchPraise3 = 'Cultivate Your Thoughts'
+const catchPraise4 = '' //'Foresty 의 전공별 게시판'
+const catchPraise5 = ''
+//'같은 전공끼리 모이는 커뮤니티를 통해 다양한 정보를 공유해 보세요.'
 
 export default function HomePage() {
   const dispatch = useDispatch()
@@ -173,7 +173,15 @@ export default function HomePage() {
         <HomePageMiddle>
           <MiddleSectionTextArea>
             <BigText>{catchPraise3}</BigText>
-            <LargeBoldText>{catchPraise4}</LargeBoldText>
+            <LargeBoldText>
+              <DefaultButton>
+                {loginState ? (
+                  <Link to={`/forest?page=1`}>Let's Start!</Link>
+                ) : (
+                  <Link to={`/login`}>Let's Start!</Link>
+                )}
+              </DefaultButton>
+            </LargeBoldText>
             <br />
             <br />
             <br />

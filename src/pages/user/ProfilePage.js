@@ -199,16 +199,6 @@ export default function ProfilePage({ match }) {
           })}
         </PostsContainer>
       </BoardContainer>
-
-      <ButtonContainer>
-        <Tree_Button
-          onClick={() => {
-            history.push(`/forest/${compareID}`)
-          }}
-        >
-          {displayName}'s Forest
-        </Tree_Button>
-      </ButtonContainer>
     </MainWrapper>
   )
 }
